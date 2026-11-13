@@ -1,0 +1,31 @@
+{
+  "name": "racines",
+  "version": "1.0.0",
+  "description": "Racines — créer, entretenir et récolter son potager, soigner ses plantes et sa basse-cour",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "check": "rolldown scripts/check-data.ts --platform node --format esm -o .tmp/check.mjs --log-level warn && node .tmp/check.mjs",
+    "smoke": "rolldown tests/logic.test.ts --platform node --format esm -o .tmp/logic.mjs --log-level warn && node .tmp/logic.mjs",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run check && npm run smoke && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "icons": "node scripts/make-icons.mjs",
+    "wiki": "rolldown scripts/fetch-wiki.ts --platform node --format esm -o .tmp/wiki.mjs --log-level warn && node .tmp/wiki.mjs",
+    "deploy": "npm run build && node scripts/deploy.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "rolldown": "^1.2.12",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.2"
+  }
+}

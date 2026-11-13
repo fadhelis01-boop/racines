@@ -1,0 +1,902 @@
+{
+ "tomate": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Tomate_Dev_Num.png/500px-Tomate_Dev_Num.png?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Tomate",
+  "titre": "Tomate"
+ },
+ "aubergine": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Solanum_melongena_26_08_2012_%281%29.JPG/500px-Solanum_melongena_26_08_2012_%281%29.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Aubergine",
+  "titre": "Aubergine"
+ },
+ "poivron": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Capsicum_annuum_fruits_IMGP0049.jpg/500px-Capsicum_annuum_fruits_IMGP0049.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Poivron",
+  "titre": "Poivron"
+ },
+ "courgette": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Courgette_Cucurbita_pepo_2.jpg/500px-Courgette_Cucurbita_pepo_2.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Courgette",
+  "titre": "Courgette"
+ },
+ "concombre": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Cucumis_sativus_Blanco2.299-cropped.jpg/500px-Cucumis_sativus_Blanco2.299-cropped.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Concombre",
+  "titre": "Concombre"
+ },
+ "courge": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Bu%C4%8De.jpg/500px-Bu%C4%8De.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Potiron",
+  "titre": "Potiron"
+ },
+ "melon": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Melon_plant.jpg/500px-Melon_plant.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Melon_(plante)",
+  "titre": "Melon (plante)"
+ },
+ "haricot": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Haricots_grimpants_ph%C3%A9nom%C3%A8nes02.jpg/500px-Haricots_grimpants_ph%C3%A9nom%C3%A8nes02.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Haricot",
+  "titre": "Haricot"
+ },
+ "pois": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Peas.jpg/500px-Peas.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Petit_pois",
+  "titre": "Petit pois"
+ },
+ "feve": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/PikiWiki_Israel_30880_Green_Bean.JPG/500px-PikiWiki_Israel_30880_Green_Bean.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/F%C3%A8ve",
+  "titre": "Fève"
+ },
+ "pomme-de-terre": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/234_Solanum_tuberosum_L.jpg/500px-234_Solanum_tuberosum_L.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Pomme_de_terre",
+  "titre": "Pomme de terre"
+ },
+ "carotte": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Carrots_on_Display.jpg/500px-Carrots_on_Display.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Carotte",
+  "titre": "Carotte"
+ },
+ "radis": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Radijs_bloemen_Raphanus_sativus_subsp._sativus.jpg/500px-Radijs_bloemen_Raphanus_sativus_subsp._sativus.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Radis",
+  "titre": "Radis"
+ },
+ "navet": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/Turnip_2622027.jpg/500px-Turnip_2622027.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Navet",
+  "titre": "Navet"
+ },
+ "betterave": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/80/Betterave_potag%C3%A8re_rouge.jpg/500px-Betterave_potag%C3%A8re_rouge.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Betterave_potag%C3%A8re",
+  "titre": "Betterave potagère"
+ },
+ "panais": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3e/Pastinake-2.jpg/500px-Pastinake-2.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Panais",
+  "titre": "Panais"
+ },
+ "celeri": {
+  "img": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Apium_graveolens3.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "page": "https://fr.wikipedia.org/wiki/C%C3%A9leri",
+  "titre": "Céleri"
+ },
+ "poireau": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Poireaux.JPG/500px-Poireaux.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Poireau",
+  "titre": "Poireau"
+ },
+ "oignon": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8d/Allium_cepa.jpg/500px-Allium_cepa.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Oignon",
+  "titre": "Oignon"
+ },
+ "echalote": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/%C3%89chalotes_vari%C3%A9t%C3%A9s.jpg/500px-%C3%89chalotes_vari%C3%A9t%C3%A9s.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/%C3%89chalote",
+  "titre": "Échalote"
+ },
+ "ail": {
+  "img": "https://upload.wikimedia.org/wikipedia/commons/3/39/Allium_sativum_Woodwill_1793.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "page": "https://fr.wikipedia.org/wiki/Ail_cultiv%C3%A9",
+  "titre": "Ail cultivé"
+ },
+ "chou": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c9/Brassica_oleracea2.jpg/500px-Brassica_oleracea2.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Chou_cabus",
+  "titre": "Chou cabus"
+ },
+ "chou-fleur": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Cauliflower.jpg/500px-Cauliflower.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Chou-fleur",
+  "titre": "Chou-fleur"
+ },
+ "chou-kale": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Boerenkool.jpg/500px-Boerenkool.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Chou_fris%C3%A9",
+  "titre": "Chou frisé"
+ },
+ "laitue": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Kropsla_herfst.jpg/500px-Kropsla_herfst.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Laitue_cultiv%C3%A9e",
+  "titre": "Laitue cultivée"
+ },
+ "mache": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/M%C3%A2che_%C3%A0_feuille_ronde.jpg/500px-M%C3%A2che_%C3%A0_feuille_ronde.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Valerianella_locusta",
+  "titre": "Valerianella locusta"
+ },
+ "epinard": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Illustration_Spinacia_oleracea1.jpg/500px-Illustration_Spinacia_oleracea1.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/%C3%89pinard",
+  "titre": "Épinard"
+ },
+ "blette": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Beta_vulgaris_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-167.jpg/500px-Beta_vulgaris_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-167.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Beta_vulgaris",
+  "titre": "Beta vulgaris"
+ },
+ "roquette": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Eruca_sativa_1_IP0206101.jpg/500px-Eruca_sativa_1_IP0206101.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Roquette_(plante)",
+  "titre": "Roquette (plante)"
+ },
+ "fenouil": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Foeniculum_vulgare.JPG/500px-Foeniculum_vulgare.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Fenouil",
+  "titre": "Fenouil"
+ },
+ "artichaut": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Artischocketoskana.jpg/500px-Artischocketoskana.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Artichaut",
+  "titre": "Artichaut"
+ },
+ "asperge": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Spargel_-_Asparagus.jpg/500px-Spargel_-_Asparagus.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Asperge",
+  "titre": "Asperge"
+ },
+ "mais": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Zea_mays_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-283.jpg/500px-Zea_mays_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-283.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Ma%C3%AFs",
+  "titre": "Maïs"
+ },
+ "patate-douce": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Ipomoea_batatasL_ja01.jpg/500px-Ipomoea_batatasL_ja01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Patate_douce",
+  "titre": "Patate douce"
+ },
+ "topinambour": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d0/Fleurs_de_Topinambur_%28Helianthus_tuberosus%29.jpg/500px-Fleurs_de_Topinambur_%28Helianthus_tuberosus%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Topinambour",
+  "titre": "Topinambour"
+ },
+ "fraisier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Erdbeeren-WJP-2.jpg/500px-Erdbeeren-WJP-2.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Fraisier",
+  "titre": "Fraisier"
+ },
+ "rhubarbe": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/April_22%2C_Rhubarb.jpg/500px-April_22%2C_Rhubarb.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Rhubarbe",
+  "titre": "Rhubarbe"
+ },
+ "basilic": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/97/Ocimum_basilicum_8zz.jpg/500px-Ocimum_basilicum_8zz.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Basilic_(plante)",
+  "titre": "Basilic (plante)"
+ },
+ "persil": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2d/Petroselinum_crispum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-103.jpg/500px-Petroselinum_crispum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-103.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Persil",
+  "titre": "Persil"
+ },
+ "ciboulette": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Ciboulette.JPG/500px-Ciboulette.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Ciboulette_commune",
+  "titre": "Ciboulette commune"
+ },
+ "coriandre": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Coriandrum_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-193.jpg/500px-Coriandrum_sativum_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-193.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Coriandre",
+  "titre": "Coriandre"
+ },
+ "thym": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Thymus_vulgaris_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-271.jpg/500px-Thymus_vulgaris_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-271.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Thymus_vulgaris",
+  "titre": "Thymus vulgaris"
+ },
+ "romarin": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Rosmarinus_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-258.jpg/500px-Rosmarinus_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-258.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Romarin",
+  "titre": "Romarin"
+ },
+ "menthe": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Mentha_aquatica_%282005_09_18%29_-_uitsnede.jpg/500px-Mentha_aquatica_%282005_09_18%29_-_uitsnede.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Menthe",
+  "titre": "Menthe"
+ },
+ "sauge": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Salvia_officinalis_jfg1.jpg/500px-Salvia_officinalis_jfg1.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Sauge_officinale",
+  "titre": "Sauge officinale"
+ },
+ "origan": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1f/Illustration_Origanum_vulgare0.jpg/500px-Illustration_Origanum_vulgare0.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Origan",
+  "titre": "Origan"
+ },
+ "aneth": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Illustration_Anethum_graveolens_clean.jpg/500px-Illustration_Anethum_graveolens_clean.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Aneth",
+  "titre": "Aneth"
+ },
+ "estragon": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/-2019-07-21_Tarragon%2C_%28Artemisia_dracunculus%29%2C_Trimingham.JPG/500px--2019-07-21_Tarragon%2C_%28Artemisia_dracunculus%29%2C_Trimingham.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Estragon",
+  "titre": "Estragon"
+ },
+ "laurier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Illustration_Laurus_nobilis0.jpg/500px-Illustration_Laurus_nobilis0.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Laurus_nobilis",
+  "titre": "Laurus nobilis"
+ },
+ "cerfeuil": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Illustration_Anthriscus_cerefolium0_clean.jpg/500px-Illustration_Anthriscus_cerefolium0_clean.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Cerfeuil_commun",
+  "titre": "Cerfeuil commun"
+ },
+ "sarriette": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Satureja_hortensis_Sturm51.jpg/500px-Satureja_hortensis_Sturm51.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Sarriette",
+  "titre": "Sarriette"
+ },
+ "melisse": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Melissa_officinalis_1.jpg/500px-Melissa_officinalis_1.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/M%C3%A9lisse_officinale",
+  "titre": "Mélisse officinale"
+ },
+ "verveine": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/Aloysia_citriodora_002.jpg/500px-Aloysia_citriodora_002.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Aloysia_citrodora",
+  "titre": "Aloysia citrodora"
+ },
+ "capucine": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f8/Tropaeolum_majus.JPG/500px-Tropaeolum_majus.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Grande_capucine",
+  "titre": "Grande capucine"
+ },
+ "oeillet-inde": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/French_marigold.jpg/500px-French_marigold.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/%C5%92illet_d'Inde",
+  "titre": "Œillet d'Inde"
+ },
+ "souci": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/Calendula_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-024.jpg/500px-Calendula_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-024.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Souci_officinal",
+  "titre": "Souci officinal"
+ },
+ "bourrache": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/224_Borrago_officinalis_L.jpg/500px-224_Borrago_officinalis_L.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Bourrache_officinale",
+  "titre": "Bourrache officinale"
+ },
+ "phacelie": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Phacelia_tanacetifolia_in_bloom%2C_Souris%2C_PEI%2C_July_2025.jpg/500px-Phacelia_tanacetifolia_in_bloom%2C_Souris%2C_PEI%2C_July_2025.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Phac%C3%A9lie_%C3%A0_feuilles_de_tanaisie",
+  "titre": "Phacélie à feuilles de tanaisie"
+ },
+ "moutarde": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/Sinapis_alba_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-265.jpg/500px-Sinapis_alba_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-265.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Moutarde_blanche",
+  "titre": "Moutarde blanche"
+ },
+ "trefle": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Trifolium_incarnatum_050606.jpg/500px-Trifolium_incarnatum_050606.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Tr%C3%A8fle_incarnat",
+  "titre": "Trèfle incarnat"
+ },
+ "tournesol": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Helianthus_annuus_0001.JPG/500px-Helianthus_annuus_0001.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Tournesol",
+  "titre": "Tournesol"
+ },
+ "lavande": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/Lavandula-angustifolia-flowering.JPG/500px-Lavandula-angustifolia-flowering.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Lavandula_angustifolia",
+  "titre": "Lavandula angustifolia"
+ },
+ "consoude": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Illustration_Symphytum_officinale0.jpg/500px-Illustration_Symphytum_officinale0.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Consoude_officinale",
+  "titre": "Consoude officinale"
+ },
+ "ortie": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Illustration_Urtica_dioica0_clean.jpg/500px-Illustration_Urtica_dioica0_clean.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Grande_ortie",
+  "titre": "Grande ortie"
+ },
+ "pommier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/20/Cleaned-Illustration_Malus_domestica.jpg/500px-Cleaned-Illustration_Malus_domestica.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Pommier_domestique",
+  "titre": "Pommier domestique"
+ },
+ "poirier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/111_Pirus_communis_L.jpg/500px-111_Pirus_communis_L.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Poirier_commun",
+  "titre": "Poirier commun"
+ },
+ "cerisier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Fr%C3%BChling_bl%C3%BChender_Kirschenbaum.jpg/500px-Fr%C3%BChling_bl%C3%BChender_Kirschenbaum.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Cerisier",
+  "titre": "Cerisier"
+ },
+ "prunier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/Bluebyrd_plum.jpg/500px-Bluebyrd_plum.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Prunier",
+  "titre": "Prunier"
+ },
+ "pecher": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Illustration_Prunus_persica0.jpg/500px-Illustration_Prunus_persica0.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/P%C3%AAcher",
+  "titre": "Pêcher"
+ },
+ "figuier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Ficus_carica_L%2C_1771.jpg/500px-Ficus_carica_L%2C_1771.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Ficus_carica",
+  "titre": "Ficus carica"
+ },
+ "noyer": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d7/Illustration_Juglans_regia1.jpg/500px-Illustration_Juglans_regia1.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Noyer_commun",
+  "titre": "Noyer commun"
+ },
+ "framboisier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/Rubus_idaeus_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-124.jpg/500px-Rubus_idaeus_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-124.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Framboisier",
+  "titre": "Framboisier"
+ },
+ "groseillier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/Ribes_rubrum_-_Rote_Johannisbeeren_1353.jpg/500px-Ribes_rubrum_-_Rote_Johannisbeeren_1353.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Ribes_rubrum",
+  "titre": "Ribes rubrum"
+ },
+ "myrtillier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Blueberries-In-Pack.jpg/500px-Blueberries-In-Pack.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Bleuet_(fruit)",
+  "titre": "Bleuet (fruit)"
+ },
+ "vigne": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Vineyard_in_Montone.jpg/500px-Vineyard_in_Montone.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Vigne",
+  "titre": "Vigne"
+ },
+ "kiwi": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Kiwi_%28Actinidia_chinensis%29_1_Luc_Viatour.jpg/500px-Kiwi_%28Actinidia_chinensis%29_1_Luc_Viatour.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Kiwi",
+  "titre": "Kiwi"
+ },
+ "agrumes": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Citrus_x_limon_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-041.jpg/500px-Citrus_x_limon_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-041.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Citronnier",
+  "titre": "Citronnier"
+ },
+ "olivier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Olea_europaea_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-229.jpg/500px-Olea_europaea_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-229.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Olivier",
+  "titre": "Olivier"
+ },
+ "pothos": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Pothos_epipremnum_feuilles.jpg/500px-Pothos_epipremnum_feuilles.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Epipremnum_aureum",
+  "titre": "Epipremnum aureum"
+ },
+ "monstera": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Cataphylls_on_Philodendron_3471s.jpg/500px-Cataphylls_on_Philodendron_3471s.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Faux_philodendron",
+  "titre": "Faux philodendron"
+ },
+ "sansevieria": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Snake_plant.jpg/500px-Snake_plant.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Dracaena_trifasciata",
+  "titre": "Dracaena trifasciata"
+ },
+ "zamioculcas": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Zamioculcas_zamiifolia_1.jpg/500px-Zamioculcas_zamiifolia_1.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Zamioculcas_zamiifolia",
+  "titre": "Zamioculcas zamiifolia"
+ },
+ "spathiphyllum": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Spathiphyllum_floribundum1.jpg/500px-Spathiphyllum_floribundum1.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Spathiphyllum",
+  "titre": "Spathiphyllum"
+ },
+ "chlorophytum": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8b/Buenos_Aires%2C_bot%C3%A1nico_1994_04.jpg/500px-Buenos_Aires%2C_bot%C3%A1nico_1994_04.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Chlorophytum_comosum",
+  "titre": "Chlorophytum comosum"
+ },
+ "aloe": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/ALOE_VERA_EN_FLEUR_-_4.jpg/500px-ALOE_VERA_EN_FLEUR_-_4.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Aloe_vera",
+  "titre": "Aloe vera"
+ },
+ "cactus": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Sempervivum_tectorum0.jpg/500px-Sempervivum_tectorum0.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Plante_succulente",
+  "titre": "Plante succulente"
+ },
+ "orchidee": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Phalaenopsis_orl1.jpg/500px-Phalaenopsis_orl1.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Phalaenopsis",
+  "titre": "Phalaenopsis"
+ },
+ "calathea": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Goeppertia_burle-marxii_%27Ice_Blue%27_foliage_and_inflorescence.jpg/500px-Goeppertia_burle-marxii_%27Ice_Blue%27_foliage_and_inflorescence.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Goeppertia",
+  "titre": "Goeppertia"
+ },
+ "ficus": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Ficus_benjamina_San_Jos%C3%A9.jpg/500px-Ficus_benjamina_San_Jos%C3%A9.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Ficus_benjamina",
+  "titre": "Ficus benjamina"
+ },
+ "dracaena": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Dracaena_marginata_IndoorPlant_0605k.jpg/500px-Dracaena_marginata_IndoorPlant_0605k.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Dragonnier_de_Madagascar",
+  "titre": "Dragonnier de Madagascar"
+ },
+ "philodendron": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/06/Philodendron_giganteum01.jpg/500px-Philodendron_giganteum01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Philodendron",
+  "titre": "Philodendron"
+ },
+ "pilea": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Chinese_money_plant.jpg/500px-Chinese_money_plant.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Pilea_peperomioides",
+  "titre": "Pilea peperomioides"
+ },
+ "fougere": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/NephrolepisExaltata.jpg/500px-NephrolepisExaltata.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Nephrolepis_exaltata",
+  "titre": "Nephrolepis exaltata"
+ },
+ "kentia": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Howea_forsteriana_Lord_Howe_Island.jpg/500px-Howea_forsteriana_Lord_Howe_Island.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Kentia",
+  "titre": "Kentia"
+ },
+ "anthurium": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/AnthuriumAndraenum2.jpg/500px-AnthuriumAndraenum2.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Anthurium_andraeanum",
+  "titre": "Anthurium andraeanum"
+ },
+ "begonia": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Begonia_scharffii.jpg/500px-Begonia_scharffii.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/B%C3%A9gonia",
+  "titre": "Bégonia"
+ },
+ "yucca": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Yucca_gigantea_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg/500px-Yucca_gigantea_-_Jard%C3%ADn_Bot%C3%A1nico_Canario_Viera_y_Clavijo_-_Gran_Canaria.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Yucca_gigantea",
+  "titre": "Yucca gigantea"
+ },
+ "mildiou": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Late_blight_on_potato_leaf_2.jpg/500px-Late_blight_on_potato_leaf_2.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Mildiou_de_la_pomme_de_terre",
+  "titre": "Mildiou de la pomme de terre"
+ },
+ "oidium": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Tomate_Mehltau_Blatt.jpg/500px-Tomate_Mehltau_Blatt.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/O%C3%AFdium",
+  "titre": "Oïdium"
+ },
+ "rouille": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Stem_rust_close_up.jpg/500px-Stem_rust_close_up.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Pucciniales",
+  "titre": "Pucciniales"
+ },
+ "botrytis": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Aardbei_Lambada_vruchtrot_Botrytis_cinerea.jpg/500px-Aardbei_Lambada_vruchtrot_Botrytis_cinerea.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Botrytis_cinerea",
+  "titre": "Botrytis cinerea"
+ },
+ "alternariose": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Alternaria_solani_-_stem_lesions.jpg/500px-Alternaria_solani_-_stem_lesions.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Alternaria_solani",
+  "titre": "Alternaria solani"
+ },
+ "fonte-semis": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9e/Pythium_5361373.png/500px-Pythium_5361373.png?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Fonte_des_semis",
+  "titre": "Fonte des semis"
+ },
+ "hernie-chou": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Knolvoet_bij_bloemkool_%28Plasmodiophora_brassicae_on_cauliflower%29.jpg/500px-Knolvoet_bij_bloemkool_%28Plasmodiophora_brassicae_on_cauliflower%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Hernie_du_chou",
+  "titre": "Hernie du chou"
+ },
+ "cloque": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Cloque_du_p%C3%AAcher_-_01.jpg/500px-Cloque_du_p%C3%AAcher_-_01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Cloque_du_p%C3%AAcher",
+  "titre": "Cloque du pêcher"
+ },
+ "tavelure": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/36/Apfelschorf.jpg/500px-Apfelschorf.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Tavelure_du_pommier",
+  "titre": "Tavelure du pommier"
+ },
+ "moniliose": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Monilia_sp._on_apple.jpg/500px-Monilia_sp._on_apple.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Moniliose",
+  "titre": "Moniliose"
+ },
+ "anthracnose": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Grapeanthracnose.jpg/500px-Grapeanthracnose.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Anthracnose",
+  "titre": "Anthracnose"
+ },
+ "fusariose": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/CSIRO_ScienceImage_11263_White_heads_of_wheat_caused_by_Fusarium_crown_rot.jpg/500px-CSIRO_ScienceImage_11263_White_heads_of_wheat_caused_by_Fusarium_crown_rot.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Fusariose",
+  "titre": "Fusariose"
+ },
+ "mosaique": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Cucumber_mosaic_virus_symptoms.jpg/500px-Cucumber_mosaic_virus_symptoms.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Virus_de_la_mosa%C3%AFque_du_concombre",
+  "titre": "Virus de la mosaïque du concombre"
+ },
+ "septoriose": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Septoria-tritici.jpg/500px-Septoria-tritici.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Septoriose",
+  "titre": "Septoriose"
+ },
+ "cercosporiose": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Cercospora_beticola_on_sugar_beet.jpeg/500px-Cercospora_beticola_on_sugar_beet.jpeg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Cercospora_beticola",
+  "titre": "Cercospora beticola"
+ },
+ "mildiou-laitue": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/IJssla_wit_%28Iceberg_with_Bremia_lactucae%29.jpg/500px-IJssla_wit_%28Iceberg_with_Bremia_lactucae%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Bremia_lactucae",
+  "titre": "Bremia lactucae"
+ },
+ "chancre": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0a/Nectria_galligena.jpg/500px-Nectria_galligena.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Chancre_nectrien",
+  "titre": "Chancre nectrien"
+ },
+ "criblure": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Coryneum_01.jpg/500px-Coryneum_01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Criblure_%C3%A0_Coryneum",
+  "titre": "Criblure à Coryneum"
+ },
+ "gommose": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Plant_sap.jpg/500px-Plant_sap.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Gommose",
+  "titre": "Gommose"
+ },
+ "rouille-grillagee": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Birnengitterrost_Baum.jpg/500px-Birnengitterrost_Baum.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Rouille_grillag%C3%A9e_du_poirier",
+  "titre": "Rouille grillagée du poirier"
+ },
+ "chlorose": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Sweetgum-leaf-interveinal-chlorosis.jpg/500px-Sweetgum-leaf-interveinal-chlorosis.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Chlorose",
+  "titre": "Chlorose"
+ },
+ "gale-commune": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Aardappelschurft_%28Streptomyces_scabies_on_potato%29.jpg/500px-Aardappelschurft_%28Streptomyces_scabies_on_potato%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Gale_commune",
+  "titre": "Gale commune"
+ },
+ "pucerons": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/Sa_aphid_colony_highres_dustfree.jpg/500px-Sa_aphid_colony_highres_dustfree.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Aphidoidea",
+  "titre": "Aphidoidea"
+ },
+ "limaces": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Slugs_1896.jpg/500px-Slugs_1896.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Limace",
+  "titre": "Limace"
+ },
+ "doryphore": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Colorado_potato_beetle.jpg/500px-Colorado_potato_beetle.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Doryphore",
+  "titre": "Doryphore"
+ },
+ "altise": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Altica_oleracea01.jpg/500px-Altica_oleracea01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Alticinae",
+  "titre": "Alticinae"
+ },
+ "pieride": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Pieris_brassicae_%286%29.jpg/500px-Pieris_brassicae_%286%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Pi%C3%A9ride_du_chou",
+  "titre": "Piéride du chou"
+ },
+ "mouche-carotte": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Chamaepsila_rosae%2C_wortelvliegen.jpg/500px-Chamaepsila_rosae%2C_wortelvliegen.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Mouche_de_la_carotte",
+  "titre": "Mouche de la carotte"
+ },
+ "mouche-poireau": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Mineuse_des_feuilles_d%27allium-profil.jpg/500px-Mineuse_des_feuilles_d%27allium-profil.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Mineuse_des_feuilles_d'allium",
+  "titre": "Mineuse des feuilles d'allium"
+ },
+ "teigne-poireau": {
+  "img": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Acrolepiopsis_assectella_%28ento-csiro-au%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "page": "https://fr.wikipedia.org/wiki/Teigne_du_poireau",
+  "titre": "Teigne du poireau"
+ },
+ "mouche-oignon": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Uienvlieg_maden.jpg/500px-Uienvlieg_maden.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Delia_antiqua",
+  "titre": "Delia antiqua"
+ },
+ "mouche-chou": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Delia_radicum%2C_Bala_lakeshore%2C_North_Wales%2C_August_2011_%2817810914460%29.jpg/500px-Delia_radicum%2C_Bala_lakeshore%2C_North_Wales%2C_August_2011_%2817810914460%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Mouche_du_chou",
+  "titre": "Mouche du chou"
+ },
+ "mouche-celeri": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Euleia_heraclei_2.jpg/500px-Euleia_heraclei_2.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Mouche_du_c%C3%A9leri",
+  "titre": "Mouche du céleri"
+ },
+ "aleurode": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Weisse-Fliege.jpg/500px-Weisse-Fliege.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Aleurode",
+  "titre": "Aleurode"
+ },
+ "tetranyque": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Tetranychus_urticae_%284883560779%29.jpg/500px-Tetranychus_urticae_%284883560779%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Tetranychus_urticae",
+  "titre": "Tetranychus urticae"
+ },
+ "thrips": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Thysanoptera.jpg/500px-Thysanoptera.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Thysanoptera",
+  "titre": "Thysanoptera"
+ },
+ "cochenilles": {
+  "img": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Cochineal_drawing.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "page": "https://fr.wikipedia.org/wiki/Coccoidea",
+  "titre": "Coccoidea"
+ },
+ "carpocapse": {
+  "img": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Cydia_pomonella_%28Falter%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "page": "https://fr.wikipedia.org/wiki/Carpocapse_des_pommes_et_des_poires",
+  "titre": "Carpocapse des pommes et des poires"
+ },
+ "mouche-cerise": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Spotted-wing_Drosophila_%28Drosophila_suzukii%29_male_%2815359228246%29.jpg/500px-Spotted-wing_Drosophila_%28Drosophila_suzukii%29_male_%2815359228246%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Drosophila_suzukii",
+  "titre": "Drosophila suzukii"
+ },
+ "noctuelles": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Noctua_comes01.jpg/500px-Noctua_comes01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Noctuidae",
+  "titre": "Noctuidae"
+ },
+ "taupin": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Ctenicera_cuprea_2006.06.27_10.59.14-p6270133.jpg/500px-Ctenicera_cuprea_2006.06.27_10.59.14-p6270133.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Elateridae",
+  "titre": "Elateridae"
+ },
+ "vers-blancs": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Melolontha_melolontha_MHNT.jpg/500px-Melolontha_melolontha_MHNT.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Melolontha_melolontha",
+  "titre": "Melolontha melolontha"
+ },
+ "otiorhynque": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/ARS_Otiorhynchus_sulcatus.jpg/500px-ARS_Otiorhynchus_sulcatus.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Otiorhynque_de_la_vigne",
+  "titre": "Otiorhynque de la vigne"
+ },
+ "courtiliere": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/Gryllotalpa_gryllotalpa_MHNT.jpg/500px-Gryllotalpa_gryllotalpa_MHNT.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Gryllotalpa_gryllotalpa",
+  "titre": "Gryllotalpa gryllotalpa"
+ },
+ "bruche": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Bruchus_pisorum01.jpg/500px-Bruchus_pisorum01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Bruchinae",
+  "titre": "Bruchinae"
+ },
+ "criocere-asperge": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Crioceris_asparagi_1_beentree.jpg/500px-Crioceris_asparagi_1_beentree.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Crioceris_asparagi",
+  "titre": "Crioceris asparagi"
+ },
+ "chrysomele-romarin": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Chrysomelidae_-_Chrysolina_americana.JPG/500px-Chrysomelidae_-_Chrysolina_americana.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Chrysolina_americana",
+  "titre": "Chrysolina americana"
+ },
+ "pyrale-mais": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Ostrinia_nubilalis01.jpg/500px-Ostrinia_nubilalis01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Pyrale_du_ma%C3%AFs",
+  "titre": "Pyrale du maïs"
+ },
+ "puceron-lanigere": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Ladybird_aphid_7462.jpg/500px-Ladybird_aphid_7462.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Puceron_lanig%C3%A8re_du_pommier",
+  "titre": "Puceron lanigère du pommier"
+ },
+ "psylle-poirier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/48/Psylla_pyri.jpg/500px-Psylla_pyri.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Cacopsylla_pyri",
+  "titre": "Cacopsylla pyri"
+ },
+ "psylle-laurier": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Trioza_alacris.jpeg/500px-Trioza_alacris.jpeg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Lauritrioza_alacris",
+  "titre": "Lauritrioza alacris"
+ },
+ "ver-framboise": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Teckning_av_hallonskallbage.jpg/500px-Teckning_av_hallonskallbage.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Byturus_tomentosus",
+  "titre": "Byturus tomentosus"
+ },
+ "carpocapse-prune": {
+  "img": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Cydia_funebrana_ugglan.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "page": "https://fr.wikipedia.org/wiki/Carpocapse_des_prunes",
+  "titre": "Carpocapse des prunes"
+ },
+ "mouche-olive": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/68/Fly_December_2007-11.jpg/500px-Fly_December_2007-11.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Mouche_de_l'olive",
+  "titre": "Mouche de l'olive"
+ },
+ "balanin": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Curculio_nucum01.jpg/500px-Curculio_nucum01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Balanin_des_noisettes",
+  "titre": "Balanin des noisettes"
+ },
+ "cicadelle": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Graphocephala_coccinea_6.jpg/500px-Graphocephala_coccinea_6.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Cicadellidae",
+  "titre": "Cicadellidae"
+ },
+ "guepes": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Vespa_velutina_nigrithorax_MHNT.jpg/500px-Vespa_velutina_nigrithorax_MHNT.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Vespa_velutina",
+  "titre": "Vespa velutina"
+ },
+ "fumagine": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/38/Scale_and_sooty_mold_on_a_Eucalyptus_tree.jpg/500px-Scale_and_sooty_mold_on_a_Eucalyptus_tree.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Fumagine",
+  "titre": "Fumagine"
+ },
+ "campagnol": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/%27I_see_no_ships%27_%285140185563%29.jpg/500px-%27I_see_no_ships%27_%285140185563%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Arvicola_amphibius",
+  "titre": "Arvicola amphibius"
+ },
+ "taupe": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Talpa_europaea_%28Freising%2C_Deutschland%29_4.jpg/500px-Talpa_europaea_%28Freising%2C_Deutschland%29_4.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Taupe_d'Europe",
+  "titre": "Taupe d'Europe"
+ },
+ "pourriture-racines": {
+  "img": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Pythium_myriotylum.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+  "page": "https://fr.wikipedia.org/wiki/Pythium",
+  "titre": "Pythium"
+ },
+ "sciarides": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Sciara_hemerobioides_-_Flickr_-_gailhampshire.jpg/500px-Sciara_hemerobioides_-_Flickr_-_gailhampshire.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Sciaridae",
+  "titre": "Sciaridae"
+ },
+ "poule": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Male_and_female_chicken_sitting_together.jpg/500px-Male_and_female_chicken_sitting_together.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Gallus_gallus_domesticus",
+  "titre": "Gallus gallus domesticus"
+ },
+ "canard": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Pekin_Ducks_cropped.jpg/500px-Pekin_Ducks_cropped.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Canard_domestique",
+  "titre": "Canard domestique"
+ },
+ "oie": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/White_Sebastopol_Goose.jpg/500px-White_Sebastopol_Goose.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Oie_domestique",
+  "titre": "Oie domestique"
+ },
+ "pintade": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/15/Gallina_de_Guinea_%28Numida_meleagris%29%2C_parque_nacional_del_lago_Nakuru%2C_Kenia%2C_2024-05-18%2C_DD_40.jpg/500px-Gallina_de_Guinea_%28Numida_meleagris%29%2C_parque_nacional_del_lago_Nakuru%2C_Kenia%2C_2024-05-18%2C_DD_40.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Pintade_de_Numidie",
+  "titre": "Pintade de Numidie"
+ },
+ "caille": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7c/Coturnix_japonica%2C_Yehliu%2C_Taiwan_3.jpg/500px-Coturnix_japonica%2C_Yehliu%2C_Taiwan_3.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Caille_du_Japon",
+  "titre": "Caille du Japon"
+ },
+ "lapin": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Bobby_9_ans.jpg/500px-Bobby_9_ans.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Lapin_domestique",
+  "titre": "Lapin domestique"
+ },
+ "chevre": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/ba/She-goat_J1.jpg/500px-She-goat_J1.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Ch%C3%A8vre",
+  "titre": "Chèvre"
+ },
+ "mouton": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2c/Flock_of_sheep.jpg/500px-Flock_of_sheep.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Mouton",
+  "titre": "Mouton"
+ },
+ "ane": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9d/%C3%82ne_ari%C3%A8ge.jpg/500px-%C3%82ne_ari%C3%A8ge.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/%C3%82ne",
+  "titre": "Âne"
+ },
+ "abeille": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/%28MHNT%29_Apis_mellifera_%28female%29_-_on_viburnum_tinus_flowers.jpg/500px-%28MHNT%29_Apis_mellifera_%28female%29_-_on_viburnum_tinus_flowers.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Apis_mellifera",
+  "titre": "Apis mellifera"
+ },
+ "cochon": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/Pigs_in_the_Altai_Mountains._Village_Ortolyk.jpg/500px-Pigs_in_the_Altai_Mountains._Village_Ortolyk.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Porc",
+  "titre": "Porc"
+ },
+ "coccinelle": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Coccinelle_%281%29.jpg/500px-Coccinelle_%281%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Coccinellidae",
+  "titre": "Coccinellidae"
+ },
+ "syrphe": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Syrphidae_poster.jpg/500px-Syrphidae_poster.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Syrphidae",
+  "titre": "Syrphidae"
+ },
+ "chrysope": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Chrysopa_perla01.jpg/500px-Chrysopa_perla01.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Chrysopidae",
+  "titre": "Chrysopidae"
+ },
+ "carabe": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Calosoma_sycophanta.JPG/500px-Calosoma_sycophanta.JPG?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Carabidae",
+  "titre": "Carabidae"
+ },
+ "herisson": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Erinaceus_europaeus_LC0119.jpg/500px-Erinaceus_europaeus_LC0119.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Erinaceus_europaeus",
+  "titre": "Erinaceus europaeus"
+ },
+ "mesange": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Parus_major_2_Luc_Viatour.jpg/500px-Parus_major_2_Luc_Viatour.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/M%C3%A9sange_charbonni%C3%A8re",
+  "titre": "Mésange charbonnière"
+ },
+ "crapaud": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Bufo_bufo_sitting-Iric2006.jpg/500px-Bufo_bufo_sitting-Iric2006.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Crapaud_commun",
+  "titre": "Crapaud commun"
+ },
+ "abeilles": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Bee_montage.jpg/500px-Bee_montage.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Abeille",
+  "titre": "Abeille"
+ },
+ "chauve-souris": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Pipistrellus_pipistrellus_%285933130195%29.jpg/500px-Pipistrellus_pipistrellus_%285933130195%29.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Pipistrellus_pipistrellus",
+  "titre": "Pipistrellus pipistrellus"
+ },
+ "perce-oreille": {
+  "img": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/47/Cadeladefrade_045eue.jpg/500px-Cadeladefrade_045eue.jpg?utm_source=fr.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+  "page": "https://fr.wikipedia.org/wiki/Forficula",
+  "titre": "Forficula"
+ }
+}

@@ -1,0 +1,43 @@
+// Contrôle de cohérence du contenu, exécuté à chaque build.
+// Échoue si une référence croisée pointe vers un id inexistant.
+import { PLANTES, PROBLEMES, REMEDES, GUIDES, ANIMAUX, SIGNES, AUXILIAIRES, CALENDRIER, lienVers } from "../src/data/index";
+
+const errors: string[] = [];
+const ids = new Set<string>();
+const dup = (kind: string, arr: { id: string }[]) => {
+  for (const x of arr) {
+    if (ids.has(x.id)) errors.push(`${kind} : id en double « ${x.id} »`);
+    ids.add(x.id);
+  }
+};
+dup("plante", PLANTES); dup("problème", PROBLEMES); dup("remède", REMEDES); dup("guide", GUIDES); dup("animal", ANIMAUX); dup("auxiliaire", AUXILIAIRES);
+
+const P = new Set(PLANTES.map((p) => p.id));
+const PB = new Set(PROBLEMES.map((p) => p.id));
+const R = new Set(REMEDES.map((p) => p.id));
+
+for (const p of PLANTES) {
+  for (const a of [...p.amis, ...p.ennemis]) if (!P.has(a)) errors.push(`plante ${p.id} : voisin inconnu « ${a} »`);
+  for (const a of p.amis) if (p.ennemis.includes(a)) errors.push(`plante ${p.id} : « ${a} » à la fois ami et ennemi`);
+  for (const pb of p.problemes) if (!PB.has(pb)) errors.push(`plante ${p.id} : problème inconnu « ${pb} »`);
+  if (!p.intro || !p.etapes.length) errors.push(`plante ${p.id} : fiche incomplète`);
+}
+for (const pb of PROBLEMES) {
+  for (const pl of pb.plantes) if (pl !== "*" && !P.has(pl)) errors.push(`problème ${pb.id} : plante inconnue « ${pl} »`);
+  for (const r of pb.remedes) if (!R.has(r)) errors.push(`problème ${pb.id} : remède inconnu « ${r} »`);
+  for (const s of pb.signes) if (!SIGNES[s]) errors.push(`problème ${pb.id} : signe inconnu « ${s} »`);
+  if (!pb.signes.length) errors.push(`problème ${pb.id} : aucun signe pour le diagnostic`);
+}
+for (const r of REMEDES) for (const c of r.contre) if (!PB.has(c)) errors.push(`remède ${r.id} : problème inconnu « ${c} »`);
+for (const g of GUIDES) {
+  for (const l of g.liens ?? []) if (!lienVers(l)) errors.push(`guide ${g.id} : lien inconnu « ${l} »`);
+  if (g.etapes.length < 2) errors.push(`guide ${g.id} : trop peu d'étapes`);
+}
+if (CALENDRIER.length !== 12) errors.push("calendrier : 12 mois attendus");
+for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.includes(s))) errors.push(`signe « ${s} » jamais utilisé`);
+
+if (errors.length) {
+  console.error(`✗ ${errors.length} erreur(s) dans le contenu :\n  ` + errors.join("\n  "));
+  process.exit(1);
+}
+console.log(`✓ Contenu cohérent : ${PLANTES.length} plantes, ${PROBLEMES.length} problèmes, ${REMEDES.length} remèdes, ${GUIDES.length} tutoriels, ${ANIMAUX.length} animaux.`);
