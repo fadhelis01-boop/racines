@@ -8,16 +8,29 @@ import { verifierRotation, TYPES_ESPACE } from "../lib/garden";
 import { savePhoto } from "../lib/photos";
 import { A, Empty, StoredPhoto, toast } from "../components/ui";
 import { AjoutCulture } from "./PlanteFiche";
+import MesPlantes from "../components/MesPlantes";
 
-const TABS: [string, string][] = [["cultures", "🌱 Cultures"], ["plan", "🗺️ Plan et rotation"], ["recoltes", "🧺 Récoltes"], ["journal", "📓 Journal"], ["graines", "🏺 Graines"], ["animaux", "🐔 Animaux"]];
+const TOUS: [string, string][] = [["mesplantes", "🌿 Mes plantes"], ["cultures", "🌱 Cultures"], ["plan", "🗺️ Plan et rotation"], ["recoltes", "🧺 Récoltes"], ["journal", "📓 Journal"], ["graines", "🏺 Graines"], ["animaux", "🐔 Animaux"]];
+const PAR_PROFIL: Record<string, string[]> = {
+  appartement: ["mesplantes", "cultures", "journal", "graines"],
+  balcon: ["mesplantes", "cultures", "recoltes", "journal", "graines"],
+  "petit-jardin": ["cultures", "plan", "recoltes", "mesplantes", "journal", "graines", "animaux"],
+  jardin: ["cultures", "plan", "recoltes", "mesplantes", "journal", "graines", "animaux"],
+};
 
-export default function Jardin({ tab = "cultures" }: { tab?: string }) {
+export default function Jardin({ tab: tab0 }: { tab?: string }) {
+  const situation = useStore((s) => s.settings.situation);
+  const hasAnimals = useStore((s) => s.troupeaux.length > 0);
+  const ids = PAR_PROFIL[situation].filter((k) => k !== "animaux" || situation === "jardin" || hasAnimals);
+  const TABS = TOUS.filter(([k]) => ids.includes(k) || k === tab0).sort((a, b) => ids.indexOf(a[0]) - ids.indexOf(b[0]));
+  const tab = tab0 ?? ids[0];
   return (
     <div>
-      <h1>🧺 Mon jardin</h1>
+      <h1>{situation === "appartement" ? "🌿 Mes plantes et ma maison" : "🧺 Mon jardin"}</h1>
       <div className="tabs" role="tablist">
         {TABS.map(([k, l]) => <button key={k} role="tab" aria-selected={tab === k} className={tab === k ? "on" : ""} onClick={() => go(`/jardin/${k}`)}>{l}</button>)}
       </div>
+      {tab === "mesplantes" && <MesPlantes />}
       {tab === "cultures" && <Cultures />}
       {tab === "plan" && <Plan />}
       {tab === "recoltes" && <Recoltes />}

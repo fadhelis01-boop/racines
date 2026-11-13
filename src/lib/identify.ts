@@ -19,15 +19,42 @@ async function toBase64(b: Blob): Promise<string> {
 }
 
 // ---------- Pl@ntNet ----------
-export interface PlantNetResult { score: number; latin: string; noms: string[]; famille: string; ficheId?: string }
+export interface PlantNetResult { score: number; latin: string; noms: string[]; famille: string; ficheId?: string; exact?: boolean }
 
+// Noms scientifiques connus de chaque fiche (nom principal + synonymes), normalisés
+const clean = (s: string) => s.toLowerCase().replace(/×|\bx\b/g, " ").replace(/\bspp?\.?/g, " ").replace(/\bvar\..*$/, "").replace(/[^a-z ]/g, " ").replace(/\s+/g, " ").trim();
+let NOMS: { id: string; binomes: Set<string>; genres: Set<string> }[] | null = null;
+function noms() {
+  if (NOMS) return NOMS;
+  NOMS = PLANTES.map((p) => {
+    const all = [...p.latin.split(/[,/]|\bet\b|…/), ...(p.latins ?? [])].map(clean).filter(Boolean);
+    const binomes = new Set<string>(), genres = new Set<string>();
+    let genrePrec = "";
+    for (const n of all) {
+      const w = n.split(" ");
+      if (w[0].length <= 2 && genrePrec) w[0] = genrePrec; // « D. fragrans »
+      genrePrec = w[0];
+      if (w.length >= 2) binomes.add(w[0] + " " + w[1]);
+      else genres.add(w[0]); // fiche ou synonyme au niveau du genre (« Phalaenopsis », « Echeveria »)
+    }
+    return { id: p.id, binomes, genres };
+  });
+  return NOMS;
+}
+
+// Renvoie la fiche correspondante : exacte (même espèce) ou « genre » (fiche qui
+// couvre tout le genre). Jamais une autre espèce du même genre au hasard.
 export function ficheParLatin(latin: string): string | undefined {
-  const bin = latin.toLowerCase().split(" ").slice(0, 2).join(" ");
-  const genre = bin.split(" ")[0];
-  const exact = PLANTES.find((p) => p.latin.toLowerCase().includes(bin));
-  if (exact) return exact.id;
-  return PLANTES.find((p) => p.latin.toLowerCase().split(/[ ,/]+/).includes(genre) && /spp|×/.test(p.latin))?.id
-    ?? PLANTES.find((p) => p.latin.toLowerCase().startsWith(genre + " "))?.id;
+  return ficheLatin(latin)?.id;
+}
+export function ficheLatin(latin: string): { id: string; exact: boolean } | undefined {
+  const w = clean(latin).split(" ");
+  const bin = w.slice(0, 2).join(" ");
+  const exact = noms().find((n) => n.binomes.has(bin));
+  if (exact) return { id: exact.id, exact: true };
+  const genre = noms().find((n) => n.genres.has(w[0]));
+  if (genre) return { id: genre.id, exact: false };
+  return undefined;
 }
 
 export async function identifyPlantNet(photos: Blob[], organe: string): Promise<PlantNetResult[]> {
@@ -49,7 +76,8 @@ export async function identifyPlantNet(photos: Blob[], organe: string): Promise<
     latin: x.species.scientificNameWithoutAuthor,
     noms: x.species.commonNames ?? [],
     famille: x.species.family?.scientificNameWithoutAuthor ?? "",
-    ficheId: ficheParLatin(x.species.scientificNameWithoutAuthor),
+    ficheId: ficheLatin(x.species.scientificNameWithoutAuthor)?.id,
+    exact: ficheLatin(x.species.scientificNameWithoutAuthor)?.exact,
   }));
 }
 

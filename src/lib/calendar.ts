@@ -165,6 +165,11 @@ export function buildIcs(s: State, opts: { mois: number; travaux: boolean; mesPl
       if (d > now) ev(`soin-${t.id}-${soin.type}-${isoDate(d)}`, d, `${a!.emoji} ${t.nom} : ${soin.type}`, "Rappel Racines");
     }
   }
+  if (s.plantes.length) {
+    // Un rappel hebdomadaire « tour des plantes », le samedi matin
+    const d = new Date(now); d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7 || 7));
+    lines.push("BEGIN:VEVENT", `UID:tour-plantes@racines`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${icsDate(d)}`, "RRULE:FREQ=WEEKLY", `SUMMARY:${icsEsc("🌿 Tour des plantes : vérifier la terre, arroser si sec")}`, `DESCRIPTION:${icsEsc(s.plantes.map((p) => p.surnom).join(", "))}`, "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Tour des plantes", "TRIGGER:PT10H", "END:VALARM", "END:VEVENT");
+  }
   lines.push("END:VCALENDAR");
   return lines.join("\r\n");
 }

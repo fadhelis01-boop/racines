@@ -1,5 +1,7 @@
 // Contrôle de cohérence du contenu, exécuté à chaque build.
 // Échoue si une référence croisée pointe vers un id inexistant.
+import { ENRICH } from "../src/data/interieur2";
+import { TRAITS } from "../src/data/traits";
 import { PLANTES, PROBLEMES, REMEDES, GUIDES, ANIMAUX, SIGNES, AUXILIAIRES, CALENDRIER, lienVers } from "../src/data/index";
 
 const errors: string[] = [];
@@ -23,6 +25,7 @@ for (const p of PLANTES) {
   if (!p.intro || !p.etapes.length) errors.push(`plante ${p.id} : fiche incomplète`);
 }
 for (const pb of PROBLEMES) {
+  for (const k of Object.keys(ENRICH)) if (!P.has(k)) errors.push(`enrichissement : fiche inconnue « ${k} »`);
   for (const pl of pb.plantes) if (pl !== "*" && !P.has(pl)) errors.push(`problème ${pb.id} : plante inconnue « ${pl} »`);
   for (const r of pb.remedes) if (!R.has(r)) errors.push(`problème ${pb.id} : remède inconnu « ${r} »`);
   for (const s of pb.signes) if (!SIGNES[s]) errors.push(`problème ${pb.id} : signe inconnu « ${s} »`);
@@ -32,6 +35,13 @@ for (const r of REMEDES) for (const c of r.contre) if (!PB.has(c)) errors.push(`
 for (const g of GUIDES) {
   for (const l of g.liens ?? []) if (!lienVers(l)) errors.push(`guide ${g.id} : lien inconnu « ${l} »`);
   if (g.etapes.length < 2) errors.push(`guide ${g.id} : trop peu d'étapes`);
+}
+for (const k of Object.keys(TRAITS)) if (!P.has(k)) errors.push(`traits : fiche inconnue « ${k} »`);
+for (const p of PLANTES) {
+  for (const so of p.sosies ?? []) if (so.id && !P.has(so.id)) errors.push(`plante ${p.id} : sosie inconnu « ${so.id} »`);
+  if (p.categorie === "interieur" && !p.soins) errors.push(`plante d'intérieur ${p.id} : rythme de soins manquant`);
+  if (p.categorie === "interieur" && p.sansDangerAnimaux === undefined) errors.push(`plante d'intérieur ${p.id} : toxicité animaux non renseignée`);
+  if (p.categorie === "interieur" && !TRAITS[p.id]) errors.push(`plante d'intérieur ${p.id} : caractères d'identification manquants`);
 }
 if (CALENDRIER.length !== 12) errors.push("calendrier : 12 mois attendus");
 for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.includes(s))) errors.push(`signe « ${s} » jamais utilisé`);

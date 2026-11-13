@@ -17,7 +17,10 @@ export function diagnostiquer(opts: { planteId?: string; signes: string[]; mois:
       else if (!p.plantes.includes("*")) continue; // ce problème ne touche pas cette plante
       else if (pl.problemes.includes(p.id)) score += 6;
     }
-    if (interieur && !p.interieur) score -= 6;
+    // Plante d'intérieur : uniquement les problèmes d'intérieur ou ceux connus pour cette plante
+    if (interieur && !p.interieur && !pl?.problemes.includes(p.id)) continue;
+    // Plante du jardin : pas les troubles typiques de l'appartement, sauf s'ils la concernent
+    if (!interieur && pl && ["air-sec", "chute-feuilles", "pas-floraison", "oedeme", "jaunissement-normal"].includes(p.id) && !pl.problemes.includes(p.id) && !p.plantes.includes(pl.id)) continue;
     if (!interieur && p.interieur && p.plantes.length === 1 && p.plantes[0] === "*" && ["pourriture-racines", "air-sec", "manque-lumiere", "sciarides", "coup-soleil"].includes(p.id)) score -= 4;
     if (p.mois.includes(opts.mois as never)) score += 2;
     if (pl?.problemes.includes(p.id)) score += 4;

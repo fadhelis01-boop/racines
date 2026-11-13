@@ -1,0 +1,130 @@
+import type { Guide } from "./types";
+
+// Tutoriels pour jardiner en appartement, sans balcon
+export const GUIDES_INTERIEUR: Guide[] = [
+  {
+    id: "lumiere-led", titre: "La lumière en intérieur : mesurer et compléter avec une lampe LED", rubrique: "interieur", emoji: "💡", niveau: 1, duree: "30 minutes",
+    resume: "La lumière est le facteur n° 1 de réussite en appartement. Comment savoir ce que reçoit chaque fenêtre, et comment choisir et régler une lampe horticole sans se tromper.",
+    materiel: ["Votre main et une feuille blanche (test de l'ombre)", "Optionnel : application de luxmètre sur téléphone", "Lampe LED horticole « spectre complet » (lumière blanche), minuterie"],
+    etapes: [
+      { titre: "Le test de l'ombre de la main", texte: "À midi, par temps clair, tenez votre main à 30 cm au-dessus d'une feuille blanche posée à l'endroit de la plante. Ombre nette aux contours précis : lumière forte (cactus, succulentes, agrumes, strelitzia). Ombre floue mais visible : lumière moyenne (la plupart des plantes vertes). Ombre à peine perceptible : lumière faible (aspidistra, zamioculcas, sansevieria, pothos, aglaonema seulement)." },
+      { titre: "Ce que reçoit chaque fenêtre", texte: "Sud : la plus lumineuse, soleil direct qui peut brûler en été derrière la vitre (voilage). Ouest : soleil chaud de l'après-midi. Est : soleil doux du matin, idéal pour la majorité des plantes, orchidées, violettes africaines. Nord : lumière douce et constante mais faible ; réservez-la aux plantes d'ombre. À 2 mètres de la fenêtre, la lumière est souvent divisée par 4 à 10 : c'est la raison n° 1 des plantes qui s'étiolent.", astuce: "Les applications de luxmètre du téléphone donnent un ordre de grandeur : moins de 1 000 lux = faible ; 1 000 à 5 000 = moyenne ; plus de 10 000 = forte." },
+      { titre: "Quand faut-il une lampe ?", texte: "En hiver dans une pièce sombre, pour les semis et les aromatiques, pour cultiver des légumes en intérieur, ou dans une pièce sans fenêtre. Signes de manque de lumière : tiges longues et pâles, plante penchée, plus de fleurs, feuilles panachées qui reverdissent." },
+      { titre: "Choisir la lampe", texte: "Prenez une LED « spectre complet » à lumière blanche (plus agréable à vivre que le violet, aussi efficace). Ne vous fiez pas aux « watts équivalents » des emballages : regardez la puissance réelle consommée. Repères : 10 à 20 W réels pour une étagère de plantes vertes ou d'aromatiques ; 30 à 50 W réels par m² pour des légumes-fruits (tomates cerises, poivrons) ou des semis." },
+      { titre: "Régler distance et durée", texte: "Plantes vertes : 30 à 60 cm au-dessus. Semis et aromatiques : 15 à 30 cm. Durée : 10 à 12 h par jour pour les plantes vertes, 12 à 16 h pour les semis et légumes. Une minuterie (prise programmable) fait le travail. Les plantes ont besoin d'une nuit noire : jamais 24 h sur 24.", attention: "Si les feuilles pâlissent ou se décolorent près de la lampe, éloignez-la ; si les tiges s'allongent, rapprochez-la." },
+    ],
+    conseils: ["Nettoyez vitres et feuilles : la poussière bloque une part importante de la lumière.", "Tournez les pots d'un quart de tour chaque semaine pour une croissance régulière."],
+    video: "choisir lampe led horticole plantes intérieur tuto", liens: ["manque-lumiere", "plantes-interieur-bases", "potager-interieur"],
+  },
+  {
+    id: "potager-interieur", titre: "Un potager d'intérieur sans balcon", rubrique: "interieur", emoji: "🍅", niveau: 2, duree: "1 heure d'installation",
+    resume: "Aromatiques, salades à couper, micro-pousses, et même tomates cerises, piments et fraises sous une lampe : ce qui marche vraiment dans un appartement.",
+    materiel: ["Rebord de fenêtre sud ou ouest, ou étagère avec lampe LED (30 à 50 W réels par m²)", "Pots percés de 2 à 15 L, soucoupes", "Terreau potager + compost ou lombricompost", "Pinceau (pollinisation)"],
+    etapes: [
+      { titre: "Ce qui réussit facilement", texte: "Sans lampe, sur une fenêtre lumineuse : ciboulette, persil, menthe, thym, laurier, micro-pousses, salade à couper, oignons verts en repousse, piments en été. Avec lampe : basilic toute l'année, laitues, radis, tomates cerises naines, poivrons et piments, fraises remontantes." },
+      { titre: "Tomates et piments en appartement", texte: "Choisissez des variétés naines (« Micro Tom », « Tiny Tim », « Balconi », piments « Numex », « Basket of Fire »). Pot de 10 à 15 L, 14 à 16 h de lumière par jour, 20-25 °C le jour.", attention: "Sans insectes pollinisateurs, il faut polliniser vous-même : secouez chaque jour les bouquets de fleurs de tomates et de piments, ou passez un pinceau de fleur en fleur pour les fraises." },
+      { titre: "Arroser et nourrir", texte: "Les pots sèchent vite près d'une fenêtre ou sous une lampe. Arrosez quand le dessus est sec, et apportez un engrais organique liquide tous les 15 jours (ou du lombrithé dilué) : les plantes en pot n'ont que ce que vous leur donnez." },
+      { titre: "Organiser les récoltes", texte: "Semez peu et souvent (micro-pousses chaque semaine, salade à couper tous les 15 jours) pour récolter en continu plutôt que tout en même temps." },
+    ],
+    video: "potager intérieur appartement sans balcon lampe tomates cerises", liens: ["lumiere-led", "herbes-interieur", "repousses-cuisine", "lombricompost"],
+  },
+  {
+    id: "repousses-cuisine", titre: "Faire repousser les restes de cuisine", rubrique: "interieur", emoji: "🥑", niveau: 1, duree: "10 minutes, puis quelques semaines",
+    resume: "Oignons verts, poireau, céleri, salade, avocat, ananas, patate douce, ail : des plantes gratuites et un super projet avec des enfants.",
+    materiel: ["Verres ou pots, cure-dents", "Terreau", "Restes de légumes frais, de préférence bio (les légumes traités contre la germination repoussent mal)"],
+    etapes: [
+      { titre: "Oignons verts, poireau, fenouil, céleri, cœur de laitue", texte: "Gardez la base avec les racines sur 3 à 5 cm, posez-la dans un fond d'eau (racines dans l'eau, haut à l'air), changez l'eau tous les 2 jours. Les oignons verts et le poireau repoussent en une semaine et se coupent plusieurs fois. Plantez ensuite en terre pour une repousse plus vigoureuse." },
+      { titre: "Ail", texte: "Une gousse germée plantée en pot donne des pousses vertes à ciseler comme de la ciboulette." },
+      { titre: "Avocat", texte: "Lavez le noyau, piquez 3 cure-dents à mi-hauteur et posez-le sur un verre d'eau, partie pointue en haut, la base trempant. En 3 à 8 semaines, il se fend, une racine puis une tige apparaissent. Plantez en pot quand la tige fait 15 cm, et pincez-la à 30 cm pour qu'elle ramifie. Il donnera une belle plante verte, mais rarement des fruits en intérieur." },
+      { titre: "Ananas", texte: "Tordez la couronne de feuilles pour la détacher, retirez les feuilles du bas sur 3 cm, laissez sécher 2 jours, puis posez-la dans l'eau jusqu'à l'apparition de racines, et plantez dans un terreau léger. Très décoratif ; une fleur (et un petit fruit) au bout de 2 à 3 ans au mieux." },
+      { titre: "Patate douce", texte: "À moitié immergée dans un verre d'eau, elle produit de longues tiges retombantes très décoratives, dont on peut faire des boutures à planter au jardin en mai." },
+    ],
+    conseils: ["Changez l'eau souvent : une eau trouble et malodorante fait pourrir la base.", "Les noyaux d'agrumes semés donnent de jolies plantes, mais pas de fruits avant de longues années."],
+    video: "faire repousser légumes restes cuisine avocat ananas", liens: ["potager-interieur", "herbes-interieur"],
+  },
+  {
+    id: "hydroponie", titre: "Culture sans terre : eau, billes d'argile et hydroponie", rubrique: "interieur", emoji: "💧", niveau: 2, duree: "1 heure",
+    resume: "Cultiver dans l'eau (boutures), en billes d'argile (« semi-hydro ») ou en hydroponie : moins de moucherons, arrosage simplifié, racines visibles.",
+    materiel: ["Billes d'argile expansée lavées (LECA) ou pouzzolane", "Pot sans trou + pot intérieur percé, ou vase transparent", "Indicateur de niveau d'eau (option)", "Engrais spécial hydroculture ou engrais liquide très dilué"],
+    etapes: [
+      { titre: "La culture dans l'eau", texte: "Pothos, philodendron, misère, lierre, chlorophytum vivent des mois voire des années dans un vase d'eau. Changez l'eau toutes les 1 à 2 semaines et ajoutez une goutte d'engrais liquide par mois." },
+      { titre: "La semi-hydroculture en billes d'argile", texte: "Lavez soigneusement la plante en retirant toute la terre des racines, coupez les racines abîmées. Placez-la dans un pot percé rempli de billes d'argile trempées 24 h, dans un cache-pot étanche. Gardez une réserve d'eau sur le quart inférieur seulement : les billes la font remonter par capillarité, le haut des racines reste aéré.", attention: "La transition terre → billes stresse la plante : faites-la au printemps, sur une plante en bonne santé ; les racines de terre meurent et sont remplacées par des racines d'eau en quelques semaines." },
+      { titre: "Nourrir", texte: "Il n'y a aucun nutriment dans l'argile : engrais d'hydroculture (ou engrais liquide dilué de moitié) à chaque remplissage au printemps et en été. Rincez les billes à l'eau claire tous les 2-3 mois pour éliminer les sels." },
+      { titre: "L'hydroponie « active »", texte: "Les kits d'intérieur (pompe, lampe, solution nutritive) font pousser aromatiques et salades très vite. Suivez la notice pour la solution nutritive et nettoyez le réservoir régulièrement (algues)." },
+    ],
+    video: "semi hydroponie billes argile plantes intérieur tuto", liens: ["sciarides", "rempoter", "bouturage"],
+  },
+  {
+    id: "terrarium", titre: "Créer un terrarium (et un kokedama)", rubrique: "fabriquer", emoji: "🫙", niveau: 2, duree: "1 heure",
+    resume: "Un petit jardin sous verre qui demande très peu d'arrosage, et la boule de mousse japonaise (kokedama) : deux réalisations décoratives pour petits espaces.",
+    materiel: ["Bocal ou aquarium en verre, avec ou sans couvercle", "Billes d'argile ou graviers, charbon actif (filtration), terreau, mousse", "Petites plantes de milieu humide (fittonia, petites fougères, peperomia, mousses) — jamais de succulentes dans un terrarium fermé", "Pour le kokedama : terreau + argile (ou akadama), mousse en plaque, ficelle"],
+    etapes: [
+      { titre: "Les couches du terrarium", texte: "Au fond, 2-3 cm de billes d'argile (réserve d'eau), une fine couche de charbon actif, une feuille de mousse ou de feutre pour séparer, puis 5 à 8 cm de terreau légèrement humide." },
+      { titre: "Planter", texte: "Disposez les plantes les plus hautes à l'arrière, les plus petites devant, de la mousse en surface, quelques pierres ou bois. Arrosez très peu au vaporisateur." },
+      { titre: "Entretenir", texte: "Lumière vive mais jamais de soleil direct (effet de serre : les plantes cuisent). Terrarium fermé : buée le matin = normal ; buée permanente = ouvrez quelques heures ; aucune buée = un peu d'eau. Retirez toute feuille morte (moisissures).", attention: "Les cactus et succulentes vendus en « terrarium » fermé pourrissent : ils ne vivent que dans un contenant ouvert et sec." },
+      { titre: "Le kokedama", texte: "Mélangez terreau et argile pour former une boule qui se tient, insérez-y la motte d'une petite plante (fougère, pothos, peperomia), enveloppez de mousse et ficelez. Arrosage : trempez la boule 10 minutes dans l'eau dès qu'elle devient légère, égouttez." },
+    ],
+    video: "fabriquer terrarium plantes tuto débutant kokedama", liens: ["fittonia", "fougere"],
+  },
+  {
+    id: "champignons-maison", titre: "Faire pousser des pleurotes sur du marc de café", rubrique: "interieur", emoji: "🍄", niveau: 2, duree: "1 heure + 4 à 6 semaines",
+    resume: "Recycler son marc de café en champignons comestibles, sans jardin, dans un coin de cuisine.",
+    materiel: ["Marc de café FRAIS (du jour, encore humide), environ 1 kg", "Mycélium de pleurote (« blanc de champignon » sur grains, vendu en ligne)", "Sac de congélation ou bocal, quelques trous", "Vaporisateur"],
+    etapes: [
+      { titre: "Préparer", texte: "Le marc de café frais est presque stérile grâce à l'eau bouillante de l'extraction : utilisez-le le jour même. Lavez-vous les mains, désinfectez le contenant à l'eau bouillante." },
+      { titre: "Ensemencer", texte: "Mélangez environ 1 volume de mycélium pour 5 à 10 volumes de marc, tassez légèrement dans le sac, fermez et percez quelques petits trous." },
+      { titre: "Incuber", texte: "2 à 4 semaines dans l'obscurité à 18-24 °C : le mycélium blanc colonise tout le marc. Une tache verte, noire ou orange = contamination : jetez." },
+      { titre: "Faire fructifier", texte: "Quand tout est blanc, ouvrez une fente de 5 cm, placez à la lumière indirecte et au frais (15-20 °C), vaporisez de l'eau 2 fois par jour. Les pleurotes apparaissent en 1 à 2 semaines." },
+      { titre: "Récolter", texte: "Coupez la grappe à la base quand les chapeaux sont encore légèrement enroulés. Une deuxième vague suit souvent. Le substrat épuisé part au compost ou au pied des plantes." },
+    ],
+    conseils: ["Ne consommez que des champignons issus d'un mycélium acheté et identifié, jamais une pousse spontanée inconnue."],
+    video: "pleurotes marc de café maison tuto", liens: ["compost-tas"],
+  },
+  {
+    id: "choisir-plante", titre: "Choisir une plante saine et bien l'acclimater", rubrique: "interieur", emoji: "🛒", niveau: 1, duree: "Lecture : 5 minutes",
+    resume: "La plupart des problèmes commencent en magasin. Les points à vérifier avant d'acheter, et les 3 premières semaines à la maison.",
+    etapes: [
+      { titre: "Avant d'acheter : la bonne plante pour le bon endroit", texte: "Faites le test de l'ombre de la main à l'endroit prévu (voir le tutoriel sur la lumière) et vérifiez la toxicité si vous avez des chats, des chiens ou de jeunes enfants. Les filtres du catalogue « Pièce sombre », « Sans danger pour les animaux », « Pardonne les oublis » sont faits pour ça." },
+      { titre: "Inspecter la plante", texte: "Retournez quelques feuilles : pas de toiles, de points, de cotons blancs ou de carapaces (parasites). Feuillage ferme et brillant, nouvelles pousses présentes. Soulevez le pot : des racines blanches et fermes au trou de drainage, pas d'odeur de moisi, pas de terre détrempée ni de moucherons." },
+      { titre: "En hiver, protéger du froid", texte: "Exigez un emballage (papier ou plastique) et ne laissez jamais la plante dans une voiture froide : quelques minutes sous 10 °C suffisent pour faire tomber les feuilles d'un ficus ou d'un poinsettia." },
+      { titre: "Quarantaine", texte: "Gardez la nouvelle plante 2 à 3 semaines à l'écart des autres et inspectez-la chaque semaine : c'est ainsi qu'on évite d'importer cochenilles, thrips et araignées rouges dans toute la maison." },
+      { titre: "Acclimatation", texte: "Une chute de quelques feuilles dans les semaines qui suivent est normale (changement de lumière). Pas de rempotage ni d'engrais pendant 3 à 4 semaines, sauf si les racines débordent du pot. Puis ajoutez la plante dans « Mes plantes » pour recevoir les rappels d'arrosage." },
+    ],
+    video: "bien choisir plante d'intérieur magasin conseils", liens: ["chute-feuilles", "cochenilles", "plantes-interieur-bases"],
+  },
+  {
+    id: "eau-arrosage-interieur", titre: "Quelle eau pour les plantes d'intérieur ?", rubrique: "interieur", emoji: "🚰", niveau: 1, duree: "Lecture : 5 minutes",
+    resume: "Calcaire, chlore, température, arrosage par le dessus ou par la soucoupe : les détails qui font la différence pour les plantes sensibles.",
+    etapes: [
+      { titre: "L'eau du robinet", texte: "Elle convient à la plupart des plantes. Laissez-la reposer une nuit dans l'arrosoir : elle se met à température ambiante et une partie du chlore s'évapore. En région calcaire, elle laisse des dépôts blancs et fait jaunir les plantes de terre acide." },
+      { titre: "Les plantes sensibles", texte: "Calathea, maranta, plantes carnivores, orchidées, broméliacées, tillandsias, azalées, myrtilliers : eau de pluie, eau déminéralisée ou eau filtrée (carafe filtrante). Les plantes carnivores meurent avec l'eau du robinet." },
+      { titre: "Par le dessus ou par la soucoupe ?", texte: "Par le dessus pour la plupart : arrosez jusqu'à ce que l'eau ressorte par le trou, puis videz la soucoupe après 15-30 minutes. Par la soucoupe pour les plantes qui détestent l'eau sur les feuilles ou au collet (violette africaine, cyclamen, bégonias) : 20 minutes de bain puis on vide. Par trempage pour les mottes très sèches, les orchidées et les bonsaïs." },
+      { titre: "Ce qu'il faut éviter", texte: "L'eau adoucie (salée) est néfaste. L'eau de cuisson refroidie et non salée peut servir, sans excès. L'eau de l'aquarium est un engrais doux apprécié. Évitez les « astuces » au thé, au café, à la bière ou au lait sur les plantes d'intérieur : elles attirent moucherons et moisissures." },
+    ],
+    video: "quelle eau pour arroser plantes intérieur calcaire", liens: ["air-sec", "moisissure-terreau", "eau-pluie"],
+  },
+  {
+    id: "plantes-par-piece", titre: "Quelle plante pour quelle pièce ? (et le mythe des plantes dépolluantes)", rubrique: "interieur", emoji: "🛋️", niveau: 1, duree: "Lecture : 5 minutes",
+    resume: "Salle de bain, chambre, bureau, entrée sombre, rebord plein sud : les meilleures plantes pour chaque situation, et ce que la science dit vraiment de la « dépollution ».",
+    etapes: [
+      { titre: "Salle de bain avec fenêtre", texte: "Humidité idéale pour fougère, calathea, maranta, fittonia, orchidée, tillandsia, alocasia. Sans fenêtre : aucune plante ne vit durablement sans lampe." },
+      { titre: "Chambre fraîche", texte: "Lierre, cyclamen, aspidistra, sansevieria, zamioculcas, aloe ; un hiver frais aide aussi le cactus de Noël et l'orchidée à refleurir." },
+      { titre: "Entrée ou couloir sombre", texte: "Aspidistra, zamioculcas, sansevieria, aglaonema, pothos — en acceptant une croissance lente. En dessous d'une lumière « faible », même elles déclinent : prévoyez une rotation près d'une fenêtre ou une lampe." },
+      { titre: "Fenêtre plein sud", texte: "Cactus, succulentes, aloe, kalanchoé, agrumes, strelitzia, yucca, hoya, collier de perles, aromatiques méditerranéennes ; un voilage l'été pour les autres." },
+      { titre: "Avec chats ou chiens", texte: "Chlorophytum, maranta, calathea, kentia, areca, pilea, fougère de Boston, peperomia, orchidée, violette africaine, hoya, aspidistra, cactus de Noël, broméliacées : filtre « Sans danger pour les animaux » dans le catalogue. Jamais de lys avec un chat." },
+      { titre: "Le mythe des plantes dépolluantes", texte: "L'idée vient d'une étude de la NASA de 1989 menée dans de petites chambres closes. Des analyses plus récentes ont montré qu'il faudrait des centaines de plantes par mètre carré pour égaler l'effet d'une simple aération : ouvrir les fenêtres 10 minutes par jour est bien plus efficace. Les plantes apportent en revanche bien-être, humidité légère et beauté." },
+    ],
+    video: "quelle plante pour quelle pièce sombre salle de bain", liens: ["lumiere-led", "plantes-toxiques", "choisir-plante"],
+  },
+  {
+    id: "vacances-plantes-interieur", titre: "Partir en vacances : les plantes d'intérieur", rubrique: "interieur", emoji: "🧳", niveau: 1, duree: "30 minutes",
+    resume: "Une semaine, deux semaines, un mois : la bonne solution selon la durée, sans voisin ni gadget coûteux.",
+    etapes: [
+      { titre: "Une semaine", texte: "Arrosez normalement la veille, éloignez les plantes des fenêtres plein sud, regroupez-les : la plupart tiennent sans rien." },
+      { titre: "Deux semaines", texte: "Baignoire ou bac avec 2-3 cm d'eau sur une serviette ou des billes d'argile, pots posés dessus (le fond touche l'humidité sans baigner), loin du soleil. Ou mèches de coton reliant chaque pot à une bassine d'eau (voir le tutoriel « Arroser pendant les vacances »)." },
+      { titre: "Trois semaines et plus", texte: "Combinez : mèches ou cônes d'arrosage en terre cuite, sacs plastique transparents posés sur les petites plantes (mini-serres, sans contact avec les feuilles), plantes grasses laissées sèches. Rien ne remplace un passage hebdomadaire d'un voisin : laissez-lui une fiche simple (l'application peut lire à voix haute ou afficher chaque fiche)." },
+      { titre: "À ne pas faire", texte: "Laisser les pots baigner une semaine dans l'eau (pourriture), arroser les cactus « pour être sûr », fermer les volets complètement pendant un mois (les plantes ont besoin de lumière)." },
+    ],
+    video: "arroser plantes intérieur vacances astuces", liens: ["arrosage-vacances", "soif"],
+  },
+];

@@ -23,7 +23,7 @@ export default function Onboarding() {
   const [err, setErr] = useState("");
   const [animaux, setAnimaux] = useState(true);
 
-  const finish = () => setSettings({ onboarded: true, situation, zone, ville, animauxActifs: animaux });
+  const finish = () => setSettings({ onboarded: true, situation, zone, ville, animauxActifs: situation === "jardin" && animaux, lune: situation !== "appartement" });
 
   return (
     <div className="main" style={{ maxWidth: 640, paddingBottom: 40 }}>

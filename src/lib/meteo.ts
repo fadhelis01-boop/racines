@@ -53,9 +53,10 @@ export function emojiMeteo(code: number) {
 }
 
 // Traduit les prévisions en gestes concrets pour le jardin et les animaux
-export function alertes(m: Meteo, animaux: boolean): Alerte[] {
+export function alertes(m: Meteo, animaux: boolean, situation = "jardin"): Alerte[] {
   const j = m.jours.slice(0, 4);
   const out: Alerte[] = [];
+  if (situation === "appartement") return alertesInterieur(j);
   const minGel = Math.min(...j.map((x) => x.tmin));
   if (minGel <= 0) {
     out.push({
@@ -90,5 +91,19 @@ export function alertes(m: Meteo, animaux: boolean): Alerte[] {
   // Conditions à mildiou : chaleur + humidité
   const mild = j.filter((x) => x.tmax >= 18 && x.tmax <= 28 && (x.pluie ?? 0) >= 2).length;
   if (mild >= 2 && pluie < 25) out.push({ niveau: "info", emoji: "🍅", titre: "Temps doux et humide : conditions à mildiou", conseils: ["Pulvérisez de la décoction de prêle en préventif sur tomates et pommes de terre, retirez les feuilles du bas."] });
+  return out;
+}
+
+// Appartement sans extérieur : ce que la météo change pour les plantes de la maison
+function alertesInterieur(j: Jour[]): Alerte[] {
+  const out: Alerte[] = [];
+  const maxT = Math.max(...j.map((x) => x.tmax));
+  const minT = Math.min(...j.map((x) => x.tmin));
+  if (maxT >= 28)
+    out.push({ niveau: maxT >= 33 ? "attention" : "info", emoji: "🥵", titre: `Chaleur (jusqu'à ${Math.round(maxT)} °C)`, conseils: ["Éloignez les plantes des vitres plein sud et ouest l'après-midi (brûlures derrière la vitre), ou tirez un voilage.", "Vérifiez la terre plus souvent : les pots sèchent deux fois plus vite.", "Fermez les volets aux heures chaudes, aérez la nuit."] });
+  if (minT <= 3)
+    out.push({ niveau: "info", emoji: "❄️", titre: `Nuits froides (${Math.round(minT)} °C dehors)`, conseils: ["Écartez les plantes collées aux vitres froides et des courants d'air quand vous aérez.", "Avec le chauffage, l'air devient sec : regroupez les plantes, plateau de billes d'argile mouillées, éloignez-les des radiateurs.", "Arrosez moins : la plupart des plantes sont au repos."] });
+  const sombre = j.filter((x) => x.code >= 3).length;
+  if (sombre >= 3 && !out.length) out.push({ niveau: "info", emoji: "☁️", titre: "Plusieurs jours gris", conseils: ["Moins de lumière = moins d'eau : espacez les arrosages.", "Rapprochez les plantes exigeantes de la fenêtre ou allumez la lampe horticole."] });
   return out;
 }

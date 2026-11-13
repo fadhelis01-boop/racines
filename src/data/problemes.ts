@@ -42,12 +42,19 @@ export const SIGNES: Record<string, { label: string; organe: string; emoji: stri
   "fleurs-tombent": { label: "Fleurs ou petits fruits qui tombent", organe: "fleurs", emoji: "🍂" },
   "fruits-momifies": { label: "Fruits pourris en cercles, puis momifiés", organe: "fruits", emoji: "🟫" },
   "coup-soleil": { label: "Grandes plages blanches ou beiges sèches après un soleil fort", organe: "feuilles", emoji: "☀️" },
+  "terre-seche": { label: "Terre sèche et légère, pot qui se soulève facilement", organe: "racines", emoji: "🏜️" },
+  "feuilles-tombent": { label: "Les feuilles tombent (encore vertes ou jaunies)", organe: "feuilles", emoji: "🍂" },
+  "terreau-blanc": { label: "Dépôt blanc ou moisissure à la surface du terreau", organe: "racines", emoji: "⬜" },
+  "pas-de-fleurs": { label: "La plante ne fleurit pas (ou plus)", organe: "fleurs", emoji: "🚫" },
+  "racines-sortent": { label: "Racines qui sortent par le trou ou le dessus du pot", organe: "racines", emoji: "🪢" },
+  "vieilles-feuilles-jaunes": { label: "Seules une ou deux vieilles feuilles du bas jaunissent", organe: "feuilles", emoji: "🍁" },
+  "cloques-liegeuses": { label: "Petites cloques ou bosses liégeuses sous les feuilles", organe: "feuilles", emoji: "🫧" },
 };
 
 export const PROBLEMES: Probleme[] = [
   // ───────────── Champignons et maladies ─────────────
   {
-    id: "mildiou", nom: "Mildiou", type: "champignon", wiki: "Mildiou de la pomme de terre",
+    id: "mildiou", alias: ["taches brunes tomate", "tomates noires"], nom: "Mildiou", type: "champignon", wiki: "Mildiou de la pomme de terre",
     cible: "Tomate, pomme de terre, vigne, concombre, épinard", plantes: ["tomate", "pomme-de-terre", "vigne", "concombre", "epinard", "aubergine"],
     organes: ["feuilles", "tiges", "fruits"], signes: ["taches-brunes", "fruit-pourri", "duvet-gris"],
     symptomes: [
@@ -73,7 +80,7 @@ export const PROBLEMES: Probleme[] = [
     remedes: ["preles", "bouillie-bordelaise", "bicarbonate"], gravite: 3, mois: m("6-9"),
   },
   {
-    id: "oidium", nom: "Oïdium (blanc)", type: "champignon", wiki: "Oïdium",
+    id: "oidium", alias: ["poudre blanche", "feuilles farineuses", "blanc"], nom: "Oïdium (blanc)", type: "champignon", wiki: "Oïdium",
     cible: "Courgette, courge, concombre, melon, pois, pommier, vigne, rosier, bégonia", plantes: ["courgette", "courge", "concombre", "melon", "pois", "pommier", "vigne", "groseillier", "begonia", "*"],
     organes: ["feuilles", "fruits"], signes: ["feutrage-blanc", "taches-jaunes"],
     symptomes: ["Feutrage blanc poudreux, comme de la farine, sur le dessus des feuilles.", "Les feuilles jaunissent, se dessèchent ; les fruits peuvent être tachés."],
@@ -351,7 +358,7 @@ export const PROBLEMES: Probleme[] = [
   },
   // ───────────── Ravageurs ─────────────
   {
-    id: "pucerons", nom: "Pucerons", type: "ravageur", wiki: "Puceron",
+    id: "pucerons", alias: ["insectes verts", "feuilles collantes"], nom: "Pucerons", type: "ravageur", wiki: "Puceron",
     cible: "Presque toutes les plantes, au jardin comme à l'intérieur", plantes: ["*"],
     organes: ["feuilles", "tiges", "fleurs"], signes: ["colonies", "feuilles-deformees", "miellat"], interieur: true,
     symptomes: ["Colonies de petits insectes verts, noirs, gris ou roses sur les jeunes pousses et sous les feuilles.", "Feuilles enroulées, collantes (miellat), parfois noires (fumagine).", "Fourmis qui montent et descendent : elles « élèvent » les pucerons."],
@@ -370,7 +377,7 @@ export const PROBLEMES: Probleme[] = [
     remedes: ["savon-noir", "purin-ortie-frais", "macer-rhubarbe", "glu"], gravite: 2, mois: m("4-9"),
   },
   {
-    id: "limaces", nom: "Limaces et escargots", type: "ravageur", wiki: "Limace",
+    id: "limaces", alias: ["escargots", "feuilles mangées"], nom: "Limaces et escargots", type: "ravageur", wiki: "Limace",
     cible: "Semis, salades, fraises, courgettes, choux, plants fraîchement repiqués", plantes: ["*"],
     organes: ["feuilles", "plantule", "fruits"], signes: ["bave", "trous-feuilles", "plantule-couchee", "disparition"],
     symptomes: ["Feuilles trouées ou rongées depuis le bord, semis disparus en une nuit.", "Traces brillantes de mucus séché."],
@@ -477,7 +484,7 @@ export const PROBLEMES: Probleme[] = [
     conditions: "Printemps et été.", prevention: ["Voile anti-insectes."], traitements: ["Écrasez les larves dans les mines ou retirez les feuilles."], remedes: [], gravite: 1, mois: m("5-9"),
   },
   {
-    id: "aleurode", nom: "Aleurodes (mouches blanches)", type: "ravageur", wiki: "Aleurode",
+    id: "aleurode", alias: ["mouches blanches"], nom: "Aleurodes (mouches blanches)", type: "ravageur", wiki: "Aleurode",
     cible: "Tomate, aubergine, chou, plantes de serre et d'intérieur", plantes: ["tomate", "aubergine", "chou-kale", "verveine", "*"],
     organes: ["feuilles"], signes: ["mouches-blanches", "miellat", "jaunissement"], interieur: true,
     symptomes: ["Nuée de minuscules mouches blanches qui s'envolent quand on secoue la plante.", "Feuilles collantes puis noircies (fumagine), jaunissement."],
@@ -486,7 +493,7 @@ export const PROBLEMES: Probleme[] = [
     remedes: ["savon-noir", "glu"], gravite: 2, mois: m("5-10"),
   },
   {
-    id: "tetranyque", nom: "Araignées rouges (acariens tétranyques)", type: "ravageur", wiki: "Tetranychus urticae",
+    id: "tetranyque", alias: ["araignées rouges", "toiles", "feuilles piquetées", "feuilles ternes"], nom: "Araignées rouges (acariens tétranyques)", type: "ravageur", wiki: "Tetranychus urticae",
     cible: "Aubergine, haricot, concombre, fraisier, agrumes et plantes d'intérieur", plantes: ["aubergine", "haricot", "concombre", "melon", "fraisier", "agrumes", "*"],
     organes: ["feuilles"], signes: ["toile", "points-argentes", "jaunissement"], interieur: true,
     symptomes: ["Feuilles piquetées de jaune, ternes, comme décolorées ; fines toiles sous les feuilles et aux aisselles.", "À la loupe : minuscules acariens rougeâtres ou jaunâtres."],
@@ -504,7 +511,7 @@ export const PROBLEMES: Probleme[] = [
     traitements: ["Douche, savon noir, retrait des parties très atteintes ; en serre, acariens prédateurs (Amblyseius)."], remedes: ["savon-noir", "glu"], gravite: 1, mois: m("5-9"),
   },
   {
-    id: "cochenilles", nom: "Cochenilles", type: "ravageur", wiki: "Coccoidea",
+    id: "cochenilles", alias: ["coton blanc", "carapaces", "collant", "poux des plantes"], nom: "Cochenilles", type: "ravageur", wiki: "Coccoidea",
     cible: "Plantes d'intérieur, agrumes, olivier, laurier, figuier", plantes: ["agrumes", "olivier", "laurier", "figuier", "kiwi", "*"],
     organes: ["tiges", "feuilles"], signes: ["carapaces", "miellat"], interieur: true,
     symptomes: ["Petites carapaces brunes fixées sur les tiges et le long des nervures, ou amas cotonneux blancs (cochenilles farineuses) aux aisselles.", "Miellat collant, fumagine noire, plante qui dépérit."],
@@ -717,7 +724,7 @@ export const PROBLEMES: Probleme[] = [
   },
   // ───────────── Intérieur ─────────────
   {
-    id: "pourriture-racines", nom: "Excès d'arrosage et pourriture des racines", type: "physiologique", wiki: "Pythium",
+    id: "pourriture-racines", alias: ["trop arrosé", "trop d'eau", "feuilles jaunes", "racines pourries", "terre mouillée", "plante molle"], nom: "Excès d'arrosage et pourriture des racines", type: "physiologique", wiki: "Pythium",
     cible: "Plantes d'intérieur, succulentes, aromatiques méditerranéennes en pot", plantes: ["*"],
     organes: ["racines", "feuilles"], signes: ["terre-mouillee", "jaunissement", "fletrissement", "moucherons"], interieur: true,
     symptomes: ["Feuilles qui jaunissent et ramollissent (souvent les plus basses), plante qui flétrit alors que la terre est mouillée.", "Odeur de moisi, base des tiges molle et noire, racines brunes et molles (saines : blanches et fermes)."],
@@ -732,7 +739,7 @@ export const PROBLEMES: Probleme[] = [
     remedes: [], gravite: 3, mois: m("1-12"),
   },
   {
-    id: "air-sec", nom: "Air trop sec ou eau trop calcaire", type: "physiologique",
+    id: "air-sec", alias: ["pointes brunes", "bouts des feuilles secs", "feuilles grillées au bout", "chauffage"], nom: "Air trop sec ou eau trop calcaire", type: "physiologique",
     cible: "Calathea, fougère, spathiphyllum, palmiers, chlorophytum", plantes: ["calathea", "fougere", "spathiphyllum", "kentia", "chlorophytum", "dracaena", "anthurium"],
     organes: ["feuilles"], signes: ["pointes-brunes"], interieur: true,
     symptomes: ["Pointes et bords des feuilles bruns et secs, feuilles qui s'enroulent."],
@@ -741,7 +748,7 @@ export const PROBLEMES: Probleme[] = [
     traitements: ["Coupez les pointes sèches en suivant la forme de la feuille, sans entailler la partie verte."], remedes: ["eau-pluie"], gravite: 1, mois: m("10-4"),
   },
   {
-    id: "manque-lumiere", nom: "Manque de lumière (étiolement)", type: "physiologique",
+    id: "manque-lumiere", alias: ["plante qui s'allonge", "pâle", "penche", "étiolée", "pas assez de lumière"], nom: "Manque de lumière (étiolement)", type: "physiologique",
     cible: "Succulentes, cactus, aloe, plantes à feuillage panaché, semis", plantes: ["cactus", "aloe", "orchidee", "*"],
     organes: ["plante"], signes: ["etiolement", "jaunissement"], interieur: true,
     symptomes: ["Tiges longues et fines, espacement entre les feuilles qui s'allonge, couleurs pâles, plante penchée vers la fenêtre ; pas de floraison."],
@@ -758,12 +765,82 @@ export const PROBLEMES: Probleme[] = [
     prevention: ["Habituez progressivement (une à deux semaines à l'ombre lumineuse d'abord)."], traitements: ["Les taches ne disparaîtront pas ; coupez les feuilles très atteintes."], remedes: [], gravite: 1, mois: m("4-9"),
   },
   {
-    id: "sciarides", nom: "Moucherons des terreaux (sciarides)", type: "ravageur", wiki: "Sciaridae",
+    id: "sciarides", alias: ["moucherons", "petites mouches noires", "mouches terreau"], nom: "Moucherons des terreaux (sciarides)", type: "ravageur", wiki: "Sciaridae",
     cible: "Plantes en pot, semis", plantes: ["*"], organes: ["racines", "plantule"], signes: ["moucherons", "terre-mouillee"], interieur: true,
     symptomes: ["Petits moucherons noirs qui volettent autour des pots ; les larves (vers translucides) abîment les racines des semis."],
     conditions: "Terreau constamment humide, riche en matière organique.",
     prevention: ["Laissez sécher la surface entre deux arrosages ; arrosez par la soucoupe."],
     traitements: ["Panneaux jaunes englués piqués dans le pot.", "Couche de 1 cm de sable ou de gravier fin en surface.", "Nématodes (Steinernema feltiae) en arrosage dans les cas tenaces."],
     remedes: ["glu", "nematodes"], gravite: 1, mois: m("1-12"),
+  },
+  // ───────────── Intérieur (complément) ─────────────
+  {
+    id: "soif", nom: "Manque d'eau (la plante a soif)", type: "physiologique", alias: ["plante qui a soif", "plante molle", "plante qui s'affaisse", "feuilles qui pendent", "oubli d'arrosage"],
+    cible: "Toutes les plantes en pot, surtout spathiphyllum, fittonia, fougère, bonsaï, basilic", plantes: ["*"], organes: ["plante", "feuilles"], signes: ["fletrissement", "terre-seche", "pointes-brunes"], interieur: true,
+    symptomes: ["Feuilles molles qui pendent, plante affaissée.", "Terre sèche, rétractée et décollée des bords du pot ; pot léger.", "Si cela se répète : feuilles du bas qui jaunissent et sèchent, bords bruns."],
+    confusion: "Une plante trop arrosée flétrit AUSSI : vérifiez toujours la terre avec le doigt. Terre sèche = soif ; terre mouillée = excès d'eau (voir cette fiche).",
+    conditions: "Chaleur, chauffage, pot trop petit, substrat de tourbe devenu hydrophobe (l'eau ruisselle sans pénétrer).",
+    prevention: ["Vérifiez au doigt plutôt qu'à date fixe ; utilisez les rappels de « Mes plantes ».", "Pot plus grand si la plante sèche en 2 jours.", "Pour les vacances, voir le tutoriel dédié."],
+    traitements: ["Bain : plongez le pot dans une bassine d'eau tiède 20 à 30 minutes jusqu'à ce que les bulles cessent, puis égouttez bien.", "La plante se redresse en quelques heures ; coupez ensuite les feuilles restées sèches."],
+    remedes: ["eau-pluie"], gravite: 1, mois: m("1-12"),
+  },
+  {
+    id: "chute-feuilles", nom: "Chute de feuilles après un changement (stress)", type: "physiologique", alias: ["feuilles qui tombent", "perd ses feuilles", "ficus perd ses feuilles", "après l'achat", "déménagement"],
+    cible: "Ficus, croton, schefflera, poinsettia, cactus de Noël, bonsaï, agrumes", plantes: ["ficus", "croton", "schefflera", "poinsettia", "cactus-noel", "bonsai", "agrumes"], organes: ["feuilles"], signes: ["feuilles-tombent"], interieur: true,
+    symptomes: ["Les feuilles tombent en masse, souvent encore vertes ou à peine jaunies, quelques jours après un achat, un déplacement, un rempotage ou un coup de froid."],
+    confusion: "Une chute lente de feuilles jaunes et molles avec une terre toujours humide signale plutôt un excès d'arrosage ; des feuilles ternes et piquetées, des araignées rouges.",
+    conditions: "Changement de lumière (magasin → appartement), courant d'air froid, radiateur, transport en hiver, déplacement de la plante.",
+    prevention: ["Trouvez une place définitive lumineuse et n'en bougez plus.", "Achetez emballé en hiver, jamais une plante exposée devant le magasin.", "Pas de rempotage juste après l'achat : attendez 3 à 4 semaines."],
+    traitements: ["Ne faites rien de plus : pas d'engrais, pas de rempotage, arrosage normal. La plante refait des feuilles en quelques semaines si la nouvelle place lui convient.", "Vérifiez qu'elle n'est ni dans un courant d'air ni collée à une vitre froide ou à un radiateur."],
+    remedes: [], gravite: 1, mois: m("1-12"),
+  },
+  {
+    id: "moisissure-terreau", nom: "Moisissure ou dépôt blanc sur le terreau", type: "physiologique", alias: ["terreau blanc", "moisissure terreau", "champignon dans le pot", "calcaire terreau", "croûte blanche", "duvet blanc terre"],
+    cible: "Plantes en pot, semis", plantes: ["*"], organes: ["racines"], signes: ["terreau-blanc", "terre-mouillee"], interieur: true,
+    symptomes: ["Duvet blanc cotonneux sur la terre (moisissure qui se nourrit de matière morte) : terreau trop humide et pas assez aéré.", "Croûte blanche, dure et cristalline sur la terre ou le bord du pot : dépôt de calcaire ou de sels d'engrais."],
+    confusion: "Des amas cotonneux SUR LA PLANTE (aisselles, tiges) sont des cochenilles farineuses, pas une moisissure.",
+    conditions: "Arrosages trop fréquents, pièce peu aérée, eau du robinet calcaire, excès d'engrais.",
+    prevention: ["Laissez sécher la surface entre deux arrosages, aérez la pièce.", "Arrosez à l'eau de pluie, filtrée ou reposée.", "Un arrosage abondant qui ruisselle par le trou une fois par mois rince les sels."],
+    traitements: ["Grattez les 2 premiers centimètres de terre et remplacez-les par du terreau neuf.", "La moisissure blanche n'attaque pas la plante : elle signale seulement trop d'humidité.", "Croûte de calcaire : grattez, rincez le pot, changez d'eau d'arrosage."],
+    remedes: ["eau-pluie"], gravite: 1, mois: m("1-12"),
+  },
+  {
+    id: "pas-floraison", nom: "La plante ne fleurit pas (ou plus)", type: "physiologique", alias: ["ne fleurit pas", "pas de fleurs", "orchidée ne refleurit pas", "refleurir", "pas de floraison"],
+    cible: "Orchidée, cactus de Noël, violette africaine, hoya, spathiphyllum, anthurium, agrumes, kalanchoé", plantes: ["orchidee", "cactus-noel", "saintpaulia", "hoya", "spathiphyllum", "anthurium", "agrumes", "kalanchoe", "poinsettia", "cactus"], organes: ["fleurs", "plante"], signes: ["pas-de-fleurs"], interieur: true,
+    symptomes: ["Feuillage sain mais aucune fleur depuis des mois."],
+    conditions: "Le plus souvent : manque de lumière. Ensuite : absence de repos (orchidée : pas de baisse de température la nuit en automne ; cactus de Noël et kalanchoé : nuits trop courtes ou éclairées), pot trop grand, excès d'engrais azoté.",
+    prevention: ["Plus de lumière : rapprochez de la fenêtre (est ou ouest), ou lampe LED.", "Respectez le repos décrit dans la fiche de chaque plante."],
+    traitements: ["Orchidée : 4 à 6 semaines en automne avec des nuits à 15-17 °C (chambre fraîche) déclenchent une hampe.", "Cactus de Noël et kalanchoé : 6 semaines de nuits longues et sombres (aucune lampe allumée le soir) et fraîches à l'automne.", "Hoya, violette africaine : pot plus petit, plus de lumière ; ne coupez pas les vieux pédoncules du hoya.", "Engrais pour plantes à fleurs (plus riche en potasse) au printemps et en été."],
+    remedes: [], gravite: 1, mois: m("1-12"),
+  },
+  {
+    id: "racines-etroit", nom: "Plante à l'étroit (rempotage nécessaire)", type: "physiologique", alias: ["racines qui sortent", "pot trop petit", "rempoter", "rempotage", "plante ne pousse plus"],
+    cible: "Toutes les plantes en pot", plantes: ["*"], organes: ["racines", "plante"], signes: ["racines-sortent", "terre-seche"], interieur: true,
+    symptomes: ["Racines qui sortent par le trou ou se soulèvent au-dessus de la terre.", "L'eau traverse le pot sans être retenue, la terre sèche en 1 ou 2 jours.", "Croissance arrêtée au printemps."],
+    confusion: "Certaines plantes aiment être à l'étroit pour fleurir (hoya, violette africaine, cactus de Noël).",
+    conditions: "Pas de rempotage depuis plusieurs années.",
+    prevention: ["Rempotage tous les 1 à 3 ans selon la fiche : « Mes plantes » vous le rappelle."],
+    traitements: ["Rempotez au printemps dans un pot de 2 à 4 cm plus large (voir le tutoriel « Rempoter une plante »).", "Grande plante : surfaçage (remplacer les 5 premiers centimètres de terre)."],
+    remedes: [], gravite: 1, mois: m("2-6"),
+  },
+  {
+    id: "jaunissement-normal", nom: "Vieille feuille qui jaunit (renouvellement normal)", type: "physiologique", alias: ["feuilles jaunes", "une feuille jaune", "feuille du bas jaune", "feuille qui jaunit"],
+    cible: "Toutes les plantes", plantes: ["*"], organes: ["feuilles"], signes: ["vieilles-feuilles-jaunes"], interieur: true,
+    symptomes: ["UNE ou deux feuilles parmi les plus anciennes (en bas) jaunissent puis sèchent, pendant que de nouvelles feuilles saines apparaissent en haut."],
+    confusion: "Si plusieurs feuilles jaunissent d'un coup, ou les jeunes feuilles, ou si la terre reste détrempée : cherchez un excès d'eau, un manque de lumière ou une carence.",
+    conditions: "Cycle de vie normal de la feuille ; plus fréquent en hiver (moins de lumière).",
+    prevention: ["Rien à faire : c'est naturel."],
+    traitements: ["Retirez la feuille quand elle est entièrement jaune (elle se détache facilement)."],
+    remedes: [], gravite: 1, mois: m("1-12"),
+  },
+  {
+    id: "oedeme", nom: "Œdème (cloques liégeuses)", type: "physiologique", alias: ["cloques sous les feuilles", "bosses sous les feuilles", "liège"],
+    cible: "Peperomia, plantes grasses, hoya, plantes à feuilles épaisses", plantes: ["peperomia", "succulentes", "kalanchoe", "hoya", "*"], organes: ["feuilles"], signes: ["cloques-liegeuses"], interieur: true,
+    symptomes: ["Petites cloques aqueuses sous les feuilles qui deviennent des croûtes liégeuses brunes."],
+    confusion: "Les cochenilles à carapace se décollent avec l'ongle ; les cloques d'œdème font partie de la feuille.",
+    conditions: "La plante absorbe plus d'eau qu'elle n'en évapore : terre humide, air frais et humide, peu de lumière.",
+    prevention: ["Arrosez moins en hiver, donnez plus de lumière, aérez."],
+    traitements: ["Les feuilles marquées ne guérissent pas, mais les nouvelles seront saines une fois l'arrosage corrigé."],
+    remedes: [], gravite: 1, mois: m("10-3"),
   },
 ];

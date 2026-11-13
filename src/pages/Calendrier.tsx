@@ -107,11 +107,11 @@ export default function Calendrier() {
               })}
             </div>
           ))}
-          <div className="card">
+          {s.settings.lune && <div className="card">
             <b>🌙 La lune en {MOIS_NOMS[mois - 1]}</b>
             <div className="chips" style={{ marginTop: 8 }}>{lunes.map((l) => <span key={l.d} className="chip">{l.e} {l.d} : {l.p.toLowerCase()}</span>)}</div>
             <p className="small muted">Indicatif : le jardinage avec la lune est une tradition sans effet démontré.</p>
-          </div>
+          </div>}
         </>
       )}
 

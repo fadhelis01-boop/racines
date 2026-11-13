@@ -73,6 +73,17 @@ export interface Plante {
   humidite?: string;
   rempotage?: string;
   temperature?: string;
+  // Recherche et identification
+  alias?: string[]; // noms courants (« caoutchouc », « misère »…)
+  latins?: string[]; // autres noms scientifiques, anciens ou acceptés (Pl@ntNet)
+  sosies?: { id?: string; nom: string; difference: string }[]; // plantes avec lesquelles on la confond
+  // Suivi « Mes plantes » (intérieur et pots) : jours entre deux soins
+  soins?: { arrosageEte: number; arrosageHiver: number; engrais?: number; rempotageAns?: number };
+  sansDangerAnimaux?: boolean; // chats et chiens
+  ombreOk?: boolean; // supporte une pièce peu lumineuse
+  fleurit?: boolean; // fleurit en intérieur
+  tailleAdulte?: string;
+  photo?: string; // fichier Wikimedia Commons à préférer à la photo de l'article
 }
 
 export type TypeProbleme = "champignon" | "bacterie" | "virus" | "ravageur" | "physiologique" | "carence" | "mammifere";
@@ -96,6 +107,7 @@ export interface Probleme {
   gravite: 1 | 2 | 3;
   mois: Mois[];
   interieur?: boolean;
+  alias?: string[]; // mots que l'on tape (« feuilles jaunes », « terreau blanc »…)
 }
 
 export interface Remede {

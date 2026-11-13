@@ -63,6 +63,16 @@ SCENES = {
     "abattage-volaille": "no humans, rustic farm kitchen table with knife, cutting board, large pot of water, bowls, clean and calm",
     "utiliser-carcasse": "no humans, large pot of homemade chicken broth with vegetables, carrots, onions, herbs, rustic kitchen",
     "conserver-viande": "no humans, freezer bags, glass jars of confit, kitchen counter, vacuum sealer, neat and clean",
+    "lumiere-led": "no humans, indoor plant shelf under warm white LED grow light, pothos, herbs, cozy apartment, evening window",
+    "potager-interieur": "no humans, apartment kitchen windowsill with cherry tomato plant in pot, chili peppers, basil, strawberries, grow light",
+    "repousses-cuisine": "no humans, avocado seed in a glass of water with toothpicks, green onions regrowing in jars, pineapple top, kitchen counter",
+    "hydroponie": "no humans, houseplants growing in glass vases with clay pebbles and water, visible white roots, bright room",
+    "terrarium": "no humans, glass terrarium with moss, small ferns and fittonia, kokedama moss ball hanging, wooden table",
+    "champignons-maison": "no humans, oyster mushrooms growing from a bag of coffee grounds on a kitchen counter, coffee cups",
+    "choisir-plante": "no humans, plant shop with healthy potted houseplants on wooden shelves, price tags without text, bright",
+    "eau-arrosage-interieur": "no humans, watering can and glass water carafe next to houseplants, rain water bottle, saucers, indoor",
+    "plantes-par-piece": "no humans, cutaway view of an apartment with plants in bathroom, bedroom, living room, sunny window",
+    "vacances-plantes-interieur": "no humans, houseplants grouped in a bathtub with wet towels, water basin with cotton wicks to pots, suitcase nearby",
     "preparer-lapin": "no humans, rustic farm kitchen with herbs, cutting board, knife, pot, calm atmosphere",
 }
 

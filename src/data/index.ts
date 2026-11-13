@@ -2,17 +2,19 @@ import { LEGUMES } from "./legumes";
 import { AROMATIQUES, FLEURS } from "./aromatiques";
 import { FRUITS } from "./fruits";
 import { INTERIEUR } from "./interieur";
+import { INTERIEUR2, ENRICH } from "./interieur2";
 import { PROBLEMES, SIGNES } from "./problemes";
 import { REMEDES, AUXILIAIRES } from "./remedes";
 import { ANIMAUX } from "./animaux";
 import { GUIDES_JARDIN } from "./guides-jardin";
 import { GUIDES_MAISON } from "./guides-maison";
 import { GUIDES_ANIMAUX } from "./guides-animaux";
+import { GUIDES_INTERIEUR } from "./guides-interieur";
 import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
 
-export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR];
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_MAISON, ...GUIDES_ANIMAUX];
+export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2].map((p) => (ENRICH[p.id] ? { ...p, ...ENRICH[p.id] } : p));
+export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_ANIMAUX];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 
 const idx = <T extends { id: string }>(a: T[]) => new Map(a.map((x) => [x.id, x]));

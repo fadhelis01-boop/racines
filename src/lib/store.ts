@@ -20,6 +20,7 @@ export interface Settings {
   plantnetKey: string;
   sensible: boolean; // afficher les tutoriels d'abattage sans avertissement
   animauxActifs: boolean;
+  lune: boolean;
 }
 
 export type TypeEspace = "planche" | "carre" | "bac" | "pot" | "serre" | "interieur" | "verger";
@@ -30,6 +31,22 @@ export interface Note { id: string; date: string; texte: string; photo?: string;
 export interface Graine { id: string; planteId: string; variete: string; annee: number; qte?: string }
 export interface Troupeau { id: string; animalId: string; nom: string; nombre: number; depuis?: string; notes?: string }
 export interface Soin { id: string; troupeauId: string; type: string; date: string; prochain?: string; note?: string }
+export type Fenetre = "sud" | "ouest" | "est" | "nord" | "lampe" | "sombre";
+// Une plante de la maison suivie individuellement (intérieur, pots)
+export interface MaPlante {
+  id: string;
+  planteId: string;
+  surnom: string;
+  piece?: string;
+  fenetre?: Fenetre;
+  depuis?: string;
+  arrosages: string[];
+  engrais: string[];
+  rempotages: string[];
+  photos: { date: string; key: string }[];
+  frequence?: number; // jours entre deux arrosages, réglé par l'utilisateur (sinon calculé)
+  note?: string;
+}
 
 export interface State {
   settings: Settings;
@@ -44,6 +61,7 @@ export interface State {
   fait: Record<string, string>; // tâche cochée → date
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
+  plantes: MaPlante[];
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -59,6 +77,7 @@ export const DEFAULT_SETTINGS: Settings = {
   plantnetKey: "",
   sensible: false,
   animauxActifs: true,
+  lune: true,
 };
 
 const EMPTY: State = {
@@ -74,6 +93,7 @@ const EMPTY: State = {
   fait: {},
   videos: {},
   favoris: [],
+  plantes: [],
 };
 
 let state: State = EMPTY;
@@ -83,7 +103,8 @@ const emit = () => listeners.forEach((l) => l());
 
 export async function loadState() {
   const saved = await dbGet<Partial<State>>("state");
-  if (saved) state = { ...EMPTY, ...saved, settings: { ...DEFAULT_SETTINGS, ...(saved.settings ?? {}) } };
+  if (saved) state = migrate({ ...EMPTY, ...saved, settings: { ...DEFAULT_SETTINGS, ...(saved.settings ?? {}) } });
+  if (saved && saved.settings && (saved.settings as Partial<Settings>).lune === undefined && state.settings.situation === "appartement") state = { ...state, settings: { ...state.settings, lune: false } };
   loaded = true;
   applyAppearance();
   emit();
@@ -131,7 +152,7 @@ export function isoDate(d: Date) {
 }
 
 // Ajout/modification/suppression génériques dans une liste de l'état
-type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins";
+type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes";
 export function upsert<K extends ListKey>(key: K, item: State[K][number]) {
   update((s) => {
     const list = s[key] as { id: string }[];
@@ -193,4 +214,17 @@ export function blobToDataUrl(b: Blob): Promise<string> {
     r.onerror = rej;
     r.readAsDataURL(b);
   });
+}
+
+// Les plantes d'intérieur notées comme « cultures » (anciennes versions) deviennent des « Mes plantes »
+import { plante as ficheDe } from "../data/index";
+function migrate(s: State): State {
+  const restantes: Culture[] = [];
+  const plantes = [...(s.plantes ?? [])];
+  for (const c of s.cultures) {
+    const f = ficheDe(c.planteId);
+    if (f?.categorie === "interieur") plantes.push({ id: c.id, planteId: c.planteId, surnom: f.nom.split(" (")[0], depuis: c.date, arrosages: [], engrais: [], rempotages: [], photos: [] });
+    else restantes.push(c);
+  }
+  return { ...s, cultures: restantes, plantes };
 }

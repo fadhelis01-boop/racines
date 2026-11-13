@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useStore, toggleFait, getState } from "../lib/store";
+import { useStore, toggleFait } from "../lib/store";
 import { meteo, alertes, emojiMeteo, type Meteo } from "../lib/meteo";
 import { lune } from "../lib/lune";
 import { travauxDuMois, plantesDuMois, tachesPerso, ACTIONS, type Action } from "../lib/calendar";
@@ -8,6 +8,9 @@ import { A, Listen, Section } from "../components/ui";
 import { href, go } from "../lib/router";
 import { Logo } from "../App";
 import type { Plante } from "../data/types";
+import { ZONES } from "../data/index";
+import { aFaire, marquer } from "../lib/mesplantes";
+import { upsert } from "../lib/store";
 
 export function filtreSituation(sit: string) {
   return (p: Plante) =>
@@ -18,7 +21,7 @@ export function filtreSituation(sit: string) {
 
 export function sectionsSituation(sit: string, animaux: boolean) {
   const base: { k: "potager" | "verger" | "serre" | "interieur" | "compost" | "animaux" | "balcon"; t: string; e: string }[] =
-    sit === "appartement" ? [{ k: "interieur", t: "Plantes d'intérieur", e: "🌿" }, { k: "balcon", t: "Fenêtre et pots", e: "🏙️" }]
+    sit === "appartement" ? [{ k: "interieur", t: "Plantes de la maison", e: "🌿" }]
     : sit === "balcon" ? [{ k: "balcon", t: "Balcon", e: "🏢" }, { k: "interieur", t: "Plantes d'intérieur", e: "🌿" }, { k: "compost", t: "Compost", e: "♻️" }]
     : [{ k: "potager", t: "Potager", e: "🥕" }, { k: "verger", t: "Verger et petits fruits", e: "🍎" }, { k: "serre", t: "Serre et abris", e: "🏡" }, { k: "compost", t: "Compost", e: "♻️" }, { k: "interieur", t: "Plantes d'intérieur", e: "🌿" }];
   if (animaux && sit === "jardin") base.splice(1, 0, { k: "animaux", t: "Animaux", e: "🐔" });
@@ -43,7 +46,9 @@ export default function Accueil() {
   const t = travauxDuMois(mois);
   const sections = sectionsSituation(settings.situation, settings.animauxActifs || s.troupeaux.length > 0);
   const pm = plantesDuMois(mois, settings.zone, filtreSituation(settings.situation));
-  const al = wx ? alertes(wx, settings.animauxActifs || s.troupeaux.length > 0) : [];
+  const al = wx ? alertes(wx, settings.animauxActifs || s.troupeaux.length > 0, settings.situation) : [];
+  const appart = settings.situation === "appartement";
+  const aVerifier = aFaire(s.plantes, now);
   const heure = now.getHours();
   const salut = heure < 12 ? "Bonjour" : heure < 18 ? "Bon après-midi" : "Bonsoir";
   const saison = mois <= 2 || mois === 12 ? "hiver" : mois <= 5 ? "printemps" : mois <= 8 ? "été" : "automne";
@@ -51,6 +56,7 @@ export default function Accueil() {
   const blocsLecture = [
     `${salut}. Nous sommes le ${now.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}.`,
     ...al.map((a) => `Alerte météo : ${a.titre}. ${a.conseils.join(" ")}`),
+    ...(aVerifier.length ? ["Plantes à vérifier aujourd'hui : " + aVerifier.map(({ mp, e }) => `${mp.surnom}, ${e.texte}`).join(". ")] : []),
     ...(perso.length ? ["Vos tâches : " + perso.map((p) => p.texte).join(". ")] : []),
     ...sections.map((x) => `${x.t} : ${t[x.k].join(" ")}`),
   ];
@@ -97,20 +103,41 @@ export default function Accueil() {
         <div className="callout info small">🌦️ Ajoutez votre commune dans les <A to="/reglages">réglages</A> pour la météo et les alertes gel, canicule et fortes pluies.</div>
       )}
 
-      <div className="card row" style={{ marginTop: 12 }}>
+      {settings.lune && <div className="card row" style={{ marginTop: 12 }}>
         <span style={{ fontSize: "2.2rem" }}>{l.emoji}</span>
         <div style={{ flex: 1 }}>
           <b>{l.phase} · lune {l.montante ? "montante" : "descendante"}</b>
           <div className="small muted">{l.conseil} <i>Tradition jardinière, sans effet démontré scientifiquement.</i></div>
         </div>
-      </div>
+      </div>}
 
       <div className="grid-sm" style={{ marginTop: 14 }}>
-        <a className="btn big" href={href("/diagnostic")}>🩺 Ma plante est malade</a>
+        <a className="btn big" href={href(appart ? "/diagnostic?interieur=1" : "/diagnostic")}>🩺 Ma plante est malade</a>
         <a className="btn big" href={href("/identifier")}>📷 Identifier par photo</a>
-        <a className="btn big" href={href("/creer")}>👨‍🌾 Créer mon potager</a>
-        <a className="btn big" href={href("/jardin")}>🧺 Noter un semis, une récolte</a>
+        {appart ? <>
+          <a className="btn big" href={href("/jardin/mesplantes")}>🌿 Mes plantes</a>
+          <a className="btn big" href={href("/guide/potager-interieur")}>🍅 Potager d'intérieur</a>
+        </> : <>
+          <a className="btn big" href={href("/creer")}>👨‍🌾 Créer mon potager</a>
+          <a className="btn big" href={href("/jardin")}>🧺 Noter un semis, une récolte</a>
+        </>}
       </div>
+
+      {(s.plantes.length > 0 || appart) && (
+        <Section title="Mes plantes à vérifier" right={<a className="small" href={href("/jardin/mesplantes")}>Toutes →</a>}>
+          {aVerifier.length ? (
+            <div className="card">
+              {aVerifier.map(({ mp, e }) => (
+                <div key={mp.id + e.type} className="task">
+                  <button className="btn sm" onClick={() => upsert("plantes", marquer(mp, e.type))} aria-label={`Noter : ${e.type} fait`}>{e.type === "arrosage" ? "💧" : e.type === "engrais" ? "🌱" : "🪣"} Fait</button>
+                  <span><b>{mp.surnom}</b>{mp.piece ? <span className="muted"> · {mp.piece}</span> : null} — {e.texte}</span>
+                </div>
+              ))}
+              <p className="small muted" style={{ margin: "6px 0 0" }}>Enfoncez un doigt dans la terre : n'arrosez que si elle est sèche sur 2 à 3 cm (succulentes : entièrement sèche).</p>
+            </div>
+          ) : s.plantes.length ? <p className="muted small">Rien à vérifier aujourd'hui. 🌿</p> : <p className="muted small">Ajoutez vos plantes dans <A to="/jardin/mesplantes">Mes plantes</A> pour recevoir les rappels d'arrosage, d'engrais et de rempotage.</p>}
+        </Section>
+      )}
 
       <Section title="Mes tâches">
         {perso.length ? (
@@ -123,7 +150,7 @@ export default function Accueil() {
             ))}
           </div>
         ) : (
-          <p className="muted small">Notez vos semis, plantations et animaux dans <A to="/jardin">Mon jardin</A> : Racines calculera vos dates de récolte et vos rappels de soins.</p>
+          <p className="muted small">{appart ? "Notez vos semis d'aromatiques et de micro-pousses dans" : "Notez vos semis, plantations et animaux dans"} <A to="/jardin">{appart ? "Mes plantes et ma maison" : "Mon jardin"}</A> : Racines calculera vos dates de récolte et vos rappels de soins.</p>
         )}
       </Section>
 
@@ -156,7 +183,7 @@ export default function Accueil() {
           </div>
         ))}
       </Section>
-      <p className="small muted center" style={{ marginTop: 24 }}>Zone climatique : {settings.zone} · <A to="/reglages">modifier</A>{getState().settings.situation === "jardin" ? "" : ""}</p>
+      <p className="small muted center" style={{ marginTop: 24 }}>Climat : {ZONES.find((z) => z.id === settings.zone)?.nom} · <A to="/reglages">modifier</A></p>
     </div>
   );
 }

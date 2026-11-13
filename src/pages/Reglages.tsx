@@ -4,7 +4,7 @@ import { ZONES } from "../data/index";
 import type { ZoneId } from "../data/calendrier";
 import { chercherVille } from "../lib/meteo";
 import { frenchVoices, preview, useTts } from "../lib/tts";
-import { download, toast } from "../components/ui";
+import { download, toast, toutesLesPhotos } from "../components/ui";
 import { promptInstall, usePwa, isIos, isStandalone, checkForAppUpdate } from "../lib/pwa";
 import { isoDate } from "../lib/store";
 
@@ -44,6 +44,7 @@ export default function Reglages() {
           </form>
           <div className="chips" style={{ marginTop: 6 }}>{villes.map((v) => <button key={v.nom + v.lat} className="chip" onClick={() => { setSettings({ ville: v }); setVilles([]); toast("Ville enregistrée"); }}>{v.nom}</button>)}</div>
         </div>
+        <label className="row"><input type="checkbox" checked={s.lune} onChange={(e) => setSettings({ lune: e.target.checked })} /> Afficher la lune (tradition jardinière, sans effet démontré)</label>
         <label className="row"><input type="checkbox" checked={s.animauxActifs} onChange={(e) => setSettings({ animauxActifs: e.target.checked })} /> Afficher les conseils pour les animaux dans le calendrier</label>
       </div>
 
@@ -118,6 +119,21 @@ export default function Reglages() {
         <button className="btn sm" onClick={async () => toast((await checkForAppUpdate()) ? "Mise à jour trouvée : elle s'installe…" : "Vous avez la dernière version.")}>Vérifier les mises à jour</button>
       </div>
 
+      <h2>Photos hors connexion</h2>
+      <div className="card stack">
+        <p className="small">Les photos des fiches viennent d'Internet et sont gardées sur l'appareil quand vous les voyez. Pour tout consulter sans connexion (jardin sans réseau, voyage), téléchargez-les une fois (environ {Math.round(toutesLesPhotos().length * 0.045)} Mo).</p>
+        <button className="btn" onClick={async (e) => {
+          const b = e.currentTarget; b.disabled = true;
+          const all = toutesLesPhotos(); let ok = 0;
+          for (let i = 0; i < all.length; i += 6) {
+            await Promise.all(all.slice(i, i + 6).map((u) => fetch(u, { mode: "cors" }).then((r) => { if (r.ok) ok++; }).catch(() => undefined)));
+            b.textContent = `Téléchargement… ${Math.min(i + 6, all.length)} / ${all.length}`;
+          }
+          b.textContent = `✅ ${ok} photos disponibles hors connexion`; b.disabled = false;
+        }}>⬇️ Télécharger toutes les photos</button>
+        <p className="small muted">Nécessite que l'application soit installée ou ouverte depuis le site publié (le stockage hors ligne est géré par le navigateur).</p>
+      </div>
+
       <h2>Sauvegarde</h2>
       <div className="card stack">
         <p className="small">Vos données (cultures, récoltes, journal et photos, animaux, réglages) sont sur cet appareil uniquement. Sauvegardez-les régulièrement, ou pour les transférer sur un autre appareil.</p>
@@ -131,7 +147,7 @@ export default function Reglages() {
       <h2>À propos</h2>
       <div className="card small">
         <p><b>Racines</b> — potager, verger, plantes d'intérieur et basse-cour. Contenus rédigés pour la France métropolitaine, à adapter à votre terrain : rien ne remplace l'observation, les conseils des jardiniers de votre région et, pour les animaux, votre vétérinaire.</p>
-        <p>Photos des fiches : Wikipédia / Wikimedia Commons (licences libres, auteurs crédités sur chaque page source). Météo : Open-Meteo. Identification : Pl@ntNet, Anthropic Claude (avec vos clés).</p>
+        <p>Photos des fiches : Wikimedia Commons, sous licences libres ; l'auteur et la licence de chaque photo sont indiqués sous l'image. Illustrations des tutoriels : créations originales. Météo : Open-Meteo. Identification : Pl@ntNet, Anthropic Claude (avec vos clés).</p>
         <p>Aucune publicité, aucun traceur, aucun compte.</p>
       </div>
     </div>

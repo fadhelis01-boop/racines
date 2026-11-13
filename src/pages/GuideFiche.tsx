@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { guide, lienVers, RUBRIQUES } from "../data/index";
 import { Back, Listen, Videos, A, Empty, Photo } from "../components/ui";
+import { youtube } from "../data/util";
 import { href } from "../lib/router";
 import { useStore, setSettings } from "../lib/store";
 import { play, pause, stop, keepAwake, listenCommands, voiceCommandsSupported, useTts } from "../lib/tts";
@@ -61,6 +62,7 @@ export default function GuideFiche({ id }: { id?: string }) {
             <p style={{ margin: "4px 0" }}>{e.texte}</p>
             {e.attention && <div className="callout danger small"><b>⚠️ Attention</b>{e.attention}</div>}
             {e.astuce && <div className="callout ok small"><b>💡 Astuce</b>{e.astuce}</div>}
+            <a className="small" href={youtube(`${e.titre} ${g.titre.split(/[:(]/)[0]}`)} target="_blank" rel="noreferrer">▶️ Voir ce geste en vidéo</a>
           </li>
         ))}
       </ol>

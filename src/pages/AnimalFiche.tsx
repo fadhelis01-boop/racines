@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { animal, GUIDES } from "../data/index";
-import { Credit, Back, Listen, Photo, Videos, A, Empty, toast } from "../components/ui";
+import { Galerie, Back, Listen, Videos, A, Empty, toast } from "../components/ui";
 import { href } from "../lib/router";
 import { upsert, uid, today } from "../lib/store";
 
@@ -23,7 +23,7 @@ export default function AnimalFiche({ id }: { id?: string }) {
     <div>
       <Back />
       <div className="hero" style={{ marginTop: 8 }}>
-        <div><div className="pic"><Photo id={a.id} emoji={a.emoji} alt={a.nom} /></div><Credit id={a.id} /></div>
+        <Galerie id={a.id} emoji={a.emoji} alt={a.nom} />
         <div>
           <h1>{a.emoji} {a.nom}</h1>
           <p>{a.resume}</p>

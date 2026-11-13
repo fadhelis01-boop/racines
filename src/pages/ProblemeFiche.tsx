@@ -1,5 +1,5 @@
 import { probleme, remede, plante, TYPES_PROBLEME } from "../data/index";
-import { Credit, Back, Listen, Photo, Videos, A, Empty } from "../components/ui";
+import { Galerie, Back, Listen, Videos, A, Empty } from "../components/ui";
 import { href } from "../lib/router";
 import { MOIS_NOMS } from "../data/util";
 
@@ -19,7 +19,7 @@ export default function ProblemeFiche({ id }: { id?: string }) {
     <div>
       <Back />
       <div className="hero" style={{ marginTop: 8 }}>
-        <div><div className="pic"><Photo id={p.id} emoji={"🩺"} alt={p.nom} /></div><Credit id={p.id} /></div>
+        <Galerie id={p.id} emoji={"🩺"} alt={p.nom} />
         <div>
           <span className="badge">{TYPES_PROBLEME[p.type]}</span>{" "}
           <span className={`badge ${p.gravite === 3 ? "danger" : p.gravite === 2 ? "sun" : "green"}`}>{["", "Bénin", "Sérieux", "Grave"][p.gravite]}</span>
@@ -50,7 +50,7 @@ export default function ProblemeFiche({ id }: { id?: string }) {
         </>
       )}
       <h2>🎬 Vidéos</h2>
-      <Videos id={p.id} query={`${p.nom.split(" (")[0].toLowerCase()} traitement naturel jardin`} />
+      <Videos id={p.id} query={`${p.nom.split(" (")[0].toLowerCase()} traitement naturel`} gestes={[`reconnaître ${p.nom.split(" (")[0].toLowerCase()}`, `${p.nom.split(" (")[0].toLowerCase()} prévention`]} />
     </div>
   );
 }

@@ -7,9 +7,12 @@ import type { Categorie } from "../data/types";
 
 export default function Plantes() {
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState<Categorie | "tout" | "fav">("tout");
+  const situation = useStore((s) => s.settings.situation);
+  const [cat, setCat] = useState<Categorie | "tout" | "fav">(situation === "appartement" ? "interieur" : "tout");
   const [lieu, setLieu] = useState<string>("");
   const [facile, setFacile] = useState(false);
+  const [filtres, setFiltres] = useState<string[]>([]);
+  const tog = (f: string) => setFiltres(filtres.includes(f) ? filtres.filter((x) => x !== f) : [...filtres, f]);
   const fav = useStore((s) => s.favoris);
   const nq = norm(q);
   const list = PLANTES.filter(
@@ -17,7 +20,11 @@ export default function Plantes() {
       (cat === "tout" || (cat === "fav" ? fav.includes(p.id) : p.categorie === cat)) &&
       (!lieu || p.lieux.includes(lieu as never)) &&
       (!facile || p.difficulte === 1) &&
-      (!nq || norm(p.nom + " " + p.latin).includes(nq)),
+      (!filtres.includes("animaux") || p.sansDangerAnimaux === true) &&
+      (!filtres.includes("sombre") || p.ombreOk === true || p.expo.includes("ombre")) &&
+      (!filtres.includes("oublis") || (p.difficulte === 1 && p.eau !== "fort")) &&
+      (!filtres.includes("fleurs") || p.fleurit === true) &&
+      (!nq || norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" ")).includes(nq)),
   ).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
   return (
     <div>
@@ -41,6 +48,11 @@ export default function Plantes() {
           <option value="interieur">En intérieur</option>
         </select>
         <label className="row small"><input type="checkbox" checked={facile} onChange={(e) => setFacile(e.target.checked)} /> Faciles seulement</label>
+      </div>
+      <div className="chips" style={{ marginBottom: 12 }}>
+        {[["animaux", "🐱 Sans danger chats et chiens"], ["sombre", "🌑 Pièce sombre"], ["oublis", "🙈 Pardonne les oublis"], ["fleurs", "🌸 Fleurit en intérieur"]].map(([k, l]) => (
+          <button key={k} className={`chip ${filtres.includes(k) ? "on" : ""}`} onClick={() => tog(k)}>{l}</button>
+        ))}
       </div>
       <div className="grid">
         {list.map((p) => (

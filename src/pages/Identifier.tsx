@@ -4,6 +4,7 @@ import { identifyPlantNet, identifyClaude, claudeErrorMessage, savePhoto, type P
 import { plante, probleme, animal } from "../data/index";
 import { href } from "../lib/router";
 import { Back, Listen, A, toast } from "../components/ui";
+import IdentGuidee from "../components/IdentGuidee";
 
 export default function Identifier() {
   const settings = useStore((s) => s.settings);
@@ -116,7 +117,8 @@ export default function Identifier() {
                 <span style={{ flex: 1 }}>
                   <b>{r.noms[0] ?? r.latin}</b> <i className="muted small">{r.latin}</i>
                   {r.noms.length > 1 && <div className="small muted">Aussi appelé : {r.noms.slice(1, 4).join(", ")}</div>}
-                  {f && <div><a href={href(`/plante/${f.id}`)}>→ Voir la fiche {f.nom}</a></div>}
+                  {f && <div><a href={href(`/plante/${f.id}`)}>→ {r.exact ? "Voir la fiche" : "Fiche la plus proche (même genre) :"} {f.nom}</a></div>}
+                  {f?.sosies?.length ? <div className="small muted">À ne pas confondre avec : {f.sosies.map((s) => s.nom).join(", ")}</div> : null}
                 </span>
               </div>
             );
@@ -159,10 +161,19 @@ export default function Identifier() {
       )}
 
       {!photos.length && (
-        <div className="callout info" style={{ marginTop: 12 }}>
-          <b>Sans clé ni connexion ?</b>
-          Le <a href={href("/diagnostic")}>diagnostic guidé</a> fonctionne hors ligne en quelques questions. Pour identifier une plante, l'application gratuite Pl@ntNet ou Google Lens sur votre téléphone font aussi très bien l'affaire.
-        </div>
+        <>
+          <div className="card" style={{ marginTop: 12 }}>
+            <h3>📱 Sans clé : les applications gratuites</h3>
+            <p className="small">Pas besoin de clé pour identifier une plante : utilisez directement l'une de ces applications, puis cherchez le nom trouvé dans Racines (les noms courants et scientifiques sont reconnus).</p>
+            <div className="row">
+              <a className="btn" href="https://identify.plantnet.org/fr" target="_blank" rel="noreferrer">🌿 Pl@ntNet (site et appli)</a>
+              <a className="btn" href="https://lens.google.com/" target="_blank" rel="noreferrer">🔍 Google Lens</a>
+              <a className="btn" href={href("/recherche")}>Rechercher le nom trouvé</a>
+            </div>
+            <p className="small muted">Conseils pour une bonne identification : une feuille entière bien à plat, le dessus ET le dessous, une vue d'ensemble, et la fleur si possible. Pour une maladie, le <a href={href("/diagnostic")}>diagnostic guidé</a> fonctionne hors ligne.</p>
+          </div>
+          <div style={{ marginTop: 12 }}><IdentGuidee /></div>
+        </>
       )}
     </div>
   );

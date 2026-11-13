@@ -78,7 +78,7 @@ export const INTERIEUR: Plante[] = [
     toxique: "Toxique pour chats et chiens (latex jaune sous la peau : vomissements, diarrhée). Le gel interne seul s'utilise en usage externe.",
   },
   {
-    ...base, id: "cactus", nom: "Cactus et succulentes", latin: "Cactaceae, Crassula, Echeveria…", emoji: "🌵", wiki: "Plante succulente", difficulte: 1, expo: ["soleil"], eau: "faible",
+    ...base, id: "cactus", nom: "Cactus", latin: "Cactaceae", emoji: "🌵", wiki: "Cactaceae", difficulte: 1, expo: ["soleil"], eau: "faible",
     intro: "Ils demandent beaucoup de lumière, très peu d'eau et un repos hivernal frais pour fleurir.",
     lumiere: "Le maximum : rebord de fenêtre au sud.", arrosageDetail: "Par trempage quand la terre est sèche, de mars à octobre ; presque rien de novembre à février.",
     humidite: "Air sec.", temperature: "Hiver frais (8-12 °C) pour la floraison.", rempotage: "Tous les 2-3 ans, gants et papier journal plié pour les épines.",

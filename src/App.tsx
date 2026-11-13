@@ -5,6 +5,7 @@ import { Player } from "./components/Player";
 import { usePwa, applyUpdate } from "./lib/pwa";
 import Accueil from "./pages/Accueil";
 import Onboarding from "./pages/Onboarding";
+import Garde from "./components/Garde";
 
 const Calendrier = lazy(() => import("./pages/Calendrier"));
 const Plantes = lazy(() => import("./pages/Plantes"));
@@ -53,6 +54,8 @@ export default function App() {
   const route = useRoute();
   const loaded = useLoaded();
   const onboarded = useStore((s) => s.settings.onboarded);
+  const appart = useStore((s) => s.settings.situation === "appartement");
+  const nav = NAV.map((n) => (n.to === "/jardin" && appart ? { ...n, label: "Mes plantes", i: "🌿" } : n.to === "/creer" && appart ? { ...n, label: "Mon potager d'intérieur" } : n));
   const { updateReady } = usePwa();
   const [p0, p1] = route.parts;
 
@@ -92,7 +95,7 @@ export default function App() {
     <div className="app">
       <nav className="side" aria-label="Navigation principale">
         <a className="brand" href={href("/")}><Logo /> Racines</a>
-        {NAV.map((n, i) => (
+        {nav.map((n, i) => (
           <span key={n.to}>
             {i === 4 && <div className="sep" />}
             <a href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span aria-hidden="true">{n.i}</span> {n.label}</a>
@@ -106,7 +109,7 @@ export default function App() {
             <button className="btn sm primary" onClick={applyUpdate}>Mettre à jour</button>
           </div>
         )}
-        <Suspense fallback={<p className="muted">Chargement…</p>}>{page}</Suspense>
+        <Garde cle={route.path}><Suspense fallback={<p className="muted">Chargement…</p>}>{page}</Suspense></Garde>
       </main>
       <nav className="bottom-nav" aria-label="Navigation">
         {NAV.filter((n) => n.main).map((n) => (

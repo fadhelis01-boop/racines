@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { plante, probleme, CATEGORIES, FAMILLES } from "../data/index";
-import { Credit, Back, Fav, Listen, MonthGrid, Photo, Videos, A, Empty, toast } from "../components/ui";
+import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty, toast } from "../components/ui";
 import { useStore, upsert, uid, today } from "../lib/store";
 import { href } from "../lib/router";
 import { moisAffiches } from "../lib/calendar";
+import { AjoutMaPlante } from "../components/MesPlantes";
 import { MOIS_NOMS } from "../data/util";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
@@ -13,10 +14,12 @@ const EAU = { faible: "💧 Faible", moyen: "💧💧 Moyen", fort: "💧💧�
 export default function PlanteFiche({ id }: { id?: string }) {
   const p = id ? plante(id) : undefined;
   const zone = useStore((s) => s.settings.zone);
-  const espaces = useStore((s) => s.espaces);
   const cultures = useStore((s) => s.cultures.filter((c) => c.planteId === id));
   const [tab, setTab] = useState("culture");
   const [ajout, setAjout] = useState(false);
+  const [ajoutMp, setAjoutMp] = useState(false);
+  const situation = useStore((s) => s.settings.situation);
+  const mesExemplaires = useStore((s) => s.plantes.filter((x) => x.planteId === id).length);
   if (!p) return <Empty emoji="🤷">Fiche introuvable. <A to="/plantes">Toutes les plantes</A></Empty>;
   const interieur = p.categorie === "interieur";
 
@@ -64,7 +67,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
       <div className="row between"><Back /><div className="row"><Fav id={p.id} /></div></div>
       <div className="hero" style={{ marginTop: 8 }}>
         <div>
-          <div><div className="pic"><Photo id={p.id} emoji={p.emoji} alt={p.nom} /></div><Credit id={p.id} /></div>
+          <Galerie id={p.id} emoji={p.emoji} alt={p.nom} />
         </div>
         <div>
           <span className="badge green">{CATEGORIES[p.categorie].emoji} {CATEGORIES[p.categorie].label}</span>{" "}
@@ -74,10 +77,13 @@ export default function PlanteFiche({ id }: { id?: string }) {
           <p>{p.intro}</p>
           <div className="row">
             <Listen id={`plante-${p.id}`} title={p.nom} blocks={lecture} label="Écouter la fiche" />
-            {!interieur && <button className="btn primary" onClick={() => setAjout(!ajout)}>➕ J'ai semé / planté</button>}
-            {interieur && <button className="btn primary" onClick={() => { upsert("cultures", { id: uid(), planteId: p.id, date: today(), mode: "plantation", espaceId: espaces.find((e) => e.type === "interieur")?.id }); toast("Ajoutée à Mon jardin"); }}>➕ J'ai cette plante</button>}
+            {!interieur && situation !== "appartement" && <button className="btn primary" onClick={() => setAjout(!ajout)}>➕ J'ai semé / planté</button>}
+            {!interieur && situation === "appartement" && p.lieux.includes("interieur") && <button className="btn" onClick={() => setAjout(!ajout)}>➕ J'ai semé</button>}
+            {(interieur || p.lieux.includes("pot") || p.lieux.includes("interieur")) && <button className={`btn ${interieur ? "primary" : ""}`} onClick={() => setAjoutMp(!ajoutMp)}>🌿 {interieur ? "J'ai cette plante" : "Je la suis en pot"}</button>}
           </div>
           {ajout && <AjoutCulture planteId={p.id} onDone={() => setAjout(false)} />}
+          {ajoutMp && <AjoutMaPlante planteId={p.id} onDone={() => setAjoutMp(false)} />}
+          {mesExemplaires > 0 && <p className="small muted">Dans Mes plantes : {mesExemplaires} exemplaire(s). <A to="/jardin/mesplantes">Voir</A></p>}
           {cultures.length > 0 && <p className="small muted">Dans votre jardin : {cultures.length} culture(s) notée(s). <A to="/jardin">Voir</A></p>}
         </div>
       </div>
@@ -92,6 +98,22 @@ export default function PlanteFiche({ id }: { id?: string }) {
 
       {tab === "culture" && (
         <div>
+          {p.sosies && p.sosies.length > 0 && (
+            <div className="callout warn">
+              <b>👀 Ne pas confondre avec</b>
+              <ul className="ticks" style={{ margin: 0 }}>
+                {p.sosies.map((s) => <li key={s.nom}>{s.id && plante(s.id) ? <a href={href(`/plante/${s.id}`)}><b>{s.nom}</b></a> : <b>{s.nom}</b>} : {s.difference}</li>)}
+              </ul>
+            </div>
+          )}
+          {(p.alias?.length || p.tailleAdulte || p.sansDangerAnimaux !== undefined) && (
+            <p className="small muted">
+              {p.alias?.length ? <>Aussi appelée : {p.alias.slice(0, 5).join(", ")}. </> : null}
+              {p.tailleAdulte ? <>Taille adulte : {p.tailleAdulte}. </> : null}
+              {p.sansDangerAnimaux === true && <span className="badge green">🐱 Sans danger chats et chiens</span>}
+              {p.sansDangerAnimaux === false && <span className="badge danger">🐱 Toxique pour chats et chiens</span>}
+            </p>
+          )}
           <div className="facts">{facts.filter(([, v]) => v).map(([k, v]) => <div key={k} className="fact"><div className="k">{k}</div>{v}</div>)}</div>
           <h2>{interieur ? "Installation" : "Culture pas à pas"}</h2>
           <ol className="steps">{p.etapes.map((e, i) => <li key={i}>{e}</li>)}</ol>
@@ -157,7 +179,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
           {p.toxique && <p className="small" style={{ marginBottom: 0 }}><b>Toxicité :</b> {p.toxique}</p>}
         </div>
       )}
-      {tab === "videos" && <Videos id={p.id} query={`${p.nom.split(" (")[0].toLowerCase()} ${interieur ? "entretien plante d'intérieur" : "culture potager conseils"}`} />}
+      {tab === "videos" && (() => { const n = p.nom.split(" (")[0].toLowerCase(); return <Videos id={p.id} query={`${n} ${interieur ? "entretien plante d'intérieur" : "culture potager conseils"}`} gestes={interieur ? [`${n} arrosage`, `${n} rempotage`, `${n} bouture`, `${n} feuilles jaunes`] : [`semis ${n}`, `plantation ${n}`, `${n} taille entretien`, `récolte ${n}`, `${n} maladies traitement naturel`]} />; })()}
     </div>
   );
 }
