@@ -1,3 +1,4 @@
+import { MALADIES_ANIMALES } from "../data/maladies-animales";
 import { useState } from "react";
 import { animal, GUIDES } from "../data/index";
 import { Galerie, Back, Listen, Videos, A, Empty, toast } from "../components/ui";
@@ -62,6 +63,8 @@ export default function AnimalFiche({ id }: { id?: string }) {
       )}
       {tab === "sante" && (
         <div>
+          <a className="btn big primary" href={href(`/diagnostic-animal?animal=${a.id}`)}>🩺 Diagnostic guidé : mon animal ne va pas bien</a>
+          {MALADIES_ANIMALES.some((m) => m.especes.includes(a.id)) && <div className="chips" style={{ margin: "10px 0" }}>{MALADIES_ANIMALES.filter((m) => m.especes.includes(a.id)).map((m) => <a key={m.id} className="chip" href={href(`/maladie-animale/${m.id}`)}>🩺 {m.nom}</a>)}</div>}
           <h3>Signes d'alerte : que faire ?</h3>
           {a.sante.map((s) => <div key={s.signe} className="card"><b>👁️ {s.signe}</b><p className="small" style={{ margin: "4px 0 0" }}>→ {s.action}</p></div>)}
           <h3 style={{ marginTop: 18 }}>Maladies et parasites courants</h3>

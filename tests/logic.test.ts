@@ -5,7 +5,9 @@ import { lune } from "../src/lib/lune";
 import { spoken } from "../src/lib/tts";
 import { ficheParLatin } from "../src/lib/identify";
 import { DEFAULT_SETTINGS, type State, type MaPlante } from "../src/lib/store";
-import { rechercher } from "../src/lib/search";
+import { rechercher, parleAnimal, ressembleSymptome } from "../src/lib/search";
+import { diagnostiquerAnimal } from "../src/lib/sante-animale";
+import { plantesVertes } from "../src/lib/garden";
 import { echeances, intervalleArrosage, marquer } from "../src/lib/mesplantes";
 import { ficheLatin } from "../src/lib/identify";
 import { plante } from "../src/data/index";
@@ -113,6 +115,34 @@ ok(!plantesDuMois(7, "tempere").recolte.some((p) => p.id === "zinnia") && plante
 
 ok(["Rosier", "Rose trémière"].includes(rechercher("rose")[0]?.titre ?? ""), "recherche « rose » → rosier ou rose trémière en tête (obtenu : " + rechercher("rose")[0]?.titre + ")");
 ok(!rechercher("rose").slice(0, 5).some((h) => h.titre === "Persil"), "« rose » ne trouve pas le persil");
+
+// Audit amateur 4 profils : requêtes de débutants
+const top = (q: string, k = 5) => rechercher(q).slice(0, k).map((h) => h.titre);
+const vise = (q: string, attendu: string, k = 5) => ok(top(q, k).some((t) => t.startsWith(attendu)), `recherche « ${q} » → ${attendu} (obtenu : ${top(q, 3).join(" | ")})`);
+vise("quand planter les tomates", "Tomate", 3);
+vise("haie", "Planter et tailler une haie", 3);
+vise("pelouse jaune", "Une pelouse naturelle", 5);
+vise("coq", "Poules", 3);
+vise("oeufs mous", "Œufs mous", 3);
+vise("tuer un poulet", "Abattre et préparer une volaille", 3);
+vise("déclaration poules mairie", "Règles à connaître", 5);
+vise("chèvre maigre", "Vers digestifs", 5);
+vise("plante pour chat", "Plantes toxiques", 5);
+vise("engrais plantes vertes", "Plantes d'intérieur : les 5 règles", 5);
+vise("lavande en pot", "Lavande", 3);
+vise("pigeons balcon", "Pigeons au balcon", 3);
+vise("monstera pleure", "Gouttes d'eau sur les feuilles", 3);
+vise("poule ne pond plus", "Ponte en baisse", 3);
+vise("lapin ne mange plus", "Arrêt du transit", 3);
+vise("arrosage automatique balcon", "Arrosage automatique sur un balcon", 3);
+ok(parleAnimal("ma poule tousse") && ressembleSymptome("ma poule tousse"), "« ma poule tousse » → carte diagnostic animal");
+ok(!parleAnimal("feuilles jaunes tomate"), "« feuilles jaunes tomate » ne parle pas d'animal");
+ok(diagnostiquerAnimal("lapin", ["ne-mange-plus", "plus-de-crottes"])[0]?.m.id === "stase-lapin", "lapin sans crottes → arrêt du transit en tête");
+ok(diagnostiquerAnimal("poule", ["muqueuses-pales", "ponte-baisse", "parasites"])[0]?.m.id === "poux-rouges", "crête pâle + ponte en baisse + parasites → poux rouges");
+ok(diagnostiquerAnimal("chevre", ["ventre-gonfle"])[0]?.m.urgence === 3, "chèvre ventre gonflé → urgence");
+ok(!diagnostiquerAnimal("lapin", ["ponte-baisse"]).some((x) => x.m.id === "arret-ponte"), "pas d'arrêt de ponte pour un lapin");
+const vertes = plantesVertes({ situation: "appartement", expo: "ombre", temps: "peu", surface: 1, objectifs: ["compagnie"] });
+ok(vertes.length > 0 && vertes.every((p) => p.sansDangerAnimaux && p.expo.includes("ombre") && p.difficulte === 1), `plantes vertes ombre + chat : ${vertes.map((p) => p.nom).join(", ")}`);
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

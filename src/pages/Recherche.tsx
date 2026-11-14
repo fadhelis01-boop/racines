@@ -1,18 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { href, useRoute } from "../lib/router";
 import { Vignette } from "../components/Ico";
-import { rechercher, ressembleSymptome } from "../lib/search";
+import { rechercher, ressembleSymptome, parleAnimal } from "../lib/search";
 import { Listen } from "../components/ui";
 
 export default function Recherche() {
   const route = useRoute();
-  const [q, setQ] = useState(route.query.get("q") ?? "");
+  const qUrl = route.query.get("q") ?? "";
+  const [q, setQ] = useState(qUrl);
+  useEffect(() => setQ(qUrl), [qUrl]);
   const res = rechercher(q);
   return (
     <div>
       <h1>🔍 Rechercher</h1>
       <div className="search"><input type="search" autoFocus placeholder="Plante, nom courant, symptôme, technique… (ex. : caoutchouc, feuilles jaunes, rempotage)" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Rechercher" /></div>
-      {q.length >= 3 && ressembleSymptome(q) && (
+      {q.length >= 3 && ressembleSymptome(q) && parleAnimal(q) && (
+        <a className="callout warn row" href={href("/diagnostic-animal")} style={{ textDecoration: "none", color: "inherit", display: "flex" }}>
+          <span>🐔 Un animal semble concerné : lancez le <b>diagnostic guidé des animaux</b> (causes probables et niveau d'urgence).</span>
+        </a>
+      )}
+      {q.length >= 3 && ressembleSymptome(q) && !parleAnimal(q) && (
         <a className="callout info row" href={href("/diagnostic")} style={{ textDecoration: "none", color: "inherit", display: "flex" }}>
           <span>🩺 Cela ressemble à un symptôme : lancez le <b>diagnostic guidé</b> pour trouver la cause la plus probable.</span>
         </a>

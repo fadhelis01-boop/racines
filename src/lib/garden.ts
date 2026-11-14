@@ -84,6 +84,15 @@ export interface Profil {
   objectifs: string[]; // "faciles", "aromatiques", "fruits", "autonomie", "enfants", "animaux"
 }
 
+// Plantes d'intérieur conseillées selon la lumière, le temps et la présence d'animaux de compagnie
+export function plantesVertes(pr: Profil): Plante[] {
+  const diffMax = pr.temps === "peu" ? 1 : pr.temps === "moyen" ? 2 : 3;
+  const compagnie = pr.objectifs.includes("compagnie");
+  return PLANTES.filter((p) => p.categorie === "interieur" && p.expo.includes(pr.expo) && p.difficulte <= diffMax && (!compagnie || p.sansDangerAnimaux))
+    .sort((a, b) => a.difficulte - b.difficulte || a.nom.localeCompare(b.nom, "fr"))
+    .slice(0, 12);
+}
+
 export function recommander(pr: Profil): { plantes: Plante[]; methode: string; conseils: string[]; verger: Plante[] } {
   const lieux = pr.situation === "appartement" ? ["interieur"] : pr.situation === "balcon" ? ["pot", "balcon"] : ["pleine-terre"];
   const diffMax = pr.temps === "peu" ? 1 : pr.temps === "moyen" ? 2 : 3;

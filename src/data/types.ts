@@ -180,6 +180,7 @@ export interface Guide {
   erreurs?: string[];
   video: string; // requête de recherche vidéo
   liens?: string[]; // ids de plantes, problèmes, guides ou animaux liés
+  alias?: string[]; // mots de recherche supplémentaires
   sensible?: boolean; // contenu à accès volontaire (abattage)
 }
 

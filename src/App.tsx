@@ -26,6 +26,9 @@ const Reglages = lazy(() => import("./pages/Reglages"));
 const Plus = lazy(() => import("./pages/Plus"));
 const Recherche = lazy(() => import("./pages/Recherche"));
 const Lexique = lazy(() => import("./pages/Lexique"));
+const MaladieAnimale = lazy(() => import("./pages/SanteAnimale"));
+const DiagnosticAnimal = lazy(() => import("./pages/SanteAnimale").then((m) => ({ default: m.DiagnosticAnimal })));
+const Calculs = lazy(() => import("./pages/Calculs"));
 import BarreRecherche from "./components/BarreRecherche";
 import { Ico } from "./components/Ico";
 
@@ -92,9 +95,12 @@ export default function App() {
     case "plus": page = <Plus />; break;
     case "recherche": page = <Recherche />; break;
     case "lexique": page = <Lexique />; break;
+    case "maladie-animale": page = <MaladieAnimale id={p1} />; break;
+    case "diagnostic-animal": page = <DiagnosticAnimal />; break;
+    case "calculs": page = <Calculs />; break;
     default: page = <Accueil />;
   }
-  const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/animaux" && p0 === "animal"));
+  const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/animaux" && ["animal", "maladie-animale", "diagnostic-animal"].includes(p0 ?? "")));
 
   return (
     <div className="app">
@@ -121,7 +127,7 @@ export default function App() {
         {NAV.filter((n) => n.main).map((n) => (
           <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span className="i"><Ico nom={n.ico} emoji={n.i} taille={28} /></span>{n.label.replace(" et fleurs", "")}</a>
         ))}
-        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
+        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
       </nav>
       <Player />
     </div>

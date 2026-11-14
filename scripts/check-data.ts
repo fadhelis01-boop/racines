@@ -1,3 +1,5 @@
+import { ALIAS_GUIDES } from "../src/data/guides-balcon";
+import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales";
 // Contrôle de cohérence du contenu, exécuté à chaque build.
 // Échoue si une référence croisée pointe vers un id inexistant.
 import { ENRICH } from "../src/data/interieur2";
@@ -48,6 +50,14 @@ for (const t of LEXIQUE) if (t.voir && !lienVers(t.voir)) errors.push(`lexique $
 if (CALENDRIER.length !== 12) errors.push("calendrier : 12 mois attendus");
 for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.includes(s))) errors.push(`signe « ${s} » jamais utilisé`);
 
+{
+  for (const k of Object.keys(ALIAS_GUIDES)) if (!GUIDES.some((g) => g.id === k)) errors.push(`alias de tutoriel pour un id inconnu « ${k} »`);
+  dup("maladie animale", MALADIES_ANIMALES);
+  for (const m of MALADIES_ANIMALES) {
+    for (const e of m.especes) if (!ANIMAUX.some((a) => a.id === e)) errors.push(`maladie ${m.id} : espèce inconnue « ${e} »`);
+    for (const x of m.signesIds) if (!SIGNES_ANIMAUX[x]) errors.push(`maladie ${m.id} : signe inconnu « ${x} »`);
+  }
+}
 if (errors.length) {
   console.error(`✗ ${errors.length} erreur(s) dans le contenu :\n  ` + errors.join("\n  "));
   process.exit(1);

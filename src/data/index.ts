@@ -13,12 +13,13 @@ import { GUIDES_MAISON } from "./guides-maison";
 import { GUIDES_ANIMAUX } from "./guides-animaux";
 import { GUIDES_INTERIEUR } from "./guides-interieur";
 import { GUIDES_JARDIN2 } from "./guides-jardin2";
+import { GUIDES_BALCON, ALIAS_GUIDES } from "./guides-balcon";
 import { ANIMAUX2 } from "./animaux2";
 import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
 
 export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...JARDIN2, ...FLEURS2].map((p) => ({ ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}) }));
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_ANIMAUX];
+export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_ANIMAUX].map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
 const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 

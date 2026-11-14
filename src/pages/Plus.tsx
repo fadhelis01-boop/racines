@@ -11,7 +11,9 @@ export default function Plus() {
           <a key={n.to} className="btn big" href={href(n.to)} style={{ justifyContent: "flex-start" }}><Ico nom={n.ico} emoji={n.i} taille={36} /> {n.label}</a>
         ))}
         <a className="btn big" href={href("/recherche")} style={{ justifyContent: "flex-start" }}><Ico nom="recherche" emoji="🔍" taille={36} /> Rechercher</a>
-        <a className="btn big" href={href("/diagnostic")} style={{ justifyContent: "flex-start" }}><Ico nom="diagnostic" emoji="🔎" taille={36} /> Diagnostic</a>
+        <a className="btn big" href={href("/diagnostic")} style={{ justifyContent: "flex-start" }}><Ico nom="diagnostic" emoji="🔎" taille={36} /> Diagnostic des plantes</a>
+        <a className="btn big" href={href("/diagnostic-animal")} style={{ justifyContent: "flex-start" }}><Ico nom="sante" emoji="🩺" taille={36} /> Diagnostic des animaux</a>
+        <a className="btn big" href={href("/calculs")} style={{ justifyContent: "flex-start" }}><Ico nom="creer" emoji="🧮" taille={36} /> Calculs pratiques</a>
       </div>
     </div>
   );

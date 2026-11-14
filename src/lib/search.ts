@@ -1,23 +1,35 @@
 import { PLANTES, PROBLEMES, REMEDES, GUIDES, ANIMAUX, SIGNES } from "../data/index";
 import { norm } from "./garden";
 import { LEXIQUE } from "../data/lexique";
+import { MALADIES_ANIMALES } from "../data/maladies-animales";
 
 // Moteur de recherche : noms courants et synonymes, texte complet des fiches,
-// symptômes (« feuilles jaunes » → diagnostic), et tolérance aux fautes de frappe.
+// questions en phrase (« quand planter les tomates », « ma poule ne pond plus »),
+// symptômes (→ diagnostic) et tolérance aux fautes de frappe.
 
 export interface Hit { href: string; emoji: string; titre: string; type: string; score: number; id?: string }
-interface Doc { href: string; emoji: string; titre: string; type: string; noms: string; texte: string; id?: string }
+interface Doc { href: string; emoji: string; titre: string; type: string; noms: string; texte: string; id?: string; principal: boolean }
+
+// Autres noms des animaux (pour « coq », « brebis », « ruche »…)
+const ALIAS_ANIMAUX: Record<string, string> = {
+  poule: "poules coq coqs poussin poussins ponte oeuf oeufs volaille volailles poulailler pondeuse",
+  canard: "canards cane canes caneton", oie: "oies jars oison", pintade: "pintades pintadeau", caille: "cailles",
+  lapin: "lapins lapine lapereau clapier", chevre: "chevres bouc chevreau caprin", mouton: "moutons brebis agneau belier ovin",
+  ane: "anes anesse anon", cheval: "chevaux poney poneys jument equide", cochon: "cochons porc porcs truie porcelet",
+  abeille: "abeilles ruche ruches apiculture miel essaim", dindon: "dinde dindes dindonneau", pigeon: "pigeons pigeonneau colombe",
+};
 
 let DOCS: Doc[] | null = null;
 function docs(): Doc[] {
   if (DOCS) return DOCS;
   DOCS = [
-    ...PLANTES.map((p) => ({ id: p.id, href: `/plante/${p.id}`, emoji: p.emoji, titre: p.nom, type: p.categorie === "fleur" || p.categorie === "ornement" ? "Fleur et jardin d'agrément" : p.categorie === "arbre" ? "Arbre fruitier" : p.categorie === "interieur" ? "Plante d'intérieur" : p.categorie === "toxique" ? "Plante dangereuse" : p.categorie === "sauvage" ? "Plante sauvage" : "Plante", noms: norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" | ")), texte: norm([p.intro, ...p.etapes, ...p.entretien, p.conservation ?? "", p.lumiere ?? "", p.arrosageDetail ?? ""].join(" ")) })),
-    ...LEXIQUE.map((t) => ({ id: t.wiki ? "lex-" + t.id : undefined, href: `/lexique?t=${t.id}`, emoji: "📖", titre: t.terme, type: "Lexique", noms: norm([t.terme, ...(t.alias ?? [])].join(" | ")), texte: norm(t.def) })),
-    ...ANIMAUX.map((a) => ({ id: a.id, href: `/animal/${a.id}`, emoji: a.emoji, titre: a.nom, type: "Animal", noms: norm(a.nom), texte: norm([a.resume, ...a.quotidien, ...a.alimentation, ...a.interdits].join(" ")) })),
-    ...PROBLEMES.map((p) => ({ id: p.id, href: `/probleme/${p.id}`, emoji: "🩺", titre: p.nom, type: "Santé", noms: norm([p.nom, ...(p.alias ?? []), ...p.signes.map((s) => SIGNES[s].label)].join(" | ")), texte: norm([p.cible, ...p.symptomes, p.conditions].join(" ")) })),
-    ...REMEDES.map((r) => ({ href: `/remede/${r.id}`, emoji: r.emoji, titre: r.nom, type: "Remède", noms: norm(r.nom), texte: norm([r.role, ...r.usage].join(" ")) })),
-    ...GUIDES.map((g) => ({ id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm(g.titre + " | " + g.resume), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
+    ...PLANTES.map((p) => ({ principal: true, id: p.id, href: `/plante/${p.id}`, emoji: p.emoji, titre: p.nom, type: p.categorie === "fleur" || p.categorie === "ornement" ? "Fleur et jardin d'agrément" : p.categorie === "arbre" ? "Arbre fruitier" : p.categorie === "interieur" ? "Plante d'intérieur" : p.categorie === "toxique" ? "Plante dangereuse" : p.categorie === "sauvage" ? "Plante sauvage" : "Plante", noms: norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" | ")), texte: norm([p.intro, ...p.etapes, ...p.entretien, p.conservation ?? "", p.lumiere ?? "", p.arrosageDetail ?? "", p.toxique ?? "", p.sansDangerAnimaux ? "sans danger chats chiens" : ""].join(" ")) })),
+    ...LEXIQUE.map((t) => ({ principal: false, id: t.wiki ? "lex-" + t.id : undefined, href: `/lexique?t=${t.id}`, emoji: "📖", titre: t.terme, type: "Lexique", noms: norm([t.terme, ...(t.alias ?? [])].join(" | ")), texte: norm(t.def) })),
+    ...ANIMAUX.map((a) => ({ principal: true, id: a.id, href: `/animal/${a.id}`, emoji: a.emoji, titre: a.nom, type: "Animal", noms: norm(a.nom + " | " + (ALIAS_ANIMAUX[a.id] ?? "")), texte: norm([a.resume, ...a.quotidien, ...a.alimentation, ...a.interdits, ...a.reglementation, ...a.sante.map((s) => s.signe)].join(" ")) })),
+    ...MALADIES_ANIMALES.map((m) => ({ principal: true, id: m.especes[0], href: `/maladie-animale/${m.id}`, emoji: "🩺", titre: m.nom, type: "Santé des animaux", noms: norm([m.nom, ...m.alias].join(" | ")), texte: norm([m.signes, m.explication, ...m.especes.map((e) => ALIAS_ANIMAUX[e] ?? e)].join(" ")) })),
+    ...PROBLEMES.map((p) => ({ principal: true, id: p.id, href: `/probleme/${p.id}`, emoji: "🩺", titre: p.nom, type: "Santé des plantes", noms: norm([p.nom, ...(p.alias ?? []), ...p.signes.map((s) => SIGNES[s].label)].join(" | ")), texte: norm([p.cible, ...p.symptomes, p.conditions].join(" ")) })),
+    ...REMEDES.map((r) => ({ principal: false, href: `/remede/${r.id}`, emoji: r.emoji, titre: r.nom, type: "Remède", noms: norm(r.nom), texte: norm([r.role, ...r.usage].join(" ")) })),
+    ...GUIDES.map((g) => ({ principal: false, id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm([g.titre, g.resume, ...(g.alias ?? [])].join(" | ")), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
   ];
   return DOCS;
 }
@@ -40,35 +52,75 @@ function lev(a: string, b: string, max: number) {
   return d[b.length];
 }
 
-const STOP = new Set(["de", "la", "le", "les", "des", "du", "un", "une", "a", "au", "aux", "et", "en", "ma", "mon", "mes", "qui", "pour", "sur", "est", "ont", "pas", "plante", "plantes"]);
-const radical = (t: string) => { const r = t.replace(/(ements|ement|ations|ation|ages|age|eurs|eur|ees|ee|ers|er|es|s|x)$/, ""); return r.length >= 4 ? r : t; };
+// Mots qui ne portent pas le sens de la question
+const STOP = new Set([
+  "de", "la", "le", "les", "des", "du", "un", "une", "a", "au", "aux", "et", "en", "ma", "mon", "mes", "ta", "ton", "tes", "sa", "son", "ses", "nos", "vos", "leur", "leurs",
+  "qui", "que", "quoi", "quand", "comment", "pourquoi", "quel", "quelle", "quels", "quelles", "ou", "est", "sont", "ont", "pas", "ne", "plus", "tres", "trop", "peu",
+  "pour", "sur", "dans", "avec", "sans", "par", "chez", "je", "j", "il", "elle", "ils", "elles", "on", "nous", "vous", "ce", "cet", "cette", "ces", "faire", "faut", "peut", "doit",
+  "plante", "plantes", "mon", "bien", "mal", "y", "l", "d", "qu", "c", "s", "n", "m",
+]);
+// Synonymes : un mot de la question est satisfait si l'un de ses équivalents est trouvé
+const SYN: Record<string, string[]> = {
+  tuer: ["abattre", "abattage"], tue: ["abattre", "abattage"], abattre: ["abattage"], saigner: ["saignee", "abattage"],
+  meurt: ["malade", "diagnostic", "sauver"], mourir: ["malade", "diagnostic"], creve: ["malade", "diagnostic"], malade: ["diagnostic", "maladie"],
+  jaunit: ["jaune", "jaunissement"], jaunissent: ["jaune", "jaunissement"], jaunes: ["jaune", "jaunissement"],
+  mous: ["molle", "molles"], mou: ["molle"], maigre: ["amaigrissement", "maigrit"], maigrit: ["amaigrissement"],
+  declaration: ["declarer", "reglementation"], declarer: ["declaration"], mairie: ["declaration"],
+  pond: ["ponte"], pondent: ["ponte"], oeufs: ["oeuf", "ponte"], chat: ["chats", "animaux"], chien: ["chiens", "animaux"],
+  planter: ["plantation", "plantez"], semer: ["semis", "semez"], arroser: ["arrosage", "arrosez"], tailler: ["taille", "taillez"], rempoter: ["rempotage"],
+  hiverner: ["hivernage", "hiver"], pigeons: ["pigeon"], nourrir: ["alimentation", "nourrir", "manger"], manger: ["alimentation", "nourrir"],
+  pucerons: ["puceron"], limace: ["limaces"], vers: ["ver", "vermifuge"], tomates: ["tomate"], fraises: ["fraisier", "fraise"], pommes: ["pommier", "pomme"],
+  automatique: ["programmateur", "goutte"], voisin: ["voisinage", "voisins"], copropriete: ["syndic", "voisinage"],
+};
+// Expressions transformées avant l'analyse
+const PHRASES: [RegExp, string][] = [
+  [/plantes? vertes?/g, "plante interieur"],
+  [/plantes? pour (les )?(chats?|chiens?)/g, "sans danger chats chiens"],
+  [/sans danger (pour )?(les )?(chats?|chiens?)/g, "sans danger chats chiens"],
+  [/\boeufs? mous\b|\boeufs? sans coquille/g, "coquilles molles oeufs"],
+  [/arrosage automatique/g, "arrosage automatique programmateur"],
+];
 
-// Mots courts : correspondance en début de mot seulement (« rose » ne doit pas trouver « Petroselinum »)
+const radical = (t: string) => { const r = t.replace(/(ements|ement|ations|ation|ages|age|eurs|eur|ees|ee|ers|er|es|s|x)$/, ""); return r.length >= 4 ? r : t; };
 const echappe = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const contient = (hay: string, tok: string) => (tok.length >= 6 ? hay.includes(tok) : new RegExp(`(^|[^a-z0-9])${echappe(tok)}`).test(hay));
+// Mots de 4 lettres ou moins : le mot entier (au pluriel près) — « coq » ne trouve pas « coquelicot ».
+// Mots de 5 lettres : début de mot. Au-delà : n'importe où.
+const contient = (hay: string, tok: string) =>
+  tok.length >= 6 ? hay.includes(tok) : tok.length === 5 ? new RegExp(`(^|[^a-z0-9])${echappe(tok)}`).test(hay) : new RegExp(`(^|[^a-z0-9])${echappe(tok)}(s|x)?($|[^a-z0-9])`).test(hay);
 
 export function rechercher(q: string, limit = 60): Hit[] {
-  const nq = norm(q.trim()).replace(/['’-]/g, " ");
+  let nq = norm(q.trim()).replace(/['’-]/g, " ").replace(/\s+/g, " ");
   if (nq.length < 2) return [];
-  const toks = nq.split(/\s+/).filter((t) => t.length > 1 && !STOP.has(t));
+  for (const [re, rep] of PHRASES) nq = nq.replace(re, rep);
+  const toks = nq.split(" ").filter((t) => t.length > 1 && !STOP.has(t));
+  const variantes = (t: string) => [t, radical(t), ...(SYN[t] ?? [])];
+  const radQ = new Set(toks.flatMap((t) => [radical(t), ...(SYN[t] ?? []).map(radical)]));
   const hits: Hit[] = [];
   for (const d of docs()) {
     let score = 0;
     const titre = norm(d.titre);
     if (titre === nq) score += 100;
     else if (titre.startsWith(nq)) score += 50;
+    // Un nom ou un alias identique à la question (« haie », « pelouse jaune ») : c'est la fiche attendue
+    if (d.noms.split(" | ").some((x) => x === nq)) score += 40;
     if (contient(d.noms, nq)) score += 60;
     else if (contient(d.texte, nq)) score += 20;
+    // Le sujet de la fiche est nommé dans la question (« tomates » dans « quand planter les tomates »)
+    const motsTitre = titre.split(/[^a-z0-9]+/).filter((w) => w.length >= 4 && !STOP.has(w)).map(radical);
+    if (d.principal && motsTitre.length && radical(motsTitre[0]) && radQ.has(motsTitre[0])) score += 45;
+    if (motsTitre.length && motsTitre.every((w) => radQ.has(w))) score += 30;
     if (toks.length) {
-      let all = true;
+      let manquants = 0;
       for (const t of toks) {
-        const r = radical(t);
-        if (contient(d.noms, r)) score += 12;
-        else if (contient(d.texte, r)) score += 4;
+        const vs = variantes(t);
+        if (vs.some((v) => contient(d.noms, v))) score += 12;
+        else if (vs.some((v) => contient(d.texte, v))) score += 4;
         else if (t.length >= 5 && d.noms.split(/[^a-z0-9]+/).some((w) => w.length >= 4 && lev(w, t, t.length >= 8 ? 2 : 1) <= (t.length >= 8 ? 2 : 1))) score += 8;
-        else all = false;
+        else manquants++;
       }
-      if (!all) score = Math.min(score, toks.length > 1 ? score * 0.4 : 0);
+      // Tous les mots doivent être trouvés ; dans une phrase de 3 mots et plus, on tolère un mot absent
+      if (manquants && !(toks.length >= 3 && manquants === 1)) score = toks.length > 1 ? score * 0.35 : 0;
+      else if (manquants) score *= 0.75;
     }
     if (score > 0) hits.push({ id: d.id, href: d.href, emoji: d.emoji, titre: d.titre, type: d.type, score });
   }
@@ -78,5 +130,9 @@ export function rechercher(q: string, limit = 60): Hit[] {
 // La requête ressemble-t-elle à un symptôme ? → proposer le diagnostic
 export function ressembleSymptome(q: string) {
   const nq = norm(q);
-  return /jaun|tache|brun|noir|blanc|mou|fletri|tomb|sech|trou|insect|mouche|moucheron|pourri|colle|toile|pend|malade|meurt|crev|cloque|poudre|ver\b|vers/.test(nq);
+  return /jaun|tache|brun|noir|blanc|mou|fletri|tomb|sech|trou|insect|mouche|moucheron|pourri|colle|toile|pend|malade|meurt|crev|cloque|poudre|ver\b|vers|pond|maigr|boite|diarrh|tousse|gratte/.test(nq);
+}
+export function parleAnimal(q: string) {
+  const nq = norm(q);
+  return Object.entries(ALIAS_ANIMAUX).some(([k, v]) => new RegExp(`(^|[^a-z])(${k}|${v.split(" ").join("|")})($|[^a-z])`).test(nq));
 }

@@ -1,7 +1,7 @@
 import { Vignette } from "../components/Ico";
 import { useState } from "react";
 import { useStore, upsert, uid, getState } from "../lib/store";
-import { recommander, relations, type Profil } from "../lib/garden";
+import { recommander, relations, plantesVertes, type Profil } from "../lib/garden";
 import { moisAffiches } from "../lib/calendar";
 import { MOIS_NOMS } from "../data/util";
 import { href, go } from "../lib/router";
@@ -15,6 +15,8 @@ const OBJ = [
   { id: "fruits", label: "Des fruits", e: "🍓" },
   { id: "enfants", label: "Jardiner avec des enfants", e: "🧒" },
   { id: "animaux", label: "Nourrir mes animaux", e: "🐔" },
+  { id: "vertes", label: "Des plantes vertes pour décorer", e: "🪴" },
+  { id: "compagnie", label: "J'ai un chat ou un chien (plantes sans danger)", e: "🐱" },
 ];
 
 export default function Creer() {
@@ -73,7 +75,7 @@ export default function Creer() {
       {step === 3 && (
         <div className="card stack">
           <h3>Vos envies</h3>
-          {OBJ.filter((o) => o.id !== "animaux" || pr.situation === "jardin").map((o) => (
+          {OBJ.filter((o) => (o.id !== "animaux" || pr.situation === "jardin") && (o.id !== "vertes" || pr.situation === "appartement" || pr.situation === "balcon")).map((o) => (
             <label key={o.id} className="row" style={{ cursor: "pointer" }}><input type="checkbox" checked={pr.objectifs.includes(o.id)} onChange={() => tog(o.id)} /> {o.e} {o.label}</label>
           ))}
           <div className="row"><button className="btn" onClick={() => setStep(2)}>← Retour</button><button className="btn primary" onClick={() => setStep(4)}>Voir mon potager</button></div>
@@ -98,6 +100,21 @@ export default function Creer() {
               <div className="chips">{reco.verger.map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}><Vignette id={p.id} emoji={p.emoji} taille={22} /> {p.nom}</a>)}</div>
               <p className="small muted">Ils produisent pendant des années : c'est le meilleur investissement d'un jardin familial.</p>
             </>
+          )}
+          {(() => {
+            if (pr.situation !== "appartement" && !pr.objectifs.includes("vertes")) return null;
+            const v = plantesVertes(pr);
+            return (
+              <>
+                <h3>🪴 Plantes vertes pour votre lumière</h3>
+                <p className="small muted">Choisies pour {pr.expo === "soleil" ? "une fenêtre très lumineuse" : pr.expo === "mi-ombre" ? "une lumière moyenne" : "une pièce peu lumineuse"}{pr.temps === "peu" ? ", très peu d'entretien" : ""}{pr.objectifs.includes("compagnie") ? ", sans danger pour les chats et les chiens" : ""}.</p>
+                {v.length ? <div className="chips">{v.map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}><Vignette id={p.id} emoji={p.emoji} taille={22} /> {p.nom}</a>)}</div> : <p className="small muted">Aucune plante de nos fiches ne réunit tous ces critères : ajoutez une lampe LED (voir le tutoriel lumière) ou acceptez un peu plus d'entretien.</p>}
+                <p className="small"><A to="/guide/plantes-par-piece">Quelle plante pour quelle pièce ?</A> · <A to="/guide/plantes-interieur-bases">Les 5 règles d'or</A></p>
+              </>
+            );
+          })()}
+          {pr.objectifs.includes("compagnie") && reco.plantes.some((p) => p.toxique) && (
+            <div className="callout warn small"><b>🐱 Chats et chiens</b>Certaines plantes proposées sont toxiques si elles sont mâchées : {reco.plantes.filter((p) => p.toxique).map((p) => p.nom).join(", ")}. Placez-les hors de portée ou retirez-les. <A to="/guide/plantes-toxiques">Plantes toxiques</A></div>
           )}
           <h3>📅 Votre première année</h3>
           <div className="card" style={{ overflowX: "auto" }}><div style={{ minWidth: 520 }}><MonthGrid plantes={reco.plantes} zone={settings.zone} /></div></div>

@@ -19,6 +19,7 @@ export default function Sante() {
         <a className="btn big primary" href={href("/diagnostic")}>🔎 Diagnostic guidé</a>
         <a className="btn big" href={href("/identifier")}>📷 Par photo</a>
         <a className="btn big" href={href("/diagnostic?interieur=1")}>🌿 Plante d'intérieur</a>
+        <a className="btn big" href={href("/diagnostic-animal")}>🐔 Un animal malade</a>
       </div>
       <div className="callout info small">
         <b>Rappel</b>
