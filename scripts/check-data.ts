@@ -1,3 +1,6 @@
+import { GESTES_RECOLTE } from "../src/data/cueillette";
+import { AMENAGEMENTS } from "../src/data/amenagements";
+import { MULTIPLICATION, AROMATES_INT } from "../src/data/interieur-hub";
 import { ALIAS_GUIDES } from "../src/data/guides-balcon";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales";
 // Contrôle de cohérence du contenu, exécuté à chaque build.
@@ -53,6 +56,10 @@ for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.include
 {
   for (const k of Object.keys(ALIAS_GUIDES)) if (!GUIDES.some((g) => g.id === k)) errors.push(`alias de tutoriel pour un id inconnu « ${k} »`);
   dup("maladie animale", MALADIES_ANIMALES);
+  for (const id of Object.keys(MULTIPLICATION)) if (!PLANTES.some((p) => p.id === id)) errors.push(`multiplication : plante inconnue « ${id} »`);
+  for (const a of AROMATES_INT) if (a.id && !PLANTES.some((p) => p.id === a.id)) errors.push(`aromate intérieur : plante inconnue « ${a.id} »`);
+  for (const g of GESTES_RECOLTE) for (const id of g.plantes) if (!PLANTES.some((p) => p.id === id)) errors.push(`geste ${g.id} : plante inconnue « ${id} »`);
+  for (const a of AMENAGEMENTS) for (const l of a.liens) if (!lienVers(l)) errors.push(`aménagement ${a.id} : lien inconnu « ${l} »`);
   for (const m of MALADIES_ANIMALES) {
     for (const e of m.especes) if (!ANIMAUX.some((a) => a.id === e)) errors.push(`maladie ${m.id} : espèce inconnue « ${e} »`);
     for (const x of m.signesIds) if (!SIGNES_ANIMAUX[x]) errors.push(`maladie ${m.id} : signe inconnu « ${x} »`);

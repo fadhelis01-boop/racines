@@ -54,12 +54,12 @@ export function Credit({ id, index = 0 }: { id: string; index?: number }) {
 }
 
 // Plusieurs vues de la plante (feuille, ensemble, fleur…) avec agrandissement
-export function Galerie({ id, emoji, alt }: { id: string; emoji: string; alt: string }) {
+export function Galerie({ id, emoji, alt, photoFirst }: { id: string; emoji: string; alt: string; photoFirst?: boolean }) {
   const photos = WIKI[id]?.photos ?? [];
   const [i, setI] = useState(0);
   const [zoom, setZoom] = useState(false);
-  const local = LOCAL.has(id);
-  if (local || photos.length <= 1) {
+  const local = LOCAL.has(id) && !(photoFirst && photos.length);
+  if (local || (photos.length <= 1 && !photoFirst)) {
     return <div><div className="pic" onClick={() => photos.length && !local && setZoom(true)} style={{ cursor: photos.length && !local ? "zoom-in" : undefined }}><Photo id={id} emoji={emoji} alt={alt} /></div><Credit id={id} />{zoom && <Lightbox ph={photos[0]} alt={alt} onClose={() => setZoom(false)} />}</div>;
   }
   const ph = photos[i];
@@ -133,14 +133,14 @@ export function Back() {
 
 export function MonthGrid({ plantes, actions, zone, onlyLabel }: { plantes: Plante[]; actions?: Action[]; zone: Parameters<typeof moisAffiches>[2]; onlyLabel?: boolean }) {
   const now = new Date().getMonth() + 1;
-  const acts = actions ?? (["semisAbri", "semisPlace", "plantation", "recolte", "taille", "floraison"] as Action[]);
+  const acts = actions ?? (["semisAbri", "repiquage", "semisPlace", "plantation", "recolte", "taille", "floraison"] as Action[]);
   return (
     <div>
       <div className="months" role="table" aria-label="Calendrier de culture">
         <div />
         {MOIS_COURTS.map((m, i) => <div key={m} className="head" style={{ fontWeight: i + 1 === now ? 900 : undefined }}>{m[0].toUpperCase()}</div>)}
         {plantes.flatMap((p) =>
-          acts.filter((a) => p[a]?.length).map((a) => {
+          acts.filter((a) => moisAffiches(p, a, zone).size).map((a) => {
             const set = moisAffiches(p, a, zone);
             return [
               <div key={p.id + a} className="lab" title={`${p.nom} — ${ACTIONS[a].label}`}>{onlyLabel ? ACTIONS[a].label : `${p.emoji} ${p.nom}`}</div>,
@@ -152,9 +152,8 @@ export function MonthGrid({ plantes, actions, zone, onlyLabel }: { plantes: Plan
         )}
       </div>
       <div className="legend">
-        {acts.map((a) => <span key={a}><i className={`m ${a}`} style={{ background: `var(--c-${a})` }} />{ACTIONS[a].emoji} {ACTIONS[a].label}</span>)}
+        {acts.filter((a) => plantes.some((p) => moisAffiches(p, a, zone).size)).map((a) => <span key={a}><i className={`m ${a}`} style={{ background: `var(--c-${a})` }} />{ACTIONS[a].emoji} {ACTIONS[a].label}</span>)}
       </div>
-      <style>{`.legend i.semisAbri{background:#d7b46a}.legend i.semisPlace{background:#8bbf6a}.legend i.plantation{background:#4f9a5d}.legend i.recolte{background:#c9693c}.legend i.taille{background:#8a7a68}.legend i.floraison{background:#d66ba0}`}</style>
     </div>
   );
 }

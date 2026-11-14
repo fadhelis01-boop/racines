@@ -1,3 +1,4 @@
+import { href } from "../lib/router";
 import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { PLANTES, CATEGORIES } from "../data/index";
@@ -36,6 +37,11 @@ export default function Plantes() {
     <div>
       <h1>🌱 Les plantes</h1>
       <p className="muted small" style={{ marginTop: -6 }}>{PLANTES.length} fiches : culture pas à pas, calendrier, associations, maladies, vidéos, et ce que vos animaux peuvent en manger.</p>
+      <div className="row small" style={{ gap: 8, marginBottom: 8 }}>
+        <a className="chip" href={href("/interieur")}>🌿 Plantes d'intérieur et aromates (avec ou sans lampe)</a>
+        <a className="chip" href={href("/amenagements")}>🗺️ Aménager le jardin</a>
+        <a className="chip" href={href("/cueillette")}>🧺 Bien cueillir</a>
+      </div>
       <div className="search"><input type="search" placeholder="Rechercher une plante…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Rechercher une plante" /></div>
       <div className="chips scroll-x" style={{ margin: "12px 0" }}>
         <button className={`chip ${cat === "tout" ? "on" : ""}`} onClick={() => setCat("tout")}>Toutes</button>

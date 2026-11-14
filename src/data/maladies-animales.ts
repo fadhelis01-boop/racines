@@ -8,9 +8,9 @@ export const SIGNES_ANIMAUX: Record<string, { label: string; emoji: string }> = 
   "plus-de-crottes": { label: "Ne fait plus de crottes ou de crottins", emoji: "🚫" },
   boiterie: { label: "Boite, marche mal, reste couché", emoji: "🦶" },
   maigrit: { label: "Maigrit, os saillants", emoji: "📉" },
-  respiration: { label: "Tousse, éternue, respire bouche ouverte ou en sifflant", emoji: "😮‍💨" },
+  respiration: { label: "Tousse, éternue, respire bouche ouverte ou en sifflant", emoji: "😷" },
   "yeux-nez": { label: "Yeux gonflés, collés, écoulement du nez", emoji: "👁️" },
-  gratte: { label: "Se gratte, perd ses plumes ou ses poils", emoji: "🪶" },
+  gratte: { label: "Se gratte, perd ses plumes ou ses poils", emoji: "🐦" },
   parasites: { label: "Petits insectes ou points rouges/gris visibles (plumes, perchoirs, poils)", emoji: "🔍" },
   "ventre-gonfle": { label: "Ventre gonflé (surtout à gauche chez les ruminants)", emoji: "🎈" },
   "ponte-baisse": { label: "Ponte en baisse ou arrêtée", emoji: "🥚" },
@@ -21,8 +21,8 @@ export const SIGNES_ANIMAUX: Record<string, { label: string; emoji: string }> = 
   chaleur: { label: "Halète, ailes écartées, prostré par forte chaleur", emoji: "🥵" },
   "muqueuses-pales": { label: "Crête ou muqueuses de l'œil pâles", emoji: "⚪" },
   "se-roule": { label: "Se roule, gratte le sol, regarde ses flancs", emoji: "🌀" },
-  "plaie-asticots": { label: "Plaie, laine ou poils souillés avec des asticots", emoji: "🪱" },
-  couve: { label: "Reste au nid, gonfle les plumes, grogne", emoji: "🪺" },
+  "plaie-asticots": { label: "Plaie, laine ou poils souillés avec des asticots", emoji: "🐛" },
+  couve: { label: "Reste au nid, gonfle les plumes, grogne", emoji: "🥚" },
   "tete-penchee": { label: "Tête penchée, perte d'équilibre, tourne en rond", emoji: "🌀" },
 };
 

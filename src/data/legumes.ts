@@ -329,7 +329,7 @@ export const LEGUMES: Plante[] = [
   {
     id: "betterave", nom: "Betterave", latin: "Beta vulgaris", categorie: "legume", famille: "amaranthacees", emoji: "🟣", wiki: "Betterave potagère",
     difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil", "mi-ombre"], besoin: "moyen", eau: "moyen",
-    semisAbri: m("3"), semisPlace: m("4-6"), recolte: m("7-11"),
+    semisAbri: m("3"), plantation: m("4-5"), semisPlace: m("4-6"), recolte: m("7-11"),
     espacement: "10-15 cm, rangs à 30 cm", profondeur: "2 cm", levee: "8 à 15 jours", delai: "80 à 100 jours", joursRecolte: 90,
     amis: ["laitue", "oignon", "chou", "haricot"], ennemis: ["carotte", "epinard", "poireau"],
     intro: "Chaque « graine » est un glomérule qui donne plusieurs plants : éclaircissez sans regret.",
@@ -541,7 +541,7 @@ export const LEGUMES: Plante[] = [
   {
     id: "blette", nom: "Blette (bette à carde)", latin: "Beta vulgaris var. cicla", categorie: "legume", famille: "amaranthacees", emoji: "🥬", wiki: "Beta vulgaris",
     difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil", "mi-ombre"], besoin: "gourmand", eau: "moyen",
-    semisAbri: m("3-4"), semisPlace: m("4-7"), recolte: m("6-12"),
+    semisAbri: m("3-4"), plantation: m("4-5"), semisPlace: m("4-7"), recolte: m("6-12"),
     espacement: "40 cm", profondeur: "2 cm", levee: "8 à 12 jours", delai: "60 jours", joursRecolte: 60,
     amis: ["haricot", "laitue", "oignon"], ennemis: ["epinard", "poireau"],
     intro: "Productive pendant des mois, décorative (côtes jaunes, rouges, blanches) et peu exigeante.",
@@ -618,7 +618,7 @@ export const LEGUMES: Plante[] = [
   {
     id: "mais", nom: "Maïs doux", latin: "Zea mays", categorie: "legume", famille: "poacees", emoji: "🌽", wiki: "Maïs",
     difficulte: 1, lieux: ["pleine-terre"], expo: ["soleil"], besoin: "gourmand", eau: "moyen",
-    semisAbri: m("4"), semisPlace: m("5-6"), recolte: m("8-9"),
+    semisAbri: m("4"), plantation: m("5"), semisPlace: m("5-6"), recolte: m("8-9"),
     espacement: "30 cm, en carré de plusieurs rangs (pollinisation par le vent)", profondeur: "3 cm", levee: "7 à 10 jours", delai: "80 à 100 jours", joursRecolte: 90,
     amis: ["haricot", "courge", "courgette", "concombre", "pois", "melon"], ennemis: ["celeri", "tomate"],
     intro: "Semez-le en bloc de 4 rangs plutôt qu'en un seul rang : le pollen tombe sur les voisins, et les épis sont bien remplis.",

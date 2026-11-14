@@ -18,7 +18,7 @@ export function famillesDe(espaceId: string, annee: number, cultures: { espaceId
 }
 
 export default function PlanVisuel() {
-  const espaces = useStore((s) => s.espaces);
+  const espaces = useStore((s) => s.espaces.filter((e) => !e.archive));
   const cultures = useStore((s) => s.cultures);
   const [annee, setAnnee] = useState(new Date().getFullYear());
   const [sel, setSel] = useState<string>("");
@@ -120,7 +120,7 @@ export function besoinEau(e: Espace, cultures: { espaceId?: string; planteId: st
 }
 
 export function ArrosageSemaine() {
-  const espaces = useStore((s) => s.espaces);
+  const espaces = useStore((s) => s.espaces.filter((e) => !e.archive));
   const cultures = useStore((s) => s.cultures);
   const ville = useStore((s) => s.settings.ville);
   const [wx, setWx] = useState<Meteo | null>(null);

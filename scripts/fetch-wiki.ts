@@ -132,12 +132,32 @@ for (const it of items) {
   if (it.photo) f = [cle(it.photo), ...f];
   candidats.set(it.id, [...new Set(f)].slice(0, 6));
 }
+// Techniques sans article dédié : recherche directe de photos sur Commons
+const PHOTOS_TECHNIQUES: Record<string, string> = {
+  "am-planches": "vegetable garden beds", "am-carres": "square foot gardening raised bed", "am-butte": "hugelkultur bed",
+  "am-lasagnes": "sheet mulching", "am-serrure": "keyhole garden", "am-mandala": "mandala garden",
+  "am-bacs-hauts": "raised bed garden", "am-serre": "polytunnel tomatoes", "am-jardin-foret": "forest garden permaculture",
+  "am-verger": "orchard meadow apple trees", "am-pots": "balcony vegetable garden", "am-vertical": "vertical garden vegetables wall",
+  "am-sol-vivant": "no dig garden compost mulch", "am-prairie": "wildflower meadow garden", "am-jardin-sec": "gravel garden",
+  "am-anglais": "cottage garden flower border", "am-francais": "potager Villandry", "am-mare": "garden pond wildlife", "am-zones": "permaculture zones garden design",
+  "am-poulailler-mobile": "chicken tractor mobile coop",
+  "cueillir-tomates": "picking tomatoes hand", "cueillir-salade": "harvesting lettuce knife", "arracher-racines": "harvesting carrots garden fork",
+  "recolter-pommes-de-terre": "harvesting potatoes garden fork", "cueillir-fruits-arbre": "picking apples tree hand", "cueillir-petits-fruits": "picking raspberries",
+  "couper-fleurs": "cutting flowers secateurs", "couper-aromatiques": "harvesting basil", "recolter-courges": "pumpkin harvest stem", "cueillir-haricots": "picking green beans",
+  "repiquage": "pricking out seedlings",
+};
+for (const [id, q] of Object.entries(PHOTOS_TECHNIQUES)) {
+  if (ONLY.length ? !ONLY.includes(id) : !process.env.FORCE && old[id]?.photos?.length) continue;
+  candidats.set(id, (await rechercheCommons(q)).slice(0, 4));
+  items.push({ id, wiki: "Commons:" + q });
+  await sleep(300);
+}
 const info = await infos([...new Set([...candidats.values()].flat())]);
 const manquants: string[] = [];
 for (const it of items) {
   const vus = new Set<string>();
   const photos = ((candidats.get(it.id) ?? []).map((f) => info.get(f)).filter((p) => p && !vus.has(p.img) && vus.add(p.img)) as Ph[]).slice(0, 4);
-  if (photos.length) out[it.id] = { photos, article: `https://fr.wikipedia.org/wiki/${encodeURIComponent(it.wiki.replace(/ /g, "_"))}` };
+  if (photos.length) out[it.id] = { photos, article: it.wiki.startsWith("Commons:") ? `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(it.wiki.slice(8))}` : `https://fr.wikipedia.org/wiki/${encodeURIComponent(it.wiki.replace(/ /g, "_"))}` };
   else manquants.push(`${it.id} (${it.wiki})`);
 }
 writeFileSync(OUT, JSON.stringify(out));

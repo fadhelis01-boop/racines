@@ -34,11 +34,12 @@ export function shiftMonths(months: Mois[] | undefined, weeks: number): Set<numb
   return out;
 }
 
-export type Action = "semisAbri" | "semisPlace" | "plantation" | "recolte" | "taille" | "floraison";
+export type Action = "semisAbri" | "repiquage" | "semisPlace" | "plantation" | "recolte" | "taille" | "floraison";
 export const ACTIONS: Record<Action, { label: string; emoji: string; verbe: string }> = {
-  semisAbri: { label: "Semer à l'abri", emoji: "🏠", verbe: "Semer au chaud / sous abri" },
+  semisAbri: { label: "Semer à l'abri", emoji: "🏠", verbe: "Semer au chaud / sous abri (en caissette ou en godet)" },
+  repiquage: { label: "Repiquer en godets", emoji: "🤲", verbe: "Repiquer les jeunes plants en godets (à l'abri)" },
   semisPlace: { label: "Semer en place", emoji: "🌱", verbe: "Semer en pleine terre" },
-  plantation: { label: "Planter", emoji: "🌿", verbe: "Planter / repiquer" },
+  plantation: { label: "Planter en place", emoji: "🌿", verbe: "Planter en place (mise en terre définitive)" },
   recolte: { label: "Récolter", emoji: "🧺", verbe: "Récolter" },
   taille: { label: "Tailler", emoji: "✂️", verbe: "Tailler" },
   floraison: { label: "En fleur", emoji: "🌸", verbe: "En fleur" },
@@ -46,14 +47,21 @@ export const ACTIONS: Record<Action, { label: string; emoji: string; verbe: stri
 
 // Mois d'une action, avec les semis d'automne réservés aux climats doux
 const DOUX = new Set<ZoneId>(["mediterraneen", "oceanique"]);
+// Plantes semées directement en godet individuel (grosses graines, racines fragiles) : pas de repiquage
+const SANS_REPIQUAGE = new Set(["courge", "courgette", "concombre", "melon", "pasteque", "mais", "haricot", "pois", "feve", "tournesol", "capucine", "pois-senteur", "betterave", "blette"]);
+export function aRepiquer(p: Plante) {
+  return !!p.semisAbri?.length && !!p.plantation?.length && !SANS_REPIQUAGE.has(p.id) && p.categorie !== "arbre" && p.categorie !== "interieur";
+}
 export function moisDe(p: Plante, a: Action, zone: ZoneId): Mois[] | undefined {
+  // Repiquage en godets : 2 à 4 semaines après le semis en caissette
+  if (a === "repiquage") return aRepiquer(p) ? ([...new Set(p.semisAbri!.map((m) => (m % 12) + 1))] as Mois[]) : undefined;
   if (a === "semisPlace" && p.semisPlaceDoux && DOUX.has(zone)) return [...(p.semisPlace ?? []), ...p.semisPlaceDoux];
-  return p[a];
+  return p[a as Exclude<Action, "repiquage">];
 }
 
 export function plantesDuMois(mois: number, zone: ZoneId, filtre?: (p: Plante) => boolean) {
   const w = decalage(zone);
-  const res: Record<Action, Plante[]> = { semisAbri: [], semisPlace: [], plantation: [], recolte: [], taille: [], floraison: [] };
+  const res: Record<Action, Plante[]> = { semisAbri: [], repiquage: [], semisPlace: [], plantation: [], recolte: [], taille: [], floraison: [] };
   for (const p of PLANTES) {
     if (filtre && !filtre(p)) continue;
     for (const a of Object.keys(res) as Action[]) {

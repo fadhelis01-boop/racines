@@ -1,4 +1,4 @@
-import { Ico, Vignette } from "../components/Ico";
+import { Ico, Vignette, srcVignette } from "../components/Ico";
 import { useEffect, useRef, useState } from "react";
 import { useStore, toggleFait } from "../lib/store";
 import { plantesDuMois, travauxDuMois, ACTIONS, buildIcs, type Action } from "../lib/calendar";
@@ -49,6 +49,19 @@ export default function Calendrier() {
     <div>
       <h1>📅 Calendrier du jardin</h1>
       <p className="muted small" style={{ marginTop: -6 }}>Adapté à votre climat : {zone.nom} (dernières gelées : {zone.gel}). <A to="/reglages">Changer</A></p>
+      <details className="box">
+        <summary>🌱 Semer, repiquer, planter, récolter : quelle différence ?</summary>
+        <div className="row" style={{ alignItems: "flex-start", flexWrap: "wrap", gap: 12, marginTop: 8 }}>
+          {srcVignette("repiquage") && <img src={srcVignette("repiquage")} alt="Repiquage d'un jeune plant en godet" style={{ width: 220, borderRadius: 10 }} />}
+          <ol className="steps small" style={{ flex: 1, minWidth: 240, margin: 0 }}>
+            <li><b>🏠 Semer à l'abri</b> : dans une caissette ou des godets, au chaud (maison, serre, mini-serre), pour les plantes frileuses ou lentes (tomates, poivrons, choux, poireaux, fleurs annuelles). <a href={href("/guide/semis-interieur")}>Tutoriel</a></li>
+            <li><b>🤲 Repiquer en godets</b> : 2 à 4 semaines après, quand les plantules ont 2 vraies feuilles, on les sépare une à une dans des godets plus grands ; elles restent à l'abri. Les courges, haricots, maïs, semés directement en godet individuel, n'en ont pas besoin.</li>
+            <li><b>🌱 Semer en place</b> : directement dans la terre du jardin ou du bac, là où la plante va grandir (carottes, radis, haricots, salades d'été). On éclaircit ensuite. <a href={href("/guide/semis-place")}>Tutoriel</a></li>
+            <li><b>🌿 Planter en place</b> : on installe définitivement le jeune plant (repiqué ou acheté) au jardin ou dans son grand pot, après une semaine d'endurcissement dehors le jour.</li>
+            <li><b>🧺 Récolter</b> : au bon stade, avec le bon geste. <a href={href("/cueillette")}>Bien cueillir</a></li>
+          </ol>
+        </div>
+      </details>
       <div className="chips scroll-x" role="tablist" aria-label="Mois" ref={moisRef}>
         {MOIS_NOMS.map((m, i) => (
           <button key={m} className={`chip ${mois === i + 1 ? "on" : ""}`} onClick={() => setMois(i + 1)} style={i + 1 === now.getMonth() + 1 ? { fontWeight: 900 } : undefined}>{m}</button>

@@ -7,6 +7,7 @@ import { frenchVoices, preview, useTts } from "../lib/tts";
 import { download, toast, toutesLesPhotos } from "../components/ui";
 import { promptInstall, usePwa, isIos, isStandalone, checkForAppUpdate } from "../lib/pwa";
 import { isoDate } from "../lib/store";
+import { href } from "../lib/router";
 
 export default function Reglages() {
   const s = useStore((x) => x.settings);
@@ -30,6 +31,7 @@ export default function Reglages() {
             <option value="balcon">🏢 Balcon ou terrasse</option>
             <option value="appartement">🏙️ Appartement sans extérieur</option>
           </select>
+          <a className="small" href={href("/demenagement")}>📦 Vous déménagez ? L'assistant vous guide (plantes, graines, animaux, démarches) →</a>
         </label>
         <label className="field">Climat (décale tout le calendrier)
           <select value={s.zone} onChange={(e) => setSettings({ zone: e.target.value as ZoneId })}>

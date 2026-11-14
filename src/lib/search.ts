@@ -2,6 +2,9 @@ import { PLANTES, PROBLEMES, REMEDES, GUIDES, ANIMAUX, SIGNES } from "../data/in
 import { norm } from "./garden";
 import { LEXIQUE } from "../data/lexique";
 import { MALADIES_ANIMALES } from "../data/maladies-animales";
+import { AMENAGEMENTS } from "../data/amenagements";
+import { GESTES_RECOLTE } from "../data/cueillette";
+import { AROMATES_INT } from "../data/interieur-hub";
 
 // Moteur de recherche : noms courants et synonymes, texte complet des fiches,
 // questions en phrase (« quand planter les tomates », « ma poule ne pond plus »),
@@ -28,6 +31,15 @@ function docs(): Doc[] {
     ...ANIMAUX.map((a) => ({ principal: true, id: a.id, href: `/animal/${a.id}`, emoji: a.emoji, titre: a.nom, type: "Animal", noms: norm(a.nom + " | " + (ALIAS_ANIMAUX[a.id] ?? "")), texte: norm([a.resume, ...a.quotidien, ...a.alimentation, ...a.interdits, ...a.reglementation, ...a.sante.map((s) => s.signe)].join(" ")) })),
     ...MALADIES_ANIMALES.map((m) => ({ principal: true, id: m.especes[0], href: `/maladie-animale/${m.id}`, emoji: "🩺", titre: m.nom, type: "Santé des animaux", noms: norm([m.nom, ...m.alias].join(" | ")), texte: norm([m.signes, m.explication, ...m.especes.map((e) => ALIAS_ANIMAUX[e] ?? e)].join(" ")) })),
     ...PROBLEMES.map((p) => ({ principal: true, id: p.id, href: `/probleme/${p.id}`, emoji: "🩺", titre: p.nom, type: "Santé des plantes", noms: norm([p.nom, ...(p.alias ?? []), ...p.signes.map((s) => SIGNES[s].label)].join(" | ")), texte: norm([p.cible, ...p.symptomes, p.conditions].join(" ")) })),
+    ...AMENAGEMENTS.map((a) => ({ principal: false, id: a.id, href: `/amenagements?id=${a.id}`, emoji: a.emoji, titre: a.nom, type: "Aménagement", noms: norm([a.nom, "amenager amenagement jardin"].join(" | ")), texte: norm([a.resume, ...a.avantages, ...a.inconvenients].join(" ")) })),
+    ...GESTES_RECOLTE.map((g) => ({ principal: false, id: g.id, href: `/cueillette?g=${g.id}`, emoji: g.emoji, titre: "Cueillir — " + g.titre, type: "Bien cueillir", noms: norm(["cueillir recolter cueillette comment recolter", g.titre].join(" | ")), texte: norm([g.quand, ...g.comment].join(" ")) })),
+    { principal: false, href: "/interieur", emoji: "🌿", titre: "Plantes d'intérieur et aromates (avec ou sans lampe)", type: "Espace intérieur", noms: norm("plantes d'interieur | plante interieur | plantes vertes | aromates interieur | herbes interieur | lampe de culture | lampe horticole | sans lampe | appartement sombre | quelle plante pour ma fenetre"), texte: norm("fenetre sud nord est ouest lampe aromates bouture substrat") },
+    { principal: false, href: "/interieur?t=lampe", emoji: "💡", titre: "Lampe de culture : calculer puissance, distance, coût", type: "Espace intérieur", noms: norm("lampe de culture | lampe horticole | led horticole | eclairage plantes | combien de watts"), texte: norm("puissance distance heures consommation kwh") },
+    { principal: false, href: "/interieur?t=multiplier", emoji: "✂️", titre: "Multiplier ses plantes d'intérieur (boutures, divisions)", type: "Espace intérieur", noms: norm("bouturer plante interieur | bouture pothos | bouture monstera | diviser plante | rejets | keiki"), texte: norm("bouture tige noeud eau division") },
+    ...AROMATES_INT.map((a) => ({ principal: false, id: a.id, href: "/interieur?t=aromates&a=" + encodeURIComponent(a.id ?? a.nom), emoji: a.emoji, titre: `${a.nom} en intérieur`, type: "Aromate en intérieur", noms: norm([`${a.nom} en interieur`, `${a.nom} interieur`, `${a.nom} lampe`, `${a.nom} appartement`, `${a.nom} supermarche`].join(" | ")), texte: norm([a.sansLampe, a.avecLampe, a.demarrer, a.piege].join(" ")) })),
+    { principal: false, href: "/demenagement", emoji: "📦", titre: "Je déménage (appartement ↔ maison avec jardin)", type: "Outil", noms: norm("je demenage | demenagement | demenager | emmenager | nouvelle maison | quitter la maison | transporter plantes"), texte: norm("emporter plantes boutures graines animaux transport declaration") },
+    { principal: false, href: "/calculs", emoji: "🧮", titre: "Calculs pratiques", type: "Outil", noms: norm("calcul | calculs | combien | quantite | combien de poules | combien de compost | combien de terreau | combien planter"), texte: norm("compost fumier terreau famille eau de pluie poules") },
+    { principal: false, href: "/amenagements", emoji: "🗺️", titre: "Aménager son jardin : les façons de faire comparées", type: "Outil", noms: norm("amenager | amenagement | amenager jardin | organiser jardin | plan du jardin | idees jardin"), texte: norm("potager carre butte lasagnes jardin foret verger prairie mare") },
     ...REMEDES.map((r) => ({ principal: false, href: `/remede/${r.id}`, emoji: r.emoji, titre: r.nom, type: "Remède", noms: norm(r.nom), texte: norm([r.role, ...r.usage].join(" ")) })),
     ...GUIDES.map((g) => ({ principal: false, id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm([g.titre, g.resume, ...(g.alias ?? [])].join(" | ")), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
   ];

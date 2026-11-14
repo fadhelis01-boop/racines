@@ -186,12 +186,20 @@ ol.steps > li::before {
 .months .lab { font-weight: 700; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 4px; }
 .months .m { height: 22px; border-radius: 4px; background: var(--surface-2); display: grid; place-items: center; color: transparent; }
 .months .head { text-align: center; color: var(--muted); font-weight: 800; }
-.months .m.semisAbri { background: #d7b46a; }
-.months .m.semisPlace { background: #8bbf6a; }
-.months .m.plantation { background: #4f9a5d; }
-.months .m.recolte { background: #c9693c; }
-.months .m.taille { background: #8a7a68; }
-.months .m.floraison { background: #d66ba0; }
+:root { --c-semisAbri: #d7b46a; }
+.months .m.semisAbri { background: var(--c-semisAbri); }
+:root { --c-semisPlace: #8bbf6a; }
+.months .m.semisPlace { background: var(--c-semisPlace); }
+:root { --c-plantation: #4f9a5d; }
+.months .m.plantation { background: var(--c-plantation); }
+:root { --c-recolte: #c9693c; }
+.months .m.recolte { background: var(--c-recolte); }
+:root { --c-taille: #8a7a68; }
+.months .m.taille { background: var(--c-taille); }
+:root { --c-floraison: #d66ba0; }
+.months .m.floraison { background: var(--c-floraison); }
+:root { --c-repiquage: #a7c75a; }
+.months .m.repiquage { background: var(--c-repiquage); }
 .months .m.now { outline: 2px solid var(--text); outline-offset: 1px; }
 .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 4px; }

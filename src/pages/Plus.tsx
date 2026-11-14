@@ -14,6 +14,9 @@ export default function Plus() {
         <a className="btn big" href={href("/diagnostic")} style={{ justifyContent: "flex-start" }}><Ico nom="diagnostic" emoji="🔎" taille={36} /> Diagnostic des plantes</a>
         <a className="btn big" href={href("/diagnostic-animal")} style={{ justifyContent: "flex-start" }}><Ico nom="sante" emoji="🩺" taille={36} /> Diagnostic des animaux</a>
         <a className="btn big" href={href("/calculs")} style={{ justifyContent: "flex-start" }}><Ico nom="creer" emoji="🧮" taille={36} /> Calculs pratiques</a>
+        <a className="btn big" href={href("/amenagements")} style={{ justifyContent: "flex-start" }}><Ico nom="jardin" emoji="🗺️" taille={36} /> Aménager son jardin</a>
+        <a className="btn big" href={href("/cueillette")} style={{ justifyContent: "flex-start" }}><Ico nom="recolte-action" emoji="🧺" taille={36} /> Bien cueillir</a>
+        <a className="btn big" href={href("/demenagement")} style={{ justifyContent: "flex-start" }}><Ico nom="reglages" emoji="📦" taille={36} /> Je déménage</a>
       </div>
     </div>
   );

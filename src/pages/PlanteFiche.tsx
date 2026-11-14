@@ -7,6 +7,8 @@ import { href } from "../lib/router";
 import { moisAffiches } from "../lib/calendar";
 import { AjoutMaPlante } from "../components/MesPlantes";
 import { MOIS_NOMS } from "../data/util";
+import { gesteDe } from "../data/cueillette";
+import { srcVignette } from "../components/Ico";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
 const BESOIN = { gourmand: "Gourmand (sol riche, compost)", moyen: "Moyen", peu: "Peu exigeant", ameliorant: "Améliorant (enrichit le sol)" };
@@ -134,7 +136,25 @@ export default function PlanteFiche({ id }: { id?: string }) {
           <ol className="steps">{p.etapes.map((e, i) => <li key={i}>{e}</li>)}</ol>
           <h2>Entretien</h2>
           <ul className="ticks">{p.entretien.map((e, i) => <li key={i}>{e}</li>)}</ul>
-          {p.recolteConseil && <><h2>Récolte</h2><p>{p.recolteConseil}</p></>}
+          {(() => {
+            const g = gesteDe(p.id);
+            if (!p.recolteConseil && !g) return null;
+            const img = g && srcVignette(g.id);
+            const mois = [...moisAffiches(p, "recolte", zone)].sort((a, b) => a - b);
+            return (
+              <>
+                <h2>{p.categorie === "fleur" || p.categorie === "ornement" ? "Cueillir" : "Récolte"}</h2>
+                {mois.length > 0 && <p className="small muted">Période chez vous : {mois.map((x) => MOIS_NOMS[x - 1]).join(", ")}.</p>}
+                {p.recolteConseil && <p>{p.recolteConseil}</p>}
+                {g && (
+                  <a className="card row" href={href(`/cueillette?g=${g.id}`)} style={{ textDecoration: "none", color: "inherit", flexWrap: "nowrap", padding: 0, overflow: "hidden" }}>
+                    {img ? <img src={img} alt="" loading="lazy" style={{ width: 120, height: 84, objectFit: "cover", flexShrink: 0 }} /> : <span style={{ fontSize: 36, padding: 12 }}>{g.emoji}</span>}
+                    <span className="small" style={{ padding: "8px 10px 8px 0" }}><b>Le bon geste</b><br />{g.comment[0]}<br /><span className="muted">Voir le geste illustré →</span></span>
+                  </a>
+                )}
+              </>
+            );
+          })()}
           {p.conservation && <><h2>Conservation</h2><p>{p.conservation}</p></>}
           {p.astuces?.map((a) => <div key={a} className="callout ok"><b>💡 Astuce</b>{a}</div>)}
           {p.graines && (
@@ -148,6 +168,19 @@ export default function PlanteFiche({ id }: { id?: string }) {
       {tab === "calendrier" && (
         <div className="card" style={{ overflowX: "auto" }}>
           <div style={{ minWidth: 420 }}><MonthGrid plantes={[p]} zone={zone} onlyLabel /></div>
+          {(() => {
+            const m = (a: Parameters<typeof moisAffiches>[1]) => [...moisAffiches(p, a, zone)].sort((x, y) => x - y).map((x) => MOIS_NOMS[x - 1]).join(", ");
+            const etapes = [
+              m("semisAbri") && `🏠 Semer à l'abri en ${m("semisAbri")}`,
+              m("repiquage") && `🤲 repiquer en godets en ${m("repiquage")}`,
+              m("semisPlace") && `🌱 ${m("semisAbri") ? "ou semer directement en place" : "semer en place"} en ${m("semisPlace")}`,
+              m("plantation") && `🌿 planter en place en ${m("plantation")}`,
+              m("floraison") && `🌸 floraison en ${m("floraison")}`,
+              m("recolte") && `🧺 récolter en ${m("recolte")}${p.delai ? ` (${p.delai})` : ""}`,
+              m("taille") && `✂️ tailler en ${m("taille")}`,
+            ].filter(Boolean);
+            return etapes.length ? <p className="small" style={{ marginBottom: 0 }}><b>Chez vous :</b> {etapes.join(" → ")}. <a href={href("/calendrier")}>Semer, repiquer, planter : quelle différence ?</a></p> : null;
+          })()}
           <p className="small muted">Calendrier adapté à votre zone climatique. En pratique, observez aussi la météo : la température du sol compte plus que la date.</p>
         </div>
       )}
@@ -200,7 +233,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
 }
 
 export function AjoutCulture({ planteId, onDone }: { planteId: string; onDone: () => void }) {
-  const espaces = useStore((s) => s.espaces);
+  const espaces = useStore((s) => s.espaces.filter((e) => !e.archive));
   const [date, setDate] = useState(today());
   const [mode, setMode] = useState<"semis" | "plantation">("semis");
   const [espaceId, setEspaceId] = useState(espaces[0]?.id ?? "");

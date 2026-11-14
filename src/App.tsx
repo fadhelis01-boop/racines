@@ -29,6 +29,10 @@ const Lexique = lazy(() => import("./pages/Lexique"));
 const MaladieAnimale = lazy(() => import("./pages/SanteAnimale"));
 const DiagnosticAnimal = lazy(() => import("./pages/SanteAnimale").then((m) => ({ default: m.DiagnosticAnimal })));
 const Calculs = lazy(() => import("./pages/Calculs"));
+const Interieur = lazy(() => import("./pages/Interieur"));
+const Cueillette = lazy(() => import("./pages/Cueillette"));
+const Demenagement = lazy(() => import("./pages/Demenagement"));
+const Amenagements = lazy(() => import("./pages/Amenagements"));
 import BarreRecherche from "./components/BarreRecherche";
 import { Ico } from "./components/Ico";
 
@@ -47,6 +51,7 @@ const NAV = [
   { to: "/calendrier", label: "Calendrier", i: "📅", ico: "calendrier", main: true },
   { to: "/plantes", label: "Plantes et fleurs", i: "🌱", ico: "plantes", main: true },
   { to: "/sante", label: "Santé", i: "🩺", ico: "sante", main: true },
+  { to: "/interieur", label: "Intérieur et aromates", i: "🌿", ico: "interieur" },
   { to: "/jardin", label: "Mon jardin", i: "🧺", ico: "jardin" },
   { to: "/creer", label: "Créer mon potager", i: "👨‍🌾", ico: "creer" },
   { to: "/guides", label: "Tutoriels", i: "📘", ico: "tutoriels" },
@@ -98,9 +103,13 @@ export default function App() {
     case "maladie-animale": page = <MaladieAnimale id={p1} />; break;
     case "diagnostic-animal": page = <DiagnosticAnimal />; break;
     case "calculs": page = <Calculs />; break;
+    case "interieur": page = <Interieur />; break;
+    case "cueillette": page = <Cueillette />; break;
+    case "demenagement": page = <Demenagement />; break;
+    case "amenagements": page = <Amenagements />; break;
     default: page = <Accueil />;
   }
-  const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/animaux" && ["animal", "maladie-animale", "diagnostic-animal"].includes(p0 ?? "")));
+  const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/interieur" && p0 === "interieur") || (to === "/animaux" && ["animal", "maladie-animale", "diagnostic-animal"].includes(p0 ?? "")));
 
   return (
     <div className="app">
@@ -108,7 +117,7 @@ export default function App() {
         <a className="brand" href={href("/")}><Logo /> Racines</a>
         {nav.map((n, i) => (
           <span key={n.to}>
-            {i === 4 && <div className="sep" />}
+            {i === 5 && <div className="sep" />}
             <a href={href(n.to)} className={isOn(n.to) ? "on" : ""}><Ico nom={n.ico} emoji={n.i} taille={26} /> {n.label}</a>
           </span>
         ))}
@@ -124,10 +133,10 @@ export default function App() {
         <Garde cle={route.path}><Suspense fallback={<p className="muted">Chargement…</p>}>{page}</Suspense></Garde>
       </main>
       <nav className="bottom-nav" aria-label="Navigation">
-        {NAV.filter((n) => n.main).map((n) => (
+        {(appart ? NAV.map((n) => (n.to === "/calendrier" ? { ...n, to: "/interieur", label: "Intérieur", i: "🌿", ico: "interieur" } : n)) : NAV).filter((n) => n.main).map((n) => (
           <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span className="i"><Ico nom={n.ico} emoji={n.i} taille={28} /></span>{n.label.replace(" et fleurs", "")}</a>
         ))}
-        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
+        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
       </nav>
       <Player />
     </div>

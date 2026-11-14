@@ -15,7 +15,7 @@ const OBJ = [
   { id: "fruits", label: "Des fruits", e: "🍓" },
   { id: "enfants", label: "Jardiner avec des enfants", e: "🧒" },
   { id: "animaux", label: "Nourrir mes animaux", e: "🐔" },
-  { id: "vertes", label: "Des plantes vertes pour décorer", e: "🪴" },
+  { id: "vertes", label: "Des plantes vertes pour décorer", e: "🌿" },
   { id: "compagnie", label: "J'ai un chat ou un chien (plantes sans danger)", e: "🐱" },
 ];
 
@@ -29,7 +29,7 @@ export default function Creer() {
   const creerPlanches = () => {
     const n = pr.situation === "jardin" || pr.situation === "petit-jardin" ? Math.max(2, Math.min(8, Math.round(pr.surface / 5))) : 0;
     const type = pr.surface <= 6 ? "carre" : "planche";
-    const base = getState().espaces.length;
+    const base = getState().espaces.filter((e) => !e.archive).length;
     if (n) for (let i = 1; i <= n; i++) upsert("espaces", { id: uid(), nom: `${type === "carre" ? "Carré" : "Planche"} ${base + i}`, type, surface: Math.round((pr.surface / n) * 10) / 10 });
     else upsert("espaces", { id: uid(), nom: pr.situation === "balcon" ? "Balcon" : "Rebord de fenêtre", type: pr.situation === "balcon" ? "bac" : "interieur" });
     toast("Emplacements créés dans Mon jardin");
@@ -106,7 +106,7 @@ export default function Creer() {
             const v = plantesVertes(pr);
             return (
               <>
-                <h3>🪴 Plantes vertes pour votre lumière</h3>
+                <h3>🌿 Plantes vertes pour votre lumière</h3>
                 <p className="small muted">Choisies pour {pr.expo === "soleil" ? "une fenêtre très lumineuse" : pr.expo === "mi-ombre" ? "une lumière moyenne" : "une pièce peu lumineuse"}{pr.temps === "peu" ? ", très peu d'entretien" : ""}{pr.objectifs.includes("compagnie") ? ", sans danger pour les chats et les chiens" : ""}.</p>
                 {v.length ? <div className="chips">{v.map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}><Vignette id={p.id} emoji={p.emoji} taille={22} /> {p.nom}</a>)}</div> : <p className="small muted">Aucune plante de nos fiches ne réunit tous ces critères : ajoutez une lampe LED (voir le tutoriel lumière) ou acceptez un peu plus d'entretien.</p>}
                 <p className="small"><A to="/guide/plantes-par-piece">Quelle plante pour quelle pièce ?</A> · <A to="/guide/plantes-interieur-bases">Les 5 règles d'or</A></p>
@@ -131,6 +131,7 @@ export default function Creer() {
           <div className="grid-sm">
             <a className="btn" href={href("/guide/creer-potager")}>📘 Le guide complet A à Z</a>
             <a className="btn" href={href(pr.situation === "balcon" || pr.situation === "appartement" ? "/guide/potager-balcon" : "/guide/methodes-culture")}>🟫 Installer</a>
+            <a className="btn" href={href("/amenagements")}>🗺️ Comparer les aménagements</a>
             <a className="btn" href={href("/guide/compost-tas")}>♻️ Démarrer le compost</a>
             <button className="btn primary" onClick={creerPlanches}>🗺️ Créer mes emplacements</button>
           </div>

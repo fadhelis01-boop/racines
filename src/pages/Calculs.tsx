@@ -19,7 +19,7 @@ const r = (n: number, d = 0) => { const k = 10 ** d; return (Math.round(n * k) /
 const FAMILLE: { id: string; nom: string; emoji: string; parPers: number; unite: string; m2: number; note: string }[] = [
   { id: "tomate", nom: "Tomates", emoji: "🍅", parPers: 3, unite: "pieds", m2: 0.5, note: "≈ 4 à 6 kg par pied ; doublez pour faire des conserves" },
   { id: "courgette", nom: "Courgettes", emoji: "🥒", parPers: 0.75, unite: "pieds", m2: 1, note: "2 pieds suffisent pour 4 ; 1 pied ≈ 8 à 15 kg" },
-  { id: "haricot", nom: "Haricots verts", emoji: "🫛", parPers: 2, unite: "m²", m2: 1, note: "en 2 ou 3 semis échelonnés" },
+  { id: "haricot", nom: "Haricots verts", emoji: "🌱", parPers: 2, unite: "m²", m2: 1, note: "en 2 ou 3 semis échelonnés" },
   { id: "laitue", nom: "Salades", emoji: "🥬", parPers: 15, unite: "pieds par an", m2: 0.05, note: "semez 6 à 10 pieds toutes les 3 semaines" },
   { id: "carotte", nom: "Carottes", emoji: "🥕", parPers: 1.5, unite: "m²", m2: 1, note: "≈ 4 kg/m²" },
   { id: "pomme-de-terre", nom: "Pommes de terre", emoji: "🥔", parPers: 10, unite: "m²", m2: 1, note: "≈ 3 kg/m² ; 10 m² ≈ 30 kg" },
@@ -62,7 +62,7 @@ export default function Calculs() {
       <p className="muted small" style={{ marginTop: -6 }}>Des ordres de grandeur pour acheter juste et prévoir : compost, terreau, quantités à planter pour la famille, eau de pluie, poules. Les chiffres réels varient avec le sol, le climat et les variétés.</p>
       <div className="chips" style={{ margin: "8px 0 4px" }}>
         <a className="chip" href="#/calculs?s=compost" onClick={(e) => { e.preventDefault(); document.getElementById("compost")?.scrollIntoView(); }}>♻️ Compost et fumier</a>
-        <a className="chip" href="#/calculs?s=bacs" onClick={(e) => { e.preventDefault(); document.getElementById("bacs")?.scrollIntoView(); }}>🪴 Terreau des bacs</a>
+        <a className="chip" href="#/calculs?s=bacs" onClick={(e) => { e.preventDefault(); document.getElementById("bacs")?.scrollIntoView(); }}>🌿 Terreau des bacs</a>
         <a className="chip" href="#/calculs?s=famille" onClick={(e) => { e.preventDefault(); document.getElementById("famille")?.scrollIntoView(); }}>👪 Nourrir la famille</a>
         <a className="chip" href="#/calculs?s=eau" onClick={(e) => { e.preventDefault(); document.getElementById("eau")?.scrollIntoView(); }}>🌧️ Eau de pluie</a>
         <a className="chip" href="#/calculs?s=animaux" onClick={(e) => { e.preventDefault(); document.getElementById("animaux")?.scrollIntoView(); }}>🐔 Combien de poules ?</a>
@@ -81,7 +81,7 @@ export default function Calculs() {
         <p className="small"><a href={href("/guide/compost-tas")}>Faire un bon compost →</a> · <a href={href("/guide/fumiers")}>Les fumiers comparés →</a></p>
       </div>
 
-      <h2 id="bacs">🪴 Terreau pour mes bacs et jardinières</h2>
+      <h2 id="bacs">🌿 Terreau pour mes bacs et jardinières</h2>
       <div className="card stack">
         <div className="grid-sm">
           <Champ label="Longueur" value={lon} onChange={setLon} unite="cm" />

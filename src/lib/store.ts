@@ -24,7 +24,7 @@ export interface Settings {
 }
 
 export type TypeEspace = "planche" | "carre" | "bac" | "pot" | "serre" | "interieur" | "verger";
-export interface Espace { id: string; nom: string; type: TypeEspace; surface?: number; x?: number; y?: number; l?: number; p?: number }
+export interface Espace { id: string; nom: string; type: TypeEspace; surface?: number; x?: number; y?: number; l?: number; p?: number; archive?: string; lieu?: string } // archive : date du déménagement
 export interface Culture { id: string; planteId: string; espaceId?: string; date: string; mode: "semis" | "plantation"; note?: string; fini?: string }
 export interface Recolte { id: string; planteId: string; date: string; qte: number; unite: "kg" | "g" | "pièces" | "bottes" }
 export interface Note { id: string; date: string; texte: string; photo?: string; planteId?: string }

@@ -74,6 +74,7 @@ export default function Accueil() {
       </p>
       <div className="row" style={{ marginBottom: 12 }}>
         <Listen id="jour" title="Le programme du jour" blocks={blocsLecture} label="Écouter le programme du jour" />
+        {(settings.situation === "appartement" || settings.situation === "balcon") && <A to="/interieur" className="btn sm">🌿 Intérieur et aromates</A>}
       </div>
 
       {settings.ville && (
@@ -156,7 +157,7 @@ export default function Accueil() {
 
       <Section title={`À faire en ${MOIS_NOMS[mois - 1]}`} right={<A to="/calendrier" className="small">Tout le calendrier →</A>}>
         <div className="grid">
-          {(["semisAbri", "semisPlace", "plantation", "recolte"] as Action[]).map((a) =>
+          {(["semisAbri", "repiquage", "semisPlace", "plantation", "recolte"] as Action[]).map((a) =>
             pm[a].length ? (
               <div key={a} className="card">
                 <b className="row" style={{ gap: 6 }}><Ico nom={({ semisAbri: "semisAbri", semisPlace: "semisPlace", plantation: "plantation", recolte: "recolte-action", taille: "taille", floraison: "floraison" } as Record<string, string>)[a]} emoji={ACTIONS[a].emoji} taille={28} /> {ACTIONS[a].verbe}</b>

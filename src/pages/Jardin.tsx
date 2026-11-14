@@ -54,7 +54,7 @@ function PlantePicker({ value, onChange, filter }: { value: string; onChange: (v
 
 function Cultures() {
   const cultures = useStore((s) => s.cultures);
-  const espaces = useStore((s) => s.espaces);
+  const espaces = useStore((s) => s.espaces.filter((e) => !e.archive));
   const [pid, setPid] = useState("");
   const [fini, setFini] = useState(false);
   const list = cultures.filter((c) => !!c.fini === fini).sort((a, b) => b.date.localeCompare(a.date));
@@ -94,7 +94,7 @@ function Cultures() {
 }
 
 function Plan() {
-  const espaces = useStore((s) => s.espaces);
+  const espaces = useStore((s) => s.espaces.filter((e) => !e.archive));
   const cultures = useStore((s) => s.cultures);
   const [nom, setNom] = useState("");
   const [type, setType] = useState<Espace["type"]>("planche");

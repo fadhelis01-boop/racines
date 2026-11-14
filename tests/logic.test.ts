@@ -7,6 +7,8 @@ import { ficheParLatin } from "../src/lib/identify";
 import { DEFAULT_SETTINGS, type State, type MaPlante } from "../src/lib/store";
 import { rechercher, parleAnimal, ressembleSymptome } from "../src/lib/search";
 import { diagnostiquerAnimal } from "../src/lib/sante-animale";
+import { moisAffiches, aRepiquer } from "../src/lib/calendar";
+import { gesteDe } from "../src/data/cueillette";
 import { plantesVertes } from "../src/lib/garden";
 import { echeances, intervalleArrosage, marquer } from "../src/lib/mesplantes";
 import { ficheLatin } from "../src/lib/identify";
@@ -144,5 +146,18 @@ ok(!diagnostiquerAnimal("lapin", ["ponte-baisse"]).some((x) => x.m.id === "arret
 const vertes = plantesVertes({ situation: "appartement", expo: "ombre", temps: "peu", surface: 1, objectifs: ["compagnie"] });
 ok(vertes.length > 0 && vertes.every((p) => p.sansDangerAnimaux && p.expo.includes("ombre") && p.difficulte === 1), `plantes vertes ombre + chat : ${vertes.map((p) => p.nom).join(", ")}`);
 
+// Repiquage, cueillette, intérieur, déménagement, aménagements
+ok(aRepiquer(plante("tomate")!) && moisAffiches(plante("tomate")!, "repiquage", "tempere").size > 0, "la tomate se repique en godets");
+ok(!aRepiquer(plante("courge")!), "la courge semée en godet individuel ne se repique pas");
+ok(!aRepiquer(plante("carotte")!), "la carotte semée en place ne se repique pas");
+ok((plante("betterave")!.plantation ?? []).length > 0, "betterave semée à l'abri : mois de plantation renseignés");
+ok(gesteDe("tomate")?.id === "cueillir-tomates" && gesteDe("zinnia")?.id === "couper-fleurs" && gesteDe("pommier")?.id === "cueillir-fruits-arbre", "un geste de cueillette par type de plante");
+ok(!!plante("pissenlit")?.recolteConseil, "conseil de récolte ajouté au pissenlit");
+vise("basilic supermarché", "Basilic en intérieur", 3);
+vise("lampe horticole", "Lampe de culture", 3);
+vise("je déménage", "Je déménage", 3);
+vise("carré potager", "Carrés potagers", 5);
+vise("comment cueillir les pommes", "Cueillir — Fruits des arbres", 5);
+vise("bouture pothos", "Multiplier ses plantes", 5);
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);
