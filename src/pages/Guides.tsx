@@ -1,3 +1,4 @@
+import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { GUIDES, RUBRIQUES } from "../data/index";
 import { href } from "../lib/router";
@@ -18,17 +19,17 @@ export default function Guides() {
       <div className="search"><input type="search" placeholder="Rechercher : compost, oyas, poulailler…" value={q} onChange={(e) => setQ(e.target.value)} /></div>
       <div className="chips scroll-x" style={{ margin: "12px 0" }}>
         <button className={`chip ${!rub ? "on" : ""}`} onClick={() => setRub("")}>Tous</button>
-        {(Object.keys(RUBRIQUES) as Rubrique[]).map((r) => <button key={r} className={`chip ${rub === r ? "on" : ""}`} onClick={() => setRub(r)}>{RUBRIQUES[r].emoji} {RUBRIQUES[r].label}</button>)}
+        {(Object.keys(RUBRIQUES) as Rubrique[]).map((r) => <button key={r} className={`chip ${rub === r ? "on" : ""}`} onClick={() => setRub(r)}><Ico nom={r === "interieur" ? "interieur" : r === "animaux" ? "animaux" : r} emoji={RUBRIQUES[r].emoji} taille={22} /> {RUBRIQUES[r].label}</button>)}
       </div>
       {rubs.map((r) => (
         <section key={r}>
-          <h2>{RUBRIQUES[r].emoji} {RUBRIQUES[r].label}</h2>
+          <h2 className="row" style={{ gap: 8 }}><Ico nom={r} emoji={RUBRIQUES[r].emoji} taille={34} /> {RUBRIQUES[r].label}</h2>
           <div className="grid">
             {list.filter((g) => g.rubrique === r).map((g) => (
               <a key={g.id} className="tile" href={href(`/guide/${g.id}`)}>
                 <div className="ph" style={{ aspectRatio: "16/9" }}><Photo id={g.id} emoji={g.emoji} alt="" /></div>
                 <div className="bd">
-                <b>{g.emoji} {g.titre}</b>
+                <b>{g.titre}</b>
                 <div className="small muted" style={{ margin: "4px 0" }}>{g.resume}</div>
                 <div className="row" style={{ gap: 4 }}>
                   <span className="badge">{["", "Facile", "Intermédiaire", "Avancé"][g.niveau]}</span>

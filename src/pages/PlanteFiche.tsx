@@ -1,3 +1,4 @@
+import { Ico, Vignette } from "../components/Ico";
 import { useState } from "react";
 import { plante, probleme, CATEGORIES, FAMILLES } from "../data/index";
 import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty, toast } from "../components/ui";
@@ -26,6 +27,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
   const facts: [string, string | undefined][] = interieur
     ? [["Lumière", p.lumiere], ["Arrosage", p.arrosageDetail], ["Humidité", p.humidite], ["Température", p.temperature], ["Rempotage", p.rempotage]]
     : [
+        ["Où la cultiver", p.lieux.map((l) => ({ "pleine-terre": "jardin", pot: "en pot", balcon: "balcon", serre: "serre", interieur: "intérieur" })[l]).join(", ")],
         ["Exposition", p.expo.map((e) => EXPO[e]).join(", ")],
         ["Besoins du sol", BESOIN[p.besoin]],
         ["Eau", EAU[p.eau]],
@@ -36,6 +38,11 @@ export default function PlanteFiche({ id }: { id?: string }) {
         ["En pot", p.contenant],
         ["Rendement", p.rendement],
         ["Famille (rotation)", FAMILLES[p.famille]],
+        ["Cycle", p.cycle ? { annuelle: "Annuelle (un an)", bisannuelle: "Bisannuelle (fleurit la 2e année)", vivace: "Vivace (revient chaque année)", bulbe: "Bulbe ou tubercule", grimpante: "Grimpante", arbuste: "Arbuste" }[p.cycle] : undefined],
+        ["Floraison", p.floraison ? [...moisAffiches(p, "floraison", zone)].sort((a, b) => a - b).map((x) => MOIS_NOMS[x - 1]).join(", ") : undefined],
+        ["Couleurs", p.couleurs?.join(", ")],
+        ["Hauteur", p.hauteur],
+        ["Pollinisateurs", p.mellifere ? "🐝 Très appréciée des abeilles et papillons" : undefined],
       ];
 
   const lecture = [
@@ -70,9 +77,9 @@ export default function PlanteFiche({ id }: { id?: string }) {
           <Galerie id={p.id} emoji={p.emoji} alt={p.nom} />
         </div>
         <div>
-          <span className="badge green">{CATEGORIES[p.categorie].emoji} {CATEGORIES[p.categorie].label}</span>{" "}
+          <span className="badge green row" style={{ display: "inline-flex", gap: 4 }}><Ico nom={p.categorie} emoji={CATEGORIES[p.categorie].emoji} taille={18} /> {CATEGORIES[p.categorie].label}</span>{" "}
           <span className="badge">{["", "Facile", "Moyen", "Exigeant"][p.difficulte]}</span>
-          <h1 style={{ marginTop: 8 }}>{p.emoji} {p.nom}</h1>
+          <h1 style={{ marginTop: 8 }}>{p.nom}</h1>
           <p className="muted" style={{ marginTop: -8 }}><i>{p.latin}</i></p>
           <p>{p.intro}</p>
           <div className="row">
@@ -148,11 +155,11 @@ export default function PlanteFiche({ id }: { id?: string }) {
         <div className="grid">
           <div className="card">
             <b>👍 Bons voisins</b>
-            <div className="chips" style={{ marginTop: 8 }}>{p.amis.length ? p.amis.map((x) => { const q = plante(x)!; return <a key={x} className="chip" href={href(`/plante/${x}`)}>{q.emoji} {q.nom}</a>; }) : <span className="muted small">Aucun connu</span>}</div>
+            <div className="chips" style={{ marginTop: 8 }}>{p.amis.length ? p.amis.map((x) => { const q = plante(x)!; return <a key={x} className="chip" href={href(`/plante/${x}`)}><Vignette id={q.id} emoji={q.emoji} taille={22} /> {q.nom}</a>; }) : <span className="muted small">Aucun connu</span>}</div>
           </div>
           <div className="card">
             <b>👎 À éloigner</b>
-            <div className="chips" style={{ marginTop: 8 }}>{p.ennemis.length ? p.ennemis.map((x) => { const q = plante(x)!; return <a key={x} className="chip" href={href(`/plante/${x}`)}>{q.emoji} {q.nom}</a>; }) : <span className="muted small">Aucun connu</span>}</div>
+            <div className="chips" style={{ marginTop: 8 }}>{p.ennemis.length ? p.ennemis.map((x) => { const q = plante(x)!; return <a key={x} className="chip" href={href(`/plante/${x}`)}><Vignette id={q.id} emoji={q.emoji} taille={22} /> {q.nom}</a>; }) : <span className="muted small">Aucun connu</span>}</div>
           </div>
           <div className="card">
             <b>🔄 Rotation</b>

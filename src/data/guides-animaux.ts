@@ -101,6 +101,31 @@ export const GUIDES_ANIMAUX: Guide[] = [
     ],
     video: "conserver œufs poules non lavés fraîcheur", liens: ["poule"],
   },
+  {
+    id: "fumiers-securite", titre: "Fumiers sans risque : désherbants du foin, vermifuges, germes", rubrique: "animaux", emoji: "⚠️", niveau: 2, duree: "Lecture : 10 minutes",
+    resume: "Les angles morts de l'utilisation des déjections au potager : un fumier peut contenir des résidus qui détruisent les tomates pendant des années, des médicaments toxiques pour la vie du sol, ou des germes. Les règles et le test simple qui évitent les mauvaises surprises.",
+    etapes: [
+      { titre: "Les désherbants persistants du foin", texte: "Certains désherbants utilisés sur les prairies et les céréales (familles des pyridines : aminopyralide, clopyralide, picloram) traversent l'animal et restent actifs dans le fumier et même dans le compost pendant des mois ou des années. Résultat : tomates, pommes de terre, haricots, pois aux feuilles enroulées et tordues, qui ne produisent plus. Demandez toujours au fournisseur de foin, de paille ou de fumier s'il a été traité.", attention: "Ces résidus ne sont pas détruits par le compostage. En cas de doute, faites le test des haricots avant d'utiliser un fumier ou une paille achetés." },
+      { titre: "Le test des haricots (ou des pois)", texte: "Remplissez deux pots : l'un de terreau seul, l'autre de terreau mélangé à moitié avec le fumier à tester. Semez 3 haricots dans chacun. Au bout de 3 semaines, si les feuilles du pot « fumier » sont enroulées en cuillère, tordues ou décolorées alors que l'autre pot est normal, n'utilisez pas ce fumier au potager (utilisez-le au pied des arbres, des haies ou des graminées)." },
+      { titre: "Les vermifuges", texte: "Certains vermifuges (ivermectine et apparentés) passent dans les crottins pendant plusieurs semaines et tuent les bousiers et la faune du sol. Notez la date des traitements dans « Mon jardin → Animaux » et attendez au moins 3 à 4 semaines avant d'utiliser le fumier frais ; le compostage en dégrade une partie." },
+      { titre: "Les germes", texte: "Salmonelles, E. coli, parasites : compostez toujours les fumiers de volailles, de porc et de ruminants (6 mois, idéalement un tas qui chauffe) ; aucun fumier frais sur des légumes consommés crus dans les 4 mois précédant la récolte ; gants, lavage des mains, légumes lavés.", attention: "Jamais de déjections de chiens, de chats ou humaines (hors toilettes sèches gérées selon les règles) au potager : parasites dangereux (toxoplasmose, toxocarose)." },
+      { titre: "Combien en mettre ?", texte: "Le tableau des fumiers donne une dose par m² et par an. Repère simple : une brouette (60 L) de fumier composté pour 10 m² de légumes gourmands chaque automne ; deux fois moins pour les légumes moyens ; rien pour l'ail, l'oignon et les légumineuses. L'excès d'azote attire les pucerons et rend les légumes plus fragiles." },
+      { titre: "Stocker le fumier", texte: "En tas couvert (bâche respirante ou paille) sur un sol plat, loin des puits, des fossés et des cours d'eau (les jus polluent l'eau), et à distance des voisins. Le jus qui s'écoule (purin) est un engrais : recueillez-le dans un bac et diluez-le à 10 %." },
+    ],
+    video: "fumier aminopyralide test haricots compost désherbant persistant", liens: ["fumiers", "compost-tas", "cheval", "mouton"],
+  },
+  {
+    id: "repulsifs-animaux", titre: "Les produits des animaux contre les nuisibles : ce qui marche vraiment", rubrique: "animaux", emoji: "🧶", niveau: 1, duree: "Lecture : 10 minutes",
+    resume: "Laine, crottins, cendres, poils, coquilles, purins : ce que la basse-cour et les animaux apportent pour protéger le jardin, en distinguant ce qui est démontré de ce qui relève de la tradition.",
+    etapes: [
+      { titre: "Démontré ou largement observé", texte: "Laine de mouton en paillage ou en granulés : barrière qui gêne les limaces et garde l'humidité, puis se décompose en azote. Poules sous les fruitiers et en « tracteur » : moins de larves de carpocapse, de taupins, de vers blancs. Canards coureurs : grands mangeurs de limaces. Pintades : tiques et insectes. Pâturage alterné (moutons, ânes, chevaux) : casse le cycle des vers digestifs. Chicorée et sainfoin dans la ration des ruminants : moins de strongles." },
+      { titre: "Utile en barrière, à renouveler", texte: "Cendre du poêle (bois non traité) et coquilles d'œufs broyées : barrière sèche contre les limaces, efficace seulement au sec (à renouveler après chaque pluie) ; la cendre apporte aussi de la potasse (une poignée par m² et par an, pas plus)." },
+      { titre: "Tradition, effet limité ou variable", texte: "Poils, cheveux ou laine accrochés aux arbres contre les chevreuils et les lapins sauvages ; urine ou crottin répandus pour éloigner les rongeurs ; sang séché contre les lapins : effet faible et de courte durée, à combiner avec une vraie protection (grillage, manchons, clôture). Le purin de fientes n'éloigne pas les ravageurs : c'est un engrais." },
+      { titre: "Ce qu'il ne faut pas faire", texte: "Répandre de la viande, des abats ou des déchets d'abattage au jardin (rats, renards, maladies), utiliser les excréments des chiens ou des chats, ou laisser des animaux malades au contact du potager." },
+      { titre: "Le bon équilibre", texte: "Les animaux protègent le jardin… et peuvent le ravager : poules, chèvres, oies et cochons doivent être tenus hors des cultures en place (clôtures), et n'y entrer qu'aux moments choisis (après récolte, sous les arbres, en hiver)." },
+    ],
+    video: "laine de mouton limaces poules verger canards coureurs limaces", liens: ["animaux-auxiliaires", "fumiers", "limaces", "carpocapse", "cendre"],
+  },
   // ───────────── Préparation de la viande (contenu sensible) ─────────────
   {
     id: "abattage-volaille", titre: "Abattre et préparer une volaille de la basse-cour", rubrique: "boucherie", emoji: "🔪", niveau: 3, duree: "45 minutes à 1 heure 30 par oiseau", sensible: true,

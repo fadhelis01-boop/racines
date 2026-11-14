@@ -1,3 +1,4 @@
+import { Ico, Vignette } from "../components/Ico";
 import { useEffect, useRef, useState } from "react";
 import { useStore, toggleFait } from "../lib/store";
 import { plantesDuMois, travauxDuMois, ACTIONS, buildIcs, type Action } from "../lib/calendar";
@@ -83,9 +84,9 @@ export default function Calendrier() {
             {(Object.keys(pm) as Action[]).map((a) =>
               pm[a].length ? (
                 <div key={a} className="card">
-                  <b>{ACTIONS[a].emoji} {ACTIONS[a].verbe}</b> <span className="badge">{pm[a].length}</span>
+                  <b className="row" style={{ gap: 6, display: "inline-flex" }}><Ico nom={({ semisAbri: "semisAbri", semisPlace: "semisPlace", plantation: "plantation", recolte: "recolte-action", taille: "taille", floraison: "floraison" } as Record<string, string>)[a]} emoji={ACTIONS[a].emoji} taille={28} /> {ACTIONS[a].verbe}</b> <span className="badge">{pm[a].length}</span>
                   <div className="chips" style={{ marginTop: 8 }}>
-                    {pm[a].map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}>{p.emoji} {p.nom}</a>)}
+                    {pm[a].map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}><Vignette id={p.id} emoji={p.emoji} taille={22} /> {p.nom}</a>)}
                   </div>
                 </div>
               ) : null,
@@ -95,7 +96,7 @@ export default function Calendrier() {
           <h2>Les travaux de {MOIS_NOMS[mois - 1]}</h2>
           {sections.map((x) => (
             <div key={x.k} className="card">
-              <b>{x.e} {x.t}</b>
+              <b className="row" style={{ gap: 6 }}><Ico nom={({ potager: "legume", verger: "arbre", serre: "serre", compost: "compost", interieur: "interieur", animaux: "animaux", balcon: "balcon" } as Record<string, string>)[x.k]} emoji={x.e} taille={28} /> {x.t}</b>
               {t[x.k].map((txt, i) => {
                 const key = `${annee}-${mois}:${x.k}:${i}`;
                 return (

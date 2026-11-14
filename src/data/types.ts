@@ -86,8 +86,15 @@ export interface Plante {
   photo?: string; // fichier Wikimedia Commons à préférer à la photo de l'article
   danger?: boolean; // plante très toxique : alerte rouge à l'identification
   semisPlaceDoux?: Mois[]; // semis d'automne réservés aux climats doux
-  comestible?: string; // plante sauvage : partie comestible et précautions
+  comestible?: string; // partie comestible et précautions (plantes sauvages, fleurs)
+  // Fleurs
+  couleurs?: Couleur[];
+  floraison?: Mois[];
+  cycle?: "annuelle" | "bisannuelle" | "vivace" | "bulbe" | "grimpante" | "arbuste";
+  mellifere?: boolean;
+  hauteur?: string;
 }
+export type Couleur = "blanc" | "jaune" | "orange" | "rouge" | "rose" | "violet" | "bleu" | "vert" | "multicolore";
 
 export type TypeProbleme = "champignon" | "bacterie" | "virus" | "ravageur" | "physiologique" | "carence" | "mammifere";
 export type Organe = "feuilles" | "fruits" | "tiges" | "racines" | "fleurs" | "plantule" | "plante";
@@ -144,6 +151,7 @@ export interface EtapeGuide {
 
 export type Rubrique =
   | "demarrer"
+  | "fleurs"
   | "sol"
   | "compost"
   | "arrosage"

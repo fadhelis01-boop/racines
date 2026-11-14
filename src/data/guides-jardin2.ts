@@ -152,4 +152,43 @@ export const GUIDES_JARDIN2: Guide[] = [
     ],
     video: "jardin surélevé accessible fauteuil seniors enfants potager", liens: ["carre-potager-diy", "securite-jardin", "plantes-toxiques", "hotel-insectes"],
   },
+  {
+    id: "fleurs-semis-entretien", titre: "Semer, planter et entretenir les fleurs", rubrique: "fleurs", emoji: "🌸", niveau: 1, duree: "Toute la saison",
+    resume: "Annuelles, bisannuelles, vivaces, bulbes, grimpantes : quand semer ou planter, comment les faire fleurir longtemps, et les gestes d'entretien selon le type de fleur.",
+    etapes: [
+      { titre: "Connaître le cycle", texte: "Annuelle (cosmos, zinnia, capucine) : semée au printemps, fleurit l'été, meurt à l'automne. Bisannuelle (pensée, rose trémière, digitale) : semée l'été, fleurit l'année suivante. Vivace (échinacée, pivoine, aster) : revient chaque année. Bulbe (tulipe, lys, dahlia) : se plante à une saison précise. Chaque fiche l'indique." },
+      { titre: "Semer les annuelles", texte: "Graines fines (muflier, pétunia, alysse) : en surface, au chaud, dès février-mars sous abri. Grosses graines (capucine, cosmos, tournesol, pois de senteur) : en place en avril-mai, après les gelées pour les frileuses. Les fleurs des champs (coquelicot, bleuet, nigelle) se sèment à la volée en automne ou au printemps sur sol nu." },
+      { titre: "Planter vivaces et bulbes", texte: "Vivaces : au printemps ou mieux en automne (racines installées avant l'été). Bulbes de printemps (tulipes, narcisses) : en automne ; bulbes d'été (dahlias, glaïeuls) : au printemps après les gelées." },
+      { titre: "Faire durer la floraison", texte: "Coupez les fleurs fanées (« nettoyage ») avant qu'elles ne fassent des graines : la plante refait des fleurs. Cueillez pour les bouquets le matin. Engrais riche en potasse (purin de consoude) pour les fleurs en pot." },
+      { titre: "Arroser et pailler", texte: "Au pied, le matin ; paillage léger. Les fleurs méditerranéennes (lavande, gaura, échinacée) se contentent de peu d'eau ; les annuelles en pot boivent tous les jours en été." },
+      { titre: "Diviser et multiplier", texte: "Divisez les touffes de vivaces tous les 3-4 ans au printemps ou en automne : vous rajeunissez la plante et obtenez de nouveaux pieds gratuits. Récoltez les graines des annuelles non hybrides (fiche « Récolter ses graines »)." },
+      { titre: "Associer au potager", texte: "Capucines, soucis, œillets d'Inde, cosmos, bourrache, alysse et phacélie attirent les pollinisateurs et les auxiliaires qui mangent les pucerons : semez-en quelques-uns au bout de chaque planche." },
+    ],
+    video: "semer fleurs annuelles vivaces entretien floraison", liens: ["fleurs-comestibles", "jardin-pollinisateurs", "graines-maison", "cosmos", "capucine"],
+  },
+  {
+    id: "fleurs-comestibles", titre: "Les fleurs comestibles (et celles à ne jamais manger)", rubrique: "fleurs", emoji: "🍽️", niveau: 1, duree: "Lecture : 10 minutes",
+    resume: "Capucines, soucis, pensées, bourrache, roses, courgettes, lavande… Celles qui se mangent, comment les récolter et les préparer, et les règles de sécurité.",
+    etapes: [
+      { titre: "Les règles de sécurité", texte: "Seulement des fleurs identifiées avec certitude, cultivées par vous ou garanties « comestibles » : JAMAIS les fleurs de fleuriste ou de jardinerie (traitées), ni celles des bords de route. Retirez pistils et étamines (pollen allergisant), goûtez en petite quantité la première fois. Le filtre « Comestible » du catalogue les rassemble." },
+      { titre: "Les plus faciles", texte: "Capucine (poivrée), souci (couleur safran), pensée et violette (douces), bourrache (goût d'huître), mauve, fleurs de courgette (farcies), ciboulette (piquante), lavande vraie (desserts, avec modération), rose (gelée, sucre), sureau (sirop, beignets), lilas, hémérocalle (boutons), coquelicot et bleuet (pétales), tournesol." },
+      { titre: "Récolter et conserver", texte: "Le matin, après la rosée, fleurs juste ouvertes ; secouez pour chasser les insectes, rincez délicatement, posez sur un papier, au réfrigérateur dans une boîte : à utiliser dans la journée. Séchage (pétales de souci, de rose) ou cristallisation au sucre (violettes)." },
+      { titre: "Les fleurs à ne JAMAIS manger", texte: "Muguet, digitale, laurier-rose, glycine, lupin d'ornement, pois de senteur (graines), datura, colchique, narcisse et jonquille, jacinthe, hortensia, rhododendron, clématite, aconit, belladone, lys (et mortel pour les chats). En cas d'ingestion : centre antipoison ou 15." },
+      { titre: "Avec les animaux", texte: "Ce qui est comestible pour vous ne l'est pas forcément pour eux : les hémérocalles et les lys tuent les chats. Vérifiez la ligne « Pour vos animaux » de chaque fiche." },
+    ],
+    video: "fleurs comestibles jardin liste sécurité recettes", liens: ["capucine", "souci", "pensee", "bourrache", "plantes-toxiques", "cueillette-sauvage"],
+  },
+  {
+    id: "jardin-pollinisateurs", titre: "Des fleurs toute l'année pour les pollinisateurs", rubrique: "fleurs", emoji: "🐝", niveau: 1, duree: "Une saison",
+    resume: "Un calendrier de floraisons de février à novembre pour nourrir abeilles, bourdons, papillons et syrphes, qui pollinisent fruits et légumes et mangent les pucerons.",
+    etapes: [
+      { titre: "Fin d'hiver (février-mars)", texte: "Crocus, primevères, violettes, perce-neige, saules et noisetiers, romarin : vitales pour les bourdons qui sortent d'hivernage." },
+      { titre: "Printemps (avril-mai)", texte: "Fruitiers, tulipes botaniques, muscaris, pensées, lilas, bourrache, consoude, glycine, giroflées." },
+      { titre: "Été (juin-août)", texte: "Lavande, phacélie, cosmos, zinnias, échinacées, rudbeckias, coquelicots, bleuets, tournesols, sauge, origan, thym, lavande, agapanthe, mauves, roses simples (pas les roses doubles, sans pollen accessible)." },
+      { titre: "Automne (septembre-novembre)", texte: "Asters, sedums, dahlias simples, lierre en fleur (indispensable : dernière grande ressource avant l'hiver), cosmos, capucines." },
+      { titre: "Les bons choix", texte: "Préférez les fleurs SIMPLES (un seul rang de pétales) aux fleurs doubles décoratives, souvent stériles ou inaccessibles. Plantez par touffes d'une même espèce. Laissez fleurir quelques légumes (poireaux, radis, roquette, choux) et un coin de pissenlits. Le filtre « Pour les abeilles » du catalogue les rassemble." },
+      { titre: "Sans traitement", texte: "Même « naturel », un insecticide (savon noir, pyrèthre) tue aussi les pollinisateurs : jamais sur les fleurs ouvertes, jamais en journée." },
+    ],
+    video: "fleurs mellifères toute l'année abeilles jardin", liens: ["hotel-insectes", "abeille", "phacelie", "lavande", "fleurs-semis-entretien"],
+  },
 ];

@@ -7,6 +7,7 @@
 //         FORCE=1 npm run wiki  (tout récupérer)
 import { writeFileSync, existsSync, readFileSync } from "node:fs";
 import { PLANTES, PROBLEMES, ANIMAUX, AUXILIAIRES } from "../src/data/index";
+import { LEXIQUE } from "../src/data/lexique";
 
 type Ph = { img: string; full: string; page: string; auteur: string; licence: string };
 const OUT = "src/data/wiki.json";
@@ -111,7 +112,7 @@ async function infos(fichiers: string[]): Promise<Map<string, Ph>> {
 }
 
 const ONLY = (process.env.ONLY ?? "").split(",").filter(Boolean);
-const items = ([...PLANTES, ...PROBLEMES, ...ANIMAUX, ...AUXILIAIRES].filter((x) => x.wiki) as { id: string; wiki: string; photo?: string }[]).filter((it) => (ONLY.length ? ONLY.includes(it.id) : process.env.FORCE || !old[it.id]?.photos?.length));
+const items = ([...PLANTES, ...PROBLEMES, ...ANIMAUX, ...AUXILIAIRES, ...LEXIQUE.filter((t) => t.wiki).map((t) => ({ id: "lex-" + t.id, wiki: t.wiki!, nom: t.terme }))].filter((x) => x.wiki) as { id: string; wiki: string; photo?: string }[]).filter((it) => (ONLY.length ? ONLY.includes(it.id) : process.env.FORCE || !old[it.id]?.photos?.length));
 const out: Record<string, { photos: Ph[]; article: string }> = {};
 for (const [k, v] of Object.entries(old)) if (v.photos?.length) out[k] = v as (typeof out)[string];
 
@@ -134,7 +135,8 @@ for (const it of items) {
 const info = await infos([...new Set([...candidats.values()].flat())]);
 const manquants: string[] = [];
 for (const it of items) {
-  const photos = (candidats.get(it.id) ?? []).map((f) => info.get(f)).filter(Boolean).slice(0, 4) as Ph[];
+  const vus = new Set<string>();
+  const photos = ((candidats.get(it.id) ?? []).map((f) => info.get(f)).filter((p) => p && !vus.has(p.img) && vus.add(p.img)) as Ph[]).slice(0, 4);
   if (photos.length) out[it.id] = { photos, article: `https://fr.wikipedia.org/wiki/${encodeURIComponent(it.wiki.replace(/ /g, "_"))}` };
   else manquants.push(`${it.id} (${it.wiki})`);
 }

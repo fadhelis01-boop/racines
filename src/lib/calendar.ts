@@ -34,13 +34,14 @@ export function shiftMonths(months: Mois[] | undefined, weeks: number): Set<numb
   return out;
 }
 
-export type Action = "semisAbri" | "semisPlace" | "plantation" | "recolte" | "taille";
+export type Action = "semisAbri" | "semisPlace" | "plantation" | "recolte" | "taille" | "floraison";
 export const ACTIONS: Record<Action, { label: string; emoji: string; verbe: string }> = {
   semisAbri: { label: "Semer à l'abri", emoji: "🏠", verbe: "Semer au chaud / sous abri" },
   semisPlace: { label: "Semer en place", emoji: "🌱", verbe: "Semer en pleine terre" },
   plantation: { label: "Planter", emoji: "🌿", verbe: "Planter / repiquer" },
   recolte: { label: "Récolter", emoji: "🧺", verbe: "Récolter" },
   taille: { label: "Tailler", emoji: "✂️", verbe: "Tailler" },
+  floraison: { label: "En fleur", emoji: "🌸", verbe: "En fleur" },
 };
 
 // Mois d'une action, avec les semis d'automne réservés aux climats doux
@@ -52,10 +53,13 @@ export function moisDe(p: Plante, a: Action, zone: ZoneId): Mois[] | undefined {
 
 export function plantesDuMois(mois: number, zone: ZoneId, filtre?: (p: Plante) => boolean) {
   const w = decalage(zone);
-  const res: Record<Action, Plante[]> = { semisAbri: [], semisPlace: [], plantation: [], recolte: [], taille: [] };
+  const res: Record<Action, Plante[]> = { semisAbri: [], semisPlace: [], plantation: [], recolte: [], taille: [], floraison: [] };
   for (const p of PLANTES) {
     if (filtre && !filtre(p)) continue;
-    for (const a of Object.keys(res) as Action[]) if (shiftMonths(moisDe(p, a, zone), w).has(mois)) res[a].push(p);
+    for (const a of Object.keys(res) as Action[]) {
+      if (a === "recolte" && p.floraison && (p.categorie === "fleur" || p.categorie === "ornement" || p.categorie === "interieur") && !p.comestible) continue;
+      if (shiftMonths(moisDe(p, a, zone), w).has(mois)) res[a].push(p);
+    }
   }
   return res;
 }

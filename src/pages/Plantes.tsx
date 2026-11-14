@@ -1,3 +1,4 @@
+import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { PLANTES, CATEGORIES } from "../data/index";
 import { Tile } from "../components/ui";
@@ -12,6 +13,7 @@ export default function Plantes() {
   const [lieu, setLieu] = useState<string>("");
   const [facile, setFacile] = useState(false);
   const [filtres, setFiltres] = useState<string[]>([]);
+  const [couleur, setCouleur] = useState("");
   const tog = (f: string) => setFiltres(filtres.includes(f) ? filtres.filter((x) => x !== f) : [...filtres, f]);
   const fav = useStore((s) => s.favoris);
   const nq = norm(q);
@@ -24,6 +26,10 @@ export default function Plantes() {
       (!filtres.includes("sombre") || p.ombreOk === true || p.expo.includes("ombre")) &&
       (!filtres.includes("oublis") || (p.difficulte === 1 && p.eau !== "fort")) &&
       (!filtres.includes("fleurs") || p.fleurit === true) &&
+      (!filtres.includes("comestible") || !!p.comestible) &&
+      (!filtres.includes("mellifere") || p.mellifere === true) &&
+      (!filtres.includes("enfleur") || (p.floraison ?? []).includes((new Date().getMonth() + 1) as never)) &&
+      (!couleur || (p.couleurs ?? []).includes(couleur as never)) &&
       (!nq || norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" ")).includes(nq)),
   ).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
   return (
@@ -35,7 +41,7 @@ export default function Plantes() {
         <button className={`chip ${cat === "tout" ? "on" : ""}`} onClick={() => setCat("tout")}>Toutes</button>
         <button className={`chip ${cat === "fav" ? "on" : ""}`} onClick={() => setCat("fav")}>★ Favoris</button>
         {Object.entries(CATEGORIES).map(([k, v]) => (
-          <button key={k} className={`chip ${cat === k ? "on" : ""}`} onClick={() => setCat(k as Categorie)}>{v.emoji} {v.label}</button>
+          <button key={k} className={`chip ${cat === k ? "on" : ""}`} onClick={() => setCat(k as Categorie)}><Ico nom={k} emoji={v.emoji} taille={22} /> {v.label}</button>
         ))}
       </div>
       <div className="row" style={{ marginBottom: 12 }}>
@@ -50,8 +56,13 @@ export default function Plantes() {
         <label className="row small"><input type="checkbox" checked={facile} onChange={(e) => setFacile(e.target.checked)} /> Faciles seulement</label>
       </div>
       <div className="chips" style={{ marginBottom: 12 }}>
-        {[["animaux", "🐱 Sans danger chats et chiens"], ["sombre", "🌑 Pièce sombre"], ["oublis", "🙈 Pardonne les oublis"], ["fleurs", "🌸 Fleurit en intérieur"]].map(([k, l]) => (
+        {[["enfleur", "🌸 En fleur ce mois-ci"], ["comestible", "🍽️ Comestible"], ["mellifere", "🐝 Pour les abeilles"], ["animaux", "🐱 Sans danger chats et chiens"], ["sombre", "🌑 Pièce sombre"], ["oublis", "🙈 Pardonne les oublis"], ["fleurs", "🌸 Fleurit en intérieur"]].map(([k, l]) => (
           <button key={k} className={`chip ${filtres.includes(k) ? "on" : ""}`} onClick={() => tog(k)}>{l}</button>
+        ))}
+      </div>
+      <div className="chips" style={{ marginBottom: 12 }} aria-label="Couleur des fleurs">
+        {[["", "Toutes couleurs", "transparent"], ["blanc", "Blanc", "#f5f5f0"], ["jaune", "Jaune", "#f2d24b"], ["orange", "Orange", "#f29a3b"], ["rouge", "Rouge", "#d9342b"], ["rose", "Rose", "#ec8fb7"], ["violet", "Violet", "#8f5bbf"], ["bleu", "Bleu", "#4f7fd1"]].map(([k, l, col]) => (
+          <button key={k} className={`chip ${couleur === k ? "on" : ""}`} onClick={() => setCouleur(k)}><span style={{ width: 12, height: 12, borderRadius: 6, background: col, border: "1px solid var(--line)", display: "inline-block" }} />{l}</button>
         ))}
       </div>
       <div className="grid">

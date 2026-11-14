@@ -2,6 +2,7 @@ import { useState } from "react";
 import { animal, GUIDES } from "../data/index";
 import { Galerie, Back, Listen, Videos, A, Empty, toast } from "../components/ui";
 import { href } from "../lib/router";
+import TableFumiers from "../components/TableFumiers";
 import { upsert, uid, today } from "../lib/store";
 
 export default function AnimalFiche({ id }: { id?: string }) {
@@ -25,7 +26,7 @@ export default function AnimalFiche({ id }: { id?: string }) {
       <div className="hero" style={{ marginTop: 8 }}>
         <Galerie id={a.id} emoji={a.emoji} alt={a.nom} />
         <div>
-          <h1>{a.emoji} {a.nom}</h1>
+          <h1>{a.nom}</h1>
           <p>{a.resume}</p>
           <div className="row">
             <button className="btn primary" onClick={() => { upsert("troupeaux", { id: uid(), animalId: a.id, nom: a.nom, nombre: 1, depuis: today() }); toast("Ajouté à Mon jardin → Animaux"); }}>➕ J'en ai</button>
@@ -76,6 +77,8 @@ export default function AnimalFiche({ id }: { id?: string }) {
       {tab === "jardin" && (
         <div>
           <div className="callout ok"><b>💩 Le fumier</b>{a.fumier.valeur}</div>
+          <TableFumiers seul={a.id} />
+          <p className="small"><a href={href("/guide/repulsifs-animaux")}>🧶 Les produits des animaux contre les nuisibles →</a> · <a href={href("/guide/fumiers")}>Tous les fumiers comparés →</a></p>
           <ul className="ticks">{a.fumier.usage.map((x) => <li key={x}>{x}</li>)}</ul>
           <h3>Services rendus au jardin</h3>
           <ul className="ticks">{a.auJardin.map((x) => <li key={x}>{x}</li>)}</ul>

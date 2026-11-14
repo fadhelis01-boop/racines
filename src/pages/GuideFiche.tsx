@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { guide, lienVers, RUBRIQUES } from "../data/index";
 import { Back, Listen, Videos, A, Empty, Photo } from "../components/ui";
 import { youtube } from "../data/util";
+import TableFumiers from "../components/TableFumiers";
 import { href } from "../lib/router";
 import { useStore, setSettings } from "../lib/store";
 import { play, pause, stop, keepAwake, listenCommands, voiceCommandsSupported, useTts } from "../lib/tts";
@@ -66,6 +67,7 @@ export default function GuideFiche({ id }: { id?: string }) {
           </li>
         ))}
       </ol>
+      {(g.id === "fumiers" || g.id === "fumiers-securite" || g.id === "engrais-naturels") && <TableFumiers />}
       {g.conseils && <><h2>Conseils</h2><ul className="ticks">{g.conseils.map((c) => <li key={c}>{c}</li>)}</ul></>}
       {g.erreurs && <><h2>Erreurs à éviter</h2><ul className="ticks">{g.erreurs.map((c) => <li key={c}>{c}</li>)}</ul></>}
       <h2>🎬 En vidéo</h2>

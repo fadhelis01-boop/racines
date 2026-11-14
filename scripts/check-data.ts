@@ -2,6 +2,7 @@
 // Échoue si une référence croisée pointe vers un id inexistant.
 import { ENRICH } from "../src/data/interieur2";
 import { TRAITS } from "../src/data/traits";
+import { LEXIQUE } from "../src/data/lexique";
 import { PLANTES, PROBLEMES, REMEDES, GUIDES, ANIMAUX, SIGNES, AUXILIAIRES, CALENDRIER, lienVers } from "../src/data/index";
 
 const errors: string[] = [];
@@ -43,6 +44,7 @@ for (const p of PLANTES) {
   if (p.categorie === "interieur" && p.sansDangerAnimaux === undefined) errors.push(`plante d'intérieur ${p.id} : toxicité animaux non renseignée`);
   if (p.categorie === "interieur" && !TRAITS[p.id]) errors.push(`plante d'intérieur ${p.id} : caractères d'identification manquants`);
 }
+for (const t of LEXIQUE) if (t.voir && !lienVers(t.voir)) errors.push(`lexique ${t.id} : lien inconnu « ${t.voir} »`);
 if (CALENDRIER.length !== 12) errors.push("calendrier : 12 mois attendus");
 for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.includes(s))) errors.push(`signe « ${s} » jamais utilisé`);
 

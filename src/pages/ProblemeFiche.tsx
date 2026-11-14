@@ -1,3 +1,4 @@
+import { Vignette } from "../components/Ico";
 import { probleme, remede, plante, TYPES_PROBLEME } from "../data/index";
 import { Galerie, Back, Listen, Videos, A, Empty } from "../components/ui";
 import { href } from "../lib/router";
@@ -40,13 +41,13 @@ export default function ProblemeFiche({ id }: { id?: string }) {
       {p.remedes.length > 0 && (
         <>
           <h3>Préparations utiles</h3>
-          <div className="chips">{p.remedes.map((r) => { const x = remede(r)!; return <a key={r} className="chip" href={href(`/remede/${r}`)}>{x.emoji} {x.nom}</a>; })}</div>
+          <div className="chips">{p.remedes.map((r) => { const x = remede(r)!; return <a key={r} className="chip" href={href(`/remede/${r}`)}><Vignette id={x.id} emoji={x.emoji} taille={22} /> {x.nom}</a>; })}</div>
         </>
       )}
       {plantes.length > 0 && (
         <>
           <h2>Plantes concernées</h2>
-          <div className="chips">{plantes.map((q) => <a key={q!.id} className="chip" href={href(`/plante/${q!.id}`)}>{q!.emoji} {q!.nom}</a>)}</div>
+          <div className="chips">{plantes.map((q) => <a key={q!.id} className="chip" href={href(`/plante/${q!.id}`)}><Vignette id={q!.id} emoji={q!.emoji} taille={22} /> {q!.nom}</a>)}</div>
         </>
       )}
       <h2>🎬 Vidéos</h2>

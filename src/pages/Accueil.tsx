@@ -1,3 +1,4 @@
+import { Ico, Vignette } from "../components/Ico";
 import { useEffect, useState } from "react";
 import { useStore, toggleFait } from "../lib/store";
 import { meteo, alertes, emojiMeteo, type Meteo } from "../lib/meteo";
@@ -5,7 +6,7 @@ import { lune } from "../lib/lune";
 import { travauxDuMois, plantesDuMois, tachesPerso, ACTIONS, type Action } from "../lib/calendar";
 import { MOIS_NOMS } from "../data/util";
 import { A, Listen, Section } from "../components/ui";
-import { href, go } from "../lib/router";
+import { href } from "../lib/router";
 import { Logo } from "../App";
 import type { Plante } from "../data/types";
 import { ZONES } from "../data/index";
@@ -66,7 +67,6 @@ export default function Accueil() {
       <div className="topbar">
         <a className="brand" href={href("/")}><Logo /> Racines</a>
         <div className="grow" />
-        <button className="icon-btn" onClick={() => go("/recherche")} aria-label="Rechercher">🔍</button>
       </div>
       <h1>{salut} 🌿</h1>
       <p className="muted" style={{ marginTop: -6 }}>
@@ -78,7 +78,7 @@ export default function Accueil() {
 
       {settings.ville && (
         <div className="card">
-          <div className="row between"><b>🌦️ Météo à {settings.ville.nom.split(",")[0]}</b>{wxErr && <span className="small muted">hors connexion</span>}</div>
+          <div className="row between"><b className="row" style={{ gap: 6 }}><Ico nom="meteo" emoji="🌦️" taille={26} /> Météo à {settings.ville.nom.split(",")[0]}</b>{wxErr && <span className="small muted">hors connexion</span>}</div>
           {wx && (
             <div className="wx" style={{ marginTop: 8 }}>
               {wx.jours.map((j) => (
@@ -104,7 +104,7 @@ export default function Accueil() {
       )}
 
       {settings.lune && <div className="card row" style={{ marginTop: 12 }}>
-        <span style={{ fontSize: "2.2rem" }}>{l.emoji}</span>
+        <span style={{ position: "relative" }}><Ico nom="lune" emoji={l.emoji} taille={48} /><span style={{ position: "absolute", right: -4, bottom: -4, fontSize: "1.2rem" }}>{l.emoji}</span></span>
         <div style={{ flex: 1 }}>
           <b>{l.phase} · lune {l.montante ? "montante" : "descendante"}</b>
           <div className="small muted">{l.conseil} <i>Tradition jardinière, sans effet démontré scientifiquement.</i></div>
@@ -112,14 +112,14 @@ export default function Accueil() {
       </div>}
 
       <div className="grid-sm" style={{ marginTop: 14 }}>
-        <a className="btn big" href={href(appart ? "/diagnostic?interieur=1" : "/diagnostic")}>🩺 Ma plante est malade</a>
-        <a className="btn big" href={href("/identifier")}>📷 Identifier par photo</a>
+        <a className="btn big" href={href(appart ? "/diagnostic?interieur=1" : "/diagnostic")}><Ico nom="diagnostic" emoji="🩺" taille={40} /> Ma plante est malade</a>
+        <a className="btn big" href={href("/identifier")}><Ico nom="photo" emoji="📷" taille={40} /> Identifier par photo</a>
         {appart ? <>
-          <a className="btn big" href={href("/jardin/mesplantes")}>🌿 Mes plantes</a>
-          <a className="btn big" href={href("/guide/potager-interieur")}>🍅 Potager d'intérieur</a>
+          <a className="btn big" href={href("/jardin/mesplantes")}><Ico nom="mesplantes" emoji="🌿" taille={40} /> Mes plantes</a>
+          <a className="btn big" href={href("/guide/potager-interieur")}><Ico nom="potager-interieur" emoji="🍅" taille={40} /> Potager d'intérieur</a>
         </> : <>
-          <a className="btn big" href={href("/creer")}>👨‍🌾 Créer mon potager</a>
-          <a className="btn big" href={href("/jardin")}>🧺 Noter un semis, une récolte</a>
+          <a className="btn big" href={href("/creer")}><Ico nom="creer" emoji="👨‍🌾" taille={40} /> Créer mon potager</a>
+          <a className="btn big" href={href("/jardin")}><Ico nom="jardin" emoji="🧺" taille={40} /> Noter un semis, une récolte</a>
         </>}
       </div>
 
@@ -159,9 +159,9 @@ export default function Accueil() {
           {(["semisAbri", "semisPlace", "plantation", "recolte"] as Action[]).map((a) =>
             pm[a].length ? (
               <div key={a} className="card">
-                <b>{ACTIONS[a].emoji} {ACTIONS[a].verbe}</b>
+                <b className="row" style={{ gap: 6 }}><Ico nom={({ semisAbri: "semisAbri", semisPlace: "semisPlace", plantation: "plantation", recolte: "recolte-action", taille: "taille", floraison: "floraison" } as Record<string, string>)[a]} emoji={ACTIONS[a].emoji} taille={28} /> {ACTIONS[a].verbe}</b>
                 <div className="chips" style={{ marginTop: 8 }}>
-                  {pm[a].slice(0, 14).map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}>{p.emoji} {p.nom}</a>)}
+                  {pm[a].slice(0, 14).map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}><Vignette id={p.id} emoji={p.emoji} taille={22} /> {p.nom}</a>)}
                   {pm[a].length > 14 && <A to="/calendrier" className="chip">+{pm[a].length - 14}</A>}
                 </div>
               </div>
@@ -170,7 +170,7 @@ export default function Accueil() {
         </div>
         {sections.map((x) => (
           <div key={x.k} className="card">
-            <b>{x.e} {x.t}</b>
+            <b className="row" style={{ gap: 6 }}><Ico nom={({ potager: "legume", verger: "arbre", serre: "serre", compost: "compost", interieur: "interieur", animaux: "animaux", balcon: "balcon" } as Record<string, string>)[x.k]} emoji={x.e} taille={28} /> {x.t}</b>
             {t[x.k].map((txt, i) => {
               const key = `${now.getFullYear()}-${mois}:${x.k}:${i}`;
               return (

@@ -25,6 +25,9 @@ const Associations = lazy(() => import("./pages/Associations"));
 const Reglages = lazy(() => import("./pages/Reglages"));
 const Plus = lazy(() => import("./pages/Plus"));
 const Recherche = lazy(() => import("./pages/Recherche"));
+const Lexique = lazy(() => import("./pages/Lexique"));
+import BarreRecherche from "./components/BarreRecherche";
+import { Ico } from "./components/Ico";
 
 export const Logo = () => (
   <svg viewBox="0 0 64 64" aria-hidden="true">
@@ -37,17 +40,18 @@ export const Logo = () => (
 );
 
 const NAV = [
-  { to: "/", label: "Aujourd'hui", i: "🏡", main: true },
-  { to: "/calendrier", label: "Calendrier", i: "📅", main: true },
-  { to: "/plantes", label: "Plantes", i: "🌱", main: true },
-  { to: "/sante", label: "Santé", i: "🩺", main: true },
-  { to: "/jardin", label: "Mon jardin", i: "🧺" },
-  { to: "/creer", label: "Créer mon potager", i: "👨‍🌾" },
-  { to: "/guides", label: "Tutoriels", i: "📘" },
-  { to: "/animaux", label: "Animaux", i: "🐔" },
-  { to: "/identifier", label: "Identifier (photo)", i: "📷" },
-  { to: "/associations", label: "Associations", i: "🤝" },
-  { to: "/reglages", label: "Réglages", i: "⚙️" },
+  { to: "/", label: "Aujourd'hui", i: "🏡", ico: "aujourdhui", main: true },
+  { to: "/calendrier", label: "Calendrier", i: "📅", ico: "calendrier", main: true },
+  { to: "/plantes", label: "Plantes et fleurs", i: "🌱", ico: "plantes", main: true },
+  { to: "/sante", label: "Santé", i: "🩺", ico: "sante", main: true },
+  { to: "/jardin", label: "Mon jardin", i: "🧺", ico: "jardin" },
+  { to: "/creer", label: "Créer mon potager", i: "👨‍🌾", ico: "creer" },
+  { to: "/guides", label: "Tutoriels", i: "📘", ico: "tutoriels" },
+  { to: "/lexique", label: "Lexique", i: "📖", ico: "lexique" },
+  { to: "/animaux", label: "Animaux", i: "🐔", ico: "animaux" },
+  { to: "/identifier", label: "Identifier (photo)", i: "📷", ico: "identifier" },
+  { to: "/associations", label: "Associations", i: "🤝", ico: "associations" },
+  { to: "/reglages", label: "Réglages", i: "⚙️", ico: "reglages" },
 ];
 
 export default function App() {
@@ -55,7 +59,7 @@ export default function App() {
   const loaded = useLoaded();
   const onboarded = useStore((s) => s.settings.onboarded);
   const appart = useStore((s) => s.settings.situation === "appartement");
-  const nav = NAV.map((n) => (n.to === "/jardin" && appart ? { ...n, label: "Mes plantes", i: "🌿" } : n.to === "/creer" && appart ? { ...n, label: "Mon potager d'intérieur" } : n));
+  const nav = NAV.map((n) => (n.to === "/jardin" && appart ? { ...n, label: "Mes plantes", i: "🌿", ico: "mesplantes" } : n.to === "/creer" && appart ? { ...n, label: "Mon potager d'intérieur" } : n));
   const { updateReady } = usePwa();
   const [p0, p1] = route.parts;
 
@@ -87,6 +91,7 @@ export default function App() {
     case "reglages": page = <Reglages />; break;
     case "plus": page = <Plus />; break;
     case "recherche": page = <Recherche />; break;
+    case "lexique": page = <Lexique />; break;
     default: page = <Accueil />;
   }
   const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/animaux" && p0 === "animal"));
@@ -98,11 +103,12 @@ export default function App() {
         {nav.map((n, i) => (
           <span key={n.to}>
             {i === 4 && <div className="sep" />}
-            <a href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span aria-hidden="true">{n.i}</span> {n.label}</a>
+            <a href={href(n.to)} className={isOn(n.to) ? "on" : ""}><Ico nom={n.ico} emoji={n.i} taille={26} /> {n.label}</a>
           </span>
         ))}
       </nav>
       <main className="main">
+        {route.path !== "/recherche" && <BarreRecherche />}
         {updateReady && (
           <div className="callout info row between">
             <span>Une nouvelle version de Racines est prête.</span>
@@ -113,9 +119,9 @@ export default function App() {
       </main>
       <nav className="bottom-nav" aria-label="Navigation">
         {NAV.filter((n) => n.main).map((n) => (
-          <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span className="i" aria-hidden="true">{n.i}</span>{n.label}</a>
+          <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span className="i"><Ico nom={n.ico} emoji={n.i} taille={28} /></span>{n.label.replace(" et fleurs", "")}</a>
         ))}
-        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages"].includes(p0 ?? "") ? "on" : ""}><span className="i" aria-hidden="true">☰</span>Plus</a>
+        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
       </nav>
       <Player />
     </div>

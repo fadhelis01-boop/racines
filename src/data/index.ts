@@ -4,6 +4,7 @@ import { FRUITS } from "./fruits";
 import { INTERIEUR } from "./interieur";
 import { INTERIEUR2, ENRICH } from "./interieur2";
 import { JARDIN2 } from "./jardin2";
+import { FLEURS2, ENRICH_FLEURS } from "./fleurs2";
 import { PROBLEMES, SIGNES } from "./problemes";
 import { REMEDES, AUXILIAIRES } from "./remedes";
 import { ANIMAUX as ANIMAUX1 } from "./animaux";
@@ -16,7 +17,7 @@ import { ANIMAUX2 } from "./animaux2";
 import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
 
-export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...JARDIN2].map((p) => (ENRICH[p.id] ? { ...p, ...ENRICH[p.id] } : p));
+export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...JARDIN2, ...FLEURS2].map((p) => ({ ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}) }));
 export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_ANIMAUX];
 const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
@@ -49,7 +50,7 @@ export const CATEGORIES: Record<Plante["categorie"], { label: string; emoji: str
   aromatique: { label: "Aromatiques", emoji: "🌿" },
   fruit: { label: "Petits fruits", emoji: "🍓" },
   arbre: { label: "Arbres fruitiers", emoji: "🍎" },
-  fleur: { label: "Fleurs utiles", emoji: "🌼" },
+  fleur: { label: "Fleurs", emoji: "🌼" },
   "engrais-vert": { label: "Engrais verts", emoji: "☘️" },
   interieur: { label: "Plantes d'intérieur", emoji: "🌿" },
   ornement: { label: "Jardin d'agrément", emoji: "🌹" },
@@ -76,6 +77,7 @@ export const FAMILLES: Record<Plante["famille"], string> = {
 
 export const RUBRIQUES: Record<Rubrique, { label: string; emoji: string }> = {
   demarrer: { label: "Démarrer son potager", emoji: "👨‍🌾" },
+  fleurs: { label: "Fleurs", emoji: "🌸" },
   sol: { label: "Sol et engrais", emoji: "🟫" },
   compost: { label: "Compost", emoji: "♻️" },
   arrosage: { label: "Arrosage", emoji: "💧" },

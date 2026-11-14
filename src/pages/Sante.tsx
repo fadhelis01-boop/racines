@@ -1,3 +1,4 @@
+import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { PROBLEMES, REMEDES, AUXILIAIRES, TYPES_PROBLEME } from "../data/index";
 import { href } from "../lib/router";
@@ -28,7 +29,7 @@ export default function Sante() {
         <div className="search"><input type="search" placeholder="Rechercher : pucerons, taches, tomate…" value={q} onChange={(e) => setQ(e.target.value)} /></div>
         <div className="chips scroll-x" style={{ margin: "10px 0" }}>
           <button className={`chip ${!type ? "on" : ""}`} onClick={() => setType("")}>Tous</button>
-          {Object.entries(TYPES_PROBLEME).map(([k, v]) => <button key={k} className={`chip ${type === k ? "on" : ""}`} onClick={() => setType(k)}>{v}</button>)}
+          {Object.entries(TYPES_PROBLEME).map(([k, v]) => <button key={k} className={`chip ${type === k ? "on" : ""}`} onClick={() => setType(k)}><Ico nom={k} emoji="🩺" taille={22} /> {v}</button>)}
           <button className={`chip ${interieur ? "on" : ""}`} onClick={() => setInterieur(!interieur)}>🌿 Intérieur</button>
         </div>
         <div className="grid">

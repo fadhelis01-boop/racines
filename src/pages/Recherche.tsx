@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { href } from "../lib/router";
+import { href, useRoute } from "../lib/router";
+import { Vignette } from "../components/Ico";
 import { rechercher, ressembleSymptome } from "../lib/search";
 import { Listen } from "../components/ui";
 
 export default function Recherche() {
-  const [q, setQ] = useState("");
+  const route = useRoute();
+  const [q, setQ] = useState(route.query.get("q") ?? "");
   const res = rechercher(q);
   return (
     <div>
@@ -23,7 +25,7 @@ export default function Recherche() {
       )}
       <ul className="clean">
         {res.map((r) => (
-          <li key={r.href}><a className="card row" href={href(r.href)} style={{ textDecoration: "none", color: "inherit", marginTop: 8, flexWrap: "nowrap" }}><span style={{ fontSize: "1.5rem" }}>{r.emoji}</span><span><b>{r.titre}</b><br /><span className="small muted">{r.type}</span></span></a></li>
+          <li key={r.href}><a className="card row" href={href(r.href)} style={{ textDecoration: "none", color: "inherit", marginTop: 8, flexWrap: "nowrap" }}><Vignette id={r.id} emoji={r.emoji} taille={44} /><span><b>{r.titre}</b><br /><span className="small muted">{r.type}</span></span></a></li>
         ))}
       </ul>
       {q.length >= 2 && !res.length && <p className="muted">Aucun résultat. Essayez un autre mot, ou l'<a href={href("/identifier")}>identification par photo</a>.</p>}

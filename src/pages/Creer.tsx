@@ -1,3 +1,4 @@
+import { Vignette } from "../components/Ico";
 import { useState } from "react";
 import { useStore, upsert, uid, getState } from "../lib/store";
 import { recommander, relations, type Profil } from "../lib/garden";
@@ -86,7 +87,7 @@ export default function Creer() {
           </div>
           <div className="callout ok"><b>🛠️ Méthode conseillée</b>{reco.methode}</div>
           <h3>🌱 {reco.plantes.length} plantes proposées</h3>
-          <div className="chips">{reco.plantes.map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}>{p.emoji} {p.nom}</a>)}</div>
+          <div className="chips">{reco.plantes.map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}><Vignette id={p.id} emoji={p.emoji} taille={22} /> {p.nom}</a>)}</div>
           {(() => {
             const rel = relations(reco.plantes.map((p) => p.id)).filter((r) => r.type === "ennemi");
             return rel.length ? <div className="callout warn small"><b>Placement</b>À ne pas mettre côte à côte : {rel.map((r) => `${r.a.nom} et ${r.b.nom}`).join(" ; ")}. <A to="/associations">Outil d'associations</A></div> : null;
@@ -94,7 +95,7 @@ export default function Creer() {
           {reco.verger.length > 0 && (
             <>
               <h3>🍎 Verger et petits fruits</h3>
-              <div className="chips">{reco.verger.map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}>{p.emoji} {p.nom}</a>)}</div>
+              <div className="chips">{reco.verger.map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}><Vignette id={p.id} emoji={p.emoji} taille={22} /> {p.nom}</a>)}</div>
               <p className="small muted">Ils produisent pendant des années : c'est le meilleur investissement d'un jardin familial.</p>
             </>
           )}

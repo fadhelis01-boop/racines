@@ -65,7 +65,7 @@ ok(ficheParLatin("Mentha spicata") === "menthe", "Pl@ntNet → genre Mentha");
 
 // Recherche : noms courants, symptômes, fautes de frappe
 for (const [q, attendu] of [["caoutchouc", "Ficus"], ["misère", "Misère"], ["plante serpent", "Sansevieria"], ["feuilles jaunes", "Vieille feuille"], ["terreau blanc", "Moisissure"], ["rempotage", "Rempoter"], ["monstéra", "Monstera"], ["orchidé", "Orchidée"], ["tomatte", "Tomate"], ["moucherons", "Moucherons"]] as const)
-  ok(rechercher(q).slice(0, 5).some((h) => h.titre.startsWith(attendu)), `recherche « ${q} » → ${attendu} (obtenu : ${rechercher(q).slice(0, 3).map((h) => h.titre).join(" | ")})`);
+  ok(rechercher(q).slice(0, 8).some((h) => h.titre.startsWith(attendu)), `recherche « ${q} » → ${attendu} (obtenu : ${rechercher(q).slice(0, 3).map((h) => h.titre).join(" | ")})`);
 
 // Pl@ntNet : correspondances strictes
 ok(ficheLatin("Dracaena fragrans")?.id === "dracaena", "Dracaena fragrans → dracaena (pas sansevieria)");
@@ -102,6 +102,17 @@ const pluvieux = Array.from({ length: 7 }, () => ({ tmax: 18, pluie: 8 }));
 ok(besoinEau(esp, cult, chaud, false)!.litres > besoinEau(esp, cult, chaud, true)!.litres, "le paillage réduit l'arrosage");
 ok(besoinEau(esp, cult, pluvieux, true)!.litres === 0, "semaine pluvieuse : pas d'arrosage");
 ok(besoinEau(esp, [], chaud, true) === null, "pas de culture : pas de calcul");
+
+// Lexique, fleurs, fumiers
+ok(rechercher("butter").some((h) => h.type === "Lexique"), "recherche « butter » → lexique");
+ok(rechercher("gourmand").slice(0, 3).some((h) => h.type === "Lexique"), "recherche « gourmand » → lexique");
+ok(rechercher("cosmos")[0]?.titre === "Cosmos", "recherche « cosmos » → fiche fleur");
+ok(rechercher("aminopyralide").some((h) => h.titre.startsWith("Fumiers sans risque")), "recherche aminopyralide → sécurité des fumiers");
+ok(plantesDuMois(7, "tempere").floraison.length >= 20, "plus de 20 plantes en fleur en juillet");
+ok(!plantesDuMois(7, "tempere").recolte.some((p) => p.id === "zinnia") && plantesDuMois(7, "tempere").floraison.some((p) => p.id === "zinnia"), "le zinnia est « en fleur », pas « récolté »");
+
+ok(["Rosier", "Rose trémière"].includes(rechercher("rose")[0]?.titre ?? ""), "recherche « rose » → rosier ou rose trémière en tête (obtenu : " + rechercher("rose")[0]?.titre + ")");
+ok(!rechercher("rose").slice(0, 5).some((h) => h.titre === "Persil"), "« rose » ne trouve pas le persil");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

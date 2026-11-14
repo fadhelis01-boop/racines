@@ -98,7 +98,7 @@ export function Tile({ to, id, emoji, title, sub, badge }: { to: string; id: str
     <a className="tile" href={href(to)}>
       <div className="ph"><Photo id={id} emoji={emoji} alt="" /></div>
       <div className="bd">
-        <div className="t">{emoji} {title}</div>
+        <div className="t">{title}</div>
         {sub && <div className="s">{sub}</div>}
         {badge}
       </div>
@@ -133,7 +133,7 @@ export function Back() {
 
 export function MonthGrid({ plantes, actions, zone, onlyLabel }: { plantes: Plante[]; actions?: Action[]; zone: Parameters<typeof moisAffiches>[2]; onlyLabel?: boolean }) {
   const now = new Date().getMonth() + 1;
-  const acts = actions ?? (["semisAbri", "semisPlace", "plantation", "recolte", "taille"] as Action[]);
+  const acts = actions ?? (["semisAbri", "semisPlace", "plantation", "recolte", "taille", "floraison"] as Action[]);
   return (
     <div>
       <div className="months" role="table" aria-label="Calendrier de culture">
@@ -154,7 +154,7 @@ export function MonthGrid({ plantes, actions, zone, onlyLabel }: { plantes: Plan
       <div className="legend">
         {acts.map((a) => <span key={a}><i className={`m ${a}`} style={{ background: `var(--c-${a})` }} />{ACTIONS[a].emoji} {ACTIONS[a].label}</span>)}
       </div>
-      <style>{`.legend i.semisAbri{background:#d7b46a}.legend i.semisPlace{background:#8bbf6a}.legend i.plantation{background:#4f9a5d}.legend i.recolte{background:#c9693c}.legend i.taille{background:#8a7a68}`}</style>
+      <style>{`.legend i.semisAbri{background:#d7b46a}.legend i.semisPlace{background:#8bbf6a}.legend i.plantation{background:#4f9a5d}.legend i.recolte{background:#c9693c}.legend i.taille{background:#8a7a68}.legend i.floraison{background:#d66ba0}`}</style>
     </div>
   );
 }
