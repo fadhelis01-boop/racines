@@ -4,6 +4,8 @@ import { PLANTES, plante } from "../data/index";
 import { echeances, intervalleArrosage, marquer, FENETRES } from "../lib/mesplantes";
 import { savePhoto } from "../lib/photos";
 import { href } from "../lib/router";
+import { chercherInterieur } from "../lib/search";
+import { norm } from "../lib/garden";
 import { Empty, Photo, StoredPhoto, toast } from "./ui";
 
 const PIECES = ["Salon", "Cuisine", "Chambre", "Salle de bain", "Bureau", "Entrée", "Véranda", "Balcon"];
@@ -15,13 +17,19 @@ export function AjoutMaPlante({ planteId: pid0, onDone }: { planteId?: string; o
   const [piece, setPiece] = useState("Salon");
   const [fenetre, setFenetre] = useState<Fenetre>("est");
   const [depuis, setDepuis] = useState(today());
-  const choix = PLANTES.filter((p) => p.lieux.includes("interieur") || p.lieux.includes("pot")).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+  const [q, setQ] = useState("");
+  const tous = PLANTES.filter((p) => p.lieux.includes("interieur") || p.lieux.includes("pot")).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+  // Filtre par nom : plantes d'intérieur (noms courants, latins, tolérance aux fautes) puis plantes en pot
+  const trouves = q.trim().length >= 2 ? [...new Set([...chercherInterieur(q).map((h) => h.plante), ...tous.filter((p) => norm([p.nom, p.latin, ...(p.alias ?? [])].join(" ")).includes(norm(q.trim())))])] : tous;
+  const choix = pid && !trouves.some((p) => p.id === pid) ? [...trouves, ...tous.filter((p) => p.id === pid)] : trouves;
   return (
     <div className="card stack" style={{ marginTop: 10 }}>
       {!pid0 && (
         <label className="field">Espèce
+          <input type="search" placeholder="Taper le nom : monstera, plante ZZ, basilic…" value={q} aria-label="Chercher l'espèce par son nom"
+            onChange={(e) => { setQ(e.target.value); const r = e.target.value.trim().length >= 2 ? chercherInterieur(e.target.value) : []; if (r[0]) setPid(r[0].plante.id); }} style={{ marginBottom: 6 }} />
           <select value={pid} onChange={(e) => setPid(e.target.value)}>
-            <option value="">— Choisir —</option>
+            <option value="">{q.trim().length >= 2 ? `— ${trouves.length} résultat(s) —` : "— Choisir —"}</option>
             {choix.map((p) => <option key={p.id} value={p.id}>{p.emoji} {p.nom}</option>)}
           </select>
         </label>

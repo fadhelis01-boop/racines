@@ -171,4 +171,4 @@ export const TYPES_ESPACE: Record<Espace["type"], { label: string; emoji: string
 };
 
 // Normalisation pour la recherche (sans accents ni casse)
-export const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+export const norm = (s: string) => s.toLowerCase().replace(/œ/g, "oe").replace(/æ/g, "ae").normalize("NFD").replace(/[̀-ͯ]/g, "");

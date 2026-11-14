@@ -19,6 +19,9 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 // on place d'abord une vue de la plante telle qu'on la cultive.
 const RECHERCHE: Record<string, string> = {
   bonsai: "Ficus microcarpa bonsai",
+  gloxinia: "Sinningia speciosa",
+  cissus: "Cissus rhombifolia",
+  azalee: "Rhododendron simsii",
   hortensia: "Hydrangea macrophylla",
   muguet: "Convallaria majalis",
   murier: "Rubus fruticosus fruits",

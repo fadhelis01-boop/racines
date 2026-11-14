@@ -1,3 +1,4 @@
+import { MULTIPLICATION3 } from "./interieur3";
 // Espace « Intérieur » : aromates sous lampe ou à la fenêtre, multiplication, substrats, saisons, matériel.
 
 export type Fenetre = "sud" | "ouest" | "est" | "nord" | "loin" | "aucune";
@@ -133,6 +134,7 @@ export const AROMATES_INT: AromateInt[] = [
 
 // Multiplication des plantes d'intérieur
 export const MULTIPLICATION: Record<string, string> = {
+  ...MULTIPLICATION3,
   pothos: "Bouture de tige avec un nœud dans l'eau ; racines en 2 à 3 semaines.",
   monstera: "Bouture de tige avec un nœud ET une racine aérienne, dans l'eau ou la sphaigne.",
   philodendron: "Bouture de tige avec un nœud, dans l'eau.",

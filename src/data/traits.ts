@@ -1,3 +1,4 @@
+import { TRAITS3 } from "./interieur3";
 // Caractères visibles des plantes d'intérieur et en pot, pour l'identification
 // guidée sans photo ni connexion.
 export type Port = "retombant" | "dresse" | "arbre" | "rosette" | "touffe" | "cactus";
@@ -30,6 +31,7 @@ export const MOTIFS: Record<Motif, string> = {
 };
 
 export const TRAITS: Record<string, { port: Port[]; feuille: Feuille[]; motif: Motif[]; fleurs?: boolean }> = {
+  ...TRAITS3,
   pothos: { port: ["retombant"], feuille: ["coeur"], motif: ["unie", "panachee"] },
   philodendron: { port: ["retombant", "dresse"], feuille: ["coeur", "decoupee"], motif: ["unie", "panachee"] },
   monstera: { port: ["dresse", "retombant"], feuille: ["decoupee", "coeur"], motif: ["unie", "panachee"] },

@@ -51,7 +51,7 @@ export const INTERIEUR: Plante[] = [
     toxique: "Toxique pour chats et chiens (oxalates).",
   },
   {
-    ...base, id: "spathiphyllum", nom: "Spathiphyllum (fleur de lune)", latin: "Spathiphyllum wallisii", emoji: "🤍", wiki: "Spathiphyllum", difficulte: 1, expo: ["mi-ombre", "ombre"], eau: "fort",
+    ...base, id: "spathiphyllum", nom: "Spathiphyllum (fleur de lune)", latin: "Spathiphyllum wallisii", emoji: "🌼", wiki: "Spathiphyllum", difficulte: 1, expo: ["mi-ombre", "ombre"], eau: "fort",
     intro: "Fleurit même dans une pièce peu lumineuse. Il « s'affaisse » quand il a soif et se redresse en une heure après arrosage : un bon indicateur.",
     lumiere: "Moyenne à faible, sans soleil direct.", arrosageDetail: "Terre toujours légèrement humide ; eau à température ambiante, non calcaire si possible.",
     humidite: "Aime l'humidité : soucoupe de billes d'argile mouillées.", temperature: "18 à 25 °C.", rempotage: "Tous les 2 ans.",

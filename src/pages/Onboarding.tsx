@@ -91,6 +91,7 @@ export default function Onboarding() {
           <h1>C'est prêt ! 🎉</h1>
           <p>Pour aller plus loin :</p>
           <ul className="ticks">
+            {(situation === "appartement" || situation === "balcon") && <li><b>Intérieur</b> : retrouvez une plante par son nom, choisissez selon votre fenêtre, cultivez vos aromates avec ou sans lampe.</li>}
             <li><b>Créer mon potager</b> : un assistant vous propose un plan adapté à votre espace et à votre temps.</li>
             <li><b>Calendrier</b> : ce qu'il faut semer, planter, récolter et faire ce mois-ci, exportable dans l'agenda de votre téléphone.</li>
             <li><b>Santé</b> : diagnostic d'une plante malade en quelques questions, ou par photo.</li>

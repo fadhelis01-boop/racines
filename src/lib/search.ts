@@ -148,3 +148,34 @@ export function parleAnimal(q: string) {
   const nq = norm(q);
   return Object.entries(ALIAS_ANIMAUX).some(([k, v]) => new RegExp(`(^|[^a-z])(${k}|${v.split(" ").join("|")})($|[^a-z])`).test(nq));
 }
+
+// Recherche d'une plante d'intérieur par son nom (courant, ancien, commercial ou latin),
+// tolérante aux fautes de frappe. Renvoie aussi le nom qui a correspondu (« aussi appelée … »).
+export interface HitInterieur { plante: (typeof PLANTES)[number]; score: number; via?: string }
+export function chercherInterieur(q: string, limit = 30): HitInterieur[] {
+  const nq = norm(q.trim()).replace(/['’-]/g, " ").replace(/\s+/g, " ");
+  if (nq.length < 2) return [];
+  const toks = nq.split(" ").filter((t) => t.length > 1 && !STOP.has(t));
+  const out: HitInterieur[] = [];
+  for (const p of PLANTES) {
+    if (p.categorie !== "interieur") continue;
+    const noms: [string, boolean][] = [[p.nom, false], [p.latin, false], ...(p.alias ?? []).map((a): [string, boolean] => [a, true]), ...(p.latins ?? []).map((a): [string, boolean] => [a, true])];
+    let best = 0, via: string | undefined;
+    for (const [n, alias] of noms) {
+      const nn = norm(n).replace(/['’-]/g, " ");
+      let sc = 0;
+      if (nn === nq) sc = 100;
+      else if (nn.startsWith(nq)) sc = 80;
+      else if (new RegExp(`(^|[^a-z0-9])${echappe(nq)}`).test(nn)) sc = 65;
+      else if (nq.length >= 4 && nn.includes(nq)) sc = 50;
+      else if (toks.length) {
+        const mots = nn.split(/[^a-z0-9]+/).filter(Boolean);
+        const trouve = toks.filter((t) => mots.some((w) => w.startsWith(t) || (t.length >= 5 && w.length >= 4 && lev(w, t, t.length >= 8 ? 2 : 1) <= (t.length >= 8 ? 2 : 1))));
+        if (trouve.length === toks.length) sc = 40;
+      }
+      if (sc > best) { best = sc; via = alias ? n : undefined; }
+    }
+    if (best) out.push({ plante: p, score: best - p.difficulte, via });
+  }
+  return out.sort((a, b) => b.score - a.score || a.plante.nom.localeCompare(b.plante.nom, "fr")).slice(0, limit);
+}
