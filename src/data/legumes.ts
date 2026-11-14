@@ -208,7 +208,7 @@ export const LEGUMES: Plante[] = [
   {
     id: "pois", nom: "Petit pois", latin: "Pisum sativum", categorie: "legume", famille: "fabacees", emoji: "🟢", wiki: "Petit pois",
     difficulte: 1, lieux: ["pleine-terre", "pot", "balcon"], expo: ["soleil", "mi-ombre"], besoin: "ameliorant", eau: "moyen",
-    semisPlace: m("2-4,10-11"), recolte: m("5-7"),
+    semisPlace: m("2-4"), semisPlaceDoux: m("10-11"), recolte: m("5-7"),
     espacement: "rangs à 40 cm, une graine tous les 3 cm", profondeur: "3 à 4 cm", levee: "8 à 15 jours", delai: "90 à 120 jours", joursRecolte: 100,
     rendement: "1 kg de gousses par mètre de rang",
     amis: ["carotte", "navet", "radis", "laitue", "concombre", "mais"], ennemis: ["oignon", "ail", "poireau", "echalote", "haricot"],
@@ -232,7 +232,7 @@ export const LEGUMES: Plante[] = [
   {
     id: "feve", nom: "Fève", latin: "Vicia faba", categorie: "legume", famille: "fabacees", emoji: "🟤", wiki: "Fève",
     difficulte: 1, lieux: ["pleine-terre"], expo: ["soleil"], besoin: "ameliorant", eau: "moyen",
-    semisPlace: m("2-3,10-11"), recolte: m("5-7"),
+    semisPlace: m("2-3"), semisPlaceDoux: m("10-11"), recolte: m("5-7"),
     espacement: "15 cm sur le rang, 50 cm entre rangs", profondeur: "5 cm", levee: "10 à 20 jours", delai: "90 à 150 jours", joursRecolte: 120,
     amis: ["pomme-de-terre", "mais", "laitue", "epinard"], ennemis: ["oignon", "ail", "poireau"],
     intro: "Rustique et facile, la fève se sème en automne dans le sud et à la fin de l'hiver ailleurs. Elle prépare le sol pour les légumes gourmands.",

@@ -88,7 +88,15 @@ export default function PlanteFiche({ id }: { id?: string }) {
         </div>
       </div>
 
-      {p.toxique && <div className="callout danger"><b>⚠️ Toxicité</b>{p.toxique}</div>}
+      {p.danger && (
+        <div className="callout danger" style={{ border: "2px solid var(--danger)" }}>
+          <b>☠️ PLANTE DANGEREUSE</b>
+          {p.toxique}
+          <div className="small" style={{ marginTop: 6 }}>Ingestion : ne faites pas vomir, appelez le centre antipoison (ou le 15, le 112). Animal : appelez votre vétérinaire immédiatement. <a href={href("/guide/plantes-toxiques")}>Toutes les plantes dangereuses →</a></div>
+        </div>
+      )}
+      {p.toxique && !p.danger && <div className="callout danger"><b>⚠️ Toxicité</b>{p.toxique}</div>}
+      {p.comestible && <div className="callout info"><b>🍽️ Comestible ?</b>{p.comestible} <span className="small muted">Ne consommez jamais une plante sauvage sans identification certaine (voir « Cueillir les plantes sauvages sans danger »).</span></div>}
 
       <div className="tabs" role="tablist">
         {[["culture", "Culture"], ["calendrier", "Calendrier"], ["voisins", "Voisins"], ["sante", "Santé"], ["animaux", "Animaux"], ["videos", "Vidéos"]]

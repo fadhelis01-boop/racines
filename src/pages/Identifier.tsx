@@ -105,6 +105,17 @@ export default function Identifier() {
 
       {err && <div className="callout danger"><b>Oups</b>{err}</div>}
 
+      {(() => {
+        const dangers = [...(pn ?? []).filter((r) => r.score >= 0.1).map((r) => r.ficheId), cl?.plante.fiche].filter((id): id is string => !!id && !!plante(id)?.danger);
+        return dangers.length ? (
+          <div className="callout danger" style={{ marginTop: 12, border: "2px solid var(--danger)" }}>
+            <b>☠️ Attention : plante potentiellement très toxique</b>
+            Parmi les résultats figure {[...new Set(dangers)].map((id) => plante(id)!.nom).join(", ")}. Ne la consommez pas, éloignez-la des enfants et des animaux (enclos, prés, foin), manipulez-la avec des gants.
+            <div className="row" style={{ marginTop: 6 }}>{[...new Set(dangers)].map((id) => <a key={id} className="btn sm" href={href(`/plante/${id}`)}>Fiche {plante(id)!.nom}</a>)}</div>
+          </div>
+        ) : null;
+      })()}
+
       {pn && (
         <div className="card" style={{ marginTop: 12 }}>
           <h3>Résultats Pl@ntNet</h3>

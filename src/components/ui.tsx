@@ -68,7 +68,7 @@ export function Galerie({ id, emoji, alt }: { id: string; emoji: string; alt: st
       <div className="pic" onClick={() => setZoom(true)} style={{ cursor: "zoom-in" }}><img src={ph.img} alt={`${alt} — vue ${i + 1}`} crossOrigin="anonymous" loading="lazy" /></div>
       <div className="row" style={{ gap: 6, marginTop: 6, flexWrap: "nowrap", overflowX: "auto" }}>
         {photos.map((p, k) => (
-          <button key={p.img} onClick={() => setI(k)} aria-label={`Vue ${k + 1}`} style={{ padding: 0, border: k === i ? "2px solid var(--green)" : "1px solid var(--line)", borderRadius: 8, overflow: "hidden", width: 56, height: 56, flexShrink: 0, background: "none", cursor: "pointer" }}>
+          <button key={k + p.img} onClick={() => setI(k)} aria-label={`Vue ${k + 1}`} style={{ padding: 0, border: k === i ? "2px solid var(--green)" : "1px solid var(--line)", borderRadius: 8, overflow: "hidden", width: 56, height: 56, flexShrink: 0, background: "none", cursor: "pointer" }}>
             <img src={p.img} alt="" crossOrigin="anonymous" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </button>
         ))}

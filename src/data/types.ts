@@ -5,7 +5,7 @@
 
 export type Mois = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
-export type Categorie = "legume" | "aromatique" | "fruit" | "arbre" | "fleur" | "engrais-vert" | "interieur";
+export type Categorie = "legume" | "aromatique" | "fruit" | "arbre" | "fleur" | "engrais-vert" | "interieur" | "ornement" | "sauvage" | "toxique";
 
 // Familles botaniques : base de la rotation des cultures
 export type Famille =
@@ -84,6 +84,9 @@ export interface Plante {
   fleurit?: boolean; // fleurit en intérieur
   tailleAdulte?: string;
   photo?: string; // fichier Wikimedia Commons à préférer à la photo de l'article
+  danger?: boolean; // plante très toxique : alerte rouge à l'identification
+  semisPlaceDoux?: Mois[]; // semis d'automne réservés aux climats doux
+  comestible?: string; // plante sauvage : partie comestible et précautions
 }
 
 export type TypeProbleme = "champignon" | "bacterie" | "virus" | "ravageur" | "physiologique" | "carence" | "mammifere";

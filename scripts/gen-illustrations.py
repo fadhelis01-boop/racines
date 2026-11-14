@@ -73,6 +73,18 @@ SCENES = {
     "eau-arrosage-interieur": "no humans, watering can and glass water carafe next to houseplants, rain water bottle, saucers, indoor",
     "plantes-par-piece": "no humans, cutaway view of an apartment with plants in bathroom, bedroom, living room, sunny window",
     "vacances-plantes-interieur": "no humans, houseplants grouped in a bathtub with wet towels, water basin with cotton wicks to pots, suitcase nearby",
+    "pelouse": "no humans, natural lawn with wildflower meadow strip, daisies, clover, butterflies, garden with fruit trees",
+    "haie": "no humans, mixed country hedgerow with hawthorn blossoms, elder flowers, hazel, birds nesting, garden edge",
+    "nuisibles-predateurs": "no humans, secure wooden chicken coop with welded wire mesh, electric fence, fox watching from the forest edge at dusk",
+    "moustique-tigre": "no humans, covered rain water barrel with mosquito net, empty flower pot saucers, tidy garden, summer",
+    "outils-tondeuse": "no humans, garden shed workbench with sharpened tools, file, oil, pruning shears, lawn mower, neatly hung tools",
+    "desherbage": "no humans, vegetable garden beds with thick straw mulch, hoe, hand weeding tool, dandelions in a basket",
+    "jardin-sec": "no humans, vegetable garden in summer drought with thick mulch, drip irrigation, shade cloth over lettuce, sunflowers",
+    "gel-grele": "no humans, frost cover fleece over young plants on a cold spring morning, frost on grass, fruit tree blossoms",
+    "sol-pollue": "no humans, urban community garden with raised wooden beds, city buildings in background, compost bins",
+    "cueillette-sauvage": "no humans, basket of wild nettles, dandelions, elderflowers and blackberries on a forest path",
+    "permaculture": "no humans, aerial view of a permaculture homestead with house, vegetable garden, chicken coop, orchard, pond and hedges",
+    "jardin-pour-tous": "no humans, raised wooden garden beds at table height with wide smooth paths, child-size watering can, garden stool, sunny garden",
     "preparer-lapin": "no humans, rustic farm kitchen with herbs, cutting board, knife, pot, calm atmosphere",
 }
 

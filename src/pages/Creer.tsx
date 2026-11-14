@@ -26,7 +26,8 @@ export default function Creer() {
   const creerPlanches = () => {
     const n = pr.situation === "jardin" || pr.situation === "petit-jardin" ? Math.max(2, Math.min(8, Math.round(pr.surface / 5))) : 0;
     const type = pr.surface <= 6 ? "carre" : "planche";
-    if (n) for (let i = 1; i <= n; i++) upsert("espaces", { id: uid(), nom: `${type === "carre" ? "Carré" : "Planche"} ${i + getState().espaces.length}`, type, surface: Math.round((pr.surface / n) * 10) / 10 });
+    const base = getState().espaces.length;
+    if (n) for (let i = 1; i <= n; i++) upsert("espaces", { id: uid(), nom: `${type === "carre" ? "Carré" : "Planche"} ${base + i}`, type, surface: Math.round((pr.surface / n) * 10) / 10 });
     else upsert("espaces", { id: uid(), nom: pr.situation === "balcon" ? "Balcon" : "Rebord de fenêtre", type: pr.situation === "balcon" ? "bac" : "interieur" });
     toast("Emplacements créés dans Mon jardin");
     go("/jardin/plan");
@@ -90,6 +91,13 @@ export default function Creer() {
             const rel = relations(reco.plantes.map((p) => p.id)).filter((r) => r.type === "ennemi");
             return rel.length ? <div className="callout warn small"><b>Placement</b>À ne pas mettre côte à côte : {rel.map((r) => `${r.a.nom} et ${r.b.nom}`).join(" ; ")}. <A to="/associations">Outil d'associations</A></div> : null;
           })()}
+          {reco.verger.length > 0 && (
+            <>
+              <h3>🍎 Verger et petits fruits</h3>
+              <div className="chips">{reco.verger.map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}>{p.emoji} {p.nom}</a>)}</div>
+              <p className="small muted">Ils produisent pendant des années : c'est le meilleur investissement d'un jardin familial.</p>
+            </>
+          )}
           <h3>📅 Votre première année</h3>
           <div className="card" style={{ overflowX: "auto" }}><div style={{ minWidth: 520 }}><MonthGrid plantes={reco.plantes} zone={settings.zone} /></div></div>
           <h3>Mois par mois</h3>

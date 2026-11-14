@@ -18,6 +18,10 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 // on place d'abord une vue de la plante telle qu'on la cultive.
 const RECHERCHE: Record<string, string> = {
   bonsai: "Ficus microcarpa bonsai",
+  hortensia: "Hydrangea macrophylla",
+  muguet: "Convallaria majalis",
+  murier: "Rubus fruticosus fruits",
+  "taches-noires-rosier": "Diplocarpon rosae",
   "cul-noir": "Blossom end rot tomato",
   "mildiou-oignon": "Peronospora destructor onion",
   "pourriture-blanche": "Sclerotium cepivorum",
@@ -33,7 +37,7 @@ const EN: Record<string, string[]> = {
   thrips: ["thrips"], carpocapse: ["cydia", "codling"], tavelure: ["venturia", "scab"], cloque: ["taphrina", "leaf_curl"],
   moniliose: ["monilinia"], poule: ["gallus", "chicken", "hen_"], canard: ["duck", "anas_"], lapin: ["rabbit", "oryctolagus"],
   chevre: ["goat", "capra"], mouton: ["sheep", "ovis"], ane: ["donkey", "equus_asinus"], cochon: ["pig", "sus_scrofa"],
-  oie: ["goose", "anser"], pintade: ["guineafowl", "numida"], abeille: ["apis", "honey_bee", "honeybee"],
+  oie: ["goose", "anser"], "tenthrede-groseillier": ["nematus", "sawfly"], processionnaire: ["thaumetopoea", "processionary"], "pyrale-buis": ["cydalima", "box_tree", "glyphodes"], "taches-noires-rosier": ["diplocarpon", "black_spot", "rose"], cheval: ["horse", "equus"], dindon: ["turkey", "meleagris"], pigeon: ["columba", "pigeon"], pintade: ["guineafowl", "numida"], abeille: ["apis", "honey_bee", "honeybee"],
 };
 const EXCLURE = /\.svg|logo|map|carte|distribution|diagram|schema|icon|range|flag|drawing|illustration|herbarium|herbier|\.gif|\.tif|Tomate_Dev_Num|Commons-|Wikispecies|Wiktionary|Disambig|Nuvola|Crystal_Clear|Gnome-|Question_book|Edit-clear|Loudspeaker|Info_|Red_pog|catalog|florist|journal|rare_flowers|Angiospermes|nematode|Internet_Archive|_page_|Seed_catalog/i;
 

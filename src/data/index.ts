@@ -3,18 +3,22 @@ import { AROMATIQUES, FLEURS } from "./aromatiques";
 import { FRUITS } from "./fruits";
 import { INTERIEUR } from "./interieur";
 import { INTERIEUR2, ENRICH } from "./interieur2";
+import { JARDIN2 } from "./jardin2";
 import { PROBLEMES, SIGNES } from "./problemes";
 import { REMEDES, AUXILIAIRES } from "./remedes";
-import { ANIMAUX } from "./animaux";
+import { ANIMAUX as ANIMAUX1 } from "./animaux";
 import { GUIDES_JARDIN } from "./guides-jardin";
 import { GUIDES_MAISON } from "./guides-maison";
 import { GUIDES_ANIMAUX } from "./guides-animaux";
 import { GUIDES_INTERIEUR } from "./guides-interieur";
+import { GUIDES_JARDIN2 } from "./guides-jardin2";
+import { ANIMAUX2 } from "./animaux2";
 import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
 
-export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2].map((p) => (ENRICH[p.id] ? { ...p, ...ENRICH[p.id] } : p));
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_ANIMAUX];
+export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...JARDIN2].map((p) => (ENRICH[p.id] ? { ...p, ...ENRICH[p.id] } : p));
+export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_ANIMAUX];
+const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 
 const idx = <T extends { id: string }>(a: T[]) => new Map(a.map((x) => [x.id, x]));
@@ -48,6 +52,9 @@ export const CATEGORIES: Record<Plante["categorie"], { label: string; emoji: str
   fleur: { label: "Fleurs utiles", emoji: "🌼" },
   "engrais-vert": { label: "Engrais verts", emoji: "☘️" },
   interieur: { label: "Plantes d'intérieur", emoji: "🌿" },
+  ornement: { label: "Jardin d'agrément", emoji: "🌹" },
+  sauvage: { label: "Plantes sauvages et « mauvaises herbes »", emoji: "🌾" },
+  toxique: { label: "Plantes dangereuses", emoji: "☠️" },
 };
 
 export const FAMILLES: Record<Plante["famille"], string> = {

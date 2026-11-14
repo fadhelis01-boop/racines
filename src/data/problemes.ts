@@ -48,6 +48,7 @@ export const SIGNES: Record<string, { label: string; organe: string; emoji: stri
   "pas-de-fleurs": { label: "La plante ne fleurit pas (ou plus)", organe: "fleurs", emoji: "🚫" },
   "racines-sortent": { label: "Racines qui sortent par le trou ou le dessus du pot", organe: "racines", emoji: "🪢" },
   "vieilles-feuilles-jaunes": { label: "Seules une ou deux vieilles feuilles du bas jaunissent", organe: "feuilles", emoji: "🍁" },
+  "nids-soyeux": { label: "Nids soyeux ou processions de chenilles", organe: "tiges", emoji: "🐛" },
   "cloques-liegeuses": { label: "Petites cloques ou bosses liégeuses sous les feuilles", organe: "feuilles", emoji: "🫧" },
 };
 
@@ -842,5 +843,34 @@ export const PROBLEMES: Probleme[] = [
     prevention: ["Arrosez moins en hiver, donnez plus de lumière, aérez."],
     traitements: ["Les feuilles marquées ne guérissent pas, mais les nouvelles seront saines une fois l'arrosage corrigé."],
     remedes: [], gravite: 1, mois: m("10-3"),
+  },
+  // ───────────── Jardin d'agrément et nuisibles ─────────────
+  {
+    id: "taches-noires-rosier", nom: "Maladie des taches noires du rosier", type: "champignon", wiki: "Diplocarpon rosae", alias: ["marsonia", "rosier taches noires", "black spot"],
+    cible: "Rosiers", plantes: ["rosier"], organes: ["feuilles"], signes: ["taches-brunes", "jaunissement", "feuilles-tombent"],
+    symptomes: ["Taches noires rondes aux bords frangés sur les feuilles, entourées de jaune.", "Les feuilles jaunissent et tombent ; le rosier se dégarnit dès l'été."],
+    conditions: "Printemps et étés pluvieux, feuillage mouillé, feuilles malades restées au sol.",
+    prevention: ["Variétés résistantes (rosiers botaniques, labels ADR).", "Ramassez et sortez du jardin les feuilles tombées ; paillez le pied pour éviter les éclaboussures.", "Arrosez au pied, taillez pour aérer.", "Décoction de prêle ou purin d'ortie en préventif au printemps."],
+    traitements: ["Retirez les feuilles atteintes au fur et à mesure.", "Soufre ou bouillie bordelaise en préventif sur les rosiers sensibles, au débourrement et après les pluies."],
+    remedes: ["preles", "soufre", "bouillie-bordelaise"], gravite: 2, mois: m("5-9"),
+  },
+  {
+    id: "pyrale-buis", nom: "Pyrale du buis", type: "ravageur", wiki: "Pyrale du buis", alias: ["chenille du buis", "buis mangé", "papillon blanc buis"],
+    cible: "Buis", plantes: ["buis"], organes: ["feuilles"], signes: ["chenilles", "toile", "trous-feuilles"],
+    symptomes: ["Chenilles vertes rayées de noir à tête noire au cœur des buis, fils de soie, crottes vertes.", "Feuillage rongé, puis buis entièrement brun en quelques jours. Papillons blancs bordés de brun le soir."],
+    conditions: "D'avril à octobre, 2 à 3 générations par an.",
+    prevention: ["Inspectez l'intérieur des buis chaque semaine d'avril à octobre.", "Pièges à phéromones pour repérer les vols.", "Nichoirs à mésanges (elles commencent à les consommer)."],
+    traitements: ["Bacillus thuringiensis (Bt) sur les jeunes chenilles, en mouillant bien l'intérieur de l'arbuste.", "Ramassage manuel, jet d'eau puissant au cœur du buis.", "Si les buis sont dévastés chaque année : remplacez-les par une autre espèce de haie."],
+    remedes: ["bt"], gravite: 3, mois: m("4-10"),
+  },
+  {
+    id: "processionnaire", nom: "Chenilles processionnaires (pin et chêne)", type: "ravageur", wiki: "Processionnaire du pin", alias: ["processionnaire", "chenille urticante", "nid dans les pins"],
+    cible: "Pins, cèdres, chênes — et danger pour les humains et les animaux", plantes: ["*"], organes: ["tiges", "feuilles"], signes: ["nids-soyeux", "chenilles"],
+    symptomes: ["Nids de soie blancs au bout des branches de pins en hiver (processionnaire du pin) ; chenilles qui descendent en file indienne au sol de janvier à avril.", "Sur les chênes : nids sur le tronc et les branches en été."],
+    confusion: "Les toiles de la pyrale du buis ou des hyponomeutes (sur fusains, pommiers) sont sans danger pour l'humain.",
+    conditions: "En forte progression vers le nord avec le réchauffement ; elle est classée espèce nuisible à la santé humaine.",
+    prevention: ["Écopiège posé autour du tronc des pins dès décembre (collerette qui capture les chenilles descendantes).", "Nichoirs à mésanges, pièges à phéromones en été (papillons).", "Retrait des nids en hiver par un professionnel équipé."],
+    traitements: ["NE TOUCHEZ PAS les chenilles ni les nids : leurs poils urticants provoquent des réactions graves (yeux, peau, voies respiratoires).", "Chien qui a léché ou mordu une chenille (langue gonflée, salivation) : URGENCE vétérinaire, rincez la gueule à l'eau sans frotter.", "Enfant ou adulte touché : rincez abondamment, ne frottez pas ; consultez en cas de réaction aux yeux ou de gêne respiratoire (15 ou 112)."],
+    remedes: ["bt"], gravite: 3, mois: m("1-4,6-8"),
   },
 ];

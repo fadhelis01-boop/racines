@@ -192,7 +192,7 @@ export const GUIDES_JARDIN: Guide[] = [
   },
   {
     id: "arrosage-bien-arroser", titre: "Bien arroser : quand, combien, comment", rubrique: "arrosage", emoji: "💧", niveau: 1, duree: "Lecture : 10 minutes",
-    resume: "Arroser moins souvent mais mieux : des racines profondes, des plantes plus résistantes, moins de maladies et d'eau gaspillée.",
+    resume: "Irrigation du potager : arroser moins souvent mais mieux, des racines profondes, des plantes plus résistantes, moins de maladies et d'eau gaspillée.",
     etapes: [
       { titre: "Le moment", texte: "Le matin tôt est le meilleur moment : la plante a de l'eau pour la journée et le feuillage sèche vite (moins de maladies). Le soir convient aussi en canicule, mais attire les limaces. Jamais en plein soleil sur le feuillage." },
       { titre: "Au pied, pas sur les feuilles", texte: "L'eau sur les feuilles favorise mildiou, oïdium et botrytis. Arrosez au pied, à l'arrosoir sans pomme ou au goutte-à-goutte. Exception : les salades et les semis apprécient une pluie fine." },

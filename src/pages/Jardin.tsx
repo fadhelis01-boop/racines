@@ -9,6 +9,8 @@ import { savePhoto } from "../lib/photos";
 import { A, Empty, StoredPhoto, toast } from "../components/ui";
 import { AjoutCulture } from "./PlanteFiche";
 import MesPlantes from "../components/MesPlantes";
+import { PRIX_KG, POIDS_PIECE } from "../data/prix";
+import PlanVisuel, { ArrosageSemaine } from "../components/PlanVisuel";
 
 const TOUS: [string, string][] = [["mesplantes", "🌿 Mes plantes"], ["cultures", "🌱 Cultures"], ["plan", "🗺️ Plan et rotation"], ["recoltes", "🧺 Récoltes"], ["journal", "📓 Journal"], ["graines", "🏺 Graines"], ["animaux", "🐔 Animaux"]];
 const PAR_PROFIL: Record<string, string[]> = {
@@ -114,6 +116,8 @@ function Plan() {
           <button className="btn primary" disabled={!nom.trim()} onClick={() => { upsert("espaces", { id: uid(), nom: nom.trim(), type, surface: surface ? Number(surface) : undefined }); setNom(""); setSurface(""); }}>Ajouter</button>
         </div>
       </div>
+      {espaces.length > 0 && <PlanVisuel />}
+      {espaces.length > 0 && <ArrosageSemaine />}
       {!espaces.length && <Empty emoji="🗺️">Aucun emplacement. Commencez par « Planche 1 », « Planche 2 »… ou utilisez l'assistant <A to="/creer">Créer mon potager</A>.</Empty>}
       <div className="grid" style={{ marginTop: 12 }}>
         {espaces.map((e) => {
@@ -162,6 +166,16 @@ function Recoltes() {
     totaux.set(r.planteId, t);
   }
   const totalKg = [...totaux.values()].reduce((a, t) => a + (t.kg ?? 0), 0);
+  const prixPerso = useStore((s) => s.prix);
+  const prixDe = (id: string) => prixPerso[id] ?? PRIX_KG[id];
+  const valeurDe = (id: string, t: Record<string, number>) => {
+    const pk = prixDe(id);
+    if (!pk) return 0;
+    const kg = (t.kg ?? 0) + ((t["pièces"] ?? 0) + (t.bottes ?? 0)) * (POIDS_PIECE[id] ?? 0);
+    return kg * pk;
+  };
+  const valeur = [...totaux.entries()].reduce((a, [id, t]) => a + valeurDe(id, t), 0);
+  const [editPrix, setEditPrix] = useState(false);
   return (
     <div>
       <div className="card">
@@ -174,11 +188,22 @@ function Recoltes() {
           <button className="btn primary" disabled={!pid || !qte} onClick={() => { upsert("recoltes", { id: uid(), planteId: pid, qte: Number(qte), unite, date }); setQte(""); toast("Récolte notée 🧺"); }}>Ajouter</button>
         </div>
       </div>
-      <h2>Bilan {annee} {totalKg > 0 && <span className="badge green">{totalKg.toFixed(1)} kg</span>}</h2>
+      <h2>Bilan {annee} {totalKg > 0 && <span className="badge green">{totalKg.toFixed(1)} kg</span>} {valeur > 0 && <span className="badge sun">≈ {Math.round(valeur)} € économisés</span>}</h2>
+      {valeur > 0 && <p className="small muted">Valeur estimée au prix moyen du bio en magasin. <button className="btn sm ghost" onClick={() => setEditPrix(!editPrix)}>{editPrix ? "Fermer" : "Ajuster les prix"}</button></p>}
+      {editPrix && (
+        <div className="card small">
+          {[...totaux.keys()].map((id) => (
+            <div key={id} className="row" style={{ justifyContent: "space-between" }}>
+              <span>{plante(id)?.nom}</span>
+              <span><input type="number" step="0.5" min="0" value={prixDe(id) ?? ""} onChange={(e) => update((s) => ({ ...s, prix: { ...s.prix, [id]: Number(e.target.value) } }))} style={{ width: 80 }} /> €/kg</span>
+            </div>
+          ))}
+        </div>
+      )}
       {!totaux.size && <Empty emoji="🧺">Aucune récolte notée cette année.</Empty>}
       <div className="grid-sm">
         {[...totaux.entries()].map(([id, t]) => (
-          <div key={id} className="card"><b>{plante(id)?.emoji} {plante(id)?.nom}</b><div className="small">{Object.entries(t).map(([u, v]) => `${u === "kg" ? v.toFixed(2) : v} ${u}`).join(" · ")}</div></div>
+          <div key={id} className="card"><b>{plante(id)?.emoji} {plante(id)?.nom}</b><div className="small">{Object.entries(t).map(([u, v]) => `${u === "kg" ? v.toFixed(2) : v} ${u}`).join(" · ")}{valeurDe(id, t) > 0 && <span className="muted"> · ≈ {Math.round(valeurDe(id, t))} €</span>}</div></div>
         ))}
       </div>
       {recoltes.length > 0 && (

@@ -43,18 +43,25 @@ export const ACTIONS: Record<Action, { label: string; emoji: string; verbe: stri
   taille: { label: "Tailler", emoji: "✂️", verbe: "Tailler" },
 };
 
+// Mois d'une action, avec les semis d'automne réservés aux climats doux
+const DOUX = new Set<ZoneId>(["mediterraneen", "oceanique"]);
+export function moisDe(p: Plante, a: Action, zone: ZoneId): Mois[] | undefined {
+  if (a === "semisPlace" && p.semisPlaceDoux && DOUX.has(zone)) return [...(p.semisPlace ?? []), ...p.semisPlaceDoux];
+  return p[a];
+}
+
 export function plantesDuMois(mois: number, zone: ZoneId, filtre?: (p: Plante) => boolean) {
   const w = decalage(zone);
   const res: Record<Action, Plante[]> = { semisAbri: [], semisPlace: [], plantation: [], recolte: [], taille: [] };
   for (const p of PLANTES) {
     if (filtre && !filtre(p)) continue;
-    for (const a of Object.keys(res) as Action[]) if (shiftMonths(p[a], w).has(mois)) res[a].push(p);
+    for (const a of Object.keys(res) as Action[]) if (shiftMonths(moisDe(p, a, zone), w).has(mois)) res[a].push(p);
   }
   return res;
 }
 
 export function moisAffiches(p: Plante, a: Action, zone: ZoneId) {
-  return shiftMonths(p[a], decalage(zone));
+  return shiftMonths(moisDe(p, a, zone), decalage(zone));
 }
 
 export const travauxDuMois = (mois: number) => CALENDRIER[mois - 1];

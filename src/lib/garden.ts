@@ -84,7 +84,7 @@ export interface Profil {
   objectifs: string[]; // "faciles", "aromatiques", "fruits", "autonomie", "enfants", "animaux"
 }
 
-export function recommander(pr: Profil): { plantes: Plante[]; methode: string; conseils: string[] } {
+export function recommander(pr: Profil): { plantes: Plante[]; methode: string; conseils: string[]; verger: Plante[] } {
   const lieux = pr.situation === "appartement" ? ["interieur"] : pr.situation === "balcon" ? ["pot", "balcon"] : ["pleine-terre"];
   const diffMax = pr.temps === "peu" ? 1 : pr.temps === "moyen" ? 2 : 3;
   let liste = PLANTES.filter(
@@ -138,7 +138,17 @@ export function recommander(pr: Profil): { plantes: Plante[]; methode: string; c
     "Commencez petit et agrandissez l'année suivante : un petit potager bien tenu produit plus qu'un grand envahi d'herbes.",
   ];
   if (pr.objectifs.includes("animaux")) conseils.push("Réservez une zone aux cultures pour les animaux (maïs, tournesol, courges, betteraves) et une autre clôturée pour le potager : les poules y feraient des dégâts.");
-  return { plantes, methode, conseils };
+  // Verger et petits fruits pour les jardins assez grands ou l'autonomie
+  let verger: Plante[] = [];
+  if ((pr.situation === "jardin" || pr.situation === "petit-jardin") && (pr.surface >= 40 || pr.objectifs.includes("fruits") || pr.objectifs.includes("autonomie"))) {
+    const petits = ["framboisier", "groseillier", "cassissier", "groseille-maquereau", "murier", "myrtillier", "kiwi", "sureau"];
+    const arbres = ["pommier", "poirier", "prunier", "cerisier", "figuier", "cognassier", "pecher", "noyer", "amandier", "chataignier"];
+    const ok = (id: string) => { const p = PLANTES.find((x) => x.id === id); return p && p.expo.includes(pr.expo) && p.difficulte <= diffMax ? p : undefined; };
+    const nbArbres = pr.surface >= 300 ? 4 : pr.surface >= 100 ? 3 : pr.surface >= 40 ? 2 : 1;
+    verger = [...arbres.map(ok).filter(Boolean).slice(0, nbArbres), ...petits.map(ok).filter(Boolean).slice(0, pr.surface >= 100 ? 4 : 2)] as Plante[];
+    if (verger.length) conseils.push("Fruitiers : plantez en hiver (novembre à mars), deux variétés de pommiers ou de poiriers pour la pollinisation, à au moins 2 m des limites de propriété pour les arbres de plus de 2 m.");
+  }
+  return { plantes, methode, conseils, verger };
 }
 
 export const TYPES_ESPACE: Record<Espace["type"], { label: string; emoji: string }> = {

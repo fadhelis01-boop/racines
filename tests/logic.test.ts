@@ -8,6 +8,8 @@ import { DEFAULT_SETTINGS, type State, type MaPlante } from "../src/lib/store";
 import { rechercher } from "../src/lib/search";
 import { echeances, intervalleArrosage, marquer } from "../src/lib/mesplantes";
 import { ficheLatin } from "../src/lib/identify";
+import { plante } from "../src/data/index";
+import { besoinEau } from "../src/components/PlanVisuel";
 
 let fails = 0, n = 0;
 const ok = (c: boolean, m: string) => { n++; if (!c) { fails++; console.error("✗ " + m); } };
@@ -70,7 +72,19 @@ ok(ficheLatin("Dracaena fragrans")?.id === "dracaena", "Dracaena fragrans → dr
 ok(ficheLatin("Phalaenopsis amabilis")?.id === "orchidee", "Phalaenopsis amabilis → orchidée");
 ok(ficheLatin("Echeveria elegans")?.id === "succulentes" && ficheLatin("Echeveria elegans")?.exact === false, "Echeveria → succulentes (genre)");
 ok(ficheLatin("Solanum melongena")?.id === "aubergine", "Solanum melongena → aubergine (pas tomate)");
-ok(ficheLatin("Solanum nigrum") === undefined, "Solanum nigrum → aucune fiche (pas de faux positif)");
+ok(ficheLatin("Solanum nigrum")?.id === "belladone", "Solanum nigrum → fiche dangereuse belladone/morelle");
+ok(ficheLatin("Solanum dulcamara")?.id === "belladone" && ficheLatin("Solanum tuberosum")?.id === "pomme-de-terre", "douce-amère ≠ pomme de terre");
+for (const l of ["Taxus baccata", "Nerium oleander", "Prunus laurocerasus", "Digitalis purpurea", "Conium maculatum", "Aethusa cynapium", "Colchicum autumnale", "Jacobaea vulgaris", "Atropa belladonna"])
+  ok(!!ficheLatin(l) && !!plante(ficheLatin(l)!.id)?.danger, `${l} → alerte plante dangereuse`);
+for (const l of ["Rosa canina", "Hydrangea macrophylla", "Taraxacum officinale", "Convolvulus arvensis", "Elymus repens", "Cydonia oblonga", "Castanea sativa", "Citrullus lanatus", "Cichorium intybus", "Allium ascalonicum", "Fragaria vesca", "Equisetum arvense"])
+  ok(!!ficheLatin(l), `${l} → fiche`);
+
+// Calendrier : semis d'automne des pois réservés aux climats doux
+ok(!plantesDuMois(11, "tempere").semisPlace.some((p) => p.id === "pois"), "pas de pois semés en novembre en climat tempéré");
+ok(plantesDuMois(11, "oceanique").semisPlace.some((p) => p.id === "pois"), "pois semés en novembre en climat océanique");
+
+// Assistant : verger pour un grand jardin
+ok(recommander({ situation: "jardin", expo: "soleil", temps: "moyen", surface: 150, objectifs: ["autonomie"] }).verger.length >= 3, "grand jardin : fruitiers proposés");
 
 // Mes plantes : rythme d'arrosage selon saison et fenêtre
 const mp: MaPlante = { id: "m", planteId: "pothos", surnom: "Pothos", fenetre: "sud", depuis: "2026-01-01", arrosages: ["2026-07-01"], engrais: [], rempotages: [], photos: [] };
@@ -79,6 +93,15 @@ ok(intervalleArrosage(mp, new Date("2026-01-10T12:00:00")) > intervalleArrosage(
 ok(echeances(mp, new Date("2026-07-20T12:00:00"))[0].dans <= 0, "pothos arrosé le 1er juillet : à vérifier le 20");
 ok(echeances(marquer(mp, "arrosage", new Date("2026-07-20T12:00:00")), new Date("2026-07-20T12:00:00"))[0].dans > 0, "après arrosage : plus rien à faire");
 ok(!echeances({ ...mp, planteId: "tillandsia" }, new Date("2026-07-20T12:00:00")).some((e) => e.type === "engrais"), "pas de rappel d'engrais pour un tillandsia");
+
+// Arrosage : chaleur = plus d'eau, pluie = moins, paillage = moins
+const esp = { id: "e1", nom: "P1", type: "planche" as const, surface: 5 };
+const cult = [{ espaceId: "e1", planteId: "tomate" }];
+const chaud = Array.from({ length: 7 }, () => ({ tmax: 30, pluie: 0 }));
+const pluvieux = Array.from({ length: 7 }, () => ({ tmax: 18, pluie: 8 }));
+ok(besoinEau(esp, cult, chaud, false)!.litres > besoinEau(esp, cult, chaud, true)!.litres, "le paillage réduit l'arrosage");
+ok(besoinEau(esp, cult, pluvieux, true)!.litres === 0, "semaine pluvieuse : pas d'arrosage");
+ok(besoinEau(esp, [], chaud, true) === null, "pas de culture : pas de calcul");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

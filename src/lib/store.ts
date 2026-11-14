@@ -24,7 +24,7 @@ export interface Settings {
 }
 
 export type TypeEspace = "planche" | "carre" | "bac" | "pot" | "serre" | "interieur" | "verger";
-export interface Espace { id: string; nom: string; type: TypeEspace; surface?: number }
+export interface Espace { id: string; nom: string; type: TypeEspace; surface?: number; x?: number; y?: number; l?: number; p?: number }
 export interface Culture { id: string; planteId: string; espaceId?: string; date: string; mode: "semis" | "plantation"; note?: string; fini?: string }
 export interface Recolte { id: string; planteId: string; date: string; qte: number; unite: "kg" | "g" | "pièces" | "bottes" }
 export interface Note { id: string; date: string; texte: string; photo?: string; planteId?: string }
@@ -62,6 +62,7 @@ export interface State {
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
   plantes: MaPlante[];
+  prix: Record<string, number>; // prix au kg choisis par l'utilisateur
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -94,6 +95,7 @@ const EMPTY: State = {
   videos: {},
   favoris: [],
   plantes: [],
+  prix: {},
 };
 
 let state: State = EMPTY;
