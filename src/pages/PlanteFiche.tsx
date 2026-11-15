@@ -2,12 +2,14 @@ import { Ico, Vignette } from "../components/Ico";
 import { useState } from "react";
 import { plante, probleme, CATEGORIES, FAMILLES } from "../data/index";
 import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty, toast } from "../components/ui";
-import { useStore, upsert, uid, today } from "../lib/store";
+import { useStore, upsert, uid, today, getState } from "../lib/store";
+const getSol = () => getState().settings.sol;
 import { href } from "../lib/router";
 import { moisAffiches } from "../lib/calendar";
 import { AjoutMaPlante } from "../components/MesPlantes";
 import { MOIS_NOMS } from "../data/util";
 import { gesteDe } from "../data/cueillette";
+import { SOL_PLANTE, TYPES_SOL } from "../data/sols";
 import { srcVignette } from "../components/Ico";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
@@ -32,6 +34,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
         ["Où la cultiver", p.lieux.map((l) => ({ "pleine-terre": "jardin", pot: "en pot", balcon: "balcon", serre: "serre", interieur: "intérieur" })[l]).join(", ")],
         ["Exposition", p.expo.map((e) => EXPO[e]).join(", ")],
         ["Besoins du sol", BESOIN[p.besoin]],
+        ["Sol idéal", SOL_PLANTE[p.id]],
         ["Eau", EAU[p.eau]],
         ["Espacement", p.espacement],
         ["Profondeur de semis", p.profondeur],
@@ -134,6 +137,17 @@ export default function PlanteFiche({ id }: { id?: string }) {
             </p>
           )}
           <div className="facts">{facts.filter(([, v]) => v).map(([k, v]) => <div key={k} className="fact"><div className="k">{k}</div>{v}</div>)}</div>
+          {!interieur && (() => {
+            const sol = getSol();
+            const types = sol ? [sol.texture, ...sol.traits].map((t) => TYPES_SOL.find((x) => x.id === t)).filter(Boolean) : [];
+            const ok = types.some((t) => t!.aime.includes(p.id));
+            return (
+              <p className="small" style={{ margin: "8px 0 0" }}>
+                {sol ? (ok ? <span className="badge green">✅ Se plaît dans votre sol ({types.map((t) => t!.nom.split(" (")[0].toLowerCase()).join(", ")})</span> : <span className="muted">Votre sol : {types.map((t) => t!.nom.split(" (")[0].toLowerCase()).join(", ")}. </span>) : <a href={href("/sol")}>🟫 Identifier mon sol</a>}
+                {" · "}<a href={href(`/nutrition?p=${p.id}`)}>🍽️ Comment la nourrir</a>
+              </p>
+            );
+          })()}
           <h2>{interieur ? "Installation" : "Culture pas à pas"}</h2>
           <ol className="steps">{p.etapes.map((e, i) => <li key={i}>{e}</li>)}</ol>
           <h2>Entretien</h2>

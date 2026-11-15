@@ -11,6 +11,7 @@ export default function Animaux() {
       <div className="grid-sm" style={{ marginBottom: 14 }}>
         <a className="btn big primary" href={href("/diagnostic-animal")}>🩺 Un animal ne va pas bien</a>
         <a className="btn big" href={href("/calculs?s=animaux")}>🧮 Combien d'animaux pour ma famille ?</a>
+        <a className="btn big" href={href("/nutrition?t=animaux")}>🍽️ Bien les nourrir</a>
         <a className="btn big" href={href("/guide/fumiers-securite")}>💩 Utiliser leur fumier</a>
       </div>
       <div className="grid">

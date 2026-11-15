@@ -1,6 +1,8 @@
 import { GESTES_RECOLTE } from "../src/data/cueillette";
 import { AMENAGEMENTS } from "../src/data/amenagements";
 import { MULTIPLICATION, AROMATES_INT } from "../src/data/interieur-hub";
+import { TYPES_SOL, SOL_PLANTE } from "../src/data/sols";
+import { NUTRIMENTS, ENGRAIS_NATURELS, NUTRITION_ANIMAUX } from "../src/data/nutrition";
 import { ALIAS_GUIDES } from "../src/data/guides-balcon";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales";
 // Contrôle de cohérence du contenu, exécuté à chaque build.
@@ -56,6 +58,12 @@ for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.include
 {
   for (const k of Object.keys(ALIAS_GUIDES)) if (!GUIDES.some((g) => g.id === k)) errors.push(`alias de tutoriel pour un id inconnu « ${k} »`);
   dup("maladie animale", MALADIES_ANIMALES);
+  for (const t of TYPES_SOL) for (const id of t.aime) if (!PLANTES.some((p) => p.id === id)) errors.push(`sol ${t.id} : plante inconnue « ${id} »`);
+  for (const id of Object.keys(SOL_PLANTE)) if (!PLANTES.some((p) => p.id === id)) errors.push(`sol idéal : plante inconnue « ${id} »`);
+  for (const n of NUTRIMENTS) if (n.carence && !PROBLEMES.some((p) => p.id === n.carence)) errors.push(`nutriment ${n.id} : carence inconnue « ${n.carence} »`);
+  for (const e of ENGRAIS_NATURELS) if (e.lien && !lienVers(e.lien)) errors.push(`engrais ${e.nom} : lien inconnu « ${e.lien} »`);
+  for (const a of ANIMAUX) if (!NUTRITION_ANIMAUX.some((n) => n.id === a.id)) errors.push(`besoins alimentaires manquants pour l'animal « ${a.id} »`);
+  for (const n of NUTRITION_ANIMAUX) if (!ANIMAUX.some((a) => a.id === n.id)) errors.push(`besoins alimentaires : animal inconnu « ${n.id} »`);
   for (const id of Object.keys(MULTIPLICATION)) if (!PLANTES.some((p) => p.id === id)) errors.push(`multiplication : plante inconnue « ${id} »`);
   for (const a of AROMATES_INT) if (a.id && !PLANTES.some((p) => p.id === a.id)) errors.push(`aromate intérieur : plante inconnue « ${a.id} »`);
   for (const g of GESTES_RECOLTE) for (const id of g.plantes) if (!PLANTES.some((p) => p.id === id)) errors.push(`geste ${g.id} : plante inconnue « ${id} »`);

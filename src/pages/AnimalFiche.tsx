@@ -53,6 +53,7 @@ export default function AnimalFiche({ id }: { id?: string }) {
       {tab === "alimentation" && (
         <div>
           <ul className="ticks">{a.alimentation.map((x) => <li key={x}>{x}</li>)}</ul>
+          <p className="small"><a href={href(`/nutrition?t=animaux&a=${a.id}`)}>🍽️ Ses besoins expliqués : eau, protéines, fibres, minéraux, signes de manque →</a></p>
           <div className="callout info"><b>💧 L'eau</b>{a.eau}</div>
           <div className="grid">
             <div className="card"><b>✅ Ce que le jardin peut leur donner</b><ul className="ticks small">{a.jardinOK.map((x) => <li key={x}>{x}</li>)}</ul></div>

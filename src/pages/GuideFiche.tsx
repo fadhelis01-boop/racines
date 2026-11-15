@@ -42,6 +42,7 @@ export default function GuideFiche({ id }: { id?: string }) {
       <span className="badge green" style={{ marginTop: 8 }}>{RUBRIQUES[g.rubrique].emoji} {RUBRIQUES[g.rubrique].label}</span>
       <h1 style={{ marginTop: 8 }}>{g.emoji} {g.titre}</h1>
       <div className="guide-hero"><Photo id={g.id} emoji="" alt="" /></div>
+      {(g.id === "connaitre-sol" || g.id === "engrais-naturels") && <a className="callout ok row" href={href(g.id === "connaitre-sol" ? "/sol" : "/nutrition")} style={{ display: "flex", textDecoration: "none", color: "inherit" }}><span>{g.id === "connaitre-sol" ? "🧪 Faites le test guidé « Mon sol » : 7 questions, et l'appli vous dit quel est votre sol, comment l'améliorer et ce qui s'y plaît." : "🍽️ Voir les besoins de chaque plante et de chaque animal, expliqués simplement."}</span></a>}
       <p>{g.resume}</p>
       <div className="row">
         <span className="badge">{["", "Facile", "Intermédiaire", "Avancé"][g.niveau]}</span>

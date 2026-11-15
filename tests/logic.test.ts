@@ -7,6 +7,7 @@ import { ficheParLatin } from "../src/lib/identify";
 import { DEFAULT_SETTINGS, type State, type MaPlante } from "../src/lib/store";
 import { rechercher, parleAnimal, ressembleSymptome, chercherInterieur } from "../src/lib/search";
 import { PLANTES } from "../src/data/index";
+import { interpreterSol, QUESTIONS_SOL } from "../src/data/sols";
 import { diagnostiquerAnimal } from "../src/lib/sante-animale";
 import { moisAffiches, aRepiquer } from "../src/lib/calendar";
 import { gesteDe } from "../src/data/cueillette";
@@ -177,6 +178,19 @@ ok(chercherInterieur("plante zz")[0]?.via !== undefined, "le nom courant qui a c
 ok(!chercherInterieur("xqzwv").length, "aucun résultat pour un nom inventé");
 ok(!chercherInterieur("tomate").length, "la recherche d'intérieur ne renvoie pas les légumes");
 ok(PLANTES.filter((p) => p.danger && p.categorie === "interieur").every((p) => !p.sansDangerAnimaux), "les plantes très toxiques ne sont jamais marquées sans danger");
+
+// Sol et nutrition
+const solDe = (choix: number[]) => { const pts: Record<string, number> = {}; QUESTIONS_SOL.forEach((q, i) => { for (const [k, v] of Object.entries(q.reponses[choix[i]].effet)) pts[k] = (pts[k] ?? 0) + (v ?? 0); }); return interpreterSol(pts); };
+ok(solDe([3, 3, 2, 1, 1, 0, 5]).texture === "argileux", "boudin en anneau + flaques → sol argileux");
+ok(solDe([0, 0, 2, 1, 1, 0, 5]).texture === "sableux", "boudin impossible + sèche vite → sol sableux");
+ok(solDe([2, 2, 0, 1, 0, 0, 1]).traits.includes("calcaire"), "vinaigre qui mousse + coquelicots → calcaire");
+ok(solDe([2, 2, 2, 1, 0, 0, 0]).traits.includes("acide"), "mousse et fougères sans calcaire → acide");
+ok(solDe([3, 3, 2, 3, 2, 2, 3]).alertes.length >= 2, "sol gorgé d'eau, tassé, sans vers → alertes");
+vise("sol argileux", "Mon sol", 3);
+vise("quel engrais", "Nourrir ses plantes", 3);
+vise("feuilles violettes", "Manque de phosphore", 3);
+vise("pierre à lécher", "Nourrir ses animaux", 3);
+vise("corne broyée", "Les engrais naturels", 3);
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

@@ -21,6 +21,7 @@ export interface Settings {
   sensible: boolean; // afficher les tutoriels d'abattage sans avertissement
   animauxActifs: boolean;
   lune: boolean;
+  sol?: { texture: string; traits: string[]; date: string }; // résultat du test « Mon sol »
 }
 
 export type TypeEspace = "planche" | "carre" | "bac" | "pot" | "serre" | "interieur" | "verger";

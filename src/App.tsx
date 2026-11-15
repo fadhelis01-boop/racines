@@ -29,6 +29,8 @@ const Lexique = lazy(() => import("./pages/Lexique"));
 const MaladieAnimale = lazy(() => import("./pages/SanteAnimale"));
 const DiagnosticAnimal = lazy(() => import("./pages/SanteAnimale").then((m) => ({ default: m.DiagnosticAnimal })));
 const Calculs = lazy(() => import("./pages/Calculs"));
+const Sol = lazy(() => import("./pages/Sol"));
+const Nutrition = lazy(() => import("./pages/Nutrition"));
 const Interieur = lazy(() => import("./pages/Interieur"));
 const Cueillette = lazy(() => import("./pages/Cueillette"));
 const Demenagement = lazy(() => import("./pages/Demenagement"));
@@ -52,6 +54,7 @@ const NAV = [
   { to: "/plantes", label: "Plantes et fleurs", i: "🌱", ico: "plantes", main: true },
   { to: "/sante", label: "Santé", i: "🩺", ico: "sante", main: true },
   { to: "/interieur", label: "Intérieur et aromates", i: "🌿", ico: "interieur" },
+  { to: "/sol", label: "Mon sol et les engrais", i: "🟫", ico: "compost" },
   { to: "/jardin", label: "Mon jardin", i: "🧺", ico: "jardin" },
   { to: "/creer", label: "Créer mon potager", i: "👨‍🌾", ico: "creer" },
   { to: "/guides", label: "Tutoriels", i: "📘", ico: "tutoriels" },
@@ -103,13 +106,15 @@ export default function App() {
     case "maladie-animale": page = <MaladieAnimale id={p1} />; break;
     case "diagnostic-animal": page = <DiagnosticAnimal />; break;
     case "calculs": page = <Calculs />; break;
+    case "sol": page = <Sol />; break;
+    case "nutrition": page = <Nutrition />; break;
     case "interieur": page = <Interieur />; break;
     case "cueillette": page = <Cueillette />; break;
     case "demenagement": page = <Demenagement />; break;
     case "amenagements": page = <Amenagements />; break;
     default: page = <Accueil />;
   }
-  const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/interieur" && p0 === "interieur") || (to === "/animaux" && ["animal", "maladie-animale", "diagnostic-animal"].includes(p0 ?? "")));
+  const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/interieur" && p0 === "interieur") || (to === "/sol" && p0 === "nutrition") || (to === "/animaux" && ["animal", "maladie-animale", "diagnostic-animal"].includes(p0 ?? "")));
 
   return (
     <div className="app">
@@ -136,7 +141,7 @@ export default function App() {
         {(appart ? NAV.map((n) => (n.to === "/calendrier" ? { ...n, to: "/interieur", label: "Intérieur", i: "🌿", ico: "interieur" } : n)) : NAV).filter((n) => n.main).map((n) => (
           <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span className="i"><Ico nom={n.ico} emoji={n.i} taille={28} /></span>{n.label.replace(" et fleurs", "")}</a>
         ))}
-        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
+        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette", "sol", "nutrition"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
       </nav>
       <Player />
     </div>
