@@ -45,12 +45,31 @@ export default function Identifier() {
     toast("Ajoutée au journal de Mon jardin");
   };
 
+  const avecCle = !!(settings.plantnetKey || settings.claudeKey);
   return (
     <div>
       <Back />
-      <h1>📷 Identifier par photo</h1>
+      <h1>🔎 Je ne connais pas le nom de ma plante</h1>
       <p className="muted small" style={{ marginTop: -6 }}>Une plante, un arbre, un fruit, une fleur, un insecte, une feuille malade… Prenez une ou plusieurs photos nettes, en gros plan, à la lumière du jour.</p>
 
+      {!photos.length && !avecCle && (
+        <>
+          <div className="callout ok small" style={{ marginTop: 10 }}><b>Le plus simple</b>Répondez à 3 questions sur la forme de la plante et de ses feuilles : Racines propose les plantes qui correspondent, avec leurs photos.</div>
+          <div style={{ marginTop: 12 }}><IdentGuidee /></div>
+          <div className="card" style={{ marginTop: 12 }}>
+            <h3>📱 Sans clé : les applications gratuites</h3>
+            <p className="small">Pas besoin de clé pour identifier une plante : utilisez directement l'une de ces applications, puis cherchez le nom trouvé dans Racines (les noms courants et scientifiques sont reconnus).</p>
+            <div className="row">
+              <a className="btn" href="https://identify.plantnet.org/fr" target="_blank" rel="noreferrer">🌿 Pl@ntNet (site et appli)</a>
+              <a className="btn" href="https://lens.google.com/" target="_blank" rel="noreferrer">🔍 Google Lens</a>
+              <a className="btn" href={href("/recherche")}>Rechercher le nom trouvé</a>
+            </div>
+            <p className="small muted">Conseils pour une bonne identification : une feuille entière bien à plat, le dessus ET le dessous, une vue d'ensemble, et la fleur si possible. Pour une maladie, le <a href={href("/diagnostic")}>diagnostic guidé</a> fonctionne hors ligne.</p>
+          </div>
+        </>
+      )}
+      {!avecCle && !photos.length && <h2>Analyser une photo dans Racines (réglage avancé)</h2>}
+      {!avecCle && !photos.length && <p className="small muted">Demande une clé gratuite Pl@ntNet ou une clé Claude, à régler une fois dans les réglages. Si ce n'est pas pour vous, les solutions ci-dessus suffisent.</p>}
       <div className="card">
         <div className="row">
           <button className="btn primary big" onClick={() => camRef.current?.click()}>📸 Prendre une photo</button>
@@ -171,7 +190,7 @@ export default function Identifier() {
         </div>
       )}
 
-      {!photos.length && (
+      {!photos.length && avecCle && (
         <>
           <div className="card" style={{ marginTop: 12 }}>
             <h3>📱 Sans clé : les applications gratuites</h3>

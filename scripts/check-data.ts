@@ -5,6 +5,7 @@ import { TYPES_SOL, SOL_PLANTE } from "../src/data/sols";
 import { NUTRIMENTS, ENGRAIS_NATURELS, NUTRITION_ANIMAUX } from "../src/data/nutrition";
 import { PAS_A_PAS, TECHNIQUES } from "../src/data/methodes";
 import { choisirMethodes } from "../src/lib/methodes";
+import { INCREVABLES, AROMATES_FACILES, POTAGER_FACILE, OFFRIR } from "../src/data/debuter";
 import { ALIAS_GUIDES } from "../src/data/guides-balcon";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales";
 // Contrôle de cohérence du contenu, exécuté à chaque build.
@@ -60,6 +61,9 @@ for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.include
 {
   for (const k of Object.keys(ALIAS_GUIDES)) if (!GUIDES.some((g) => g.id === k)) errors.push(`alias de tutoriel pour un id inconnu « ${k} »`);
   dup("maladie animale", MALADIES_ANIMALES);
+  for (const x of [...INCREVABLES, ...AROMATES_FACILES, ...POTAGER_FACILE, ...OFFRIR]) if (!PLANTES.some((p) => p.id === x.id)) errors.push(`débuter : plante inconnue « ${x.id} »`);
+  for (const x of OFFRIR) if (!PLANTES.find((p) => p.id === x.id)?.sansDangerAnimaux) errors.push(`débuter : « ${x.id} » proposée en cadeau sans danger mais toxique pour les animaux`);
+  for (const x of INCREVABLES) if ((PLANTES.find((p) => p.id === x.id)?.difficulte ?? 3) > 1) errors.push(`débuter : « ${x.id} » présentée comme increvable mais pas « facile »`);
   dup("aménagement", AMENAGEMENTS);
   for (const id of Object.keys(PAS_A_PAS)) if (!AMENAGEMENTS.some((a) => a.id === id)) errors.push(`pas à pas pour un aménagement inconnu « ${id} »`);
   for (const t of TECHNIQUES) if (!t.lien.startsWith("lex-") && !lienVers(t.lien)) errors.push(`technique ${t.nom} : lien inconnu « ${t.lien} »`);

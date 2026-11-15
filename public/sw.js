@@ -33,6 +33,31 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// Rappels quand l'appli est fermée (Chrome / Android, appli installée)
+self.addEventListener("periodicsync", (event) => {
+  if (event.tag !== "racines-rappels") return;
+  event.waitUntil((async () => {
+    try {
+      const cache = await caches.open(CONTENT_CACHE);
+      const r = await cache.match("./rappels.json");
+      if (!r) return;
+      const jour = new Date().toISOString().slice(0, 10);
+      const dus = (await r.json()).filter((x) => x.date <= jour);
+      if (!dus.length) return;
+      const noms = [...new Set(dus.map((x) => x.texte))];
+      await self.registration.showNotification("Racines 🌿", { body: `${noms.length} plante${noms.length > 1 ? "s" : ""} à vérifier : ${noms.slice(0, 4).join(", ")}. Touchez la terre avant d'arroser.`, icon: "./icons/icon-192.png", tag: "racines-jour", data: { url: "./#/" } });
+    } catch (e) { /* rien à signaler */ }
+  })());
+});
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil((async () => {
+    const wins = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    if (wins.length) return wins[0].focus();
+    return self.clients.openWindow((event.notification.data && event.notification.data.url) || "./");
+  })());
+});
+
 self.addEventListener("message", (e) => {
   if (e.data === "skip-waiting") self.skipWaiting();
 });

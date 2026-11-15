@@ -5,6 +5,7 @@ import { meteo, alertes, emojiMeteo, type Meteo } from "../lib/meteo";
 import { lune } from "../lib/lune";
 import { travauxDuMois, plantesDuMois, tachesPerso, ACTIONS, type Action } from "../lib/calendar";
 import { MOIS_NOMS } from "../data/util";
+import { PREMIER_MOIS } from "../data/debuter";
 import { A, Listen, Section } from "../components/ui";
 import { href } from "../lib/router";
 import { Logo } from "../App";
@@ -77,6 +78,34 @@ export default function Accueil() {
         {(settings.situation === "appartement" || settings.situation === "balcon") && <A to="/interieur" className="btn sm">🌿 Intérieur et aromates</A>}
       </div>
 
+      {settings.debutant && (() => {
+        const toutes = PREMIER_MOIS.flatMap((w) => w.taches);
+        const prochaine = toutes.find((x) => !s.fait["deb:" + x.id]);
+        const faites = toutes.length - toutes.filter((x) => !s.fait["deb:" + x.id]).length;
+        return prochaine ? (
+          <a className="card row" href={href("/debuter")} style={{ textDecoration: "none", color: "inherit", flexWrap: "nowrap", borderColor: "var(--green)", borderWidth: 2, marginTop: 10 }}>
+            <span style={{ fontSize: 34 }}>🌱</span>
+            <span style={{ flex: 1 }}><b>Je débute · étape {faites + 1} sur {toutes.length}</b><br /><span className="small">{prochaine.t}</span>
+              <span className="progress" style={{ display: "block", marginTop: 6 }}><span style={{ display: "block", height: "100%", width: `${(faites / toutes.length) * 100}%`, background: "var(--green)" }} /></span></span>
+          </a>
+        ) : null;
+      })()}
+      {(s.plantes.length > 0 || appart || settings.situation === "balcon" || settings.debutant) && (
+        <Section title="Mes plantes à vérifier" right={<a className="small" href={href("/jardin/mesplantes")}>Toutes →</a>}>
+          {aVerifier.length ? (
+            <div className="card">
+              {aVerifier.map(({ mp, e }) => (
+                <div key={mp.id + e.type} className="task">
+                  <button className="btn sm" onClick={() => upsert("plantes", marquer(mp, e.type))} aria-label={`Noter : ${e.type} fait`}>{e.type === "arrosage" ? "💧" : e.type === "engrais" ? "🌱" : "🏺"} Fait</button>
+                  <span><b>{mp.surnom}</b>{mp.piece ? <span className="muted"> · {mp.piece}</span> : null} — {e.texte}</span>
+                </div>
+              ))}
+              <p className="small muted" style={{ margin: "6px 0 0" }}>Enfoncez un doigt dans la terre : n'arrosez que si elle est sèche sur 2 à 3 cm (succulentes : entièrement sèche).</p>
+            </div>
+          ) : s.plantes.length ? <p className="muted small">Rien à vérifier aujourd'hui. 🌿</p> : <p className="muted small">Ajoutez vos plantes dans <A to="/jardin/mesplantes">Mes plantes</A> pour recevoir les rappels d'arrosage, d'engrais et de rempotage.</p>}
+        </Section>
+      )}
+
       {settings.ville && (
         <div className="card">
           <div className="row between"><b className="row" style={{ gap: 6 }}><Ico nom="meteo" emoji="🌦️" taille={26} /> Météo à {settings.ville.nom.split(",")[0]}</b>{wxErr && <span className="small muted">hors connexion</span>}</div>
@@ -101,7 +130,7 @@ export default function Accueil() {
         </div>
       )}
       {!settings.ville && (
-        <div className="callout info small">🌦️ Ajoutez votre commune dans les <A to="/reglages">réglages</A> pour la météo et les alertes gel, canicule et fortes pluies.</div>
+        <a className="callout warn small row" href={href("/reglages")} style={{ display: "flex", textDecoration: "none", color: "inherit" }}><span>🌦️ <b>Ajoutez votre commune</b> (30 secondes) : Racines vous préviendra avant un gel, une canicule ou de fortes pluies, ce qui sauve souvent les plantes d'un balcon ou d'un potager.</span></a>
       )}
 
       {settings.lune && <div className="card row" style={{ marginTop: 12 }}>
@@ -114,7 +143,7 @@ export default function Accueil() {
 
       <div className="grid-sm" style={{ marginTop: 14 }}>
         <a className="btn big" href={href(appart ? "/diagnostic?interieur=1" : "/diagnostic")}><Ico nom="diagnostic" emoji="🩺" taille={40} /> Ma plante est malade</a>
-        <a className="btn big" href={href("/identifier")}><Ico nom="photo" emoji="📷" taille={40} /> Identifier par photo</a>
+        <a className="btn big" href={href("/identifier")}><Ico nom="photo" emoji="📷" taille={40} /> Je ne connais pas son nom</a>
         {appart ? <>
           <a className="btn big" href={href("/jardin/mesplantes")}><Ico nom="mesplantes" emoji="🌿" taille={40} /> Mes plantes</a>
           <a className="btn big" href={href("/guide/potager-interieur")}><Ico nom="potager-interieur" emoji="🍅" taille={40} /> Potager d'intérieur</a>
@@ -123,22 +152,6 @@ export default function Accueil() {
           <a className="btn big" href={href("/jardin")}><Ico nom="jardin" emoji="🧺" taille={40} /> Noter un semis, une récolte</a>
         </>}
       </div>
-
-      {(s.plantes.length > 0 || appart) && (
-        <Section title="Mes plantes à vérifier" right={<a className="small" href={href("/jardin/mesplantes")}>Toutes →</a>}>
-          {aVerifier.length ? (
-            <div className="card">
-              {aVerifier.map(({ mp, e }) => (
-                <div key={mp.id + e.type} className="task">
-                  <button className="btn sm" onClick={() => upsert("plantes", marquer(mp, e.type))} aria-label={`Noter : ${e.type} fait`}>{e.type === "arrosage" ? "💧" : e.type === "engrais" ? "🌱" : "🪣"} Fait</button>
-                  <span><b>{mp.surnom}</b>{mp.piece ? <span className="muted"> · {mp.piece}</span> : null} — {e.texte}</span>
-                </div>
-              ))}
-              <p className="small muted" style={{ margin: "6px 0 0" }}>Enfoncez un doigt dans la terre : n'arrosez que si elle est sèche sur 2 à 3 cm (succulentes : entièrement sèche).</p>
-            </div>
-          ) : s.plantes.length ? <p className="muted small">Rien à vérifier aujourd'hui. 🌿</p> : <p className="muted small">Ajoutez vos plantes dans <A to="/jardin/mesplantes">Mes plantes</A> pour recevoir les rappels d'arrosage, d'engrais et de rempotage.</p>}
-        </Section>
-      )}
 
       <Section title="Mes tâches">
         {perso.length ? (
@@ -155,6 +168,7 @@ export default function Accueil() {
         )}
       </Section>
 
+      {s.cultures.length === 0 && s.plantes.length === 0 && <p className="small muted" style={{ marginBottom: -6 }}>Le calendrier ci-dessous dit ce qui se fait ce mois-ci <b>pour ceux qui cultivent ces plantes</b> : pas d'inquiétude si vous n'en avez aucune.</p>}
       <Section title={`À faire en ${MOIS_NOMS[mois - 1]}`} right={<A to="/calendrier" className="small">Tout le calendrier →</A>}>
         <div className="grid">
           {(["semisAbri", "repiquage", "semisPlace", "plantation", "recolte"] as Action[]).map((a) =>

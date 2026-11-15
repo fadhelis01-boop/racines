@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PLANTES, SIGNES, plante, TYPES_PROBLEME } from "../data/index";
 import { useRoute, href } from "../lib/router";
-import { diagnostiquer } from "../lib/garden";
+import { diagnostiquer, norm } from "../lib/garden";
 import { Back, Listen } from "../components/ui";
 
 const ORGANES = [
@@ -21,6 +21,7 @@ export default function Diagnostic() {
   const [organe, setOrgane] = useState("");
   const [signes, setSignes] = useState<string[]>([]);
   const [step, setStep] = useState(planteId ? 1 : 0);
+  const [qp, setQp] = useState("");
   const pl = planteId ? plante(planteId) : undefined;
   const choix = PLANTES.filter((p) => (interieur ? p.categorie === "interieur" : true)).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
   const signesOrgane = Object.entries(SIGNES).filter(([, s]) => !organe || s.organe === organe || organe === "plante");
@@ -35,10 +36,13 @@ export default function Diagnostic() {
       {step === 0 && (
         <div className="card">
           <h3>1. Quelle plante ?</h3>
+          <input type="search" placeholder="Tapez le nom : tomate, monstera, basilic…" value={qp} aria-label="Chercher la plante par son nom"
+            onChange={(e) => { setQp(e.target.value); const n = norm(e.target.value.trim()); const t = n.length >= 2 ? choix.find((p) => norm([p.nom, ...(p.alias ?? [])].join(" ")).includes(n)) : undefined; if (t) setPlanteId(t.id); }} style={{ marginBottom: 6 }} />
           <select value={planteId} onChange={(e) => setPlanteId(e.target.value)}>
             <option value="">— Je ne sais pas / autre plante —</option>
-            {choix.map((p) => <option key={p.id} value={p.id}>{p.emoji} {p.nom}</option>)}
+            {choix.filter((p) => qp.trim().length < 2 || norm([p.nom, ...(p.alias ?? [])].join(" ")).includes(norm(qp.trim())) || p.id === planteId).map((p) => <option key={p.id} value={p.id}>{p.emoji} {p.nom}</option>)}
           </select>
+          <p className="small muted" style={{ margin: "6px 0 0" }}>Vous ne connaissez pas son nom ? Choisissez « Je ne sais pas » : le diagnostic marche quand même.</p>
           <div className="row" style={{ marginTop: 12 }}><button className="btn primary" onClick={() => setStep(1)}>Continuer</button></div>
         </div>
       )}

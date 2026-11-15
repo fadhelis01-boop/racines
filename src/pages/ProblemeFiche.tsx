@@ -1,3 +1,4 @@
+import MotsLexique from "../components/MotsLexique";
 import { Vignette } from "../components/Ico";
 import { probleme, remede, plante, TYPES_PROBLEME } from "../data/index";
 import { Galerie, Back, Listen, Videos, A, Empty } from "../components/ui";
@@ -35,9 +36,9 @@ export default function ProblemeFiche({ id }: { id?: string }) {
       {p.confusion && <div className="callout warn"><b>↔ À ne pas confondre</b>{p.confusion}</div>}
       <p><b>Conditions favorables :</b> {p.conditions}</p>
       <h2>🛡️ Prévention</h2>
-      <ul className="ticks">{p.prevention.map((s) => <li key={s}>{s}</li>)}</ul>
+      <ul className="ticks">{p.prevention.map((s) => <li key={s}><MotsLexique texte={s} /></li>)}</ul>
       <h2>🌿 Que faire</h2>
-      <ol className="steps">{p.traitements.map((s) => <li key={s}>{s}</li>)}</ol>
+      <ol className="steps">{p.traitements.map((s) => <li key={s}><MotsLexique texte={s} /></li>)}</ol>
       {p.remedes.length > 0 && (
         <>
           <h3>Préparations utiles</h3>

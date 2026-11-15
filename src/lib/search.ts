@@ -12,7 +12,7 @@ import { PAILLAGES } from "../data/methodes";
 // symptômes (→ diagnostic) et tolérance aux fautes de frappe.
 
 export interface Hit { href: string; emoji: string; titre: string; type: string; score: number; id?: string }
-interface Doc { href: string; emoji: string; titre: string; type: string; noms: string; texte: string; id?: string; principal: boolean }
+interface Doc { href: string; emoji: string; titre: string; type: string; noms: string; texte: string; id?: string; principal: boolean; animal?: boolean }
 
 // Autres noms des animaux (pour « coq », « brebis », « ruche »…)
 const ALIAS_ANIMAUX: Record<string, string> = {
@@ -29,8 +29,8 @@ function docs(): Doc[] {
   DOCS = [
     ...PLANTES.map((p) => ({ principal: true, id: p.id, href: `/plante/${p.id}`, emoji: p.emoji, titre: p.nom, type: p.categorie === "fleur" || p.categorie === "ornement" ? "Fleur et jardin d'agrément" : p.categorie === "arbre" ? "Arbre fruitier" : p.categorie === "interieur" ? "Plante d'intérieur" : p.categorie === "toxique" ? "Plante dangereuse" : p.categorie === "sauvage" ? "Plante sauvage" : "Plante", noms: norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" | ")), texte: norm([p.intro, ...p.etapes, ...p.entretien, p.conservation ?? "", p.lumiere ?? "", p.arrosageDetail ?? "", p.toxique ?? "", p.sansDangerAnimaux ? "sans danger chats chiens" : ""].join(" ")) })),
     ...LEXIQUE.map((t) => ({ principal: false, id: t.wiki ? "lex-" + t.id : undefined, href: `/lexique?t=${t.id}`, emoji: "📖", titre: t.terme, type: "Lexique", noms: norm([t.terme, ...(t.alias ?? [])].join(" | ")), texte: norm(t.def) })),
-    ...ANIMAUX.map((a) => ({ principal: true, id: a.id, href: `/animal/${a.id}`, emoji: a.emoji, titre: a.nom, type: "Animal", noms: norm(a.nom + " | " + (ALIAS_ANIMAUX[a.id] ?? "")), texte: norm([a.resume, ...a.quotidien, ...a.alimentation, ...a.interdits, ...a.reglementation, ...a.sante.map((s) => s.signe)].join(" ")) })),
-    ...MALADIES_ANIMALES.map((m) => ({ principal: true, id: m.especes[0], href: `/maladie-animale/${m.id}`, emoji: "🩺", titre: m.nom, type: "Santé des animaux", noms: norm([m.nom, ...m.alias].join(" | ")), texte: norm([m.signes, m.explication, ...m.especes.map((e) => ALIAS_ANIMAUX[e] ?? e)].join(" ")) })),
+    ...ANIMAUX.map((a) => ({ animal: true, principal: true, id: a.id, href: `/animal/${a.id}`, emoji: a.emoji, titre: a.nom, type: "Animal", noms: norm(a.nom + " | " + (ALIAS_ANIMAUX[a.id] ?? "")), texte: norm([a.resume, ...a.quotidien, ...a.alimentation, ...a.interdits, ...a.reglementation, ...a.sante.map((s) => s.signe)].join(" ")) })),
+    ...MALADIES_ANIMALES.map((m) => ({ animal: true, principal: true, id: m.especes[0], href: `/maladie-animale/${m.id}`, emoji: "🩺", titre: m.nom, type: "Santé des animaux", noms: norm([m.nom, ...m.alias].join(" | ")), texte: norm([m.signes, m.explication, ...m.especes.map((e) => ALIAS_ANIMAUX[e] ?? e)].join(" ")) })),
     ...PROBLEMES.map((p) => ({ principal: true, id: p.id, href: `/probleme/${p.id}`, emoji: "🩺", titre: p.nom, type: "Santé des plantes", noms: norm([p.nom, ...(p.alias ?? []), ...p.signes.map((s) => SIGNES[s].label)].join(" | ")), texte: norm([p.cible, ...p.symptomes, p.conditions].join(" ")) })),
     ...AMENAGEMENTS.map((a) => ({ principal: false, id: a.id, href: `/amenagements?id=${a.id}`, emoji: a.emoji, titre: a.nom, type: "Aménagement", noms: norm([a.nom, "amenager amenagement jardin"].join(" | ")), texte: norm([a.resume, ...a.avantages, ...a.inconvenients].join(" ")) })),
     ...GESTES_RECOLTE.map((g) => ({ principal: false, id: g.id, href: `/cueillette?g=${g.id}`, emoji: g.emoji, titre: "Cueillir — " + g.titre, type: "Bien cueillir", noms: norm(["cueillir recolter cueillette comment recolter", g.titre].join(" | ")), texte: norm([g.quand, ...g.comment].join(" ")) })),
@@ -45,11 +45,17 @@ function docs(): Doc[] {
     { principal: false, href: "/nutrition?t=animaux", emoji: "🐔", titre: "Nourrir ses animaux : besoins de chaque espèce", type: "Outil", noms: norm("nourrir les animaux | alimentation animaux | ration | besoins animaux | mineraux | pierre a lecher | coquilles d'huitres | quoi donner"), texte: norm("eau proteines fibres mineraux poules chevres lapins") },
     { principal: false, href: "/amenagements", emoji: "🧭", titre: "Quelle méthode de potager pour moi ? (assistant)", type: "Outil", noms: norm("quelle methode potager | methode de potager | type de potager | choisir potager | modes de culture | techniques de potager | monticule | monticules | butte | lasagne | carre potager | bottes de paille | sacs de culture | potager en rangs"), texte: norm("avantages inconvenients pas a pas debutant") },
     { principal: false, href: "/amenagements?t=paillages", emoji: "🌾", titre: "Les paillages comparés (paille, tonte, feuilles, BRF, carton…)", type: "Outil", noms: norm("paillage | pailler | paillis | quel paillage | mulch | brf | toile de paillage | paillettes de lin"), texte: norm(PAILLAGES.map((x) => x.nom + " " + x.plus + " " + x.moins).join(" ")) },
+    { principal: false, href: "/jardin", emoji: "🔔", titre: "Mes plantes : rappels d'arrosage sur le téléphone", type: "Débuter", noms: norm("rappel | rappels | notification | notifications | alerte arrosage | j oublie d arroser | me prevenir"), texte: norm("agenda telephone arrosage verifier") },
+    { principal: false, href: "/debuter", emoji: "🌱", titre: "Je débute : par où commencer (même sans la main verte)", type: "Débuter", noms: norm("debuter | je debute | debutant | main verte | par ou commencer | plantes increvables | plantes faciles"), texte: norm("premier mois increvables aromates legumes balcon liste de courses") },
+    { principal: false, href: "/interieur?t=catalogue&facile=1", emoji: "💪", titre: "Les plantes d'intérieur increvables", type: "Débuter", noms: norm("increvable | increvables | plante facile | plantes faciles | plante robuste | indestructible"), texte: norm("facile oubli arrosage peu de lumiere") },
+    { principal: false, href: "/debuter?t=offrir", emoji: "🎁", titre: "Offrir une plante (facile, sans danger)", type: "Débuter", noms: norm("offrir une plante | plante cadeau | cadeau"), texte: norm("facile sans danger animaux fleurs") },
+    { principal: false, href: "/debuter?t=courses", emoji: "🛒", titre: "La liste de courses pour débuter", type: "Débuter", noms: norm("liste de courses | quoi acheter | materiel debutant"), texte: norm("pots terreau arrosoir graines plants") },
+    { principal: false, href: "/debuter?t=potager", emoji: "🥗", titre: "Mon premier potager : les légumes les plus faciles", type: "Débuter", noms: norm("potager facile | legumes faciles | premier potager"), texte: norm("radis salade courgette tomate cerise haricot") },
     { principal: false, href: "/demenagement", emoji: "📦", titre: "Je déménage (appartement ↔ maison avec jardin)", type: "Outil", noms: norm("je demenage | demenagement | demenager | emmenager | nouvelle maison | quitter la maison | transporter plantes"), texte: norm("emporter plantes boutures graines animaux transport declaration") },
     { principal: false, href: "/calculs", emoji: "🧮", titre: "Calculs pratiques", type: "Outil", noms: norm("calcul | calculs | combien | quantite | combien de poules | combien de compost | combien de terreau | combien planter"), texte: norm("compost fumier terreau famille eau de pluie poules") },
     { principal: false, href: "/amenagements", emoji: "🗺️", titre: "Aménager son jardin : les façons de faire comparées", type: "Outil", noms: norm("amenager | amenagement | amenager jardin | organiser jardin | plan du jardin | idees jardin"), texte: norm("potager carre butte lasagnes jardin foret verger prairie mare") },
     ...REMEDES.map((r) => ({ principal: false, href: `/remede/${r.id}`, emoji: r.emoji, titre: r.nom, type: "Remède", noms: norm(r.nom), texte: norm([r.role, ...r.usage].join(" ")) })),
-    ...GUIDES.map((g) => ({ principal: false, id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm([g.titre, g.resume, ...(g.alias ?? [])].join(" | ")), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
+    ...GUIDES.map((g) => ({ animal: g.rubrique === "animaux" || g.rubrique === "boucherie", principal: false, id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm([g.titre, g.resume, ...(g.alias ?? [])].join(" | ")), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
   ];
   return DOCS;
 }
@@ -78,10 +84,11 @@ const STOP = new Set([
   "qui", "que", "quoi", "quand", "comment", "pourquoi", "quel", "quelle", "quels", "quelles", "ou", "est", "sont", "ont", "pas", "ne", "plus", "tres", "trop", "peu",
   "pour", "sur", "dans", "avec", "sans", "par", "chez", "je", "j", "il", "elle", "ils", "elles", "on", "nous", "vous", "ce", "cet", "cette", "ces", "faire", "faut", "peut", "doit",
   "plante", "plantes", "mon", "bien", "mal", "y", "l", "d", "qu", "c", "s", "n", "m",
+  "tout", "tous", "toute", "toutes", "ai", "as", "avez", "avoir", "moi", "toi", "encore", "deja", "toujours", "jamais", "rien", "vraiment", "souvent", "chaque", "fois", "alors", "donc", "aussi", "voudrais", "veux", "aimerais", "besoin", "svp", "aide", "aidez",
 ]);
 // Synonymes : un mot de la question est satisfait si l'un de ses équivalents est trouvé
 const SYN: Record<string, string[]> = {
-  tuer: ["abattre", "abattage"], tue: ["abattre", "abattage"], abattre: ["abattage"], saigner: ["saignee", "abattage"],
+  abattre: ["abattage"], saigner: ["saignee", "abattage"],
   meurt: ["malade", "diagnostic", "sauver"], mourir: ["malade", "diagnostic"], creve: ["malade", "diagnostic"], malade: ["diagnostic", "maladie"],
   jaunit: ["jaune", "jaunissement"], jaunissent: ["jaune", "jaunissement"], jaunes: ["jaune", "jaunissement"],
   mous: ["molle", "molles"], mou: ["molle"], maigre: ["amaigrissement", "maigrit"], maigrit: ["amaigrissement"],
@@ -101,6 +108,20 @@ const PHRASES: [RegExp, string][] = [
   [/arrosage automatique/g, "arrosage automatique programmateur"],
 ];
 
+// Intentions de débutant : la page qui répond vraiment à la question passe en tête
+const INTENTIONS: [RegExp, string[]][] = [
+  [/(tue|tuer|meurent|meurt|crevent).*(plantes?|tout)|main verte|increvable|indestructible|qui ne meur|qui meurt pas|plantes? faciles?|debutant|debuter|je debute|commencer le jardinage|par ou commencer|robuste|resistante/, ["/debuter", "/interieur?t=catalogue&facile=1"]],
+  [/feuilles? (marron|brunes?|seches?|grillees?)|bouts? (des feuilles )?(marron|bruns?|secs?)/, ["/probleme/air-sec", "/probleme/soif", "/probleme/coup-soleil", "/probleme/pourriture-racines"]],
+  [/betes? blanches?|bestioles? blanches?|insectes? blancs?|coton blanc|duvet blanc sur (la )?plante|petites? mouches? blanches?/, ["/probleme/cochenilles", "/probleme/aleurode"]],
+  [/^(arroser|arrosage|comment arroser|arroser (une|mes|ma|les) plantes?|combien arroser|quand arroser)$/, ["/guide/arrosage-bien-arroser", "/guide/eau-arrosage-interieur"]],
+  [/basilic.*(meurt|creve|seche|noircit|fane|jaunit|mort|tient pas)|(meurt|creve|fane).*basilic|basilic (du |de )?supermarche/, ["/interieur?t=aromates&a=basilic"]],
+  [/offrir|cadeau/, ["/debuter?t=offrir"]],
+  [/rappels?|notifications?|alertes? (d )?arrosage|oublie d arroser|j oublie/, ["/jardin"]],
+  [/(grandit|pousse) (pas|plus)|ne (grandit|pousse) (pas|plus)|croissance (lente|bloquee)/, ["/probleme/manque-lumiere", "/probleme/racines-etroit", "/probleme/carence-azote"]],
+  [/liste de courses|quoi acheter|que faut il acheter|materiel (pour )?(debuter|commencer)/, ["/debuter?t=courses"]],
+  [/potager facile|legumes? faciles?|premier potager|legumes? pour debutant/, ["/debuter?t=potager", "/creer"]],
+];
+
 const radical = (t: string) => { const r = t.replace(/(ements|ement|ations|ation|ages|age|eurs|eur|ees|ee|ers|er|es|s|x)$/, ""); return r.length >= 4 ? r : t; };
 const echappe = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // Mots de 4 lettres ou moins : le mot entier (au pluriel près) — « coq » ne trouve pas « coquelicot ».
@@ -111,10 +132,17 @@ const contient = (hay: string, tok: string) =>
 export function rechercher(q: string, limit = 60): Hit[] {
   let nq = norm(q.trim()).replace(/['’-]/g, " ").replace(/\s+/g, " ");
   if (nq.length < 2) return [];
+  const brut = nq;
   for (const [re, rep] of PHRASES) nq = nq.replace(re, rep);
+  const animalQ = parleAnimal(q);
   const toks = nq.split(" ").filter((t) => t.length > 1 && !STOP.has(t));
-  const variantes = (t: string) => [t, radical(t), ...(SYN[t] ?? [])];
-  const radQ = new Set(toks.flatMap((t) => [radical(t), ...(SYN[t] ?? []).map(radical)]));
+  // La question sans les petits mots (« ma plante a des feuilles jaunes » → « feuilles jaunes »)
+  const coeur = toks.join(" ");
+  if (coeur && coeur !== nq) nq = coeur;
+  const syn = (t: string) => (animalQ && (t === "tuer" || t === "tue") ? ["abattre", "abattage"] : SYN[t] ?? []);
+  const variantes = (t: string) => [t, radical(t), ...syn(t)];
+  const cibles = INTENTIONS.filter(([re]) => re.test(brut)).flatMap(([, h]) => h);
+  const radQ = new Set(toks.flatMap((t) => [radical(t), ...syn(t).map(radical)]));
   const hits: Hit[] = [];
   for (const d of docs()) {
     let score = 0;
@@ -142,6 +170,13 @@ export function rechercher(q: string, limit = 60): Hit[] {
       if (manquants && !(toks.length >= 3 && manquants === 1)) score = toks.length > 1 ? score * 0.35 : 0;
       else if (manquants) score *= 0.75;
     }
+    // Une question sur les plantes ne doit pas remonter des fiches d'élevage
+    if (d.animal && !animalQ) score *= 0.3;
+    // Les plantes dangereuses ne remontent que si la question parle de danger
+    if (d.type === "Plante dangereuse" && !/toxi|dang|poison|mortel|enfant|chien|chat|cigue|belladone|datura|if/.test(brut)) score *= 0.3;
+    const k = cibles.indexOf(d.href);
+    if (k >= 0) score += 300 - k * 10;
+    else if (cibles.length) score *= 0.5; // une intention reconnue : le reste passe derrière
     if (score > 0) hits.push({ id: d.id, href: d.href, emoji: d.emoji, titre: d.titre, type: d.type, score });
   }
   return hits.sort((a, b) => b.score - a.score).slice(0, limit);

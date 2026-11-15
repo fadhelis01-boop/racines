@@ -1,3 +1,4 @@
+import MotsLexique from "../components/MotsLexique";
 import { useEffect, useState } from "react";
 import { AMENAGEMENTS, NIVEAU, type Amenagement } from "../data/amenagements";
 import { PAS_A_PAS, PAILLAGES, TECHNIQUES } from "../data/methodes";
@@ -121,7 +122,7 @@ function Etapes({ id }: { id: string }) {
       <p className="small" style={{ margin: "6px 0" }}><b>🗓️ Quand :</b> {e.quand}</p>
       <b className="small">🧰 Matériel</b>
       <ul className="ticks small">{e.materiel.map((x) => <li key={x}>{x}</li>)}</ul>
-      <ol className="steps">{e.etapes.map((x) => <li key={x.titre}><b>{x.titre}</b><br /><span className="small">{x.texte}</span>{x.astuce && <span className="small" style={{ display: "block", color: "var(--green)" }}>💡 {x.astuce}</span>}</li>)}</ol>
+      <ol className="steps">{e.etapes.map((x) => <li key={x.titre}><b>{x.titre}</b><br /><span className="small"><MotsLexique texte={x.texte} /></span>{x.astuce && <span className="small" style={{ display: "block", color: "var(--green)" }}>💡 {x.astuce}</span>}</li>)}</ol>
       <p className="small"><b>🌱 La première année :</b> {e.premiereAnnee}</p>
       <div className="callout warn small"><b>À éviter</b>{e.erreurs.join(" ")}</div>
     </div>

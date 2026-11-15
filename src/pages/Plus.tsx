@@ -7,6 +7,7 @@ export default function Plus() {
     <div>
       <h1>☰ Tout Racines</h1>
       <div className="grid-sm">
+        <a className="btn big primary" href={href("/debuter")} style={{ justifyContent: "flex-start" }}><Ico nom="plantes" emoji="🌱" taille={36} /> Je débute : par où commencer</a>
         {NAV.map((n) => (
           <a key={n.to} className="btn big" href={href(n.to)} style={{ justifyContent: "flex-start" }}><Ico nom={n.ico} emoji={n.i} taille={36} /> {n.label}</a>
         ))}

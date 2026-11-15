@@ -9,6 +9,8 @@ import { rechercher, parleAnimal, ressembleSymptome, chercherInterieur } from ".
 import { PLANTES } from "../src/data/index";
 import { interpreterSol, QUESTIONS_SOL } from "../src/data/sols";
 import { choisirMethodes, type ProfilPotager } from "../src/lib/methodes";
+import { essentiel } from "../src/lib/essentiel";
+import { decouper } from "../src/lib/lexique-texte";
 import { diagnostiquerAnimal } from "../src/lib/sante-animale";
 import { moisAffiches, aRepiquer } from "../src/lib/calendar";
 import { gesteDe } from "../src/data/cueillette";
@@ -207,6 +209,31 @@ ok(choisirMethodes(baseM)[0].pour.length > 0, "chaque recommandation est expliqu
 vise("monticules", "Quelle méthode de potager pour moi", 5);
 vise("quel paillage", "Les paillages comparés", 3);
 vise("bottes de paille", "Culture sur bottes de paille", 5);
+
+// Audit débutant : la recherche comprend ses phrases
+const premier = (q: string) => rechercher(q, 3).map((h) => h.titre);
+const p1 = (q: string, attendu: string) => ok(premier(q).some((t) => t.startsWith(attendu)), `débutant « ${q} » → ${attendu} (obtenu : ${premier(q).join(" | ")})`);
+const jamaisAnimal = (q: string) => ok(!rechercher(q, 3).some((h) => /animaux|Animal/.test(h.type) || /volaille|lapin|poulailler/i.test(h.titre)), `« ${q} » ne renvoie pas vers l'élevage (obtenu : ${premier(q).join(" | ")})`);
+p1("je tue toutes mes plantes", "Je débute"); jamaisAnimal("je tue toutes mes plantes");
+p1("plante facile", "Les plantes d'intérieur increvables");
+p1("plante qui ne meurt pas", "Je débute"); jamaisAnimal("plante qui ne meurt pas");
+p1("ma plante a des feuilles jaunes", "Excès d'arrosage");
+p1("feuilles marron", "Air trop sec");
+p1("bêtes blanches plante", "Cochenilles");
+p1("arroser une plante", "Bien arroser");
+p1("pourquoi mon basilic meurt", "Basilic en intérieur"); jamaisAnimal("pourquoi mon basilic meurt");
+p1("plante pour offrir", "Offrir une plante");
+p1("notification", "Mes plantes : rappels");
+p1("ma plante ne grandit pas", "Manque de lumière");
+p1("légumes faciles", "Mon premier potager");
+p1("quoi acheter pour commencer", "La liste de courses");
+p1("tuer un poulet", "Abattre et préparer une volaille");
+ok(essentiel(plante("pothos")!, "tempere").length === 3 && essentiel(plante("pothos")!, "tempere")[2].includes("oxique"), "pothos : l'essentiel signale la toxicité");
+ok(essentiel(plante("tomate")!, "tempere").some((x) => x.includes("plant")), "tomate : l'essentiel conseille d'acheter un plant");
+ok(essentiel(plante("radis")!, "tempere").some((x) => x.startsWith("Semer")), "radis : l'essentiel dit quand semer");
+const morceaux = decouper("Bouturez sous un nœud, en lumière vive indirecte, dans un godet.");
+ok(["noeud", "lumiere-indirecte", "godet"].every((id) => morceaux.some((m) => m.id === id)), `mots du lexique repérés (${morceaux.filter((m) => m.id).map((m) => m.id).join(", ")})`);
+ok(morceaux.map((m) => m.t).join("") === "Bouturez sous un nœud, en lumière vive indirecte, dans un godet.", "le texte reste identique une fois découpé");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

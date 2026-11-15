@@ -33,6 +33,7 @@ export default function Reglages() {
           </select>
           <a className="small" href={href("/demenagement")}>📦 Vous déménagez ? L'assistant vous guide (plantes, graines, animaux, démarches) →</a>
         </label>
+        <label className="row" style={{ cursor: "pointer" }}><input type="checkbox" checked={!!s.debutant} onChange={(e) => setSettings({ debutant: e.target.checked })} /> 🌱 Mode débutant : parcours « Je débute » et étape suivante sur l'accueil</label>
         <label className="field">Climat (décale tout le calendrier)
           <select value={s.zone} onChange={(e) => setSettings({ zone: e.target.value as ZoneId })}>
             {ZONES.map((z) => <option key={z.id} value={z.id}>{z.nom}</option>)}

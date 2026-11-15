@@ -1,3 +1,4 @@
+import MotsLexique from "../components/MotsLexique";
 import { useEffect, useState } from "react";
 import { guide, lienVers, RUBRIQUES } from "../data/index";
 import { Back, Listen, Videos, A, Empty, Photo } from "../components/ui";
@@ -61,7 +62,7 @@ export default function GuideFiche({ id }: { id?: string }) {
         {g.etapes.map((e) => (
           <li key={e.titre}>
             <b>{e.titre}</b>
-            <p style={{ margin: "4px 0" }}>{e.texte}</p>
+            <p style={{ margin: "4px 0" }}><MotsLexique texte={e.texte} /></p>
             {e.attention && <div className="callout danger small"><b>⚠️ Attention</b>{e.attention}</div>}
             {e.astuce && <div className="callout ok small"><b>💡 Astuce</b>{e.astuce}</div>}
             <a className="small" href={youtube(`${e.titre} ${g.titre.split(/[:(]/)[0]}`)} target="_blank" rel="noreferrer">▶️ Voir ce geste en vidéo</a>

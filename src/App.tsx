@@ -3,6 +3,7 @@ import { useRoute, href } from "./lib/router";
 import { useLoaded, useStore } from "./lib/store";
 import { Player } from "./components/Player";
 import { usePwa, applyUpdate } from "./lib/pwa";
+import { demarrerRappels } from "./lib/rappels";
 import Accueil from "./pages/Accueil";
 import Onboarding from "./pages/Onboarding";
 import Garde from "./components/Garde";
@@ -29,6 +30,7 @@ const Lexique = lazy(() => import("./pages/Lexique"));
 const MaladieAnimale = lazy(() => import("./pages/SanteAnimale"));
 const DiagnosticAnimal = lazy(() => import("./pages/SanteAnimale").then((m) => ({ default: m.DiagnosticAnimal })));
 const Calculs = lazy(() => import("./pages/Calculs"));
+const Debuter = lazy(() => import("./pages/Debuter"));
 const Sol = lazy(() => import("./pages/Sol"));
 const Nutrition = lazy(() => import("./pages/Nutrition"));
 const Interieur = lazy(() => import("./pages/Interieur"));
@@ -70,13 +72,15 @@ export default function App() {
   const loaded = useLoaded();
   const onboarded = useStore((s) => s.settings.onboarded);
   const appart = useStore((s) => s.settings.situation === "appartement");
-  const nav = NAV.map((n) => (n.to === "/jardin" && appart ? { ...n, label: "Mes plantes", i: "🌿", ico: "mesplantes" } : n.to === "/creer" && appart ? { ...n, label: "Mon potager d'intérieur" } : n));
+  const debutant = useStore((s) => !!s.settings.debutant);
+  const nav = (debutant ? [NAV[0], { to: "/debuter", label: "Je débute", i: "🌱", ico: "plantes" }, ...NAV.slice(1)] : NAV).map((n) => (n.to === "/jardin" && appart ? { ...n, label: "Mes plantes", i: "🌿", ico: "mesplantes" } : n.to === "/creer" && appart ? { ...n, label: "Mon potager d'intérieur" } : n));
   const { updateReady } = usePwa();
   const [p0, p1] = route.parts;
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [route.path]);
+  useEffect(() => { if (loaded) demarrerRappels(); }, [loaded]);
 
   if (!loaded) return null;
   if (!onboarded) return <Onboarding />;
@@ -106,6 +110,7 @@ export default function App() {
     case "maladie-animale": page = <MaladieAnimale id={p1} />; break;
     case "diagnostic-animal": page = <DiagnosticAnimal />; break;
     case "calculs": page = <Calculs />; break;
+    case "debuter": page = <Debuter />; break;
     case "sol": page = <Sol />; break;
     case "nutrition": page = <Nutrition />; break;
     case "interieur": page = <Interieur />; break;
@@ -122,7 +127,7 @@ export default function App() {
         <a className="brand" href={href("/")}><Logo /> Racines</a>
         {nav.map((n, i) => (
           <span key={n.to}>
-            {i === 5 && <div className="sep" />}
+            {i === (debutant ? 6 : 5) && <div className="sep" />}
             <a href={href(n.to)} className={isOn(n.to) ? "on" : ""}><Ico nom={n.ico} emoji={n.i} taille={26} /> {n.label}</a>
           </span>
         ))}
@@ -141,7 +146,7 @@ export default function App() {
         {(appart ? NAV.map((n) => (n.to === "/calendrier" ? { ...n, to: "/interieur", label: "Intérieur", i: "🌿", ico: "interieur" } : n)) : NAV).filter((n) => n.main).map((n) => (
           <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span className="i"><Ico nom={n.ico} emoji={n.i} taille={28} /></span>{n.label.replace(" et fleurs", "")}</a>
         ))}
-        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette", "sol", "nutrition"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
+        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette", "sol", "nutrition", "debuter"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
       </nav>
       <Player />
     </div>

@@ -22,6 +22,8 @@ export interface Settings {
   animauxActifs: boolean;
   lune: boolean;
   sol?: { texture: string; traits: string[]; date: string }; // résultat du test « Mon sol »
+  debutant?: boolean; // parcours « Je débute » mis en avant
+  notifs?: boolean; // rappels sur le téléphone
 }
 
 export type TypeEspace = "planche" | "carre" | "bac" | "pot" | "serre" | "interieur" | "verger";

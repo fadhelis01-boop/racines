@@ -1,3 +1,4 @@
+import MotsLexique from "../components/MotsLexique";
 import { Ico, Vignette } from "../components/Ico";
 import { useState } from "react";
 import { plante, probleme, CATEGORIES, FAMILLES } from "../data/index";
@@ -9,6 +10,8 @@ import { moisAffiches } from "../lib/calendar";
 import { AjoutMaPlante } from "../components/MesPlantes";
 import { MOIS_NOMS } from "../data/util";
 import { gesteDe } from "../data/cueillette";
+import { AROMATES_INT } from "../data/interieur-hub";
+import { essentiel } from "../lib/essentiel";
 import { SOL_PLANTE, TYPES_SOL } from "../data/sols";
 import { srcVignette } from "../components/Ico";
 
@@ -26,6 +29,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
   const situation = useStore((s) => s.settings.situation);
   const mesExemplaires = useStore((s) => s.plantes.filter((x) => x.planteId === id).length);
   if (!p) return <Empty emoji="🤷">Fiche introuvable. <A to="/plantes">Toutes les plantes</A></Empty>;
+  const aroInt = AROMATES_INT.find((a) => a.id === p.id);
   const interieur = p.categorie === "interieur";
 
   const facts: [string, string | undefined][] = interieur
@@ -83,7 +87,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
         </div>
         <div>
           <span className="badge green row" style={{ display: "inline-flex", gap: 4 }}><Ico nom={p.categorie} emoji={CATEGORIES[p.categorie].emoji} taille={18} /> {CATEGORIES[p.categorie].label}</span>{" "}
-          <span className="badge">{["", "Facile", "Moyen", "Exigeant"][p.difficulte]}</span>
+          <span className="badge">{["", "Facile", "Moyen", "Exigeant"][p.difficulte]}{aroInt && aroInt.facile !== p.difficulte ? " dehors" : ""}</span>{aroInt && aroInt.facile !== p.difficulte && <> <span className={`badge ${aroInt.facile === 3 ? "terra" : "sun"}`}>{["", "Facile", "Moyen", "Délicat"][aroInt.facile]} à l'intérieur</span></>}
           <h1 style={{ marginTop: 8 }}>{p.nom}</h1>
           <p className="muted" style={{ marginTop: -8 }}><i>{p.latin}</i></p>
           <p>{p.intro}</p>
@@ -120,6 +124,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
 
       {tab === "culture" && (
         <div>
+          <div className="callout ok"><b>📌 L'essentiel en 3 points</b><ol style={{ margin: "4px 0 0", paddingLeft: 20 }}>{essentiel(p, zone).map((x) => <li key={x}>{x}</li>)}</ol></div>
           {p.sosies && p.sosies.length > 0 && (
             <div className="callout warn">
               <b>👀 Ne pas confondre avec</b>
@@ -136,7 +141,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
               {p.sansDangerAnimaux === false && <span className="badge danger">🐱 Toxique pour chats et chiens</span>}
             </p>
           )}
-          <div className="facts">{facts.filter(([, v]) => v).map(([k, v]) => <div key={k} className="fact"><div className="k">{k}</div>{v}</div>)}</div>
+          <div className="facts">{facts.filter(([, v]) => v).map(([k, v]) => <div key={k} className="fact"><div className="k">{k}</div><MotsLexique texte={v!} /></div>)}</div>
           {!interieur && (() => {
             const sol = getSol();
             const types = sol ? [sol.texture, ...sol.traits].map((t) => TYPES_SOL.find((x) => x.id === t)).filter(Boolean) : [];
@@ -149,9 +154,9 @@ export default function PlanteFiche({ id }: { id?: string }) {
             );
           })()}
           <h2>{interieur ? "Installation" : "Culture pas à pas"}</h2>
-          <ol className="steps">{p.etapes.map((e, i) => <li key={i}>{e}</li>)}</ol>
+          <ol className="steps">{p.etapes.map((e, i) => <li key={i}><MotsLexique texte={e} /></li>)}</ol>
           <h2>Entretien</h2>
-          <ul className="ticks">{p.entretien.map((e, i) => <li key={i}>{e}</li>)}</ul>
+          <ul className="ticks">{p.entretien.map((e, i) => <li key={i}><MotsLexique texte={e} /></li>)}</ul>
           {(() => {
             const g = gesteDe(p.id);
             if (!p.recolteConseil && !g) return null;

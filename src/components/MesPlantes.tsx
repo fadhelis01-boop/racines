@@ -5,6 +5,10 @@ import { echeances, intervalleArrosage, marquer, FENETRES } from "../lib/mesplan
 import { savePhoto } from "../lib/photos";
 import { href } from "../lib/router";
 import { chercherInterieur } from "../lib/search";
+import { activerRappels, desactiverRappels, notifsPossibles } from "../lib/rappels";
+import { buildIcs } from "../lib/calendar";
+import { getState } from "../lib/store";
+import { download } from "./ui";
 import { norm } from "../lib/garden";
 import { Empty, Photo, StoredPhoto, toast } from "./ui";
 
@@ -74,6 +78,7 @@ export default function MesPlantes() {
         {dus.length > 1 && <button className="btn" onClick={() => { dus.forEach(({ mp }) => upsert("plantes", marquer(mp, "arrosage"))); toast(`${dus.length} plantes notées arrosées 💧`); }}>💧 J'ai fait le tour ({dus.length})</button>}
       </div>
       {ajout && <AjoutMaPlante onDone={() => setAjout(false)} />}
+      <Rappels />
       {pieces.length > 1 && (
         <div className="chips" style={{ marginTop: 10 }}>
           <button className={`chip ${!filtre ? "on" : ""}`} onClick={() => setFiltre("")}>Toutes</button>
@@ -104,7 +109,12 @@ function CartePlante({ mp, e }: { mp: MaPlante; e: ReturnType<typeof echeances> 
         <div style={{ flex: 1, minWidth: 0 }}>
           <b>{mp.surnom}</b>
           <div className="small muted">{f && <a href={href(`/plante/${f.id}`)}>{f.nom}</a>}{mp.piece ? ` · ${mp.piece}` : ""}{mp.fenetre ? ` · ${FENETRES[mp.fenetre].label.toLowerCase()}` : ""}</div>
-          {e.map((x) => <div key={x.type} className="small" style={{ color: x.dans <= 0 ? "var(--terra)" : undefined, fontWeight: x.dans <= 0 ? 800 : undefined }}>{x.type === "arrosage" ? "💧" : x.type === "engrais" ? "🌱" : "🪣"} {x.texte}</div>)}
+          {(() => {
+            const jours = mp.depuis ? Math.floor((Date.now() - new Date(mp.depuis + "T12:00:00").getTime()) / 86400000) : 0;
+            const palier = jours >= 365 ? "🏆 Un an avec vous !" : jours >= 180 ? "🎉 Six mois : vous avez la main verte" : jours >= 90 ? "🌟 Trois mois, elle est bien installée" : jours >= 30 ? "🌱 Un mois, bravo" : "";
+            return jours > 0 ? <div className="small" style={{ color: "var(--green)" }}>{palier || `Avec vous depuis ${jours} jour${jours > 1 ? "s" : ""}`} · {mp.arrosages.length} arrosage{mp.arrosages.length > 1 ? "s" : ""} noté{mp.arrosages.length > 1 ? "s" : ""}</div> : null;
+          })()}
+          {e.map((x) => <div key={x.type} className="small" style={{ color: x.dans <= 0 ? "var(--terra)" : undefined, fontWeight: x.dans <= 0 ? 800 : undefined }}>{x.type === "arrosage" ? "💧" : x.type === "engrais" ? "🌱" : "🏺"} {x.texte}</div>)}
         </div>
       </div>
       <div className="row" style={{ marginTop: 10, gap: 6 }}>
@@ -116,8 +126,21 @@ function CartePlante({ mp, e }: { mp: MaPlante; e: ReturnType<typeof echeances> 
       </div>
       {ouvert && (
         <div className="stack" style={{ marginTop: 10 }}>
+          {mp.photos.length >= 2 && (() => {
+            const tri = [...mp.photos].sort((x, y) => x.date.localeCompare(y.date));
+            const [av, ap] = [tri[0], tri[tri.length - 1]];
+            return (
+              <div>
+                <b className="small">📷 Avant / après</b>
+                <div className="row" style={{ gap: 8, flexWrap: "nowrap" }}>
+                  <figure style={{ margin: 0, flex: 1 }}><StoredPhoto k={av.key} className="photo-thumb" /><figcaption className="small muted">{new Date(av.date).toLocaleDateString("fr-FR")}</figcaption></figure>
+                  <figure style={{ margin: 0, flex: 1 }}><StoredPhoto k={ap.key} className="photo-thumb" /><figcaption className="small muted">{new Date(ap.date).toLocaleDateString("fr-FR")}</figcaption></figure>
+                </div>
+              </div>
+            );
+          })()}
           <div className="row">
-            <button className="btn sm" onClick={() => { upsert("plantes", marquer(mp, "rempotage")); toast("Rempotage noté"); }}>🪣 Rempotée aujourd'hui</button>
+            <button className="btn sm" onClick={() => { upsert("plantes", marquer(mp, "rempotage")); toast("Rempotage noté"); }}>🏺 Rempotée aujourd'hui</button>
             <a className="btn sm" href={href(`/diagnostic?plante=${mp.planteId}`)}>🩺 Un souci ?</a>
           </div>
           <label className="field small">Arroser tous les … jours (vide = automatique : {intervalleArrosage({ ...mp, frequence: undefined })} j en ce moment)
@@ -143,6 +166,29 @@ function CartePlante({ mp, e }: { mp: MaPlante; e: ReturnType<typeof echeances> 
           <button className="btn sm danger" onClick={() => confirm(`Retirer « ${mp.surnom} » de Mes plantes ?`) && remove("plantes", mp.id)}>🗑 Retirer</button>
         </div>
       )}
+    </div>
+  );
+}
+
+// Être prévenu sans ouvrir l'appli
+function Rappels() {
+  const notifs = useStore((s) => !!s.settings.notifs);
+  const ios = /iphone|ipad/i.test(navigator.userAgent);
+  const installee = window.matchMedia?.("(display-mode: standalone)").matches;
+  const agenda = () => { download("racines-mes-plantes.ics", new Blob([buildIcs(getState(), { mois: 3, travaux: false, mesPlantes: true })], { type: "text/calendar" })); toast("Ouvrez le fichier : le « tour des plantes » du samedi s'ajoute à votre agenda, avec une alarme."); };
+  return (
+    <div className="card" style={{ marginTop: 12 }}>
+      <b>🔔 Être prévenu, même sans ouvrir l'appli</b>
+      {notifs ? (
+        <p className="small" style={{ margin: "6px 0" }}>✅ Rappels activés sur cet appareil : une notification par jour au plus, quand une plante est à vérifier. <button className="btn sm ghost" onClick={desactiverRappels}>Désactiver</button></p>
+      ) : (
+        <p className="small" style={{ margin: "6px 0" }}>Une notification par jour au plus, seulement quand une plante est à vérifier. Rien n'est envoyé sur Internet.</p>
+      )}
+      <div className="row" style={{ gap: 8 }}>
+        {!notifs && notifsPossibles() && <button className="btn primary" onClick={async () => { const r = await activerRappels(); toast(r === "ok" ? "Rappels activés 🔔" : r === "refuse" ? "Notifications refusées : autorisez-les dans les réglages du navigateur, ou utilisez l'agenda." : "Notifications impossibles ici : utilisez l'agenda."); }}>🔔 Me prévenir sur ce téléphone</button>}
+        <button className="btn" onClick={agenda}>📅 Ajouter un rappel à mon agenda</button>
+      </div>
+      <p className="small muted" style={{ margin: "6px 0 0" }}>{ios && !installee ? "Sur iPhone, les notifications ne marchent que si Racines est installée sur l'écran d'accueil (Partager → « Sur l'écran d'accueil »). En attendant, l'agenda est le plus fiable." : "Appli fermée, les notifications dépendent du téléphone (Android avec l'appli installée : oui ; sinon à l'ouverture). L'agenda marche partout."}</p>
     </div>
   );
 }

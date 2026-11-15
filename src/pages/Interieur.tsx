@@ -1,3 +1,4 @@
+import MotsLexique from "../components/MotsLexique";
 import { useEffect, useState } from "react";
 import { chercherInterieur, rechercher } from "../lib/search";
 import { TRAITS } from "../data/traits";
@@ -121,11 +122,11 @@ function Aromates() {
           <details key={k} className="box" id={k} open={cible === k}>
             <summary className="row" style={{ gap: 8, display: "flex" }}>
               {a.id ? <Vignette id={a.id} emoji={a.emoji} taille={34} /> : <span style={{ fontSize: 26 }}>{a.emoji}</span>}
-              <span style={{ flex: 1 }}>{a.nom} <span className={`badge ${["", "green", "sun", "terra"][a.facile]}`}>{["", "Facile", "Moyen", "Délicat"][a.facile]}</span><br /><span className="small muted" style={{ fontWeight: 400 }}>{lampe === "sans" ? a.sansLampe : a.avecLampe}</span></span>
+              <span style={{ flex: 1 }}>{a.nom} <span className={`badge ${["", "green", "sun", "terra"][a.facile]}`}>{["", "Facile", "Moyen", "Délicat"][a.facile]} en intérieur</span><br /><span className="small muted" style={{ fontWeight: 400 }}>{lampe === "sans" ? a.sansLampe : a.avecLampe}</span></span>
             </summary>
             <ul className="ticks small">
               <li><b>{lampe === "sans" ? "🪟 Sans lampe" : "💡 Avec lampe"} :</b> {lampe === "sans" ? a.sansLampe : a.avecLampe}</li>
-              <li><b>Démarrer :</b> {a.demarrer}</li>
+              <li><b>Démarrer :</b> <MotsLexique texte={a.demarrer} /></li>
               <li><b>Arroser :</b> {a.arroser}</li>
               <li><b>Récolter :</b> {a.recolter}</li>
               <li><b>Durée de vie :</b> {a.duree}</li>
@@ -294,8 +295,10 @@ function ResultatsNom({ q, res, effacer }: { q: string; res: ReturnType<typeof c
 }
 
 function Catalogue() {
+  const route = useRoute();
   const [lum, setLum] = useState("");
-  const [chat, setChat] = useState(false), [facile, setFacile] = useState(false), [fleurs, setFleurs] = useState(false);
+  const [chat, setChat] = useState(false), [facile, setFacile] = useState(route.query.get("facile") === "1"), [fleurs, setFleurs] = useState(false);
+  useEffect(() => { if (route.query.get("facile") === "1") setFacile(true); }, [route.query]);
   const [port, setPort] = useState("");
   const [tri, setTri] = useState<"az" | "facile">("az");
   let list = PLANTES.filter((p) => p.categorie === "interieur" && (!lum || p.expo.includes(lum as never)) && (!chat || p.sansDangerAnimaux) && (!facile || p.difficulte === 1) && (!fleurs || p.fleurit || TRAITS[p.id]?.fleurs) && (!port || TRAITS[p.id]?.port.includes(port as never)));

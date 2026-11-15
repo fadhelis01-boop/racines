@@ -16,6 +16,7 @@ const SITUATIONS: { id: Situation; e: string; t: string; s: string }[] = [
 export default function Onboarding() {
   const [step, setStep] = useState(0);
   const [situation, setSituation] = useState<Situation>("jardin");
+  const [debutant, setDebutant] = useState(true);
   const [zone, setZone] = useState<ZoneId>("tempere");
   const [q, setQ] = useState("");
   const [villes, setVilles] = useState<{ nom: string; lat: number; lon: number }[]>([]);
@@ -23,7 +24,7 @@ export default function Onboarding() {
   const [err, setErr] = useState("");
   const [animaux, setAnimaux] = useState(true);
 
-  const finish = () => setSettings({ onboarded: true, situation, zone, ville, animauxActifs: situation === "jardin" && animaux, lune: situation !== "appartement" });
+  const finish = () => setSettings({ onboarded: true, situation, zone, ville, animauxActifs: situation === "jardin" && animaux, lune: false, debutant });
 
   return (
     <div className="main" style={{ maxWidth: 640, paddingBottom: 40 }}>
@@ -48,6 +49,15 @@ export default function Onboarding() {
               <button key={s.id} className={`card row ${situation === s.id ? "on" : ""}`} style={{ textAlign: "left", cursor: "pointer", borderColor: situation === s.id ? "var(--green)" : undefined, borderWidth: situation === s.id ? 2 : 1 }} onClick={() => setSituation(s.id)}>
                 <span style={{ fontSize: "2rem" }}>{s.e}</span>
                 <span><b>{s.t}</b><br /><span className="muted small">{s.s}</span></span>
+              </button>
+            ))}
+          </div>
+          <h2>Votre expérience</h2>
+          <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
+            {([[true, "🌱", "Je débute (ou mes plantes ne survivent pas)", "Un parcours guidé semaine par semaine, des plantes qui pardonnent, l'essentiel d'abord"], [false, "👩‍🌾", "J'ai déjà des bases", "Toutes les fiches et tous les outils, sans parcours"]] as [boolean, string, string, string][]).map(([v, e, t, d]) => (
+              <button key={String(v)} className="card row" style={{ textAlign: "left", cursor: "pointer", borderColor: debutant === v ? "var(--green)" : undefined, borderWidth: debutant === v ? 2 : 1 }} onClick={() => setDebutant(v)} aria-pressed={debutant === v}>
+                <span style={{ fontSize: "2rem" }}>{e}</span>
+                <span><b>{t}</b><br /><span className="muted small">{d}</span></span>
               </button>
             ))}
           </div>
