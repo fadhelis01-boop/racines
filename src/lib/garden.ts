@@ -31,7 +31,7 @@ export function diagnostiquer(opts: { planteId?: string; signes: string[]; mois:
 
 // ---------- Rotation ----------
 export const DELAI_FAMILLE: Partial<Record<Famille, number>> = {
-  solanacees: 3, brassicacees: 4, amaryllidacees: 3, apiacees: 3, cucurbitacees: 2, fabacees: 2, amaranthacees: 2, asteracees: 1, poacees: 1,
+  solanacees: 3, brassicacees: 4, amaryllidacees: 3, apiacees: 3, cucurbitacees: 2, fabacees: 2, amaranthacees: 2, asteracees: 1, poacees: 1, valerianacees: 1,
 };
 
 export interface AvisRotation { niveau: "ok" | "attention" | "eviter"; texte: string }

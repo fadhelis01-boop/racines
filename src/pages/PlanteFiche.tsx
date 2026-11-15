@@ -13,6 +13,7 @@ import { gesteDe } from "../data/cueillette";
 import { AROMATES_INT } from "../data/interieur-hub";
 import { essentiel } from "../lib/essentiel";
 import { SOL_PLANTE, TYPES_SOL } from "../data/sols";
+import { FRUITIERS } from "../data/cultures-complements";
 import { srcVignette } from "../components/Ico";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
@@ -43,6 +44,10 @@ export default function PlanteFiche({ id }: { id?: string }) {
         ["Espacement", p.espacement],
         ["Profondeur de semis", p.profondeur],
         ["Germination", p.levee],
+        ["Température pour germer", p.tempGermination],
+        ["Pollinisation", FRUITIERS[p.id]?.pollinisation],
+        ["Porte-greffe", FRUITIERS[p.id]?.porteGreffe],
+        ["Froid et gel", FRUITIERS[p.id]?.froid],
         ["Délai de récolte", p.delai],
         ["En pot", p.contenant],
         ["Rendement", p.rendement],

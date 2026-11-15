@@ -1,5 +1,6 @@
 import type { Probleme } from "./types";
 import { m } from "./util";
+import { ORGANISMES_REGLEMENTES } from "./agronomie";
 
 // Ce que l'on observe : sert au diagnostic guidé (« Qu'est-ce qui ne va pas ? »)
 export const SIGNES: Record<string, { label: string; organe: string; emoji: string }> = {
@@ -918,3 +919,6 @@ export const PROBLEMES: Probleme[] = [
     remedes: ["bt"], gravite: 3, mois: m("1-4,6-8"),
   },
 ];
+
+// Organismes réglementés (feu bactérien, Xylella) : déclaration obligatoire
+PROBLEMES.push(...ORGANISMES_REGLEMENTES);

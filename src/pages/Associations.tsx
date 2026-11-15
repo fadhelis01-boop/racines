@@ -1,3 +1,4 @@
+import { preuve, NIVEAUX } from "../data/associations-preuves";
 import { useState } from "react";
 import { PLANTES, plante } from "../data/index";
 import { relations } from "../lib/garden";
@@ -20,6 +21,7 @@ export default function Associations() {
     <div>
       <h1>🤝 Associations de cultures</h1>
       <p className="muted small" style={{ marginTop: -6 }}>Choisissez ce que vous voulez cultiver ensemble : Racines indique les bons voisins et ceux à séparer. <A to="/guide/associations">Ce qu'il faut savoir sur les associations</A></p>
+      <div className="callout info small"><b>Niveau de preuve</b>Chaque association porte une étiquette : <span className="badge green">Étudiée</span> (effet observé dans des essais), <span className="badge sun">Plausible</span> (mécanisme connu, résultats variables) ou <span className="badge">Tradition</span> (savoir de jardinier, sans preuve solide). Les bases sûres restent la rotation, la diversité et un sol vivant.</div>
       {mes.length > 0 && <button className="btn sm" onClick={() => setSel(mes.filter((x) => choix.some((p) => p.id === x)))}>Utiliser mes cultures en cours ({mes.length})</button>}
       <div className="chips" style={{ margin: "12px 0" }}>
         {choix.map((p) => <button key={p.id} className={`chip ${sel.includes(p.id) ? "on" : ""}`} onClick={() => setSel(sel.includes(p.id) ? sel.filter((x) => x !== p.id) : [...sel, p.id])}>{p.emoji} {p.nom}</button>)}
@@ -28,12 +30,12 @@ export default function Associations() {
         <div className="grid">
           <div className="card">
             <b>👍 Bons voisins ({amis.length})</b>
-            <ul className="ticks small">{amis.map((r) => <li key={r.a.id + r.b.id}>{r.a.nom} + {r.b.nom}</li>)}</ul>
+            <ul className="ticks small">{amis.map((r) => { const pr = preuve(r.a.id, r.b.id); return <li key={r.a.id + r.b.id}>{r.a.nom} + {r.b.nom} <span className={`badge ${NIVEAUX[pr.niveau].classe}`} title={NIVEAUX[pr.niveau].explication}>{NIVEAUX[pr.niveau].label}</span>{pr.note && <span className="small muted" style={{ display: "block" }}>{pr.note}</span>}</li>; })}</ul>
             {!amis.length && <p className="small muted">Aucune association connue dans votre sélection.</p>}
           </div>
           <div className="card" style={{ borderColor: ennemis.length ? "var(--danger)" : undefined }}>
             <b>👎 À séparer ({ennemis.length})</b>
-            <ul className="ticks small">{ennemis.map((r) => <li key={r.a.id + r.b.id}>{r.a.nom} ✕ {r.b.nom}</li>)}</ul>
+            <ul className="ticks small">{ennemis.map((r) => { const pr = preuve(r.a.id, r.b.id); return <li key={r.a.id + r.b.id}>{r.a.nom} ✕ {r.b.nom} <span className={`badge ${NIVEAUX[pr.niveau].classe}`} title={NIVEAUX[pr.niveau].explication}>{NIVEAUX[pr.niveau].label}</span>{pr.note && <span className="small muted" style={{ display: "block" }}>{pr.note}</span>}</li>; })}</ul>
             {!ennemis.length && <p className="small muted">Aucun conflit. 👌</p>}
           </div>
         </div>

@@ -100,7 +100,7 @@ export const REMEDES: Remede[] = [
     id: "bouillie-bordelaise", nom: "Bouillie bordelaise (cuivre)", emoji: "🔵",
     role: "Fongicide préventif à base de sulfate de cuivre et de chaux, autorisé en agriculture biologique : mildiou, cloque, tavelure, maladie criblée.",
     ingredients: ["Bouillie bordelaise du commerce, à la dose de l'étiquette"],
-    preparation: ["Respectez exactement la dose : plus n'est pas mieux."],
+    preparation: ["Respectez exactement la dose de l'étiquette : plus n'est pas mieux.", "Repère : au plus 0,4 g de cuivre métal par m² et par an, soit environ 2 g de bouillie à 20 % de cuivre par m² et par an, tous traitements confondus."],
     usage: ["Uniquement en préventif ou tout début d'attaque, par temps sec et sans vent.", "Pêcher : à la chute des feuilles et au gonflement des bourgeons."],
     precautions: [
       "Le cuivre est un métal qui s'accumule dans le sol et nuit aux vers de terre : la réglementation limite son usage à 4 kg de cuivre par hectare et par an en moyenne. Au jardin, réservez-le aux situations où la prévention ne suffit pas.",
@@ -219,11 +219,11 @@ export const REMEDES: Remede[] = [
   },
   {
     id: "urine", nom: "Urine diluée (engrais)", emoji: "💧",
-    role: "Engrais azoté complet, gratuit et sans danger sanitaire au jardin quand elle est fraîche et diluée (une personne en bonne santé produit une urine quasi stérile).",
+    role: "Engrais azoté et potassique gratuit, efficace sur les cultures gourmandes. Elle n'est pas stérile : on respecte quelques règles d'hygiène, surtout pour les légumes mangés crus.",
     ingredients: ["Urine fraîche (de moins de 24 h)", "Eau : 9 à 10 volumes pour 1 volume d'urine"],
     preparation: ["Diluez à 10 % juste avant l'emploi."],
     usage: ["Arrosage au pied (pas sur les feuilles) des cultures gourmandes : choux, courges, maïs, poireaux.", "Pure, c'est un excellent activateur du compost."],
-    precautions: ["Arrêtez un mois avant la récolte des légumes-feuilles ; pas d'urine de personne sous traitement médicamenteux lourd."],
+    precautions: ["Hygiène (recommandations de l'OMS) : pour les légumes mangés crus, utilisez de l'urine stockée un mois en bidon fermé, et arrêtez un mois avant la récolte ; jamais sur les feuilles ni sur les parties récoltées.", "Pas d'urine d'une personne sous traitement médicamenteux (résidus) ni en cas d'infection urinaire.", "L'urine est riche en azote : à petite dose, sinon brûlures, nitrates dans les légumes-feuilles et lessivage vers les nappes."],
     contre: ["carence-azote"],
   },
   {

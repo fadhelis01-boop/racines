@@ -22,6 +22,7 @@ export type Famille =
   | "rosacees"
   | "polygonacees"
   | "convolvulacees"
+  | "valerianacees"
   | "autres";
 
 export type Lieu = "pleine-terre" | "pot" | "balcon" | "serre" | "interieur";
@@ -51,6 +52,7 @@ export interface Plante {
   espacement?: string;
   profondeur?: string;
   levee?: string; // durée de germination
+  tempGermination?: string; // températures de germination (minimum, idéal)
   delai?: string; // du semis ou de la plantation à la récolte
   joursRecolte?: number; // valeur moyenne utilisée pour prévoir la récolte
   contenant?: string; // taille minimale de pot

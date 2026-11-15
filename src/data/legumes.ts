@@ -6,7 +6,7 @@ export const LEGUMES: Plante[] = [
   {
     id: "tomate", nom: "Tomate", latin: "Solanum lycopersicum", categorie: "legume", famille: "solanacees", emoji: "🍅", wiki: "Tomate",
     difficulte: 2, lieux: ["pleine-terre", "pot", "balcon", "serre"], expo: ["soleil"], besoin: "gourmand", eau: "moyen",
-    semisAbri: m("2-4"), plantation: m("5-6"), recolte: m("7-10"),
+    semisAbri: m("3-4"), plantation: m("5-6"), recolte: m("7-10"),
     espacement: "60 cm sur le rang, 80 cm entre les rangs", profondeur: "0,5 cm", levee: "6 à 10 jours à 20-25 °C", delai: "60 à 80 jours après la plantation", joursRecolte: 75,
     contenant: "pot de 30 L minimum (variétés cerises : 15 L)", rendement: "3 à 6 kg par pied",
     amis: ["basilic", "oeillet-inde", "capucine", "persil", "carotte", "oignon", "ail", "souci", "bourrache"], ennemis: ["pomme-de-terre", "fenouil", "chou", "concombre"],
@@ -276,7 +276,7 @@ export const LEGUMES: Plante[] = [
   },
   {
     id: "carotte", nom: "Carotte", latin: "Daucus carota", categorie: "legume", famille: "apiacees", emoji: "🥕", wiki: "Carotte",
-    difficulte: 2, lieux: ["pleine-terre", "pot", "balcon"], expo: ["soleil", "mi-ombre"], besoin: "moyen", eau: "moyen",
+    difficulte: 2, lieux: ["pleine-terre", "pot", "balcon"], expo: ["soleil", "mi-ombre"], besoin: "peu", eau: "moyen",
     semisPlace: m("3-7"), recolte: m("6-11"),
     espacement: "rangs à 25 cm, éclaircir à 4-5 cm", profondeur: "1 cm", levee: "15 à 20 jours (longue !)", delai: "70 à 120 jours", joursRecolte: 100,
     contenant: "bac de 30 cm de profondeur (variétés courtes ou rondes en pot)", rendement: "3 à 5 kg par m²",
@@ -509,7 +509,7 @@ export const LEGUMES: Plante[] = [
     animaux: "Pour les lapins : avec modération, une laitue montée en graines ou très sucrée est mal tolérée (préférez des feuilles plus fibreuses). Poules, canards, oies : très bien.",
   },
   {
-    id: "mache", nom: "Mâche", latin: "Valerianella locusta", categorie: "legume", famille: "autres", emoji: "🌱", wiki: "Mâche",
+    id: "mache", nom: "Mâche", latin: "Valerianella locusta", categorie: "legume", famille: "valerianacees", emoji: "🌱", wiki: "Mâche",
     difficulte: 1, lieux: ["pleine-terre", "pot", "balcon", "serre"], expo: ["soleil", "mi-ombre"], besoin: "peu", eau: "moyen",
     semisPlace: m("7-10"), recolte: m("10-3"),
     espacement: "à la volée ou rangs à 15 cm", profondeur: "0,5 cm", levee: "10 à 15 jours", delai: "60 à 90 jours", joursRecolte: 75,

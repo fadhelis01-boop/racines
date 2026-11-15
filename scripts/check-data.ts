@@ -6,6 +6,8 @@ import { NUTRIMENTS, ENGRAIS_NATURELS, NUTRITION_ANIMAUX } from "../src/data/nut
 import { PAS_A_PAS, TECHNIQUES } from "../src/data/methodes";
 import { choisirMethodes } from "../src/lib/methodes";
 import { INCREVABLES, AROMATES_FACILES, POTAGER_FACILE, OFFRIR } from "../src/data/debuter";
+import { CONTENANT, RENDEMENT, PROFONDEUR, GERMINATION, FRUITIERS } from "../src/data/cultures-complements";
+import { STATUT_REMEDE } from "../src/data/reglementation";
 import { ALIAS_GUIDES } from "../src/data/guides-balcon";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales";
 // Contrôle de cohérence du contenu, exécuté à chaque build.
@@ -61,6 +63,10 @@ for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.include
 {
   for (const k of Object.keys(ALIAS_GUIDES)) if (!GUIDES.some((g) => g.id === k)) errors.push(`alias de tutoriel pour un id inconnu « ${k} »`);
   dup("maladie animale", MALADIES_ANIMALES);
+  for (const id of [...Object.keys(CONTENANT), ...Object.keys(RENDEMENT), ...Object.keys(PROFONDEUR), ...Object.keys(GERMINATION), ...Object.keys(FRUITIERS)]) if (!PLANTES.some((p) => p.id === id)) errors.push(`complément cultural : plante inconnue « ${id} »`);
+  for (const r of REMEDES) if (!STATUT_REMEDE[r.id] && !AUXILIAIRES.some((a) => a.id === r.id)) errors.push(`remède ${r.id} : statut réglementaire manquant`);
+  for (const p of PLANTES.filter((x) => x.categorie === "legume")) { if (!p.contenant) errors.push(`légume ${p.id} : taille de pot manquante`); if (!p.rendement) errors.push(`légume ${p.id} : rendement manquant`); }
+  for (const p of PLANTES.filter((x) => x.categorie === "arbre" || x.categorie === "fruit")) if (!FRUITIERS[p.id]) errors.push(`fruitier ${p.id} : pollinisation non renseignée`);
   for (const x of [...INCREVABLES, ...AROMATES_FACILES, ...POTAGER_FACILE, ...OFFRIR]) if (!PLANTES.some((p) => p.id === x.id)) errors.push(`débuter : plante inconnue « ${x.id} »`);
   for (const x of OFFRIR) if (!PLANTES.find((p) => p.id === x.id)?.sansDangerAnimaux) errors.push(`débuter : « ${x.id} » proposée en cadeau sans danger mais toxique pour les animaux`);
   for (const x of INCREVABLES) if ((PLANTES.find((p) => p.id === x.id)?.difficulte ?? 3) > 1) errors.push(`débuter : « ${x.id} » présentée comme increvable mais pas « facile »`);

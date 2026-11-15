@@ -20,6 +20,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const RECHERCHE: Record<string, string> = {
   bonsai: "Ficus microcarpa bonsai",
   gloxinia: "Sinningia speciosa",
+  "feu-bacterien": "Erwinia amylovora fire blight",
   cissus: "Cissus rhombifolia",
   azalee: "Rhododendron simsii",
   hortensia: "Hydrangea macrophylla",

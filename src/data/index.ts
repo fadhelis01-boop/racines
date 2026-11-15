@@ -5,6 +5,8 @@ import { FRUITS } from "./fruits";
 import { INTERIEUR } from "./interieur";
 import { INTERIEUR2, ENRICH } from "./interieur2";
 import { INTERIEUR3 } from "./interieur3";
+import { ENVAHISSANTES, GUIDES_AGRO } from "./agronomie";
+import { CONTENANT, RENDEMENT, PROFONDEUR, GERMINATION } from "./cultures-complements";
 import { JARDIN2 } from "./jardin2";
 import { FLEURS2, ENRICH_FLEURS } from "./fleurs2";
 import { PROBLEMES, SIGNES } from "./problemes";
@@ -20,8 +22,22 @@ import { ANIMAUX2 } from "./animaux2";
 import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
 
-export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...INTERIEUR3, ...JARDIN2, ...FLEURS2].map((p) => ({ ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}), ...(!p.recolteConseil && RECOLTE_EN_PLUS[p.id] ? { recolteConseil: RECOLTE_EN_PLUS[p.id] } : {}) }));
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_ANIMAUX].map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
+export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...INTERIEUR3, ...ENVAHISSANTES, ...JARDIN2, ...FLEURS2].map((p) => ({ ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}), ...(!p.recolteConseil && RECOLTE_EN_PLUS[p.id] ? { recolteConseil: RECOLTE_EN_PLUS[p.id] } : {}), ...(!p.contenant && CONTENANT[p.id] ? { contenant: CONTENANT[p.id] } : {}), ...(!p.rendement && RENDEMENT[p.id] ? { rendement: RENDEMENT[p.id] } : {}), ...(!p.profondeur && PROFONDEUR[p.id] ? { profondeur: PROFONDEUR[p.id] } : {}), ...(GERMINATION[p.id] ? { tempGermination: GERMINATION[p.id] } : {}) }));
+
+// Associations rendues réciproques : si A est « bon voisin » de B, B l'est de A ;
+// en cas de désaccord (A ami de B mais B ennemi de A), « à séparer » l'emporte.
+{
+  const byId = new Map(PLANTES.map((p) => [p.id, p]));
+  for (const p of PLANTES) { p.amis = [...p.amis]; p.ennemis = [...p.ennemis]; }
+  for (const p of PLANTES) {
+    for (const e of p.ennemis) { const q = byId.get(e); if (q && !q.ennemis.includes(p.id)) q.ennemis.push(p.id); }
+  }
+  for (const p of PLANTES) {
+    for (const a of p.amis) { const q = byId.get(a); if (q && !q.amis.includes(p.id) && !q.ennemis.includes(p.id)) q.amis.push(p.id); }
+  }
+  for (const p of PLANTES) p.amis = p.amis.filter((a) => !p.ennemis.includes(a));
+}
+export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_ANIMAUX].map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
 const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 
@@ -67,7 +83,7 @@ export const FAMILLES: Record<Plante["famille"], string> = {
   fabacees: "Fabacées / légumineuses (haricot, pois…)",
   brassicacees: "Brassicacées (choux, radis, navet…)",
   apiacees: "Apiacées (carotte, céleri, persil…)",
-  amaryllidacees: "Alliacées (ail, oignon, poireau…)",
+  amaryllidacees: "Amaryllidacées, dites « alliacées » (ail, oignon, poireau…)",
   asteracees: "Astéracées (laitue, artichaut…)",
   amaranthacees: "Amaranthacées (betterave, épinard…)",
   poacees: "Poacées (maïs)",
@@ -75,6 +91,7 @@ export const FAMILLES: Record<Plante["famille"], string> = {
   rosacees: "Rosacées (fraisier, pommier…)",
   polygonacees: "Polygonacées (rhubarbe)",
   convolvulacees: "Convolvulacées (patate douce)",
+  valerianacees: "Valérianacées (mâche)",
   autres: "Autres familles",
 };
 

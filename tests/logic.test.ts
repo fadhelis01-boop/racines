@@ -10,6 +10,8 @@ import { PLANTES } from "../src/data/index";
 import { interpreterSol, QUESTIONS_SOL } from "../src/data/sols";
 import { choisirMethodes, type ProfilPotager } from "../src/lib/methodes";
 import { essentiel } from "../src/lib/essentiel";
+import { remede } from "../src/data/index";
+import { STATUT_REMEDE } from "../src/data/reglementation";
 import { decouper } from "../src/lib/lexique-texte";
 import { diagnostiquerAnimal } from "../src/lib/sante-animale";
 import { moisAffiches, aRepiquer } from "../src/lib/calendar";
@@ -234,6 +236,28 @@ ok(essentiel(plante("radis")!, "tempere").some((x) => x.startsWith("Semer")), "r
 const morceaux = decouper("Bouturez sous un nœud, en lumière vive indirecte, dans un godet.");
 ok(["noeud", "lumiere-indirecte", "godet"].every((id) => morceaux.some((m) => m.id === id)), `mots du lexique repérés (${morceaux.filter((m) => m.id).map((m) => m.id).join(", ")})`);
 ok(morceaux.map((m) => m.t).join("") === "Bouturez sous un nœud, en lumière vive indirecte, dans un godet.", "le texte reste identique une fois découpé");
+
+// Audit agronomique
+ok(plante("carotte")!.besoin === "peu", "carotte : peu exigeante");
+ok(plante("mache")!.famille === "valerianacees", "mâche : famille des Valérianacées (rotation)");
+ok(Math.min(...moisAffiches(plante("tomate")!, "semisAbri", "tempere")) >= 3, "tomate : semis à l'abri à partir de mars sans lampe");
+ok(/25 °C/.test(plante("laitue")!.tempGermination ?? ""), "laitue : dormance au-dessus de 25 °C signalée");
+ok(relations(["chou", "tomate"])[0]?.type === "ennemi", "chou et tomate : plus de contradiction (à séparer)");
+ok(PLANTES.every((p) => p.amis.every((a) => !PLANTES.find((q) => q.id === a) || PLANTES.find((q) => q.id === a)!.amis.includes(p.id))), "associations « bons voisins » toutes réciproques");
+ok(PLANTES.every((p) => !p.amis.some((a) => p.ennemis.includes(a))), "aucune plante à la fois amie et ennemie d'une autre");
+ok(!/quasi st/.test(remede("urine")!.role) && remede("urine")!.precautions.some((x) => /un mois/.test(x)), "urine : règle d'hygiène de l'OMS, plus de « stérile »");
+ok(STATUT_REMEDE["bouillie-bordelaise"].statut === "amm" && !!STATUT_REMEDE["bouillie-bordelaise"].dar, "bouillie bordelaise : statut et délai avant récolte");
+ok(STATUT_REMEDE["macer-rhubarbe"].statut === "tradition", "rhubarbe : recette traditionnelle non homologuée");
+p1("ambroisie", "Ambroisie");
+p1("berce du caucase", "Berce du Caucase");
+p1("feu bactérien", "Feu bactérien");
+p1("nitrates salade", "Nitrates");
+p1("rapport carbone azote", "Le compost en vrai");
+p1("délai avant récolte", "Traiter au jardin");
+p1("passeport phytosanitaire", "Acheter des plants sains");
+p1("lire une analyse de sol", "Lire une analyse de sol");
+p1("changement climatique", "Jardiner avec le changement climatique");
+p1("semences reproductibles", "Les semences");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);
