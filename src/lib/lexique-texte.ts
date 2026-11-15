@@ -3,7 +3,7 @@ import { LEXIQUE } from "../data/lexique";
 // Rend un texte en soulignant les termes du lexique : un toucher affiche la définition.
 // Correspondance insensible aux accents et à la casse ; chaque terme n'est souligné qu'une fois par texte.
 const SANS = (s: string) => [...s.toLowerCase()].map((c) => c.normalize("NFD")[0]).join("");
-const IGNORE = new Set(["compost", "famille", "aromatique", "botte", "epi", "oeil", "jauge", "voile", "f1", "lux", "rameau", "planche", "substrat", "bulbe", "greffe", "bouture", "annuelle", "bisannuelle", "paillage", "rotation", "purin", "humus", "compagnonnage", "hydroponie", "lasagne", "auxiliaire"]);
+const IGNORE = new Set(["compost", "famille", "aromatique", "botte", "epi", "oeil", "jauge", "voile", "f1", "lux", "rameau", "planche", "bulbe", "greffe", "bouture", "annuelle", "bisannuelle", "paillage", "rotation", "purin", "humus", "compagnonnage", "hydroponie", "lasagne", "auxiliaire"]);
 
 interface Motif { re: RegExp; id: string }
 let MOTIFS: Motif[] | null = null;

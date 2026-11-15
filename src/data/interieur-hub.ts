@@ -188,7 +188,7 @@ export const SUBSTRATS: { pour: string; melange: string }[] = [
   { pour: "Cactus, succulentes, aloe, sansevieria, zamioculcas", melange: "Terreau cactées, ou terreau + 50 % de sable grossier, pouzzolane ou gravier." },
   { pour: "Orchidées épiphytes (phalaenopsis)", melange: "Écorce de pin seule (jamais de terreau), pot transparent percé." },
   { pour: "Fougères, calathea, maranta, fittonia", melange: "Terreau qui garde la fraîcheur + un peu de fibre de coco, sans calcaire." },
-  { pour: "Plantes carnivores (dionée)", melange: "Tourbe blonde + sable de rivière lavé, sans engrais ; eau de pluie ou déminéralisée." },
+  { pour: "Plantes carnivores (dionée)", melange: "Substrat sans tourbe pour carnivores (fibre de coco lavée + sable de rivière ou perlite, ou sphaigne vivante), sans engrais ; eau de pluie ou déminéralisée. La tourbe, longtemps utilisée, vient de tourbières qu'on détruit : à éviter." },
   { pour: "Aromates en pot", melange: "Terreau potager + 1/4 de compost ; thym, romarin, sauge : ajoutez 1/3 de sable ou gravier." },
 ];
 
@@ -203,7 +203,7 @@ export const KIT: { objet: string; pourquoi: string }[] = [
   { objet: "Pots percés + cache-pots ou soucoupes", pourquoi: "Un pot sans trou est la cause n° 1 des racines pourries." },
   { objet: "Arrosoir à bec fin", pourquoi: "Pour arroser la terre, pas le cœur de la plante." },
   { objet: "Terreaux adaptés + perlite, écorces, sable", pourquoi: "Voir le tableau des mélanges." },
-  { objet: "Engrais liquide pour plantes vertes (et pour cactées)", pourquoi: "Les plantes en pot n'ont que ce qu'on leur donne." },
+  { objet: "Engrais liquide organique pour plantes vertes (et pour cactées)", pourquoi: "Les plantes en pot n'ont que ce qu'on leur donne." },
   { objet: "Hygromètre-thermomètre", pourquoi: "Un appartement chauffé descend souvent à 30 % d'humidité." },
   { objet: "Application luxmètre ou test de l'ombre de la main", pourquoi: "Savoir ce que reçoit vraiment chaque emplacement." },
   { objet: "Lampe LED horticole + prise programmable", pourquoi: "Aromates et légumes en hiver, pièces sombres." },

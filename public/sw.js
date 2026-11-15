@@ -109,6 +109,11 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(networkFirst(req, APP_CACHE, "./index.html"));
     return;
   }
+  // Illustrations : cache durable, rempli à la demande (pas de préchargement)
+  if (url.pathname.includes("/img/")) {
+    event.respondWith(cacheFirst(req, IMG_CACHE));
+    return;
+  }
   if (url.pathname.includes("/assets/")) {
     event.respondWith(cacheFirst(req, APP_CACHE));
     return;

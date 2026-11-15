@@ -330,7 +330,7 @@ export const PROBLEMES: Probleme[] = [
     symptomes: ["Les jeunes feuilles jaunissent mais les nervures restent bien vertes."],
     conditions: "Sol trop calcaire (fer bloqué), eau du robinet calcaire en pot, excès d'eau.",
     prevention: ["Plantes de terre de bruyère en bac de substrat acide, arrosage à l'eau de pluie.", "Paillage d'aiguilles de pin, compost."],
-    traitements: ["Apport de chélate de fer (en jardinerie, utilisable en bio) ; arrosage à l'eau de pluie."], remedes: ["eau-pluie"], gravite: 1, mois: m("4-9"),
+    traitements: ["Compost et terre de bruyère pour les plantes de terre acide ; en dépannage, un engrais au fer portant la mention « Utilisable en agriculture biologique » (UAB) : tous les chélates ne le sont pas ; arrosage à l'eau de pluie."], remedes: ["eau-pluie"], gravite: 1, mois: m("4-9"),
   },
   {
     id: "carence-potassium", nom: "Manque de potassium (potasse)", type: "carence", alias: ["manque de potasse", "bords des feuilles brûlés", "fruits pas sucrés", "carence potasse"],
@@ -340,7 +340,7 @@ export const PROBLEMES: Probleme[] = [
     confusion: "Des bords secs sur une plante d'intérieur viennent plus souvent de l'air sec ou du calcaire de l'eau.",
     conditions: "Sol sableux lessivé par la pluie, pots épuisés, excès d'azote ou de calcium.",
     prevention: ["Compost et fumier chaque année.", "Purin de consoude à la floraison des légumes-fruits."],
-    traitements: ["Purin de consoude dilué à 10-20 % en arrosage tous les 15 jours.", "Une poignée de cendre de bois par m² sur sol non calcaire.", "En pot : engrais liquide « fleurs et fruits » (3e chiffre élevé)."],
+    traitements: ["Purin de consoude dilué à 10-20 % en arrosage tous les 15 jours.", "Une poignée de cendre de bois par m² sur sol non calcaire.", "En pot : engrais liquide organique « fleurs et fruits » (3e chiffre élevé)."],
     remedes: ["purin-consoude", "cendre"], gravite: 1, mois: m("5-9"),
   },
   {

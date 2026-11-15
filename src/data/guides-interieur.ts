@@ -44,12 +44,12 @@ export const GUIDES_INTERIEUR: Guide[] = [
   },
   {
     id: "hydroponie", titre: "Culture sans terre : eau, billes d'argile et hydroponie", rubrique: "interieur", emoji: "💧", niveau: 2, duree: "1 heure",
-    resume: "Cultiver dans l'eau (boutures), en billes d'argile (« semi-hydro ») ou en hydroponie : moins de moucherons, arrosage simplifié, racines visibles.",
-    materiel: ["Billes d'argile expansée lavées (LECA) ou pouzzolane", "Pot sans trou + pot intérieur percé, ou vase transparent", "Indicateur de niveau d'eau (option)", "Engrais spécial hydroculture ou engrais liquide très dilué"],
+    resume: "Cultiver dans l'eau (boutures), en billes d'argile (« semi-hydro ») ou en hydroponie : moins de moucherons, arrosage simplifié, racines visibles. Attention : la culture hors-sol n'est pas compatible avec l'agriculture biologique (engrais minéraux, pas de sol vivant) ; pour un potager d'intérieur bio, préférez le pot de terreau sans tourbe.",
+    materiel: ["Billes d'argile expansée lavées (LECA) ou pouzzolane", "Pot sans trou + pot intérieur percé, ou vase transparent", "Indicateur de niveau d'eau (option)", "Engrais spécial hydroculture ou engrais liquide organique très dilué"],
     etapes: [
-      { titre: "La culture dans l'eau", texte: "Pothos, philodendron, misère, lierre, chlorophytum vivent des mois voire des années dans un vase d'eau. Changez l'eau toutes les 1 à 2 semaines et ajoutez une goutte d'engrais liquide par mois." },
+      { titre: "La culture dans l'eau", texte: "Pothos, philodendron, misère, lierre, chlorophytum vivent des mois voire des années dans un vase d'eau. Changez l'eau toutes les 1 à 2 semaines et ajoutez une goutte d'engrais liquide organique par mois." },
       { titre: "La semi-hydroculture en billes d'argile", texte: "Lavez soigneusement la plante en retirant toute la terre des racines, coupez les racines abîmées. Placez-la dans un pot percé rempli de billes d'argile trempées 24 h, dans un cache-pot étanche. Gardez une réserve d'eau sur le quart inférieur seulement : les billes la font remonter par capillarité, le haut des racines reste aéré.", attention: "La transition terre → billes stresse la plante : faites-la au printemps, sur une plante en bonne santé ; les racines de terre meurent et sont remplacées par des racines d'eau en quelques semaines." },
-      { titre: "Nourrir", texte: "Il n'y a aucun nutriment dans l'argile : engrais d'hydroculture (ou engrais liquide dilué de moitié) à chaque remplissage au printemps et en été. Rincez les billes à l'eau claire tous les 2-3 mois pour éliminer les sels." },
+      { titre: "Nourrir", texte: "Il n'y a aucun nutriment dans l'argile : engrais d'hydroculture (ou engrais liquide organique dilué de moitié) à chaque remplissage au printemps et en été. Rincez les billes à l'eau claire tous les 2-3 mois pour éliminer les sels." },
       { titre: "L'hydroponie « active »", texte: "Les kits d'intérieur (pompe, lampe, solution nutritive) font pousser aromatiques et salades très vite. Suivez la notice pour la solution nutritive et nettoyez le réservoir régulièrement (algues)." },
     ],
     video: "semi hydroponie billes argile plantes intérieur tuto", liens: ["sciarides", "rempoter", "bouturage"],

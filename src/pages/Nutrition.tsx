@@ -78,7 +78,7 @@ function Plantes() {
             <b>{p.nom}</b>
             {p.categorie === "interieur" ? (
               <ul className="ticks small">
-                <li>Engrais liquide pour plantes vertes {p.fleurit ? "(ou « plantes fleuries » au moment de la floraison)" : ""}, à demi-dose, {p.soins?.engrais ? `environ toutes les ${Math.round(p.soins.engrais / 7)} semaine(s)` : "une fois par mois"} du printemps à fin août ; rien en hiver.</li>
+                <li>Engrais liquide organique pour plantes vertes {p.fleurit ? "(ou « plantes fleuries » au moment de la floraison)" : ""}, à demi-dose, {p.soins?.engrais ? `environ toutes les ${Math.round(p.soins.engrais / 7)} semaine(s)` : "une fois par mois"} du printemps à fin août ; rien en hiver.</li>
                 <li>Rempotage {p.rempotage ? p.rempotage.toLowerCase() : "tous les 2 à 3 ans"} : un terreau neuf est le meilleur des engrais.</li>
                 <li>Cactus, succulentes, orchidées, carnivores : engrais spécifique ou aucun (carnivores : jamais).</li>
               </ul>
@@ -89,7 +89,7 @@ function Plantes() {
                 {p.categorie === "arbre" || p.categorie === "fruit" ? <li>Arbres et arbustes fruitiers : 3 à 5 kg de compost ou de fumier décomposé au pied, sur toute la largeur du feuillage, en fin d'hiver ; paillage permanent ; purin de consoude ou cendre (sol non calcaire) à la formation des fruits.</li> : null}
                 {["tomate", "aubergine", "poivron", "courge", "courgette", "concombre", "melon", "fraisier"].includes(p.id) && <li>Purin d'ortie au départ (feuilles), puis purin de consoude dès les premières fleurs (fruits).</li>}
                 {p.besoin === "peu" && <li>Évitez le fumier frais : racines fourchues, maladies, peu de goût.</li>}
-                <li>En pot ou en bac : mêmes besoins, mais tout s'épuise plus vite : engrais liquide toutes les 2 à 3 semaines en saison.</li>
+                <li>En pot ou en bac : mêmes besoins, mais tout s'épuise plus vite : engrais liquide organique toutes les 2 à 3 semaines en saison.</li>
               </ul>
             )}
             <a className="small" href={href(`/plante/${p.id}`)}>Fiche complète →</a>
@@ -149,6 +149,7 @@ function Animaux() {
             <li><b>👀 Signes d'un manque :</b> {n.manque}</li>
           </ul>
           <div className="callout warn small"><b>Bon à savoir</b>{n.astuce}</div>
+          <p className="small">🌿 Selon les principes bio : aliment certifié AB, sans additif médicamenteux, parcours en plein air. <a href={href("/guide/elevage-bio")}>Élever selon les principes bio →</a></p>
           <div className="grid">
             <div><b>✅ Ce que le jardin peut leur donner</b><ul className="ticks small">{a.jardinOK.map((x) => <li key={x}>{x}</li>)}</ul></div>
             <div><b>⛔ Interdit ou dangereux</b><ul className="ticks small">{a.interdits.map((x) => <li key={x}>{x}</li>)}</ul></div>

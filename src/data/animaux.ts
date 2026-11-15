@@ -145,7 +145,7 @@ export const ANIMAUX: Animal[] = [
     ],
     maladies: [{ nom: "Botulisme aviaire", signes: "Paralysie progressive, cou mou.", prevention: "Pas d'eau stagnante chaude, retirez les cadavres d'animaux.", soin: "Urgence vétérinaire." }],
     reproduction: ["Un mâle pour 4 à 6 canes.", "Incubation 28 jours (35 pour le Barbarie)."],
-    fumier: { valeur: "Fumier humide et riche en azote, proche de celui des poules.", usage: ["L'eau sale du bassin est un engrais liquide excellent : arrosez-en le potager ou le compost.", "Fumier à composter avec de la paille."] },
+    fumier: { valeur: "Fumier humide et riche en azote, proche de celui des poules.", usage: ["L'eau sale du bassin est un engrais liquide organique excellent : arrosez-en le potager ou le compost.", "Fumier à composter avec de la paille."] },
     auJardin: [
       "Le canard coureur indien est le meilleur chasseur de limaces : laissez-en 2 ou 3 parcourir le potager le soir ou tôt le matin, sous surveillance.",
       "Ils grattent moins que les poules, mais piétinent et mangent les jeunes salades : faites-les passer dans les allées, ou protégez les semis.",
@@ -290,7 +290,7 @@ export const ANIMAUX: Animal[] = [
       usage: [
         "Le seul fumier utilisable directement, sans compostage, au pied des cultures et dans les pots.",
         "Litière de paille souillée : excellent paillage enrichissant pour les fruitiers et les cultures gourmandes.",
-        "Thé de crottin : une poignée dans 5 L d'eau 24 h, filtré : engrais liquide doux pour les plantes en pot.",
+        "Thé de crottin : une poignée dans 5 L d'eau 24 h, filtré : engrais liquide organique doux pour les plantes en pot.",
         "Les vers du compost et le lombricomposteur adorent les crottes de lapin.",
       ],
     },

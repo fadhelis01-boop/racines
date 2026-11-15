@@ -27,7 +27,7 @@ export const NOUVELLES_METHODES: Amenagement[] = [
   { id: "am-hydroponie", nom: "Hydroponie (culture sans terre)", emoji: "💧", famille: "potager", pour: ["appartement", "balcon", "petit-jardin"], surface: "Une étagère ou un kit de table", installation: 2, entretien: 2, cout: 3, eau: 1,
     resume: "Les racines baignent dans une eau enrichie de nutriments ; souvent avec une lampe, en intérieur. Rapide et propre.",
     avantages: ["Croissance rapide, pas de terre ni de mauvaises herbes", "Économe en eau (circuit fermé)", "Possible dans une pièce sans fenêtre avec une lampe"],
-    inconvenients: ["Matériel et électricité (pompe, lampe)", "Engrais minéraux spécifiques, pH à surveiller", "Une panne de pompe peut tout faire faner en une journée"],
+    inconvenients: ["Matériel et électricité (pompe, lampe)", "Engrais minéraux spécifiques, pH à surveiller", "Une panne de pompe peut tout faire faner en une journée", "Incompatible avec l'agriculture biologique : le bio impose de cultiver dans un sol vivant, et la méthode repose sur des engrais minéraux, de la laine de roche ou du plastique et de l'électricité"],
     ideal: "Appartements, salades et aromates toute l'année, passionnés de technique.", liens: ["hydroponie", "lumiere-led"], video: "hydroponie débutant appartement kit" },
 ];
 
@@ -153,9 +153,9 @@ export const PAS_A_PAS: Record<string, PasAPas> = {
     etapes: [
       { titre: "Choisir le système", texte: "Le plus simple : la méthode « Kratky » (pot dans un bocal d'eau nutritive, sans pompe) pour les salades et le basilic." },
       { titre: "Préparer la solution", texte: "Eau + engrais hydroponique à la dose indiquée ; pH entre 5,5 et 6,5." },
-      { titre: "Démarrer", texte: "Semez dans des cubes de laine de roche ou de fibre de coco, puis placez-les dans le système quand les racines sortent." },
+      { titre: "Démarrer", texte: "Semez dans des cubes de fibre de coco (la laine de roche n'est pas recyclable), puis placez-les dans le système quand les racines sortent." },
       { titre: "Entretenir", texte: "Complétez l'eau, changez toute la solution toutes les 2 à 3 semaines, nettoyez entre deux cultures." },
-    ], premiereAnnee: "Salades en 4 semaines, basilic en 6 ; légumes-fruits avec une lampe puissante.", erreurs: ["Engrais du jardin (organique) : il pourrit dans l'eau.", "Lumière qui touche la solution (algues)."] },
+    ], premiereAnnee: "Salades en 4 semaines, basilic en 6 ; légumes-fruits avec une lampe puissante.", erreurs: ["Engrais du jardin (organique) : il pourrit dans l'eau.", "Lumière qui touche la solution (algues).", "Croire que c'est bio : ce n'est pas possible en hydroponie. Pour un potager d'intérieur bio, cultivez en pot dans un terreau sans tourbe UAB, sous lampe si besoin."] },
 };
 
 export interface Paillage { nom: string; emoji: string; pour: string; plus: string; moins: string; epaisseur: string; ou: string }
@@ -172,7 +172,8 @@ export const PAILLAGES: Paillage[] = [
   { nom: "Compost en surface", emoji: "♻️", pour: "Potager, semis", plus: "Nourrit et couvre à la fois", moins: "Trop fin pour empêcher les herbes", epaisseur: "3 à 5 cm", ou: "Potager, avant semis" },
   { nom: "Engrais vert fauché", emoji: "🌱", pour: "Potager", plus: "Produit sur place, nourrit le sol", moins: "Demande de prévoir une saison", epaisseur: "Laissé sur place", ou: "Planches entre deux cultures" },
   { nom: "Paillage minéral (graviers, ardoise, pouzzolane)", emoji: "⛰️", pour: "Plantes méditerranéennes, jardin sec, pots", plus: "Durable, garde la chaleur, ne pourrit pas", moins: "N'apporte rien au sol ; chauffe beaucoup en plein soleil", epaisseur: "5 cm", ou: "Lavande, thym, cactus, jardin sec" },
-  { nom: "Toile tissée ou bâche", emoji: "⬛", pour: "Préparer un terrain envahi, fraisiers, courges", plus: "Zéro herbe, réchauffe le sol", moins: "Plastique, pas de vie dessous, limaces ; à réserver à un usage temporaire", epaisseur: "—", ou: "Désherber une friche (6 mois à 1 an)" },
+  { nom: "Toile de jute, feutre de chanvre ou de laine", emoji: "🧶", pour: "Massifs, fraisiers, pied des arbustes", plus: "Biodégradables, laissent passer l'eau et l'air", moins: "Durent 1 à 3 ans ; plus chers que la paille", epaisseur: "Une couche", ou: "Massifs, plantations nouvelles" },
+  { nom: "Toile tissée ou bâche plastique", emoji: "⬛", pour: "Préparer un terrain envahi (temporairement)", plus: "Zéro herbe, réchauffe le sol", moins: "Plastique d'origine fossile, pas de vie dessous, limaces ; au soleil, elle se fragmente en microplastiques dans le sol. À retirer dès qu'elle a servi, jamais à demeure ; préférez le carton", epaisseur: "—", ou: "Désherber une friche (6 mois à 1 an), puis retirer" },
 ];
 
 export const TECHNIQUES: { nom: string; emoji: string; quoi: string; plus: string; moins: string; lien: string }[] = [
@@ -183,5 +184,8 @@ export const TECHNIQUES: { nom: string; emoji: string; quoi: string; plus: strin
   { nom: "Engrais verts", emoji: "🌱", quoi: "Semer des plantes pour couvrir et nourrir le sol entre deux cultures.", plus: "Sol couvert, nourri, aéré ; abeilles.", moins: "Les faucher avant qu'ils montent en graines.", lien: "engrais-verts" },
   { nom: "Goutte-à-goutte et oyas", emoji: "💧", quoi: "Arroser au pied, lentement, sans gaspiller.", plus: "Jusqu'à 70 % d'eau économisée, moins de maladies.", moins: "Installation et matériel.", lien: "oyas" },
   { nom: "Voile et filets", emoji: "🕸️", quoi: "Voile d'hivernage contre le froid, filet anti-insectes contre les mouches et les papillons.", plus: "Récoltes plus précoces, protection sans produit.", moins: "À ouvrir pour la pollinisation des légumes-fruits.", lien: "gel-grele" },
+  { nom: "Faux-semis", emoji: "🌱", quoi: "Préparer la terre comme pour semer, attendre 2 à 3 semaines que les graines d'adventices lèvent, les détruire au râteau ou à la binette en surface, puis semer pour de vrai.", plus: "Technique bio de base : beaucoup moins de désherbage sur carottes, oignons, radis, sans aucun produit.", moins: "Demande de prévoir 2 à 3 semaines de plus.", lien: "desherbage" },
+  { nom: "Lutte biologique par les auxiliaires", emoji: "🐞", quoi: "Attirer (fleurs, refuges, haies) ou lâcher des auxiliaires : coccinelles, chrysopes, nématodes, trichogrammes.", plus: "Contrôle durable des ravageurs sans produit.", moins: "Il faut tolérer quelques ravageurs pour nourrir les auxiliaires.", lien: "hotel-insectes" },
+  { nom: "Tonte différenciée", emoji: "🌼", quoi: "Tondre seulement les allées et les zones de jeu, laisser fleurir le reste et le faucher une ou deux fois par an.", plus: "Moins de carburant et de bruit, beaucoup plus d'insectes, paillage gratuit.", moins: "Aspect plus « sauvage » à assumer.", lien: "jardin-sobre" },
   { nom: "Semis échelonnés", emoji: "🗓️", quoi: "Semer un peu toutes les 2 à 3 semaines.", plus: "Récoltes régulières sans gaspillage.", moins: "Demande de l'organisation.", lien: "semis-place" },
 ];

@@ -17,7 +17,7 @@ export const A = ({ to, children, className }: { to: string; children: ReactNode
 export type PhotoLibre = { img: string; full: string; page: string; auteur: string; licence: string };
 const WIKI = wiki as unknown as Record<string, { photos: PhotoLibre[]; article: string }>;
 export const wikiOf = (id: string) => WIKI[id];
-export const toutesLesPhotos = () => Object.values(WIKI).flatMap((w) => (w.photos ?? []).map((p) => p.img));
+export const toutesLesPhotos = () => [...Object.values(WIKI).flatMap((w) => (w.photos ?? []).map((p) => p.img)), ...[...LOCAL].map((id) => `./img/${id}.webp`)];
 
 // Photo libre (Wikimedia) ou, à défaut, l'emoji de la fiche
 export function Photo({ id, emoji, alt }: { id: string; emoji: string; alt: string; credit?: boolean }) {

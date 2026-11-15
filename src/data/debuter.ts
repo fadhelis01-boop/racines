@@ -64,23 +64,23 @@ export const COURSES: Record<"interieur" | "balcon" | "jardin", { objet: string;
   interieur: [
     { objet: "1 à 3 plantes increvables", prix: "10 à 30 € chacune" },
     { objet: "Pots percés un peu plus grands que la motte + soucoupes ou cache-pots", prix: "5 à 15 € pièce" },
-    { objet: "Un sac de terreau plantes vertes (10 à 20 L)", prix: "5 à 10 €" },
+    { objet: "Un sac de terreau plantes vertes SANS TOURBE, mention UAB (10 à 20 L)", prix: "8 à 15 €" },
     { objet: "Un petit arrosoir à bec fin", prix: "5 à 10 €" },
-    { objet: "Un engrais liquide plantes vertes (pour le printemps)", prix: "5 à 8 €", note: "Une bouteille dure 1 à 2 ans." },
+    { objet: "Un engrais liquide organique plantes vertes (pour le printemps)", prix: "5 à 8 €", note: "Une bouteille dure 1 à 2 ans." },
     { objet: "Facultatif : un hygromètre-thermomètre", prix: "5 à 15 €" },
   ],
   balcon: [
     { objet: "2 jardinières de 60 cm (ou à réserve d'eau)", prix: "10 à 30 € pièce" },
     { objet: "1 grand pot de 20 L pour une tomate cerise", prix: "10 à 20 €" },
-    { objet: "Terreau potager (2 sacs de 40 L) + un peu de compost", prix: "15 à 25 €" },
-    { objet: "Plants : 1 tomate cerise, 3 fraisiers, 1 ciboulette ; graines : radis, salade à couper", prix: "15 à 25 €" },
+    { objet: "Terreau potager sans tourbe, mention UAB (2 sacs de 40 L) + un peu de compost", prix: "20 à 35 €" },
+    { objet: "Plants bio : 1 tomate cerise, 3 fraisiers, 1 ciboulette ; graines bio non traitées : radis, salade à couper", prix: "15 à 30 €" },
     { objet: "Arrosoir de 5 L, soucoupes, paillage (paillettes de lin)", prix: "15 à 25 €" },
   ],
   jardin: [
     { objet: "Une bêche-fourche ou une grelinette, un transplantoir, un râteau", prix: "40 à 100 €" },
     { objet: "Compost ou fumier composté (gratuit en déchetterie dans beaucoup de communes)", prix: "0 à 30 €" },
     { objet: "Paille pour pailler (une botte)", prix: "5 à 10 €" },
-    { objet: "Plants et graines faciles pour 10 m² (voir « Premier potager »)", prix: "20 à 40 €" },
+    { objet: "Plants et graines bio faciles pour 10 m² (voir « Premier potager »)", prix: "25 à 50 €" },
     { objet: "Arrosoir de 10 L, tuyau, et si possible un récupérateur d'eau de pluie", prix: "20 à 80 €" },
   ],
 };

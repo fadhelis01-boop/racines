@@ -39,7 +39,7 @@ export const GUIDES_MAISON: Guide[] = [
       { titre: "2. Arroser selon le besoin, pas selon le calendrier", texte: "Enfoncez le doigt dans la terre : sec sur 2-3 cm, arrosez ; humide, attendez. Arrosez à fond jusqu'à ce que l'eau s'écoule par le trou, puis videz la soucoupe ou le cache-pot après 15-30 minutes. En hiver, la plupart des plantes boivent 2 à 3 fois moins." },
       { titre: "3. Toujours un trou de drainage", texte: "Un pot sans trou = racines qui pourrissent. Gardez le pot de culture en plastique percé dans un cache-pot décoratif." },
       { titre: "4. L'humidité de l'air", texte: "Le chauffage assèche l'air (souvent moins de 30 % d'humidité en hiver). Éloignez les plantes des radiateurs, groupez-les, posez-les sur un plateau de billes d'argile mouillées. La brumisation a un effet très bref." },
-      { titre: "5. Nourrir au printemps et en été seulement", texte: "Engrais liquide dilué une fois par mois d'avril à septembre (ou lombrithé). Pas d'engrais en hiver, ni sur une plante fraîchement rempotée ou malade." },
+      { titre: "5. Nourrir au printemps et en été seulement", texte: "Engrais liquide organique dilué une fois par mois d'avril à septembre (ou lombrithé). Pas d'engrais en hiver, ni sur une plante fraîchement rempotée ou malade." },
       { titre: "Bonus : observer les feuilles", texte: "Jaunes et molles : trop d'eau. Sèches et cassantes au bout : air sec ou eau calcaire. Pâles et tiges longues : manque de lumière. Taches beiges brûlées : trop de soleil direct. Collantes : insectes. Le diagnostic de l'application vous guide." },
     ],
     conseils: ["Vérifiez la toxicité pour vos animaux de compagnie : chaque fiche l'indique (les lys sont mortels pour les chats, même le pollen)."],

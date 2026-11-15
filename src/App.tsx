@@ -30,6 +30,7 @@ const Lexique = lazy(() => import("./pages/Lexique"));
 const MaladieAnimale = lazy(() => import("./pages/SanteAnimale"));
 const DiagnosticAnimal = lazy(() => import("./pages/SanteAnimale").then((m) => ({ default: m.DiagnosticAnimal })));
 const Calculs = lazy(() => import("./pages/Calculs"));
+const Bio = lazy(() => import("./pages/Bio"));
 const Debuter = lazy(() => import("./pages/Debuter"));
 const Sol = lazy(() => import("./pages/Sol"));
 const Nutrition = lazy(() => import("./pages/Nutrition"));
@@ -57,6 +58,7 @@ const NAV = [
   { to: "/sante", label: "Santé", i: "🩺", ico: "sante", main: true },
   { to: "/interieur", label: "Intérieur et aromates", i: "🌿", ico: "interieur" },
   { to: "/sol", label: "Mon sol et les engrais", i: "🟫", ico: "compost" },
+  { to: "/bio", label: "Bio et éco-score", i: "🌿", ico: "plantes" },
   { to: "/jardin", label: "Mon jardin", i: "🧺", ico: "jardin" },
   { to: "/creer", label: "Créer mon potager", i: "👨‍🌾", ico: "creer" },
   { to: "/guides", label: "Tutoriels", i: "📘", ico: "tutoriels" },
@@ -111,6 +113,7 @@ export default function App() {
     case "diagnostic-animal": page = <DiagnosticAnimal />; break;
     case "calculs": page = <Calculs />; break;
     case "debuter": page = <Debuter />; break;
+    case "bio": page = <Bio />; break;
     case "sol": page = <Sol />; break;
     case "nutrition": page = <Nutrition />; break;
     case "interieur": page = <Interieur />; break;
@@ -146,7 +149,7 @@ export default function App() {
         {(appart ? NAV.map((n) => (n.to === "/calendrier" ? { ...n, to: "/interieur", label: "Intérieur", i: "🌿", ico: "interieur" } : n)) : NAV).filter((n) => n.main).map((n) => (
           <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span className="i"><Ico nom={n.ico} emoji={n.i} taille={28} /></span>{n.label.replace(" et fleurs", "")}</a>
         ))}
-        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette", "sol", "nutrition", "debuter"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
+        <a href={href("/plus")} className={["plus", "jardin", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette", "sol", "nutrition", "debuter", "bio"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
       </nav>
       <Player />
     </div>

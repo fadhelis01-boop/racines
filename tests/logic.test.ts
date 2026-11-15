@@ -12,6 +12,8 @@ import { choisirMethodes, type ProfilPotager } from "../src/lib/methodes";
 import { essentiel } from "../src/lib/essentiel";
 import { remede } from "../src/data/index";
 import { STATUT_REMEDE } from "../src/data/reglementation";
+import { ecoScore, PRATIQUES } from "../src/data/bio";
+import { SUBSTRATS } from "../src/data/interieur-hub";
 import { decouper } from "../src/lib/lexique-texte";
 import { diagnostiquerAnimal } from "../src/lib/sante-animale";
 import { moisAffiches, aRepiquer } from "../src/lib/calendar";
@@ -258,6 +260,19 @@ p1("passeport phytosanitaire", "Acheter des plants sains");
 p1("lire une analyse de sol", "Lire une analyse de sol");
 p1("changement climatique", "Jardiner avec le changement climatique");
 p1("semences reproductibles", "Les semences");
+
+// Audit bio et écoresponsable
+ok(!SUBSTRATS.some((x) => /tourbe blonde/i.test(x.melange)), "plus de tourbe conseillée pour les carnivores");
+ok(ecoScore(new Set(), false).score === 0 && ecoScore(new Set(PRATIQUES.map((p) => p.id)), true).score === 100, "éco-score de 0 à 100");
+ok(ecoScore(new Set(), false).parTheme.every((t) => t.theme !== "animaux"), "éco-score sans animaux : thème animaux masqué");
+ok(choisirMethodes({ ...baseM, lieu: "appartement", surface: 1 }).find((c) => c.id === "am-hydroponie")!.contre.some((x) => /bio/.test(x)), "hydroponie signalée incompatible avec le bio");
+p1("label bio", "Les labels");
+p1("terreau sans tourbe", "Jardiner bio");
+p1("vendre légumes bio", "Jardiner bio");
+p1("tonte différenciée", "Tonte différenciée");
+p1("faux semis", "Faux-semis");
+p1("éco-score", "Mon éco-score");
+p1("poules bio", "Élever ses animaux selon les principes bio");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

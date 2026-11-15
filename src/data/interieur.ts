@@ -13,7 +13,7 @@ export const INTERIEUR: Plante[] = [
     humidite: "Normale.", temperature: "15 à 28 °C.",
     rempotage: "Tous les 2 ans au printemps, pot d'une taille au-dessus.",
     etapes: ["Placez-le près d'une fenêtre sans soleil direct brûlant.", "Faites-le grimper sur un tuteur mousse ou laissez-le retomber d'une étagère."],
-    entretien: ["Bouturage : coupez une tige sous un nœud (la petite bosse d'où sort une racine aérienne), mettez-la dans l'eau, rempotez quand les racines font 5 cm.", "Engrais liquide pour plantes vertes une fois par mois au printemps et en été."],
+    entretien: ["Bouturage : coupez une tige sous un nœud (la petite bosse d'où sort une racine aérienne), mettez-la dans l'eau, rempotez quand les racines font 5 cm.", "Engrais liquide organique pour plantes vertes une fois par mois au printemps et en été."],
     problemes: ["pourriture-racines", "cochenilles", "tetranyque", "thrips"],
     toxique: "Toxique pour chats et chiens (oxalates de calcium : brûlures de la bouche, salivation, vomissements).",
   },

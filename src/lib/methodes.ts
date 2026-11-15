@@ -148,6 +148,7 @@ export function choisirMethodes(p: ProfilPotager): Choix[] {
     if (p.budget === "petit") moins(c, 25, "Matériel et électricité.");
     if (p.objectif === "debuter") moins(c, 10, "Plus technique qu'un pot de terreau.");
     if (p.objectif === "effort") moins(c, 10, "pH et solution à surveiller.");
+    moins(c, 15, "Incompatible avec le bio (engrais minéraux, pas de sol vivant) et consomme de l'électricité.");
   }, p.lieu === "appartement" || p.lieu === "balcon");
 
   add("am-serrure", (c) => {

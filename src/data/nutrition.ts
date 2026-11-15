@@ -19,7 +19,7 @@ export const NUTRIMENTS: Nutriment[] = [
     sources: ["Compost", "Dolomie", "Sel d'Epsom (sulfate de magnésium) en dépannage : 10 g par litre en arrosage"], carence: "carence-magnesium" },
   { id: "Fe", symbole: "Fe", nom: "Fer", role: "Indispensable pour fabriquer la chlorophylle.", image: "Il donne le vert des jeunes feuilles.",
     manque: "JEUNES feuilles (en haut) jaunes avec nervures vertes. Presque toujours un blocage par le calcaire, pas un vrai manque.", trop: "Rare.",
-    sources: ["Compost et humus (débloquent le fer)", "Terre de bruyère pour les plantes de terre acide", "Chélate de fer en dépannage"], carence: "chlorose" },
+    sources: ["Compost et humus (débloquent le fer)", "Terre de bruyère pour les plantes de terre acide", "En dépannage, un engrais au fer portant la mention UAB (tous les chélates ne sont pas autorisés en bio)"], carence: "chlorose" },
   { id: "B", symbole: "B", nom: "Bore et oligo-éléments", role: "En toutes petites quantités : floraison, nouaison, qualité des racines.", image: "Les « vitamines » de la plante.",
     manque: "Cœur noir et creux des betteraves et céleris, tiges creuses des choux-fleurs, fruits déformés.", trop: "Toxique à forte dose : jamais de bore pur au hasard.",
     sources: ["Compost varié", "Algues", "Purin de consoude", "Fumiers"], carence: "carence-bore" },
@@ -67,7 +67,7 @@ export const ERREURS_ENGRAIS = [
 // Besoins des animaux
 export interface NutritionAnimal { id: string; eau: string; base: string; besoins: string[]; mineraux: string; manque: string; astuce: string }
 export const NUTRITION_ANIMAUX: NutritionAnimal[] = [
-  { id: "poule", eau: "0,25 à 0,5 L par jour et par poule (le double par forte chaleur).", base: "Aliment complet « pondeuse » (16 à 17 % de protéines) : 120 à 130 g par jour, + parcours, verdure, restes autorisés (au plus 1/4 de la ration).",
+  { id: "poule", eau: "0,25 à 0,5 L par jour et par poule (le double par forte chaleur).", base: "Aliment complet « pondeuse » (16 à 17 % de protéines), de préférence certifié AB et sans anticoccidien : 120 à 130 g par jour, + parcours, verdure, restes autorisés (au plus 1/4 de la ration).",
     besoins: ["Protéines pour les œufs (insectes, vers, aliment pondeuse)", "Calcium pour les coquilles", "Petits graviers pour broyer (gésier)", "Énergie l'hiver (un peu de blé ou de maïs le soir)"],
     mineraux: "Coquilles d'huîtres broyées à volonté, à part ; grit (petits cailloux) si le parcours n'en a pas.", manque: "Œufs mous ou sans coquille (calcium), picage et plumes mangées (protéines), ponte faible.", astuce: "Le mélange de graines seul (blé, maïs) est trop pauvre en protéines pour des pondeuses : c'est l'erreur n° 1." },
   { id: "canard", eau: "1 à 2 L par jour, dans un récipient assez profond pour plonger la tête (ils nettoient leurs narines et leurs yeux).", base: "Aliment pour palmipèdes ou pondeuse (sans médicament anticoccidien pour volailles), 150 à 200 g par jour, + herbe, limaces.",

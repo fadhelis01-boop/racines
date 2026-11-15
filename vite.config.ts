@@ -11,7 +11,7 @@ function stampServiceWorker(): Plugin {
     closeBundle() {
       const f = "dist/sw.js";
       const list = (d: string) => (existsSync("dist/" + d) ? readdirSync("dist/" + d).map((x) => `./${d}/${x}`) : []);
-      const files = [...list("assets"), ...list("img")];
+      const files = [...list("assets"), ...list("ico")]; // illustrations (img) chargées à la demande
       if (existsSync(f)) writeFileSync(f, readFileSync(f, "utf8").replaceAll("__BUILD__", new Date().toISOString()).replace("[] /*__FILES__*/", JSON.stringify(files)));
     },
   };
