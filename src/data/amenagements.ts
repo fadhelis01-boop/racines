@@ -112,3 +112,7 @@ export const AMENAGEMENTS: Amenagement[] = [
 ];
 
 export const NIVEAU = ["", "Faible", "Moyen", "Élevé"];
+
+import { NOUVELLES_METHODES } from "./methodes";
+AMENAGEMENTS.splice(1, 0, ...NOUVELLES_METHODES.slice(0, 1));
+AMENAGEMENTS.splice(AMENAGEMENTS.findIndex((a) => a.id === "am-serrure"), 0, ...NOUVELLES_METHODES.slice(1));

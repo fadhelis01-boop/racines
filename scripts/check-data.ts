@@ -3,6 +3,8 @@ import { AMENAGEMENTS } from "../src/data/amenagements";
 import { MULTIPLICATION, AROMATES_INT } from "../src/data/interieur-hub";
 import { TYPES_SOL, SOL_PLANTE } from "../src/data/sols";
 import { NUTRIMENTS, ENGRAIS_NATURELS, NUTRITION_ANIMAUX } from "../src/data/nutrition";
+import { PAS_A_PAS, TECHNIQUES } from "../src/data/methodes";
+import { choisirMethodes } from "../src/lib/methodes";
 import { ALIAS_GUIDES } from "../src/data/guides-balcon";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales";
 // Contrôle de cohérence du contenu, exécuté à chaque build.
@@ -58,6 +60,11 @@ for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.include
 {
   for (const k of Object.keys(ALIAS_GUIDES)) if (!GUIDES.some((g) => g.id === k)) errors.push(`alias de tutoriel pour un id inconnu « ${k} »`);
   dup("maladie animale", MALADIES_ANIMALES);
+  dup("aménagement", AMENAGEMENTS);
+  for (const id of Object.keys(PAS_A_PAS)) if (!AMENAGEMENTS.some((a) => a.id === id)) errors.push(`pas à pas pour un aménagement inconnu « ${id} »`);
+  for (const t of TECHNIQUES) if (!t.lien.startsWith("lex-") && !lienVers(t.lien)) errors.push(`technique ${t.nom} : lien inconnu « ${t.lien} »`);
+  const tous = choisirMethodes({ lieu: "jardin", surface: 50, depart: "pelouse", sol: "inconnu", temps: "moyen", budget: "moyen", corps: "ok", eau: "facile", materiaux: [], duree: "long", objectif: "debuter" });
+  for (const c of tous) { if (!AMENAGEMENTS.some((a) => a.id === c.id)) errors.push(`assistant : méthode inconnue « ${c.id} »`); if (!PAS_A_PAS[c.id]) errors.push(`assistant : pas à pas manquant pour « ${c.id} »`); }
   for (const t of TYPES_SOL) for (const id of t.aime) if (!PLANTES.some((p) => p.id === id)) errors.push(`sol ${t.id} : plante inconnue « ${id} »`);
   for (const id of Object.keys(SOL_PLANTE)) if (!PLANTES.some((p) => p.id === id)) errors.push(`sol idéal : plante inconnue « ${id} »`);
   for (const n of NUTRIMENTS) if (n.carence && !PROBLEMES.some((p) => p.id === n.carence)) errors.push(`nutriment ${n.id} : carence inconnue « ${n.carence} »`);

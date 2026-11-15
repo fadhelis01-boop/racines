@@ -5,6 +5,7 @@ import { MALADIES_ANIMALES } from "../data/maladies-animales";
 import { AMENAGEMENTS } from "../data/amenagements";
 import { GESTES_RECOLTE } from "../data/cueillette";
 import { AROMATES_INT } from "../data/interieur-hub";
+import { PAILLAGES } from "../data/methodes";
 
 // Moteur de recherche : noms courants et synonymes, texte complet des fiches,
 // questions en phrase (« quand planter les tomates », « ma poule ne pond plus »),
@@ -42,6 +43,8 @@ function docs(): Doc[] {
     { principal: false, href: "/nutrition", emoji: "🍽️", titre: "Nourrir ses plantes : besoins, N-P-K, carences", type: "Outil", noms: norm("engrais | nourrir les plantes | npk | azote phosphore potassium | besoins des plantes | carence | quel engrais | fertiliser"), texte: norm("gourmand compost fumier purin feuilles jaunes") },
     { principal: false, href: "/nutrition?t=engrais", emoji: "🧺", titre: "Les engrais naturels comparés", type: "Outil", noms: norm("engrais naturel | engrais bio | corne broyee | sang seche | poudre d'os | cendre | marc de cafe | coquilles d'oeufs | guano"), texte: norm("dose vitesse attention") },
     { principal: false, href: "/nutrition?t=animaux", emoji: "🐔", titre: "Nourrir ses animaux : besoins de chaque espèce", type: "Outil", noms: norm("nourrir les animaux | alimentation animaux | ration | besoins animaux | mineraux | pierre a lecher | coquilles d'huitres | quoi donner"), texte: norm("eau proteines fibres mineraux poules chevres lapins") },
+    { principal: false, href: "/amenagements", emoji: "🧭", titre: "Quelle méthode de potager pour moi ? (assistant)", type: "Outil", noms: norm("quelle methode potager | methode de potager | type de potager | choisir potager | modes de culture | techniques de potager | monticule | monticules | butte | lasagne | carre potager | bottes de paille | sacs de culture | potager en rangs"), texte: norm("avantages inconvenients pas a pas debutant") },
+    { principal: false, href: "/amenagements?t=paillages", emoji: "🌾", titre: "Les paillages comparés (paille, tonte, feuilles, BRF, carton…)", type: "Outil", noms: norm("paillage | pailler | paillis | quel paillage | mulch | brf | toile de paillage | paillettes de lin"), texte: norm(PAILLAGES.map((x) => x.nom + " " + x.plus + " " + x.moins).join(" ")) },
     { principal: false, href: "/demenagement", emoji: "📦", titre: "Je déménage (appartement ↔ maison avec jardin)", type: "Outil", noms: norm("je demenage | demenagement | demenager | emmenager | nouvelle maison | quitter la maison | transporter plantes"), texte: norm("emporter plantes boutures graines animaux transport declaration") },
     { principal: false, href: "/calculs", emoji: "🧮", titre: "Calculs pratiques", type: "Outil", noms: norm("calcul | calculs | combien | quantite | combien de poules | combien de compost | combien de terreau | combien planter"), texte: norm("compost fumier terreau famille eau de pluie poules") },
     { principal: false, href: "/amenagements", emoji: "🗺️", titre: "Aménager son jardin : les façons de faire comparées", type: "Outil", noms: norm("amenager | amenagement | amenager jardin | organiser jardin | plan du jardin | idees jardin"), texte: norm("potager carre butte lasagnes jardin foret verger prairie mare") },

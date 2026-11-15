@@ -8,6 +8,7 @@ import { DEFAULT_SETTINGS, type State, type MaPlante } from "../src/lib/store";
 import { rechercher, parleAnimal, ressembleSymptome, chercherInterieur } from "../src/lib/search";
 import { PLANTES } from "../src/data/index";
 import { interpreterSol, QUESTIONS_SOL } from "../src/data/sols";
+import { choisirMethodes, type ProfilPotager } from "../src/lib/methodes";
 import { diagnostiquerAnimal } from "../src/lib/sante-animale";
 import { moisAffiches, aRepiquer } from "../src/lib/calendar";
 import { gesteDe } from "../src/data/cueillette";
@@ -191,6 +192,21 @@ vise("quel engrais", "Nourrir ses plantes", 3);
 vise("feuilles violettes", "Manque de phosphore", 3);
 vise("pierre à lécher", "Nourrir ses animaux", 3);
 vise("corne broyée", "Les engrais naturels", 3);
+
+// Assistant « quelle méthode de potager »
+const baseM: ProfilPotager = { lieu: "jardin", surface: 30, depart: "pelouse", sol: "inconnu", temps: "moyen", budget: "moyen", corps: "ok", eau: "facile", materiaux: [], duree: "long", objectif: "debuter" };
+const topM = (p: Partial<ProfilPotager>, n = 1) => choisirMethodes({ ...baseM, ...p }).slice(0, n).map((c) => c.id);
+ok(topM({ lieu: "appartement", surface: 1 })[0] === "am-pots", "appartement → pots");
+ok(topM({ corps: "fauteuil" })[0] === "am-bacs-hauts", "fauteuil → bacs surélevés");
+ok(topM({ depart: "pelouse", materiaux: ["carton", "feuilles"] }, 2).includes("am-lasagnes"), "pelouse + carton et feuilles → lasagne parmi les 2 premiers");
+ok(topM({ lieu: "cour", depart: "dur", duree: "provisoire", budget: "petit" }, 2).some((id) => id === "am-bottes-paille" || id === "am-sacs"), "cour bétonnée en location → bottes de paille ou sacs");
+ok(topM({ sol: "humide", materiaux: ["bois"], depart: "cultive" })[0] === "am-butte", "sol humide + bois → butte");
+ok(topM({ objectif: "produire", surface: 150, depart: "cultive" })[0] === "am-planches", "produire beaucoup sur 150 m² → planches permanentes");
+ok(!topM({ lieu: "appartement" }, 20).includes("am-butte"), "jamais de butte en appartement");
+ok(choisirMethodes(baseM)[0].pour.length > 0, "chaque recommandation est expliquée");
+vise("monticules", "Quelle méthode de potager pour moi", 5);
+vise("quel paillage", "Les paillages comparés", 3);
+vise("bottes de paille", "Culture sur bottes de paille", 5);
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

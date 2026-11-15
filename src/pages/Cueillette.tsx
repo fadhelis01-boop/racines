@@ -20,7 +20,7 @@ export default function Cueillette() {
         {GESTES_RECOLTE.map((g) => <a key={g.id} className="chip" href={href(`/cueillette?g=${g.id}`)}>{g.emoji} {g.titre.split(" :")[0]}</a>)}
       </div>
       {GESTES_RECOLTE.map((g) => {
-        const img = srcVignette(g.id);
+        const img = srcVignette(g.id)?.startsWith("./img/") ? srcVignette(g.id) : undefined;
         return (
           <section key={g.id} id={g.id} className="card" style={{ borderColor: cible === g.id ? "var(--green)" : undefined, borderWidth: cible === g.id ? 2 : 1 }}>
             <h2 style={{ marginTop: 0 }}>{g.emoji} {g.titre}</h2>

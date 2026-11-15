@@ -144,6 +144,8 @@ const PHOTOS_TECHNIQUES: Record<string, string> = {
   "am-sol-vivant": "no dig garden compost mulch", "am-prairie": "wildflower meadow garden", "am-jardin-sec": "gravel garden",
   "am-anglais": "cottage garden flower border", "am-francais": "potager Villandry", "am-mare": "garden pond wildlife", "am-zones": "permaculture zones garden design",
   "am-poulailler-mobile": "chicken tractor mobile coop",
+  "am-rangs": "vegetable garden rows allotment", "am-trois-soeurs": "three sisters maize beans squash", "am-bottes-paille": "straw bale gardening",
+  "am-sacs": "grow bag potatoes", "am-hydroponie": "hydroponic lettuce",
   "cueillir-tomates": "picking tomatoes hand", "cueillir-salade": "harvesting lettuce knife", "arracher-racines": "harvesting carrots garden fork",
   "recolter-pommes-de-terre": "harvesting potatoes garden fork", "cueillir-fruits-arbre": "picking apples tree hand", "cueillir-petits-fruits": "picking raspberries",
   "couper-fleurs": "cutting flowers secateurs", "couper-aromatiques": "harvesting basil", "recolter-courges": "pumpkin harvest stem", "cueillir-haricots": "picking green beans",
