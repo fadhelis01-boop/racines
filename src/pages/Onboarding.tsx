@@ -24,7 +24,7 @@ export default function Onboarding() {
   const [err, setErr] = useState("");
   const [animaux, setAnimaux] = useState(true);
 
-  const finish = () => setSettings({ onboarded: true, situation, zone, ville, animauxActifs: situation === "jardin" && animaux, lune: false, debutant });
+  const finish = () => setSettings({ onboarded: true, situation, zone, ville, animauxActifs: (situation === "jardin" || situation === "petit-jardin") && animaux, lune: false, debutant });
 
   return (
     <div className="main" style={{ maxWidth: 640, paddingBottom: 40 }}>
@@ -84,7 +84,7 @@ export default function Onboarding() {
           {villes.length > 0 && (
             <div className="chips">{villes.map((v) => <button key={v.nom + v.lat} className={`chip ${ville?.nom === v.nom ? "on" : ""}`} onClick={() => setVille(v)}>{v.nom}</button>)}</div>
           )}
-          <div className="row"><button className="btn" onClick={() => setStep(1)}>← Retour</button><button className="btn primary" onClick={() => setStep(situation === "jardin" ? 3 : 4)}>Continuer</button></div>
+          <div className="row"><button className="btn" onClick={() => setStep(1)}>← Retour</button><button className="btn primary" onClick={() => setStep(situation === "jardin" || situation === "petit-jardin" ? 3 : 4)}>Continuer</button></div>
         </div>
       )}
       {step === 3 && (

@@ -4,6 +4,7 @@ import type { ZoneId } from "../data/calendrier";
 import type { Culture, State } from "./store";
 import { isoDate } from "./store";
 import { MOIS_NOMS } from "../data/util";
+import { tachesCouvees } from "./elevage";
 
 // ---------- Décalage climatique ----------
 // Chaque mois de référence est une fenêtre de dates ; on la décale de N semaines
@@ -121,6 +122,7 @@ export function tachesPerso(s: State, now = new Date()): TachePerso[] {
       }
     }
   }
+  for (const c of tachesCouvees(s.couvees ?? [], now)) out.push({ ...c, emoji: "🐣", href: "/jardin/animaux" });
   return out.sort((a, b) => a.quand.localeCompare(b.quand));
 }
 

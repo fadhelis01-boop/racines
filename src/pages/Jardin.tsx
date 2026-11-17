@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { ProductionCard, IndividusSection, CouveesCard, RegistreCard, DepensesBilanCard } from "../components/Elevage";
 import { useStore, upsert, remove, uid, today, update, type Espace, type Recolte, type Troupeau, type Soin } from "../lib/store";
 import type { Animal } from "../data/types";
 import { PLANTES, ANIMAUX, plante, animal } from "../data/index";
@@ -23,7 +24,7 @@ const PAR_PROFIL: Record<string, string[]> = {
 export default function Jardin({ tab: tab0 }: { tab?: string }) {
   const situation = useStore((s) => s.settings.situation);
   const hasAnimals = useStore((s) => s.troupeaux.length > 0);
-  const ids = PAR_PROFIL[situation].filter((k) => k !== "animaux" || situation === "jardin" || hasAnimals);
+  const ids = PAR_PROFIL[situation].filter((k) => k !== "animaux" || situation === "jardin" || situation === "petit-jardin" || hasAnimals);
   const TABS = TOUS.filter(([k]) => ids.includes(k) || k === tab0).sort((a, b) => ids.indexOf(a[0]) - ids.indexOf(b[0]));
   const tab = tab0 ?? ids[0];
   return (
@@ -292,14 +293,9 @@ function Graines() {
 function MesAnimaux() {
   const troupeaux = useStore((s) => s.troupeaux);
   const soins = useStore((s) => s.soins);
-  const ponte = useStore((s) => s.ponte);
   const [aid, setAid] = useState("");
   const [nom, setNom] = useState("");
   const [nombre, setNombre] = useState("1");
-  const [oeufs, setOeufs] = useState("");
-  const d30 = [...Array(30)].map((_, i) => addDays(today(), -i));
-  const total30 = d30.reduce((a, d) => a + (ponte[d] ?? 0), 0);
-  const hasPoules = troupeaux.some((t) => ["poule", "canard", "caille", "oie", "pintade"].includes(t.animalId));
   return (
     <div>
       <div className="card">
@@ -314,25 +310,16 @@ function MesAnimaux() {
           <button className="btn primary" disabled={!aid} onClick={() => { upsert("troupeaux", { id: uid(), animalId: aid, nom: nom || animal(aid)!.nom, nombre: Number(nombre) || 1, depuis: today() }); setAid(""); setNom(""); }}>Ajouter</button>
         </div>
       </div>
-      {hasPoules && (
-        <div className="card" style={{ marginTop: 12 }}>
-          <b>🥚 Ponte</b> <span className="small muted">— 30 derniers jours : {total30} œufs</span>
-          <div className="row" style={{ marginTop: 8 }}>
-            <input type="number" min="0" placeholder="Œufs aujourd'hui" value={oeufs} onChange={(e) => setOeufs(e.target.value)} style={{ width: 160 }} />
-            <button className="btn primary" disabled={oeufs === ""} onClick={() => { update((s) => ({ ...s, ponte: { ...s.ponte, [today()]: Number(oeufs) } })); setOeufs(""); toast("Ponte notée 🥚"); }}>Noter</button>
-            {ponte[today()] !== undefined && <span className="small">Aujourd'hui : {ponte[today()]}</span>}
-          </div>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 60, marginTop: 10 }} aria-label="Ponte des 30 derniers jours">
-            {[...d30].reverse().map((d) => { const n = ponte[d] ?? 0; const max = Math.max(1, ...d30.map((x) => ponte[x] ?? 0)); return <div key={d} title={`${d} : ${n}`} style={{ flex: 1, height: `${(n / max) * 100}%`, minHeight: 2, background: n ? "var(--sun)" : "var(--surface-2)", borderRadius: 2 }} />; })}
-          </div>
-        </div>
-      )}
+      <ProductionCard troupeaux={troupeaux} />
       {!troupeaux.length && <Empty emoji="🐔">Aucun animal enregistré. Ajoutez vos poules, chèvres, lapins… pour suivre soins, vermifuges, vaccins et ponte, avec rappels.</Empty>}
       {troupeaux.map((t) => {
         const a = animal(t.animalId)!;
         const mes = soins.filter((x) => x.troupeauId === t.id).sort((x, y) => y.date.localeCompare(x.date));
         return <TroupeauCard key={t.id} t={t} a={a} soins={mes} />;
       })}
+      <CouveesCard />
+      <RegistreCard troupeaux={troupeaux} />
+      <DepensesBilanCard troupeaux={troupeaux} />
       <p className="small muted" style={{ marginTop: 14 }}>Ce suivi peut servir de base à votre registre d'élevage, mais il ne remplace pas les documents officiels obligatoires (registre papier ou numérique de l'EDE pour les ruminants, etc.).</p>
     </div>
   );
@@ -357,6 +344,7 @@ function TroupeauCard({ t, a, soins }: { t: Troupeau; a: Animal; soins: Soin[] }
           })}
         </div>
       )}
+      <IndividusSection t={t} a={a} />
       <details className="box"><summary>Noter un soin</summary>
         <div className="row" style={{ marginTop: 8 }}>
           <select value={type} onChange={(e) => setType(e.target.value)} style={{ flex: 1, minWidth: 160 }}>

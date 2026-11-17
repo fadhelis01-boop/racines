@@ -3,6 +3,7 @@ import { useStore } from "../lib/store";
 import { href, useRoute } from "../lib/router";
 import { Back, Listen } from "../components/ui";
 import { Vignette } from "../components/Ico";
+import { COUVAISON, datesCouvee } from "../lib/elevage";
 
 // Calculs pratiques : quantités indicatives, arrondies, pour un jardin familial
 const Champ = ({ label, value, onChange, min = 0, max = 10000, step = 1, unite }: { label: string; value: number; onChange: (n: number) => void; min?: number; max?: number; step?: number; unite?: string }) => (
@@ -132,6 +133,9 @@ export default function Calculs() {
         <p className="small"><a href={href("/guide/recuperateur-pluie")}>Installer un récupérateur →</a></p>
       </div>
 
+      <h2 id="eclosion">🐣 Date d'éclosion</h2>
+      <Eclosion />
+
       <h2 id="animaux">🐔 Combien de poules pour ma famille ?</h2>
       <div className="card stack">
         <div className="grid-sm">
@@ -158,6 +162,30 @@ export default function Calculs() {
         </details>
       </div>
       <Listen id="calculs" title="Calculs pratiques" blocks={[`Pour ${surface} mètres carrés : ${r(surface * 2)} à ${r(surface * 3)} kilos de compost par an.`, `Pour ${oeufs} œufs par semaine : ${poules} poules.`, `Pour ${pers} personnes : environ ${r(surfaceTotale * 1.4)} mètres carrés de potager avec les allées.`]} label="Écouter le résumé" />
+    </div>
+  );
+}
+
+function Eclosion() {
+  const [esp, setEsp] = useState("poule");
+  const [debut, setDebut] = useState(new Date().toISOString().slice(0, 10));
+  const d = datesCouvee(esp, debut);
+  const P = COUVAISON[esp];
+  const fr = (x: string) => new Date(x + "T12:00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  return (
+    <div className="card stack">
+      <div className="grid-sm">
+        <label className="field">Espèce<select value={esp} onChange={(e) => setEsp(e.target.value)}>{Object.entries(COUVAISON).map(([k, v]) => <option key={k} value={k}>{v.nom} ({v.jours} jours)</option>)}</select></label>
+        <label className="field">Début de la couvaison<input type="date" value={debut} onChange={(e) => setDebut(e.target.value)} /></label>
+      </div>
+      <ul className="ticks small">
+        <li><b>1er mirage</b> (retirer les œufs clairs) : {fr(d.mirage1)}</li>
+        <li><b>2e mirage</b> (retirer les embryons arrêtés) : {fr(d.mirage2)}</li>
+        <li><b>Arrêt du retournement</b>, humidité augmentée : {fr(d.arretRetournement)}</li>
+        <li><b>Éclosion</b> : {fr(d.eclosion)} (jusqu'au {fr(d.finEclosion)})</li>
+        <li><b>En couveuse</b> : {P.temp} ; humidité {P.humidite} ; retournement {P.retournement}.</li>
+      </ul>
+      <p className="small muted" style={{ margin: 0 }}>Mirer un œuf : dans le noir, une lampe torche puissante posée contre le gros bout ; un œuf fécondé montre des vaisseaux en toile d'araignée, un œuf clair reste translucide. Suivez votre couvée avec rappels dans <a href={href("/jardin/animaux")}>Mon jardin → Animaux</a>.</p>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { AMENAGEMENTS } from "../data/amenagements";
 import { GESTES_RECOLTE } from "../data/cueillette";
 import { AROMATES_INT } from "../data/interieur-hub";
 import { PAILLAGES } from "../data/methodes";
+import { RACES } from "../data/races";
 
 // Moteur de recherche : noms courants et synonymes, texte complet des fiches,
 // questions en phrase (« quand planter les tomates », « ma poule ne pond plus »),
@@ -22,6 +23,12 @@ const ALIAS_ANIMAUX: Record<string, string> = {
   ane: "anes anesse anon", cheval: "chevaux poney poneys jument equide", cochon: "cochons porc porcs truie porcelet",
   abeille: "abeilles ruche ruches apiculture miel essaim", dindon: "dinde dindes dindonneau", pigeon: "pigeons pigeonneau colombe",
 };
+
+const MOTS_ANIMAUX = new Set([...Object.keys(ALIAS_ANIMAUX), ...Object.values(ALIAS_ANIMAUX).flatMap((v) => v.split(" ")), "vache", "vaches", "veau", "alpaga", "alpagas", "lama", "lamas", "paon", "paons", "faisan", "faisans", "cobaye", "animal", "animaux", "betes"]);
+export function animalDe(q: string): string | undefined {
+  const nq = norm(q);
+  return Object.entries(ALIAS_ANIMAUX).find(([k, v]) => new RegExp(`(^|[^a-z])(${k}|${v.split(" ").join("|")})($|[^a-z])`).test(nq))?.[0];
+}
 
 let DOCS: Doc[] | null = null;
 function docs(): Doc[] {
@@ -45,6 +52,8 @@ function docs(): Doc[] {
     { principal: false, href: "/nutrition?t=animaux", emoji: "🐔", titre: "Nourrir ses animaux : besoins de chaque espèce", type: "Outil", noms: norm("nourrir les animaux | alimentation animaux | ration | besoins animaux | mineraux | pierre a lecher | coquilles d'huitres | quoi donner"), texte: norm("eau proteines fibres mineraux poules chevres lapins") },
     { principal: false, href: "/amenagements", emoji: "🧭", titre: "Quelle méthode de potager pour moi ? (assistant)", type: "Outil", noms: norm("quelle methode potager | methode de potager | type de potager | choisir potager | modes de culture | techniques de potager | monticule | monticules | butte | lasagne | carre potager | bottes de paille | sacs de culture | potager en rangs"), texte: norm("avantages inconvenients pas a pas debutant") },
     { principal: false, href: "/amenagements?t=paillages", emoji: "🌾", titre: "Les paillages comparés (paille, tonte, feuilles, BRF, carton…)", type: "Outil", noms: norm("paillage | pailler | paillis | quel paillage | mulch | brf | toile de paillage | paillettes de lin"), texte: norm(PAILLAGES.map((x) => x.nom + " " + x.plus + " " + x.moins).join(" ")) },
+    ...ANIMAUX.map((a) => ({ animal: true, principal: false, id: a.id, href: `/animal/${a.id}?t=races`, emoji: a.emoji, titre: `Races : ${a.nom.split(" (")[0].toLowerCase()}`, type: "Animal", noms: norm(`races ${a.nom} | race ${a.id} | ${(RACES[a.id] ?? []).map((r) => r.nom).join(" | ")}`), texte: norm((RACES[a.id] ?? []).map((r) => r.pour + " " + r.texte).join(" ")) })),
+    { animal: true, principal: false, href: "/calculs?s=eclosion", emoji: "🐣", titre: "Calculer la date d'éclosion (poule, cane, oie, caille…)", type: "Outil", noms: norm("eclosion | date d eclosion | couvaison | incubation | mirage | mirer les oeufs | couveuse"), texte: norm("21 jours 28 jours retournement humidite temperature") },
     { principal: false, href: "/bio", emoji: "📊", titre: "Mon éco-score : où en est mon jardin bio et écoresponsable ?", type: "Outil", noms: norm("eco score | ecoscore | jardin ecologique | jardin bio | ecoresponsable | empreinte | mes pratiques"), texte: norm("sol eau biodiversite energie dechets intrants animaux") },
     { principal: false, href: "/bio?t=labels", emoji: "🏷️", titre: "Les labels bio et écologiques expliqués", type: "Outil", noms: norm("label | labels | logo bio | ab | uab | ecolabel | vegetal local | plante bleue | demeter | nature et progres"), texte: norm("terreau sans tourbe semences bio") },
     { principal: false, href: "/jardin", emoji: "🔔", titre: "Mes plantes : rappels d'arrosage sur le téléphone", type: "Débuter", noms: norm("rappel | rappels | notification | notifications | alerte arrosage | j oublie d arroser | me prevenir"), texte: norm("agenda telephone arrosage verifier") },
@@ -120,6 +129,17 @@ const INTENTIONS: [RegExp, string[]][] = [
   [/offrir|cadeau/, ["/debuter?t=offrir"]],
   [/rappels?|notifications?|alertes? (d )?arrosage|oublie d arroser|j oublie/, ["/jardin"]],
   [/(grandit|pousse) (pas|plus)|ne (grandit|pousse) (pas|plus)|croissance (lente|bloquee)/, ["/probleme/manque-lumiere", "/probleme/racines-etroit", "/probleme/carence-azote"]],
+  [/registre/, ["/guide/registre-elevage"]],
+  [/(eclo|eclos|mirer|mirage|couveuse|incubat|combien de (temps|jours).*(couv|oeufs?)|couvaison)/, ["/calculs?s=eclosion", "/guide/couvaison"]],
+  [/colostrum|mise bas|mettre bas|agnel|chevreau|agneau|porcelet|naissance|ne tete pas|biberon/, ["/guide/naissances"]],
+  [/alpaga|lama|vache|veau|paon|faisan|cochon d inde|cobaye|lapin nain|lapin de compagnie/, ["/guide/autres-animaux"]],
+  [/(lacher|laisser|mettre|sortir).*poules?.*(potager|jardin)|poules? (et|au|dans le) potager|poules au jardin/, ["/guide/poules-potager"]],
+  [/(eau|abreuvoir).*(gel|glace)|lumiere.*poulailler|ponte.*hiver|poules? en hiver|basse cour.*hiver|froid.*poul/, ["/guide/hiver-basse-cour"]],
+  [/traire|traite|fromage|lait de (chevre|brebis)|faisselle/, ["/guide/traite-fromage"]],
+  [/(tondre|tonte).*(mouton|brebis)|laine/, ["/guide/tonte-laine"]],
+  [/miel|extracteur|hausse|recolte.*ruche/, ["/guide/recolte-miel"]],
+  [/salmonel|zoonose|enfants?.*(poule|animaux|chevre|lapin|ane)|laver les oeufs|hygiene.*(oeuf|poule|animaux)/, ["/guide/hygiene-animaux"]],
+  [/que (planter|semer|cultiver) pour (mes |les )?(poules|chevres|lapins|animaux)/, ["/guide/cultiver-pour-animaux"]],
   [/liste de courses|quoi acheter|que faut il acheter|materiel (pour )?(debuter|commencer)/, ["/debuter?t=courses"]],
   [/potager facile|legumes? faciles?|premier potager|legumes? pour debutant/, ["/debuter?t=potager", "/creer"]],
 ];
@@ -143,7 +163,16 @@ export function rechercher(q: string, limit = 60): Hit[] {
   if (coeur && coeur !== nq) nq = coeur;
   const syn = (t: string) => (animalQ && (t === "tuer" || t === "tue") ? ["abattre", "abattage"] : SYN[t] ?? []);
   const variantes = (t: string) => [t, radical(t), ...syn(t)];
+  const motEntier = (t: string) => MOTS_ANIMAUX.has(t) || MOTS_ANIMAUX.has(radical(t));
+  const trouve = (hay: string, t: string, v: string) => (motEntier(t) ? new RegExp(`(^|[^a-z0-9])${echappe(v)}(s|x)?($|[^a-z0-9])`).test(hay) : contient(hay, v));
+  const motsBete = toks.filter((t) => motEntier(t) && !["animal", "animaux", "betes"].includes(t));
   const cibles = INTENTIONS.filter(([re]) => re.test(brut)).flatMap(([, h]) => h);
+  const bete = animalDe(q);
+  if (bete && /(mort|morte|morts|meurt|deced|cadavre|enterrer|equarriss)/.test(brut)) cibles.unshift("/guide/deces-animal");
+  if (/enterrer un animal|animal mort|animaux morts/.test(brut)) cibles.unshift("/guide/deces-animal");
+  if (bete && /races?|pond beaucoup|meilleure pondeuse|laitiere|quelle (poule|chevre|brebis|lapine|cane)|calme|naine?/.test(brut)) cibles.unshift(`/animal/${bete}?t=races`);
+  if (bete === "dindon" || /dinde/.test(brut)) cibles.push("/animal/dindon");
+  if (bete && /vacances|absence|partir|garder|nourrit|nourrir pendant/.test(brut)) cibles.unshift("/guide/vacances-animaux");
   const radQ = new Set(toks.flatMap((t) => [radical(t), ...syn(t).map(radical)]));
   const hits: Hit[] = [];
   for (const d of docs()) {
@@ -163,9 +192,9 @@ export function rechercher(q: string, limit = 60): Hit[] {
       let manquants = 0;
       for (const t of toks) {
         const vs = variantes(t);
-        if (vs.some((v) => contient(d.noms, v))) score += 12;
-        else if (vs.some((v) => contient(d.texte, v))) score += 4;
-        else if (t.length >= 5 && d.noms.split(/[^a-z0-9]+/).some((w) => w.length >= 4 && lev(w, t, t.length >= 8 ? 2 : 1) <= (t.length >= 8 ? 2 : 1))) score += 8;
+        if (vs.some((v) => trouve(d.noms, t, v))) score += 12;
+        else if (vs.some((v) => trouve(d.texte, t, v))) score += 4;
+        else if (!motEntier(t) && t.length >= 5 && d.noms.split(/[^a-z0-9]+/).some((w) => w.length >= 4 && lev(w, t, t.length >= 8 ? 2 : 1) <= (t.length >= 8 ? 2 : 1))) score += 8;
         else manquants++;
       }
       // Tous les mots doivent être trouvés ; dans une phrase de 3 mots et plus, on tolère un mot absent
@@ -174,6 +203,8 @@ export function rechercher(q: string, limit = 60): Hit[] {
     }
     // Une question sur les plantes ne doit pas remonter des fiches d'élevage
     if (d.animal && !animalQ) score *= 0.3;
+    // Question sur un animal : les fiches qui ne parlent pas de cet animal passent derrière
+    if (motsBete.length && !motsBete.some((t) => trouve(d.noms, t, t) || trouve(d.texte, t, t))) score *= 0.2;
     // Les plantes dangereuses ne remontent que si la question parle de danger
     if (d.type === "Plante dangereuse" && !/toxi|dang|poison|mortel|enfant|chien|chat|cigue|belladone|datura|if/.test(brut)) score *= 0.3;
     const k = cibles.indexOf(d.href);

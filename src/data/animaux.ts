@@ -181,7 +181,7 @@ export const ANIMAUX: Animal[] = [
     reglementation: ["Volaille : déclaration en mairie, mesures influenza aviaire."],
     produits: ["Viande, graisse (conserve), duvet", "Œufs au printemps"],
     video: "élever des oies au verger débutant",
-    soins: [],
+    soins: [{ type: "Nettoyage de l'abri et de la litière", tousLesJours: 60 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }],
   },
   {
     id: "pintade", nom: "Pintades", emoji: "🐦", wiki: "Pintade de Numidie",
@@ -204,7 +204,7 @@ export const ANIMAUX: Animal[] = [
     reglementation: ["Volaille : déclaration en mairie, mesures influenza aviaire."],
     produits: ["Viande fine au goût de gibier", "Petits œufs très bons"],
     video: "élever des pintades conseils",
-    soins: [],
+    soins: [{ type: "Inspection poux rouges", tousLesJours: 14 }, { type: "Nettoyage complet du poulailler", tousLesJours: 90 }],
   },
   {
     id: "caille", nom: "Cailles", emoji: "🐤", wiki: "Caille du Japon",
@@ -225,7 +225,7 @@ export const ANIMAUX: Animal[] = [
     reglementation: ["Volaille : déclaration en mairie (Cerfa 15472) et mesures influenza aviaire."],
     produits: ["Œufs (5 œufs de caille = 1 œuf de poule)", "Viande"],
     video: "élever des cailles pondeuses jardin",
-    soins: [],
+    soins: [{ type: "Nettoyage de la volière", tousLesJours: 14 }, { type: "Inspection parasites", tousLesJours: 30 }],
   },
   {
     id: "lapin", nom: "Lapins", emoji: "🐇", wiki: "Lapin domestique",

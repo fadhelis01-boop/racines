@@ -52,7 +52,7 @@ export const ANIMAUX2: Animal[] = [
     reglementation: ["Volaille : déclaration en mairie (Cerfa 15472) et mesures influenza aviaire.", "Abattage familial autorisé pour la consommation du foyer."],
     produits: ["Viande", "Œufs (gros, au printemps)"],
     video: "élever des dindes de noël débutant",
-    soins: [],
+    soins: [{ type: "Nettoyage de l'abri", tousLesJours: 60 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }],
   },
   {
     id: "pigeon", nom: "Pigeons de chair et d'ornement", emoji: "🕊️", wiki: "Pigeon biset",

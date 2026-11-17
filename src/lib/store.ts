@@ -34,6 +34,15 @@ export interface Note { id: string; date: string; texte: string; photo?: string;
 export interface Graine { id: string; planteId: string; variete: string; annee: number; qte?: string }
 export interface Troupeau { id: string; animalId: string; nom: string; nombre: number; depuis?: string; notes?: string }
 export interface Soin { id: string; troupeauId: string; type: string; date: string; prochain?: string; note?: string }
+// Élevage : animaux suivis un par un, registre des mouvements, production, dépenses, couvées
+export interface Individu { id: string; troupeauId: string; nom: string; boucle?: string; naissance?: string; race?: string; sexe?: "F" | "M"; sortie?: string; note?: string }
+export type TypeMouvement = "entree" | "naissance" | "sortie" | "deces";
+export interface Mouvement { id: string; troupeauId: string; date: string; type: TypeMouvement; nombre: number; boucles?: string; provenance?: string; note?: string }
+export type TypeProduction = "oeufs" | "lait" | "miel" | "laine" | "viande";
+export interface Production { id: string; troupeauId: string; date: string; type: TypeProduction; qte: number }
+export type CategorieDepense = "aliment" | "litiere" | "veterinaire" | "materiel" | "achat" | "autre";
+export interface Depense { id: string; troupeauId?: string; date: string; categorie: CategorieDepense; montant: number; note?: string }
+export interface Couvee { id: string; espece: string; debut: string; oeufs: number; mode: "poule" | "couveuse"; eclos?: number; fini?: string; note?: string }
 export type Fenetre = "sud" | "ouest" | "est" | "nord" | "lampe" | "sombre";
 // Une plante de la maison suivie individuellement (intérieur, pots)
 export interface MaPlante {
@@ -60,7 +69,12 @@ export interface State {
   graines: Graine[];
   troupeaux: Troupeau[];
   soins: Soin[];
-  ponte: Record<string, number>; // date ISO → nombre d'œufs
+  ponte: Record<string, number>; // date ISO → nombre d'œufs (ancien suivi global, conservé)
+  individus: Individu[];
+  mouvements: Mouvement[];
+  production: Production[];
+  depenses: Depense[];
+  couvees: Couvee[];
   fait: Record<string, string>; // tâche cochée → date
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
@@ -94,6 +108,11 @@ const EMPTY: State = {
   troupeaux: [],
   soins: [],
   ponte: {},
+  individus: [],
+  mouvements: [],
+  production: [],
+  depenses: [],
+  couvees: [],
   fait: {},
   videos: {},
   favoris: [],
@@ -157,7 +176,7 @@ export function isoDate(d: Date) {
 }
 
 // Ajout/modification/suppression génériques dans une liste de l'état
-type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes";
+type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees";
 export function upsert<K extends ListKey>(key: K, item: State[K][number]) {
   update((s) => {
     const list = s[key] as { id: string }[];

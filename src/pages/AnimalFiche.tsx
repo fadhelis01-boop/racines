@@ -1,5 +1,7 @@
 import { MALADIES_ANIMALES } from "../data/maladies-animales";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { RACES } from "../data/races";
+import { useRoute } from "../lib/router";
 import { animal, GUIDES } from "../data/index";
 import { Galerie, Back, Listen, Videos, A, Empty, toast } from "../components/ui";
 import { href } from "../lib/router";
@@ -8,7 +10,9 @@ import { upsert, uid, today } from "../lib/store";
 
 export default function AnimalFiche({ id }: { id?: string }) {
   const a = id ? animal(id) : undefined;
-  const [tab, setTab] = useState("quotidien");
+  const tQ = useRoute().query.get("t");
+  const [tab, setTab] = useState(tQ ?? "quotidien");
+  useEffect(() => { if (tQ) setTab(tQ); }, [tQ, id]);
   if (!a) return <Empty emoji="🤷">Fiche introuvable. <A to="/animaux">Tous les animaux</A></Empty>;
   const guides = GUIDES.filter((g) => g.liens?.includes(a.id));
   const L = (t: string, l: string[]) => (l.length ? [t + ".", ...l] : []);
@@ -19,8 +23,9 @@ export default function AnimalFiche({ id }: { id?: string }) {
     sante: [...a.sante.map((s) => `Si vous observez : ${s.signe}. Alors : ${s.action}`), ...a.maladies.map((m) => `${m.nom}. Signes : ${m.signes}. Prévention : ${m.prevention}. Soin : ${m.soin}`)],
     jardin: [`Le fumier. ${a.fumier.valeur}`, ...a.fumier.usage, ...L("Au jardin", a.auJardin)],
     regles: [...L("Réglementation", a.reglementation), ...L("Reproduction", a.reproduction)],
+    races: (RACES[a.id] ?? []).map((r) => `${r.nom}. Pour : ${r.pour}. ${r.texte} ${r.prod ?? ""}`),
   };
-  const TABS: [string, string][] = [["quotidien", "Au quotidien"], ["logement", "Logement"], ["alimentation", "Alimentation"], ["sante", "Santé"], ["jardin", "Fumier et jardin"], ["regles", "Règles et reproduction"], ["videos", "Vidéos"]];
+  const TABS: [string, string][] = [["quotidien", "Au quotidien"], ["races", "Races"], ["logement", "Logement"], ["alimentation", "Alimentation"], ["sante", "Santé"], ["jardin", "Fumier et jardin"], ["regles", "Règles et reproduction"], ["videos", "Vidéos"]];
   return (
     <div>
       <Back />
@@ -88,6 +93,22 @@ export default function AnimalFiche({ id }: { id?: string }) {
           <ul className="ticks">{a.auJardin.map((x) => <li key={x}>{x}</li>)}</ul>
           {a.produits && <><h3>Ce qu'ils produisent</h3><ul className="ticks">{a.produits.map((x) => <li key={x}>{x}</li>)}</ul></>}
           {a.cohabitation && <p><b>Cohabitation :</b> {a.cohabitation}</p>}
+        </div>
+      )}
+      {tab === "races" && (
+        <div>
+          <p className="small">Les races les plus courantes en élevage familial. Les races locales et rustiques sont plus sobres, résistent mieux aux maladies, et les élever aide à les préserver.</p>
+          <div className="grid">
+            {(RACES[a.id] ?? []).map((r) => (
+              <div key={r.nom} className="card">
+                <b>{r.nom}</b>
+                <div className="row" style={{ gap: 6, margin: "4px 0" }}><span className="badge">{r.pour}</span>{r.rustique && <span className="badge green">Rustique</span>}{r.enfants && <span className="badge green">Calme avec les enfants</span>}</div>
+                <p className="small" style={{ margin: "4px 0" }}>{r.texte}</p>
+                {r.prod && <p className="small muted" style={{ margin: 0 }}>{r.prod}</p>}
+              </div>
+            ))}
+          </div>
+          {!(RACES[a.id] ?? []).length && <p className="muted small">Pas encore de races détaillées pour cet animal.</p>}
         </div>
       )}
       {tab === "regles" && (

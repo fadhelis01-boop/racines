@@ -7,6 +7,8 @@ import { INTERIEUR2, ENRICH } from "./interieur2";
 import { INTERIEUR3 } from "./interieur3";
 import { ENVAHISSANTES, GUIDES_AGRO } from "./agronomie";
 import { GUIDES_BIO } from "./bio";
+import { GUIDES_ELEVAGE } from "./guides-elevage";
+import { MALADIES_ANIMALES } from "./maladies-animales";
 import { CONTENANT, RENDEMENT, PROFONDEUR, GERMINATION } from "./cultures-complements";
 import { JARDIN2 } from "./jardin2";
 import { FLEURS2, ENRICH_FLEURS } from "./fleurs2";
@@ -38,7 +40,7 @@ export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUI
   }
   for (const p of PLANTES) p.amis = p.amis.filter((a) => !p.ennemis.includes(a));
 }
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX].map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
+export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX, ...GUIDES_ELEVAGE].map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
 const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 
@@ -62,6 +64,8 @@ export function lienVers(id: string): { href: string; label: string; emoji: stri
   if (a) return { href: `/animal/${id}`, label: a.nom, emoji: a.emoji };
   const r = R.get(id);
   if (r) return { href: `/remede/${id}`, label: r.nom, emoji: r.emoji };
+  const ma = MALADIES_ANIMALES.find((x) => x.id === id);
+  if (ma) return { href: `/maladie-animale/${id}`, label: ma.nom, emoji: "🩺" };
   return null;
 }
 
