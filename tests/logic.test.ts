@@ -14,6 +14,8 @@ import { remede } from "../src/data/index";
 import { STATUT_REMEDE } from "../src/data/reglementation";
 import { ecoScore, PRATIQUES } from "../src/data/bio";
 import { datesCouvee, bilan, registreCsv, tachesCouvees } from "../src/lib/elevage";
+import { EXPORTS, bilanPluriannuel, varietesDe } from "../src/lib/exports";
+import { GUIDES } from "../src/data/index";
 import { SUBSTRATS } from "../src/data/interieur-hub";
 import { decouper } from "../src/lib/lexique-texte";
 import { diagnostiquerAnimal } from "../src/lib/sante-animale";
@@ -309,6 +311,29 @@ const etatFerme = { ...({} as never as import("../src/lib/store").State), ponte:
 ok(bilan(etatFerme, "2026-01-01").parType.oeufs === 10 && bilan(etatFerme, "2026-01-01").coutOeuf === 0.5, "bilan : œufs (ancien + nouveau suivi) et coût par œuf");
 ok(registreCsv(etatFerme).includes("Naissance") && registreCsv(etatFerme).includes("Chèvres"), "registre exportable avec espèce et mouvement");
 ok(tachesCouvees([{ id: "c", espece: "poule", debut: "2026-03-01", oeufs: 8, mode: "poule" }], new Date("2026-03-18T12:00:00")).some((t) => /retournement/.test(t.texte)), "couvée : rappel d'arrêt du retournement");
+
+// Audit récup, petit budget, jardinier confirmé, plantes de collection
+p1("pneus potager", "Matériaux de récup");
+p1("cuve ibc", "Matériaux de récup");
+p1("plaque amiante jardin", "Matériaux de récup");
+p1("serre vieilles fenêtres", "Construire une serre ou un châssis");
+p1("poulailler palettes", "Construire un poulailler en palettes");
+p1("godets papier journal", "Fabriquer ses petits équipements");
+p1("jardiner sans argent", "Jardiner sans argent");
+p1("toilettes sèches", "Toilettes sèches");
+p1("eaux grises", "Arroser avec les eaux grises");
+p1("manche cassé", "Réparer et fabriquer ses outils");
+p1("échange de boutures", "Échanger boutures");
+p1("acariens prédateurs", "Lutte biologique dans la maison");
+p1("thai constellation", "Monstera");
+p1("pink princess", "Philodendron");
+ok(chercherInterieur("anthurium crystallinum")[0]?.plante.id === "anthurium", "cultivar rare retrouvé dans la recherche d'intérieur");
+ok(GUIDES.find((g) => g.id === "recuperateur-pluie")!.etapes.some((e) => /toiture/i.test(e.titre)), "récupérateur d'eau : toiture et cuve ajoutées");
+const etatJardin = { ...({} as never as import("../src/lib/store").State), espaces: [], ponte: {}, graines: [{ id: "g", planteId: "tomate", variete: "Noire de Crimée", annee: 2025 }], cultures: [{ id: "c", planteId: "tomate", variete: "Cœur de bœuf", date: "2025-05-10", mode: "plantation" as const }], recoltes: [{ id: "r1", planteId: "tomate", variete: "Cœur de bœuf", date: "2025-08-01", qte: 2, unite: "kg" as const }, { id: "r2", planteId: "tomate", variete: "Cœur de bœuf", date: "2026-07-20", qte: 500, unite: "g" as const }, { id: "r3", planteId: "tomate", variete: "Noire de Crimée", date: "2026-08-03", qte: 1, unite: "kg" as const }], notes: [], plantes: [], multiplications: [{ id: "m", type: "bouture" as const, planteId: "pothos", date: "2026-03-01", nombre: 4, reussis: 3, fini: "2026-04-01" }] };
+const bp = bilanPluriannuel(etatJardin);
+ok(bp.annees.join(",") === "2025,2026" && bp.varietes.length === 2 && bp.varietes.find((v) => v.variete === "Cœur de bœuf")!.parAnnee["2026"] === 0.5, "bilan par année et par variété");
+ok(varietesDe(etatJardin, "tomate").length === 2, "variétés proposées à partir des graines, cultures et récoltes");
+ok(EXPORTS.recoltes.faire(etatJardin).includes("Noire de Crimée") && EXPORTS.multiplications.faire(etatJardin).includes("75 %"), "exports tableur avec variétés et taux de réussite");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

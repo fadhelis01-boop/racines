@@ -1,5 +1,8 @@
 import MotsLexique from "../components/MotsLexique";
 import { useEffect, useState } from "react";
+import { useStore, upsert, remove, uid, today } from "../lib/store";
+import { ALIAS_CULTIVARS } from "../data/guides-recup";
+import { toast } from "../components/ui";
 import { chercherInterieur, rechercher } from "../lib/search";
 import { TRAITS } from "../data/traits";
 import { norm } from "../lib/garden";
@@ -18,6 +21,7 @@ const ONGLETS: [string, string, string][] = [
   ["entretien", "🗓️", "Entretien et saisons"],
   ["multiplier", "✂️", "Bouturer, diviser"],
   ["soigner", "🩺", "Problèmes"],
+  ["collection", "💎", "Ma collection et mes envies"],
   ["tutos", "📘", "Tous les tutoriels"],
 ];
 // Aromates qui demandent du soleil direct quand on n'a pas de lampe
@@ -61,6 +65,7 @@ export default function Interieur() {
       {onglet === "multiplier" && <Multiplier />}
       {onglet === "soigner" && <Soigner />}
       {onglet === "tutos" && <Tutos />}
+      {onglet === "collection" && <Collection />}
     </div>
   );
 }
@@ -334,6 +339,45 @@ function Catalogue() {
         </div>
       ))}
       {!list.length && <p className="muted">Aucune plante ne réunit tous ces critères.</p>}
+    </div>
+  );
+}
+
+function Collection() {
+  const envies = useStore((s) => s.envies);
+  const [pid, setPid] = useState("");
+  const [texte, setTexte] = useState("");
+  const choix = PLANTES.filter((p) => p.categorie === "interieur").sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+  const ouvertes = envies.filter((e) => !e.obtenue);
+  return (
+    <div>
+      <h2 style={{ marginTop: 0 }}>💭 Ma liste d'envies</h2>
+      <div className="card">
+        <div className="grid-sm">
+          <select value={pid} onChange={(e) => setPid(e.target.value)} aria-label="Plante"><option value="">— Plante (facultatif) —</option>{choix.map((p) => <option key={p.id} value={p.id}>{p.emoji} {p.nom}</option>)}</select>
+          <input type="text" placeholder="Cultivar ou précision (ex. : Pink Princess)" value={texte} onChange={(e) => setTexte(e.target.value)} />
+        </div>
+        <button className="btn primary sm" style={{ marginTop: 6 }} disabled={!pid && !texte} onClick={() => { upsert("envies", { id: uid(), planteId: pid || undefined, texte: texte || plante(pid)!.nom }); setPid(""); setTexte(""); toast("Ajoutée à vos envies"); }}>Ajouter</button>
+      </div>
+      {ouvertes.map((e) => (
+        <div key={e.id} className="card row" style={{ flexWrap: "nowrap" }}>
+          {e.planteId ? <Vignette id={e.planteId} emoji={plante(e.planteId)?.emoji ?? "🌿"} taille={44} /> : <span style={{ fontSize: 30 }}>🌿</span>}
+          <span style={{ flex: 1 }}><b>{e.texte}</b>{e.planteId && <span className="small muted"> · <a href={href(`/plante/${e.planteId}`)}>{plante(e.planteId)?.nom}</a></span>}</span>
+          <button className="btn sm" onClick={() => { upsert("envies", { ...e, obtenue: today() }); toast("Bravo ! Pensez à l'ajouter dans Mes plantes"); }}>Obtenue</button>
+          <button className="btn sm ghost" onClick={() => remove("envies", e.id)} aria-label="Supprimer">🗑</button>
+        </div>
+      ))}
+      {!ouvertes.length && <p className="muted small">Aucune envie pour l'instant.</p>}
+      <p className="small">Partagez vos envies et vos doubles avec d'autres passionnés : onglet <a href={href("/jardin/partage")}>Partage</a> de Mon jardin.</p>
+      <h2>💎 Cultivars recherchés</h2>
+      <p className="small">Racines reconnaît ces noms dans la recherche et renvoie vers la fiche de l'espèce, dont les soins de base s'appliquent ; la panachure demande plus de lumière et de patience.</p>
+      <div className="grid">{Object.entries(ALIAS_CULTIVARS).map(([id, noms]) => { const p = plante(id); return p ? <a key={id} className="card" href={href(`/plante/${id}`)} style={{ textDecoration: "none", color: "inherit" }}><b>{p.emoji} {p.nom}</b><div className="small muted">{noms.join(" · ")}</div></a> : null; })}</div>
+      <div className="grid-sm" style={{ marginTop: 12 }}>
+        <a className="btn" href={href("/guide/collection-plantes")}>💎 Plantes de collection, panachure, vitrine</a>
+        <a className="btn" href={href("/guide/lutte-bio-interieur")}>🐞 Lutte biologique dans la maison</a>
+        <a className="btn" href={href("/guide/echange-boutures")}>🔄 Échanger des boutures</a>
+        <a className="btn" href={href("/jardin/multiplier")}>✂️ Suivre mes boutures</a>
+      </div>
     </div>
   );
 }

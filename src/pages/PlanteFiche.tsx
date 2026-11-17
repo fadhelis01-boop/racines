@@ -10,6 +10,7 @@ import { moisAffiches } from "../lib/calendar";
 import { AjoutMaPlante } from "../components/MesPlantes";
 import { MOIS_NOMS } from "../data/util";
 import { gesteDe } from "../data/cueillette";
+import { varietesDe } from "../lib/exports";
 import { AROMATES_INT } from "../data/interieur-hub";
 import { essentiel } from "../lib/essentiel";
 import { SOL_PLANTE, TYPES_SOL } from "../data/sols";
@@ -264,6 +265,7 @@ export function AjoutCulture({ planteId, onDone }: { planteId: string; onDone: (
   const [mode, setMode] = useState<"semis" | "plantation">("semis");
   const [espaceId, setEspaceId] = useState(espaces[0]?.id ?? "");
   const [note, setNote] = useState("");
+  const [variete, setVariete] = useState("");
   return (
     <div className="card" style={{ marginTop: 10 }}>
       <div className="row">
@@ -278,9 +280,10 @@ export function AjoutCulture({ planteId, onDone }: { planteId: string; onDone: (
         </select>
       </label>
       {!espaces.length && <p className="small muted">Créez vos planches, carrés ou pots dans <A to="/jardin/plan">Mon jardin → Plan</A> pour suivre la rotation.</p>}
-      <label className="field">Note (variété, quantité…)<input type="text" value={note} onChange={(e) => setNote(e.target.value)} /></label>
+      <label className="field">Variété<input type="text" list="var-culture" placeholder="Ex. : Cœur de bœuf, Noire de Crimée…" value={variete} onChange={(e) => setVariete(e.target.value)} /><datalist id="var-culture">{varietesDe(getState(), planteId).map((v) => <option key={v} value={v} />)}</datalist></label>
+      <label className="field">Note (quantité, origine des graines…)<input type="text" value={note} onChange={(e) => setNote(e.target.value)} /></label>
       <div className="row" style={{ marginTop: 10 }}>
-        <button className="btn primary" onClick={() => { upsert("cultures", { id: uid(), planteId, date, mode, espaceId: espaceId || undefined, note: note || undefined }); toast("Noté dans Mon jardin"); onDone(); }}>Enregistrer</button>
+        <button className="btn primary" onClick={() => { upsert("cultures", { id: uid(), planteId, variete: variete.trim() || undefined, date, mode, espaceId: espaceId || undefined, note: note || undefined }); toast("Noté dans Mon jardin"); onDone(); }}>Enregistrer</button>
         <button className="btn ghost" onClick={onDone}>Annuler</button>
       </div>
     </div>

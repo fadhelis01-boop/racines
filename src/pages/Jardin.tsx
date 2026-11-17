@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import { ExportsCard, BilanPluriannuel, Multiplications, PartageCard } from "../components/Suivi";
+import { varietesDe } from "../lib/exports";
 import { ProductionCard, IndividusSection, CouveesCard, RegistreCard, DepensesBilanCard } from "../components/Elevage";
 import { useStore, upsert, remove, uid, today, update, type Espace, type Recolte, type Troupeau, type Soin } from "../lib/store";
 import type { Animal } from "../data/types";
@@ -13,12 +15,12 @@ import MesPlantes from "../components/MesPlantes";
 import { PRIX_KG, POIDS_PIECE } from "../data/prix";
 import PlanVisuel, { ArrosageSemaine } from "../components/PlanVisuel";
 
-const TOUS: [string, string][] = [["mesplantes", "🌿 Mes plantes"], ["cultures", "🌱 Cultures"], ["plan", "🗺️ Plan et rotation"], ["recoltes", "🧺 Récoltes"], ["journal", "📓 Journal"], ["graines", "🏺 Graines"], ["animaux", "🐔 Animaux"]];
+const TOUS: [string, string][] = [["mesplantes", "🌿 Mes plantes"], ["cultures", "🌱 Cultures"], ["plan", "🗺️ Plan et rotation"], ["recoltes", "🧺 Récoltes"], ["multiplier", "✂️ Boutures et semis"], ["journal", "📓 Journal"], ["graines", "🏺 Graines"], ["animaux", "🐔 Animaux"], ["partage", "🤝 Partage"]];
 const PAR_PROFIL: Record<string, string[]> = {
-  appartement: ["mesplantes", "cultures", "journal", "graines"],
-  balcon: ["mesplantes", "cultures", "recoltes", "journal", "graines"],
-  "petit-jardin": ["cultures", "plan", "recoltes", "mesplantes", "journal", "graines", "animaux"],
-  jardin: ["cultures", "plan", "recoltes", "mesplantes", "journal", "graines", "animaux"],
+  appartement: ["mesplantes", "multiplier", "cultures", "journal", "graines", "partage"],
+  balcon: ["mesplantes", "cultures", "recoltes", "multiplier", "journal", "graines", "partage"],
+  "petit-jardin": ["cultures", "plan", "recoltes", "multiplier", "mesplantes", "journal", "graines", "animaux", "partage"],
+  jardin: ["cultures", "plan", "recoltes", "multiplier", "mesplantes", "journal", "graines", "animaux", "partage"],
 };
 
 export default function Jardin({ tab: tab0 }: { tab?: string }) {
@@ -38,6 +40,8 @@ export default function Jardin({ tab: tab0 }: { tab?: string }) {
       {tab === "plan" && <Plan />}
       {tab === "recoltes" && <Recoltes />}
       {tab === "journal" && <Journal />}
+      {tab === "multiplier" && <Multiplications />}
+      {tab === "partage" && <PartageCard />}
       {tab === "graines" && <Graines />}
       {tab === "animaux" && <MesAnimaux />}
     </div>
@@ -79,7 +83,7 @@ function Cultures() {
           <div key={c.id} className="card row">
             <span style={{ fontSize: "1.8rem" }}>{p?.emoji}</span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <a href={href(`/plante/${c.planteId}`)}><b>{p?.nom}</b></a> {c.note && <span className="muted small">· {c.note}</span>}
+              <a href={href(`/plante/${c.planteId}`)}><b>{p?.nom}</b></a>{c.variete && <b> « {c.variete} »</b>} {c.note && <span className="muted small">· {c.note}</span>}
               <div className="small muted">{c.mode === "semis" ? "Semé" : "Planté"} le {new Date(c.date).toLocaleDateString("fr-FR")}{e ? ` · ${e.nom}` : ""}</div>
               {r && !c.fini && <div className="small">🧺 Récolte estimée : vers le {r.toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}</div>}
             </div>
@@ -158,6 +162,8 @@ function Recoltes() {
   const [qte, setQte] = useState("");
   const [unite, setUnite] = useState<Recolte["unite"]>("kg");
   const [date, setDate] = useState(today());
+  const [variete, setVariete] = useState("");
+  const etat = useStore((x) => x);
   const annee = new Date().getFullYear().toString();
   const totaux = new Map<string, Record<string, number>>();
   for (const r of recoltes.filter((x) => x.date.startsWith(annee))) {
@@ -183,10 +189,11 @@ function Recoltes() {
         <b>➕ Peser une récolte</b>
         <div className="row" style={{ marginTop: 8 }}>
           <div style={{ flex: 2, minWidth: 180 }}><PlantePicker value={pid} onChange={setPid} filter={(p) => p.categorie !== "interieur"} /></div>
+          {pid && <><input type="text" list="var-recolte" placeholder="Variété" value={variete} onChange={(e) => setVariete(e.target.value)} style={{ width: 150 }} /><datalist id="var-recolte">{varietesDe(etat, pid).map((v) => <option key={v} value={v} />)}</datalist></>}
           <input type="number" step="0.01" placeholder="Quantité" value={qte} onChange={(e) => setQte(e.target.value)} style={{ width: 110 }} />
           <select value={unite} onChange={(e) => setUnite(e.target.value as Recolte["unite"])} style={{ width: 110 }}><option>kg</option><option>g</option><option>pièces</option><option>bottes</option></select>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ width: 160 }} />
-          <button className="btn primary" disabled={!pid || !qte} onClick={() => { upsert("recoltes", { id: uid(), planteId: pid, qte: Number(qte), unite, date }); setQte(""); toast("Récolte notée 🧺"); }}>Ajouter</button>
+          <button className="btn primary" disabled={!pid || !qte} onClick={() => { upsert("recoltes", { id: uid(), planteId: pid, variete: variete.trim() || undefined, qte: Number(qte), unite, date }); setQte(""); toast("Récolte notée 🧺"); }}>Ajouter</button>
         </div>
       </div>
       <h2>Bilan {annee} {totalKg > 0 && <span className="badge green">{totalKg.toFixed(1)} kg</span>} {valeur > 0 && <span className="badge sun">≈ {Math.round(valeur)} € économisés</span>}</h2>
@@ -207,16 +214,18 @@ function Recoltes() {
           <div key={id} className="card"><b>{plante(id)?.emoji} {plante(id)?.nom}</b><div className="small">{Object.entries(t).map(([u, v]) => `${u === "kg" ? v.toFixed(2) : v} ${u}`).join(" · ")}{valeurDe(id, t) > 0 && <span className="muted"> · ≈ {Math.round(valeurDe(id, t))} €</span>}</div></div>
         ))}
       </div>
+      <BilanPluriannuel />
       {recoltes.length > 0 && (
         <>
           <h3 style={{ marginTop: 18 }}>Historique</h3>
           <table className="table"><tbody>
             {[...recoltes].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 50).map((r) => (
-              <tr key={r.id}><td>{new Date(r.date).toLocaleDateString("fr-FR")}</td><td>{plante(r.planteId)?.nom}</td><td>{r.qte} {r.unite}</td><td><button className="btn sm ghost" onClick={() => remove("recoltes", r.id)} aria-label="Supprimer">🗑</button></td></tr>
+              <tr key={r.id}><td>{new Date(r.date).toLocaleDateString("fr-FR")}</td><td>{plante(r.planteId)?.nom}{r.variete ? ` « ${r.variete} »` : ""}</td><td>{r.qte} {r.unite}</td><td><button className="btn sm ghost" onClick={() => remove("recoltes", r.id)} aria-label="Supprimer">🗑</button></td></tr>
             ))}
           </tbody></table>
         </>
       )}
+      <div style={{ marginTop: 18 }}><ExportsCard /></div>
     </div>
   );
 }

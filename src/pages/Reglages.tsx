@@ -8,6 +8,7 @@ import { download, toast, toutesLesPhotos } from "../components/ui";
 import { promptInstall, usePwa, isIos, isStandalone, checkForAppUpdate } from "../lib/pwa";
 import { isoDate } from "../lib/store";
 import { href } from "../lib/router";
+import { ExportsCard } from "../components/Suivi";
 
 export default function Reglages() {
   const s = useStore((x) => x.settings);
@@ -136,6 +137,9 @@ export default function Reglages() {
         }}>⬇️ Télécharger toutes les photos</button>
         <p className="small muted">Nécessite que l'application soit installée ou ouverte depuis le site publié (le stockage hors ligne est géré par le navigateur).</p>
       </div>
+
+      <h2>Exporter en tableur</h2>
+      <ExportsCard />
 
       <h2>Sauvegarde</h2>
       <div className="card stack">

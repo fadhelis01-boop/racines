@@ -8,6 +8,7 @@ import { INTERIEUR3 } from "./interieur3";
 import { ENVAHISSANTES, GUIDES_AGRO } from "./agronomie";
 import { GUIDES_BIO } from "./bio";
 import { GUIDES_ELEVAGE } from "./guides-elevage";
+import { GUIDES_RECUP, ETAPES_EN_PLUS, ALIAS_CULTIVARS } from "./guides-recup";
 import { MALADIES_ANIMALES } from "./maladies-animales";
 import { CONTENANT, RENDEMENT, PROFONDEUR, GERMINATION } from "./cultures-complements";
 import { JARDIN2 } from "./jardin2";
@@ -25,7 +26,7 @@ import { ANIMAUX2 } from "./animaux2";
 import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
 
-export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...INTERIEUR3, ...ENVAHISSANTES, ...JARDIN2, ...FLEURS2].map((p) => ({ ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}), ...(!p.recolteConseil && RECOLTE_EN_PLUS[p.id] ? { recolteConseil: RECOLTE_EN_PLUS[p.id] } : {}), ...(!p.contenant && CONTENANT[p.id] ? { contenant: CONTENANT[p.id] } : {}), ...(!p.rendement && RENDEMENT[p.id] ? { rendement: RENDEMENT[p.id] } : {}), ...(!p.profondeur && PROFONDEUR[p.id] ? { profondeur: PROFONDEUR[p.id] } : {}), ...(GERMINATION[p.id] ? { tempGermination: GERMINATION[p.id] } : {}) }));
+export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...INTERIEUR3, ...ENVAHISSANTES, ...JARDIN2, ...FLEURS2].map((p) => ({ ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}), ...(!p.recolteConseil && RECOLTE_EN_PLUS[p.id] ? { recolteConseil: RECOLTE_EN_PLUS[p.id] } : {}), ...(!p.contenant && CONTENANT[p.id] ? { contenant: CONTENANT[p.id] } : {}), ...(!p.rendement && RENDEMENT[p.id] ? { rendement: RENDEMENT[p.id] } : {}), ...(!p.profondeur && PROFONDEUR[p.id] ? { profondeur: PROFONDEUR[p.id] } : {}), ...(GERMINATION[p.id] ? { tempGermination: GERMINATION[p.id] } : {}), ...(ALIAS_CULTIVARS[p.id] ? { alias: [...(p.alias ?? []), ...(ENRICH[p.id]?.alias ?? []), ...ALIAS_CULTIVARS[p.id]] } : {}) }));
 
 // Associations rendues réciproques : si A est « bon voisin » de B, B l'est de A ;
 // en cas de désaccord (A ami de B mais B ennemi de A), « à séparer » l'emporte.
@@ -40,7 +41,7 @@ export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUI
   }
   for (const p of PLANTES) p.amis = p.amis.filter((a) => !p.ennemis.includes(a));
 }
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX, ...GUIDES_ELEVAGE].map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
+export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX, ...GUIDES_ELEVAGE, ...GUIDES_RECUP].map((g) => (ETAPES_EN_PLUS[g.id] ? { ...g, etapes: [...g.etapes, ...ETAPES_EN_PLUS[g.id]] } : g)).map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
 const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 

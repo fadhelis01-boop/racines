@@ -28,8 +28,13 @@ export interface Settings {
 
 export type TypeEspace = "planche" | "carre" | "bac" | "pot" | "serre" | "interieur" | "verger";
 export interface Espace { id: string; nom: string; type: TypeEspace; surface?: number; x?: number; y?: number; l?: number; p?: number; archive?: string; lieu?: string } // archive : date du déménagement
-export interface Culture { id: string; planteId: string; espaceId?: string; date: string; mode: "semis" | "plantation"; note?: string; fini?: string }
-export interface Recolte { id: string; planteId: string; date: string; qte: number; unite: "kg" | "g" | "pièces" | "bottes" }
+export interface Culture { id: string; planteId: string; variete?: string; espaceId?: string; date: string; mode: "semis" | "plantation"; note?: string; fini?: string }
+export interface Recolte { id: string; planteId: string; variete?: string; date: string; qte: number; unite: "kg" | "g" | "pièces" | "bottes" }
+// Multiplications suivies (boutures, semis maison, divisions…)
+export type TypeMultiplication = "bouture" | "semis" | "division" | "marcottage" | "rejet";
+export interface Multiplication { id: string; type: TypeMultiplication; planteId: string; variete?: string; date: string; nombre: number; reussis?: number; fini?: string; note?: string; origine?: string }
+export interface Envie { id: string; planteId?: string; texte: string; note?: string; obtenue?: string }
+export interface Partage { id: string; objet: string; type: "pret" | "don" | "recherche"; note?: string }
 export interface Note { id: string; date: string; texte: string; photo?: string; planteId?: string }
 export interface Graine { id: string; planteId: string; variete: string; annee: number; qte?: string }
 export interface Troupeau { id: string; animalId: string; nom: string; nombre: number; depuis?: string; notes?: string }
@@ -75,6 +80,9 @@ export interface State {
   production: Production[];
   depenses: Depense[];
   couvees: Couvee[];
+  multiplications: Multiplication[];
+  envies: Envie[];
+  partages: Partage[];
   fait: Record<string, string>; // tâche cochée → date
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
@@ -113,6 +121,9 @@ const EMPTY: State = {
   production: [],
   depenses: [],
   couvees: [],
+  multiplications: [],
+  envies: [],
+  partages: [],
   fait: {},
   videos: {},
   favoris: [],
@@ -176,7 +187,7 @@ export function isoDate(d: Date) {
 }
 
 // Ajout/modification/suppression génériques dans une liste de l'état
-type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees";
+type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages";
 export function upsert<K extends ListKey>(key: K, item: State[K][number]) {
   update((s) => {
     const list = s[key] as { id: string }[];
