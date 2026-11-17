@@ -15,6 +15,7 @@ import { STATUT_REMEDE } from "../src/data/reglementation";
 import { ecoScore, PRATIQUES } from "../src/data/bio";
 import { datesCouvee, bilan, registreCsv, tachesCouvees } from "../src/lib/elevage";
 import { EXPORTS, bilanPluriannuel, varietesDe } from "../src/lib/exports";
+import { planifier, plantsParPlanche, successions, nurserie, tempsDeTravail, engraisVertPour } from "../src/lib/plan-culture";
 import { GUIDES } from "../src/data/index";
 import { SUBSTRATS } from "../src/data/interieur-hub";
 import { decouper } from "../src/lib/lexique-texte";
@@ -334,6 +335,29 @@ const bp = bilanPluriannuel(etatJardin);
 ok(bp.annees.join(",") === "2025,2026" && bp.varietes.length === 2 && bp.varietes.find((v) => v.variete === "Cœur de bœuf")!.parAnnee["2026"] === 0.5, "bilan par année et par variété");
 ok(varietesDe(etatJardin, "tomate").length === 2, "variétés proposées à partir des graines, cultures et récoltes");
 ok(EXPORTS.recoltes.faire(etatJardin).includes("Noire de Crimée") && EXPORTS.multiplications.faire(etatJardin).includes("75 %"), "exports tableur avec variétés et taux de réussite");
+
+// Audit maraîcher
+const pl = planifier("laitue", 10, "tempere", 2026);
+ok(pl.intervalle === 3 && pl.series.length >= 8 && pl.series[0].plants === 30, `laitue : une série toutes les 3 semaines, 30 plants pour 10 par semaine (${pl.series.length} séries)`);
+ok(pl.series.every((x, i) => i === 0 || x.recolteDebut > pl.series[i - 1].recolteDebut), "séries de laitue : récoltes successives, sans doublon");
+ok(planifier("tomate", 3, "tempere", 2026).series.length >= 1, "tomate : au moins une série planifiée");
+ok(!!planifier("ail", 1, "tempere", 2026).avertissement, "ail : multiplication par caïeux signalée");
+const pp = plantsParPlanche("carotte", 10, 0.75)!;
+ok(pp.rangs === 3 && pp.plants === 750, "carottes : 3 rangs de 250 sur une planche de 10 × 0,75 m");
+ok(successions("x", new Date(2026, 5, 25), [], "tempere").length > 0, "planche libérée fin juin : successions proposées");
+ok(!successions("x", new Date(2026, 9, 25), [], "tempere").some((p) => p.id === "tomate"), "pas de tomate proposée fin octobre");
+ok(engraisVertPour(9).texte.includes("hiver"), "engrais vert d'hiver proposé en septembre");
+ok(nurserie("tempere").some((n) => n.plante.id === "poireau"), "nurserie : poireaux en motte");
+ok(tempsDeTravail(100, "paille").moyenne < tempsDeTravail(100, "rangs").moyenne, "paillage : moins de temps de travail");
+p1("plan de culture", "Plan de culture");
+p1("quoi planter après les fèves", "Mes planches");
+p1("binette oscillante", "Les outils du maraîcher");
+p1("tensiomètre", "Irrigation raisonnée");
+p1("chambre froide", "Après la récolte");
+p1("vendre ses légumes", "Vendre son surplus");
+p1("bande fleurie", "Plantes de service");
+p1("voile de forçage", "Piloter un tunnel");
+p1("plaque alvéolée", "Nurserie");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

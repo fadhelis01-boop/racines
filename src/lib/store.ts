@@ -35,6 +35,9 @@ export type TypeMultiplication = "bouture" | "semis" | "division" | "marcottage"
 export interface Multiplication { id: string; type: TypeMultiplication; planteId: string; variete?: string; date: string; nombre: number; reussis?: number; fini?: string; note?: string; origine?: string }
 export interface Envie { id: string; planteId?: string; texte: string; note?: string; obtenue?: string }
 export interface Partage { id: string; objet: string; type: "pret" | "don" | "recherche"; note?: string }
+// Interventions par planche (cahier de culture) : paillage, amendement, désherbage, traitement…
+export type TypeIntervention = "travail" | "amendement" | "paillage" | "desherbage" | "traitement" | "irrigation" | "autre";
+export interface Intervention { id: string; espaceId: string; date: string; type: TypeIntervention; produit?: string; quantite?: string; note?: string }
 export interface Note { id: string; date: string; texte: string; photo?: string; planteId?: string }
 export interface Graine { id: string; planteId: string; variete: string; annee: number; qte?: string }
 export interface Troupeau { id: string; animalId: string; nom: string; nombre: number; depuis?: string; notes?: string }
@@ -83,6 +86,7 @@ export interface State {
   multiplications: Multiplication[];
   envies: Envie[];
   partages: Partage[];
+  interventions: Intervention[];
   fait: Record<string, string>; // tâche cochée → date
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
@@ -124,6 +128,7 @@ const EMPTY: State = {
   multiplications: [],
   envies: [],
   partages: [],
+  interventions: [],
   fait: {},
   videos: {},
   favoris: [],
@@ -187,7 +192,7 @@ export function isoDate(d: Date) {
 }
 
 // Ajout/modification/suppression génériques dans une liste de l'état
-type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages";
+type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions";
 export function upsert<K extends ListKey>(key: K, item: State[K][number]) {
   update((s) => {
     const list = s[key] as { id: string }[];

@@ -17,6 +17,12 @@ export const EXPORTS: Record<string, { label: string; fichier: string; faire: (s
     faire: (s) => csv(["Date", "Plante", "Note"], [...s.notes].sort((a, b) => a.date.localeCompare(b.date)).map((n) => [n.date, nom(n.planteId), n.texte])) },
   plantes: { label: "Mes plantes", fichier: "racines-mes-plantes.csv", vide: (s) => !s.plantes.length,
     faire: (s) => csv(["Surnom", "Espèce", "Pièce", "Depuis", "Arrosages notés", "Dernier arrosage", "Dernier rempotage"], s.plantes.map((p) => [p.surnom, nom(p.planteId), p.piece, p.depuis, p.arrosages.length, p.arrosages[p.arrosages.length - 1], p.rempotages[p.rempotages.length - 1]])) },
+  cahier: { label: "Cahier de culture", fichier: "racines-cahier-de-culture.csv", vide: (s) => !s.cultures.length && !s.interventions.length,
+    faire: (s) => csv(["Date", "Planche", "Opération", "Plante / produit", "Variété / quantité", "Note"], [
+      ...s.cultures.map((c) => [c.date, s.espaces.find((e) => e.id === c.espaceId)?.nom ?? "", c.mode === "semis" ? "Semis" : "Plantation", nom(c.planteId), c.variete, c.note]),
+      ...s.cultures.filter((c) => c.fini).map((c) => [c.fini, s.espaces.find((e) => e.id === c.espaceId)?.nom ?? "", "Fin de culture", nom(c.planteId), c.variete, ""]),
+      ...s.interventions.map((i) => [i.date, s.espaces.find((e) => e.id === i.espaceId)?.nom ?? "", i.type, i.produit, i.quantite, i.note]),
+    ].sort((a, b) => String(a[0]).localeCompare(String(b[0])))) },
   multiplications: { label: "Boutures et semis", fichier: "racines-boutures-semis.csv", vide: (s) => !s.multiplications.length,
     faire: (s) => csv(["Date", "Type", "Plante", "Variété", "Nombre", "Réussis", "Taux", "Origine", "Note"], s.multiplications.map((m) => [m.date, m.type, nom(m.planteId), m.variete, m.nombre, m.reussis, m.reussis !== undefined ? `${Math.round((m.reussis / Math.max(1, m.nombre)) * 100)} %` : "", m.origine, m.note])) },
 };

@@ -70,6 +70,7 @@ function Cultures() {
         <div style={{ marginTop: 8 }}><PlantePicker value={pid} onChange={setPid} /></div>
         {pid && <AjoutCulture planteId={pid} onDone={() => setPid("")} />}
       </div>
+      <p className="small" style={{ margin: "8px 0 0" }}><a href={href("/plan-culture")}>📋 Plan de culture : séries échelonnées, plants par planche, successions, nurserie →</a></p>
       <div className="chips" style={{ margin: "12px 0" }}>
         <button className={`chip ${!fini ? "on" : ""}`} onClick={() => setFini(false)}>En cours</button>
         <button className={`chip ${fini ? "on" : ""}`} onClick={() => setFini(true)}>Terminées</button>
