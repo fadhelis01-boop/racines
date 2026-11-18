@@ -274,3 +274,10 @@ label.row > input[type="checkbox"], label.row > input[type="radio"] { flex-shrin
 .mot-lex:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
 .bulle-lex { position: fixed; left: 16px; right: 16px; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px); z-index: 70; max-width: 560px; margin: 0 auto; background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.25); padding: 12px 14px; font-size: .92rem; font-weight: 400; line-height: 1.45; display: block; text-align: left; }
 @media (min-width: 900px) { .bulle-lex { bottom: 24px; left: 270px; } }
+
+/* Étiquettes de bocaux : seules les étiquettes s'impriment */
+@media print {
+  body * { visibility: hidden; }
+  .etiquettes, .etiquettes * { visibility: visible; }
+  .etiquettes { position: absolute; left: 0; top: 0; width: 100%; }
+}

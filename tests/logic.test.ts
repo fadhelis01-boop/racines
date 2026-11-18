@@ -30,6 +30,8 @@ import { besoinEau } from "../src/components/PlanVisuel";
 import { couleurReine, valeurVarroa, niveauVarroa, pertesHiver, alertesRucher, registreTraitementsCsv } from "../src/lib/rucher";
 import { dernierSoin } from "../src/lib/calendar";
 import { RACES } from "../src/data/races";
+import { proposer, numeroLot, finDeGarde, alertesStocks, planAnnee, selLacto, sucreConfiture } from "../src/lib/conserverie";
+import { CONSERV, METHODES_CONSERV, majorationAltitude } from "../src/data/conservation";
 import { MALADIES_ANIMALES } from "../src/data/maladies-animales";
 
 let fails = 0, n = 0;
@@ -409,6 +411,48 @@ api("abeilles qui tremblent", "Intoxication");
 api("couvain troué", "Loque");
 ok(!rechercher("reine-claude", 3).some((h) => h.titre.startsWith("Les reines")), "reine-claude reste une prune");
 ok(!rechercher("registre élevage", 3).some((h) => h.titre.startsWith("Mon rucher")), "registre d'élevage ne part pas au rucher");
+
+// Audit conserverie : sécurité, assistant, garde-manger, recherche
+ok(proposer("tomate", { kg: 10, materiel: ["congelateur", "sterilisateur"], temps: 3, place: true })[0].methode === "sterilisation", "10 kg de tomates avec stérilisateur → bocaux");
+ok(proposer("tomate", { kg: 3, materiel: ["congelateur"], temps: 1, place: false })[0].methode === "congelation", "peu de temps et pas de stérilisateur → congélation");
+ok(proposer("tomate", { kg: 10, materiel: ["sterilisateur"], temps: 3, place: true }).find((p) => p.methode === "sterilisation")!.pourquoi.some((x) => /citron/.test(x)), "tomates en bocaux : rappel du citron");
+ok(proposer("tomate", { kg: 5, materiel: [], temps: 2, place: true }).find((p) => p.methode === "congelation")!.manque !== undefined, "sans congélateur, la congélation est signalée impossible");
+ok(/coulis/.test(proposer("tomate", { kg: 10, materiel: ["sterilisateur"], temps: 3, place: true }).find((p) => p.methode === "sterilisation")!.rendement ?? ""), "rendement affiché pour le coulis");
+ok(numeroLot("Coulis de tomates", "2026-08-15", [{ lot: "260815-COU-1" }]) === "260815-COU-2", "numéro de lot unique");
+ok(finDeGarde({ date: "2026-08-15", gardeMois: 12 }) === "2027-08-15", "date de garde d'un bocal");
+{
+  const st = [{ id: "a", produit: "Coulis", methode: "sterilisation", lieu: "placard" as const, date: "2025-01-10", quantite: 3, unite: "bocaux", gardeMois: 12 }, { id: "b", produit: "Pommes", methode: "cave", lieu: "cave" as const, date: "2026-10-01", quantite: 10, unite: "kg", gardeMois: 4 }, { id: "c", produit: "Vide", methode: "sucre", lieu: "placard" as const, date: "2024-01-01", quantite: 0, unite: "pots", gardeMois: 12 }];
+  const al = alertesStocks(st, "2026-01-20");
+  ok(al.depasses.length === 1 && al.depasses[0].id === "a" && al.cave, "garde-manger : bocal dépassé signalé, stock vide ignoré, cave détectée");
+  const t = tachesPerso({ ...state, stocks: st } as State, new Date("2026-11-20T12:00:00"));
+  ok(t.some((x) => x.key.startsWith("cave:")) , "tournée de cave rappelée en novembre");
+}
+ok(planAnnee([{ rendementId: "coulis", parMois: 4, mois: 9, contenance: 0.5 }])[0].bocaux === 36 && planAnnee([{ rendementId: "coulis", parMois: 4, mois: 9, contenance: 0.5 }])[0].kgFrais === 30, "plan de l'année : 36 bocaux de coulis = 30 kg de tomates");
+ok(selLacto(2, 1).rape === 40 && selLacto(2, 1).saumure === 30, "sel de lacto-fermentation");
+ok(sucreConfiture(2, 500).allegee && sucreConfiture(2, 800).sucre === 1.6, "sucre de confiture et alerte allégée");
+ok(majorationAltitude(100) === 0 && majorationAltitude(600) === 5 && majorationAltitude(1200) === 10 && majorationAltitude(2000) === null, "correction d'altitude");
+ok(Object.values(CONSERV).every((c) => c.methodes.every((m) => METHODES_CONSERV[m])), "méthodes de conservation connues");
+ok(["chicoree", "oseille", "cresson"].every((id) => CONSERV[id]?.texte), "légumes sans conservation complétés");
+ok(/citron/.test(PLANTES.find((p) => p.id === "tomate")!.conservation!), "fiche tomate : acidifier le coulis");
+ok(!/feuilles dans l'huile\./.test(PLANTES.find((p) => p.id === "basilic")!.conservation!), "fiche basilic : plus de feuilles à l'huile à température ambiante");
+ok(GUIDES.filter((g) => g.id.startsWith("cs-")).length === 15, "15 guides de conserverie");
+const cs = (q: string, attendu: string, k = 3) => { const r = rechercher(q, k).map((h) => h.titre); ok(r.some((t) => t.startsWith(attendu)), `conserverie « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+cs("confiture", "Confitures et gelées");
+cs("botulisme", "Conserves maison : les règles");
+cs("ail dans l'huile", "Conserves maison : les règles");
+cs("combien de temps stériliser", "Temps de");
+cs("pasteuriser", "Temps de blanchiment");
+cs("chutney", "Pickles au vinaigre");
+cs("jus de pomme", "Jus, nectars");
+cs("fumer", "Sel, huile et fumage", 1);
+cs("trop de tomates", "J'ai trop de", 1);
+cs("bocal bombé", "Conserves maison");
+cs("le parfait", "Le matériel de conserverie");
+cs("vendre ses confitures", "Donner ou vendre");
+cs("conserver les pommes", "La cave et le fruitier");
+cs("eau de vie", "Fruits à l'eau-de-vie");
+ok(!rechercher("trop de soleil", 3).some((h) => h.titre.startsWith("J'ai trop de")), "« trop de soleil » ne part pas vers les surplus");
+ok(rechercher("fumier", 1)[0]?.titre.startsWith("Fumier"), "fumier reste le fumier");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

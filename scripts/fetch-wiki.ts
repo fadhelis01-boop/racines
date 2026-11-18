@@ -151,6 +151,12 @@ const PHOTOS_TECHNIQUES: Record<string, string> = {
   "recolter-pommes-de-terre": "harvesting potatoes garden fork", "cueillir-fruits-arbre": "picking apples tree hand", "cueillir-petits-fruits": "picking raspberries",
   "couper-fleurs": "cutting flowers secateurs", "couper-aromatiques": "harvesting basil", "recolter-courges": "pumpkin harvest stem", "cueillir-haricots": "picking green beans",
   "repiquage": "pricking out seedlings",
+  // Conserverie
+  "bocaux": "home canning jars water bath", "lactofermentation": "sauerkraut fermentation jar", "conserver-recoltes": "root cellar vegetables storage", "apres-recolte": "washing harvested vegetables",
+  "cs-securite": "Mason jars canned vegetables", "cs-temps": "canning jars boiling water bath", "cs-confitures": "homemade jam jars", "cs-fruits-sucre": "compote jar",
+  "cs-vinaigre": "pickled gherkins jar", "cs-jus-cidre": "apple press cider", "cs-alcool": "Rumtopf", "cs-sel-huile-fumage": "smoked garlic braids",
+  "cs-sechage": "drying tomatoes sun", "cs-congelation": "frozen peas", "cs-plats-bocaux": "pressure canner jars", "cs-cave": "apple storage cellar",
+  "cs-materiel": "canning jars lids rings", "cs-atelier-collectif": "canning women kitchen", "cs-donner-vendre": "jam jars market stall",
 };
 for (const [id, q] of Object.entries(PHOTOS_TECHNIQUES)) {
   if (ONLY.length ? !ONLY.includes(id) : !process.env.FORCE && old[id]?.photos?.length) continue;

@@ -5,6 +5,7 @@ import type { Culture, State } from "./store";
 import { isoDate } from "./store";
 import { MOIS_NOMS } from "../data/util";
 import { tachesCouvees } from "./elevage";
+import { alertesStocks, finDeGarde } from "./conserverie";
 
 // ---------- Décalage climatique ----------
 // Chaque mois de référence est une fenêtre de dates ; on la décale de N semaines
@@ -124,6 +125,15 @@ export function tachesPerso(s: State, now = new Date()): TachePerso[] {
     }
   }
   for (const c of tachesCouvees(s.couvees ?? [], now)) out.push({ ...c, emoji: "🐣", href: "/jardin/animaux" });
+  {
+    const al = alertesStocks(s.stocks ?? [], isoDate(now));
+    for (const x of al.depasses) out.push({ key: `stock:${x.id}:depasse`, texte: `Garde-manger : ${x.produit} (${x.quantite} ${x.unite}) à consommer en priorité, garde conseillée dépassée`, emoji: "🫙", href: "/conserver?t=stock", quand: isoDate(now), urgent: true });
+    for (const x of al.bientot) out.push({ key: `stock:${x.id}:bientot`, texte: `Garde-manger : ${x.produit} à consommer avant le ${new Date(finDeGarde(x) + "T12:00:00").toLocaleDateString("fr-FR")}`, emoji: "🫙", href: "/conserver?t=stock", quand: finDeGarde(x) });
+    if (al.cave && now.getMonth() >= 9 || al.cave && now.getMonth() <= 3) {
+      const lundi = new Date(now); lundi.setDate(lundi.getDate() + ((8 - lundi.getDay()) % 7));
+      out.push({ key: `cave:${isoDate(lundi)}`, texte: "Tournée de la cave : retirer ce qui pourrit ou germe, vérifier température et humidité", emoji: "🏚️", href: "/guide/cs-cave", quand: isoDate(lundi) });
+    }
+  }
   return out.sort((a, b) => a.quand.localeCompare(b.quand));
 }
 

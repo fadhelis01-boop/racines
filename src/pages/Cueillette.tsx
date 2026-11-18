@@ -41,7 +41,7 @@ export default function Cueillette() {
           </section>
         );
       })}
-      <p className="small"><a href={href("/guide/conserver-recoltes")}>Conserver ses récoltes →</a> · <a href={href("/guide/graines-maison")}>Récolter ses graines →</a></p>
+      <p className="small"><a href={href("/conserver")}>Conserver ses récoltes →</a> · <a href={href("/guide/graines-maison")}>Récolter ses graines →</a></p>
     </div>
   );
 }

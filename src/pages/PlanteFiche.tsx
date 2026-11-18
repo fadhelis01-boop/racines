@@ -16,6 +16,7 @@ import { essentiel } from "../lib/essentiel";
 import { SOL_PLANTE, TYPES_SOL } from "../data/sols";
 import { FRUITIERS } from "../data/cultures-complements";
 import { srcVignette } from "../components/Ico";
+import { CONSERV, METHODES_CONSERV } from "../data/conservation";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
 const BESOIN = { gourmand: "Gourmand (sol riche, compost)", moyen: "Moyen", peu: "Peu exigeant", ameliorant: "Améliorant (enrichit le sol)" };
@@ -69,7 +70,8 @@ export default function PlanteFiche({ id }: { id?: string }) {
     "Entretien.",
     ...p.entretien,
     ...(p.recolteConseil ? [`Récolte. ${p.recolteConseil}`] : []),
-    ...(p.conservation ? [`Conservation. ${p.conservation}`] : []),
+    ...(p.conservation || CONSERV[p.id]?.texte ? [`Conservation. ${p.conservation ?? CONSERV[p.id]!.texte}`] : []),
+    ...(CONSERV[p.id] ? [`Au frais : ${CONSERV[p.id].frais}. Méthodes possibles : ${CONSERV[p.id].methodes.map((m) => METHODES_CONSERV[m].nom).join(", ")}.${CONSERV[p.id].cave ? " En cave : " + CONSERV[p.id].cave + "." : ""}${CONSERV[p.id].varietes ? " Variétés de garde : " + CONSERV[p.id].varietes + "." : ""}`] : []),
     ...(p.astuces ?? []).map((a) => `Astuce. ${a}`),
     ...(p.toxique ? [`Attention, toxicité. ${p.toxique}`] : []),
     ...(p.animaux ? [`Pour vos animaux. ${p.animaux}`] : []),
@@ -182,7 +184,17 @@ export default function PlanteFiche({ id }: { id?: string }) {
               </>
             );
           })()}
-          {p.conservation && <><h2>Conservation</h2><p>{p.conservation}</p></>}
+          {(p.conservation || CONSERV[p.id]) && (() => { const c = CONSERV[p.id]; return (<>
+            <h2>Conservation</h2>
+            {(p.conservation ?? c?.texte) && <p>{p.conservation ?? c?.texte}</p>}
+            {c && (
+              <div className="card" style={{ background: "var(--surface-2)" }}>
+                <div className="small">🥬 <b>Au frais</b> : {c.frais}{c.cave ? <><br />🏚️ <b>En cave</b> : {c.cave}</> : null}{c.nonCongel ? <><br />🚫 <b>Ne se congèle pas</b> : {c.nonCongel}</> : null}{c.varietes ? <><br />⭐ <b>Variétés de garde</b> : {c.varietes}</> : null}</div>
+                <div className="chips" style={{ marginTop: 6 }}>{c.methodes.map((m) => <a key={m} className="chip" href={href(`/guide/${METHODES_CONSERV[m].guide}`)}>{METHODES_CONSERV[m].emoji} {METHODES_CONSERV[m].nom}</a>)}</div>
+                <p className="small" style={{ margin: "6px 0 0" }}><a href={href(`/conserver?t=assistant&p=${p.id}`)}>J'en ai trop : que faire ? →</a> · <a href={href("/guide/cs-securite")}>Règles de sécurité</a></p>
+              </div>
+            )}
+          </>); })()}
           {p.astuces?.map((a) => <div key={a} className="callout ok"><b>💡 Astuce</b>{a}</div>)}
           {p.graines && (
             <>

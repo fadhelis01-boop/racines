@@ -56,6 +56,9 @@ export interface Ruche { id: string; nom: string; type?: string; origine?: strin
 export type MethodeVarroa = "chute" | "sucre" | "alcool";
 export interface Visite { id: string; rucheId: string; date: string; reine?: "vue" | "oeufs" | "non"; couvain?: number; miel?: number; pollen?: number; humeur?: 1 | 2 | 3; cellules?: "non" | "essaimage" | "remplacement"; varroaMethode?: MethodeVarroa; varroaValeur?: number; varroaJours?: number; action?: string; note?: string }
 export interface TraitementApi { id: string; rucheIds: string[]; produit: string; lot?: string; debut: string; fin?: string; dose?: string; ordonnance?: string; note?: string }
+// Garde-manger : bocaux, congélateur, cave
+export type LieuStock = "placard" | "cave" | "congelateur" | "refrigerateur";
+export interface Stock { id: string; produit: string; planteId?: string; methode: string; lieu: LieuStock; date: string; quantite: number; unite: string; lot?: string; gardeMois: number; note?: string }
 export type Fenetre = "sud" | "ouest" | "est" | "nord" | "lampe" | "sombre";
 // Une plante de la maison suivie individuellement (intérieur, pots)
 export interface MaPlante {
@@ -95,6 +98,7 @@ export interface State {
   ruches: Ruche[];
   visites: Visite[];
   traitementsApi: TraitementApi[];
+  stocks: Stock[];
   fait: Record<string, string>; // tâche cochée → date
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
@@ -140,6 +144,7 @@ const EMPTY: State = {
   ruches: [],
   visites: [],
   traitementsApi: [],
+  stocks: [],
   fait: {},
   videos: {},
   favoris: [],
@@ -203,7 +208,7 @@ export function isoDate(d: Date) {
 }
 
 // Ajout/modification/suppression génériques dans une liste de l'état
-type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions" | "ruches" | "visites" | "traitementsApi";
+type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions" | "ruches" | "visites" | "traitementsApi" | "stocks";
 export function upsert<K extends ListKey>(key: K, item: State[K][number]) {
   update((s) => {
     const list = s[key] as { id: string }[];
