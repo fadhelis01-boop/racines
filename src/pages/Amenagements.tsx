@@ -6,7 +6,7 @@ import { choisirMethodes, type ProfilPotager } from "../lib/methodes";
 import { useStore } from "../lib/store";
 import { lienVers } from "../data/index";
 import { href, useRoute, go } from "../lib/router";
-import { Back, Listen, Galerie, wikiOf } from "../components/ui";
+import { Back, Listen, Galerie, wikiOf, Titre } from "../components/ui";
 import { srcVignette } from "../components/Ico";
 import { youtube } from "../data/util";
 
@@ -24,7 +24,7 @@ export default function Amenagements() {
   return (
     <div>
       <Back />
-      <h1>🗺️ Les façons de faire un potager et d'aménager son jardin</h1>
+      <Titre ico="jardin" emoji="🗺️">Les façons de faire un potager et d'aménager son jardin</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>{AMENAGEMENTS.length} méthodes et aménagements comparés (planches, carrés, buttes, lasagnes, monticules, bottes de paille, pots, sacs…), les paillages et les techniques, avec avantages, inconvénients et un pas à pas pour débutant. Répondez à quelques questions : l'appli vous dit ce qui convient le mieux à votre cas.</p>
       <div className="chips" role="tablist" style={{ margin: "10px 0 14px" }}>
         {ONGLETS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/amenagements?t=${k}`)}>{l}</button>)}

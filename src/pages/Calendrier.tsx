@@ -5,7 +5,7 @@ import { plantesDuMois, travauxDuMois, ACTIONS, buildIcs, type Action } from "..
 import { MOIS_NOMS } from "../data/util";
 import { CATEGORIES, PLANTES, ZONES } from "../data/index";
 import { href } from "../lib/router";
-import { Listen, MonthGrid, download, toast, A } from "../components/ui";
+import { Listen, MonthGrid, download, toast, A, Titre } from "../components/ui";
 import { filtreSituation, sectionsSituation } from "./Accueil";
 import { lune } from "../lib/lune";
 
@@ -47,7 +47,7 @@ export default function Calendrier() {
 
   return (
     <div>
-      <h1>📅 Calendrier du jardin</h1>
+      <Titre ico="calendrier" emoji="📅">Calendrier du jardin</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Adapté à votre climat : {zone.nom} (dernières gelées : {zone.gel}). <A to="/reglages">Changer</A></p>
       <details className="box">
         <summary>🌱 Semer, repiquer, planter, récolter : quelle différence ?</summary>
@@ -113,10 +113,10 @@ export default function Calendrier() {
               {t[x.k].map((txt, i) => {
                 const key = `${annee}-${mois}:${x.k}:${i}`;
                 return (
-                  <div key={key} className={`task ${s.fait[key] ? "done" : ""}`}>
-                    <input type="checkbox" checked={!!s.fait[key]} onChange={() => toggleFait(key)} aria-label="Fait" />
+                  <label key={key} className={`task ${s.fait[key] ? "done" : ""}`}>
+                    <input type="checkbox" checked={!!s.fait[key]} onChange={() => toggleFait(key)} />
                     <span>{txt}</span>
-                  </div>
+                  </label>
                 );
               })}
             </div>

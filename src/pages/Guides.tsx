@@ -3,7 +3,7 @@ import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { GUIDES, RUBRIQUES } from "../data/index";
 import { href } from "../lib/router";
-import { Photo } from "../components/ui";
+import { Photo, Titre } from "../components/ui";
 import { norm } from "../lib/garden";
 import type { Rubrique } from "../data/types";
 
@@ -15,9 +15,12 @@ export default function Guides() {
   const nq = norm(q);
   const list = GUIDES.filter((g) => (!rub || g.rubrique === rub) && (!niveau || g.niveau === niveau) && (!nq || norm(g.titre + " " + g.resume).includes(nq)));
   const rubs = (Object.keys(RUBRIQUES) as Rubrique[]).filter((r) => list.some((g) => g.rubrique === r));
+  // Sans filtre, chaque rubrique montre ses 6 premiers tutoriels ; « Voir tout » déplie la rubrique
+  const [ouvertes, setOuvertes] = useState<string[]>([]);
+  const replie = !rub && !nq;
   return (
     <div>
-      <h1>📘 Tutoriels</h1>
+      <Titre ico="tutoriels" emoji="📘">Tutoriels</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>{GUIDES.length} tutoriels pas à pas, lisibles à voix haute, avec un mode « mains dans la terre » : grandes étapes, écran toujours allumé, commandes vocales.</p>
       <div className="search"><input type="search" placeholder="Rechercher : compost, oyas, poulailler…" value={q} onChange={(e) => setQ(e.target.value)} /></div>
       <div className="chips" style={{ marginTop: 10 }} aria-label="Niveau">
@@ -32,7 +35,7 @@ export default function Guides() {
         <section key={r}>
           <h2 className="row" style={{ gap: 8 }}><Ico nom={r} emoji={RUBRIQUES[r].emoji} taille={34} /> {RUBRIQUES[r].label}</h2>
           <div className="grid">
-            {list.filter((g) => g.rubrique === r).map((g) => (
+            {list.filter((g) => g.rubrique === r).slice(0, replie && !ouvertes.includes(r) ? 6 : undefined).map((g) => (
               <a key={g.id} className="tile" href={href(`/guide/${g.id}`)}>
                 <div className="ph" style={{ aspectRatio: "16/9" }}><Photo id={g.id} emoji={g.emoji} alt="" /></div>
                 <div className="bd">
@@ -47,6 +50,7 @@ export default function Guides() {
               </a>
             ))}
           </div>
+          {replie && !ouvertes.includes(r) && list.filter((g) => g.rubrique === r).length > 6 && <button className="btn sm" style={{ marginTop: 8 }} onClick={() => setOuvertes([...ouvertes, r])}>Voir les {list.filter((g) => g.rubrique === r).length - 6} autres tutoriels « {RUBRIQUES[r].label} »</button>}
         </section>
       ))}
     </div>

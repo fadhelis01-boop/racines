@@ -2,7 +2,7 @@ import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { PROBLEMES, REMEDES, AUXILIAIRES, TYPES_PROBLEME } from "../data/index";
 import { href } from "../lib/router";
-import { Photo, Section } from "../components/ui";
+import { Photo, Section, Titre } from "../components/ui";
 import { norm } from "../lib/garden";
 
 export default function Sante() {
@@ -13,7 +13,7 @@ export default function Sante() {
   const list = PROBLEMES.filter((p) => (!type || p.type === type) && (!interieur || p.interieur) && (!nq || norm(p.nom + " " + p.cible + " " + p.symptomes.join(" ")).includes(nq))).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
   return (
     <div>
-      <h1>⚕️ Santé des plantes</h1>
+      <Titre ico="sante" emoji="⚕️">Santé des plantes</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Maladies, ravageurs, carences et troubles de culture, avec des solutions naturelles autorisées au jardin familial.</p>
       <div className="grid-sm" style={{ marginBottom: 14 }}>
         <a className="btn big primary" href={href("/diagnostic")}>🔎 Diagnostic guidé</a>

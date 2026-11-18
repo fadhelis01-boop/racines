@@ -2,7 +2,7 @@ import { useState } from "react";
 import { PLANTES, SIGNES, plante, TYPES_PROBLEME } from "../data/index";
 import { useRoute, href } from "../lib/router";
 import { diagnostiquer, norm } from "../lib/garden";
-import { Back, Listen } from "../components/ui";
+import { Back, Listen, Titre } from "../components/ui";
 
 const ORGANES = [
   { id: "feuilles", label: "Les feuilles", e: "🍃" },
@@ -30,7 +30,7 @@ export default function Diagnostic() {
   return (
     <div>
       <Back />
-      <h1>🔎 Qu'est-ce qui ne va pas ?</h1>
+      <Titre ico="diagnostic" emoji="🔎">Qu'est-ce qui ne va pas ?</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Trois questions pour trouver les causes les plus probables. Observez la plante de près, dessus ET dessous des feuilles, idéalement avec une loupe.</p>
 
       {step === 0 && (

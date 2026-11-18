@@ -4,7 +4,7 @@ import { PLANTES, plante } from "../data/index";
 import { relations } from "../lib/garden";
 import { useStore } from "../lib/store";
 import { href } from "../lib/router";
-import { A } from "../components/ui";
+import { A, Titre } from "../components/ui";
 
 export default function Associations() {
   const mes = useStore((s) => [...new Set(s.cultures.filter((c) => !c.fini).map((c) => c.planteId))]);
@@ -19,7 +19,7 @@ export default function Associations() {
     : [];
   return (
     <div>
-      <h1>🤝 Associations de cultures</h1>
+      <Titre ico="associations" emoji="🤝">Associations de cultures</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Choisissez ce que vous voulez cultiver ensemble : Racines indique les bons voisins et ceux à séparer. <A to="/guide/associations">Ce qu'il faut savoir sur les associations</A></p>
       <div className="callout info small"><b>Niveau de preuve</b>Chaque association porte une étiquette : <span className="badge green">Étudiée</span> (effet observé dans des essais), <span className="badge sun">Plausible</span> (mécanisme connu, résultats variables) ou <span className="badge">Tradition</span> (savoir de jardinier, sans preuve solide). Les bases sûres restent la rotation, la diversité et un sol vivant.</div>
       {mes.length > 0 && <button className="btn sm" onClick={() => setSel(mes.filter((x) => choix.some((p) => p.id === x)))}>Utiliser mes cultures en cours ({mes.length})</button>}

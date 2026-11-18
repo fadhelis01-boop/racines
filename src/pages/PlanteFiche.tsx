@@ -2,21 +2,22 @@ import MotsLexique from "../components/MotsLexique";
 import { Ico, Vignette } from "../components/Ico";
 import { useState } from "react";
 import { plante, probleme, CATEGORIES, FAMILLES } from "../data/index";
-import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty, toast } from "../components/ui";
-import { useStore, upsert, uid, today, getState } from "../lib/store";
+import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty } from "../components/ui";
+import { useStore, getState } from "../lib/store";
 const getSol = () => getState().settings.sol;
 import { href } from "../lib/router";
 import { moisAffiches } from "../lib/calendar";
 import { AjoutMaPlante } from "../components/MesPlantes";
 import { MOIS_NOMS } from "../data/util";
 import { gesteDe } from "../data/cueillette";
-import { varietesDe } from "../lib/exports";
+
 import { AROMATES_INT } from "../data/interieur-hub";
 import { essentiel } from "../lib/essentiel";
 import { SOL_PLANTE, TYPES_SOL } from "../data/sols";
 import { FRUITIERS } from "../data/cultures-complements";
 import { srcVignette } from "../components/Ico";
 import { CONSERV, METHODES_CONSERV } from "../data/conservation";
+import { AjoutCulture } from "../components/AjoutCulture";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
 const BESOIN = { gourmand: "Gourmand (sol riche, compost)", moyen: "Moyen", peu: "Peu exigeant", ameliorant: "Améliorant (enrichit le sol)" };
@@ -274,37 +275,6 @@ export default function PlanteFiche({ id }: { id?: string }) {
         </div>
       )}
       {tab === "videos" && (() => { const n = p.nom.split(" (")[0].toLowerCase(); return <Videos id={p.id} query={`${n} ${interieur ? "entretien plante d'intérieur" : "culture potager conseils"}`} gestes={interieur ? [`${n} arrosage`, `${n} rempotage`, `${n} bouture`, `${n} feuilles jaunes`] : [`semis ${n}`, `plantation ${n}`, `${n} taille entretien`, `récolte ${n}`, `${n} maladies traitement naturel`]} />; })()}
-    </div>
-  );
-}
-
-export function AjoutCulture({ planteId, onDone }: { planteId: string; onDone: () => void }) {
-  const espaces = useStore((s) => s.espaces.filter((e) => !e.archive));
-  const [date, setDate] = useState(today());
-  const [mode, setMode] = useState<"semis" | "plantation">("semis");
-  const [espaceId, setEspaceId] = useState(espaces[0]?.id ?? "");
-  const [note, setNote] = useState("");
-  const [variete, setVariete] = useState("");
-  return (
-    <div className="card" style={{ marginTop: 10 }}>
-      <div className="row">
-        <label className="row"><input type="radio" checked={mode === "semis"} onChange={() => setMode("semis")} /> Semis</label>
-        <label className="row"><input type="radio" checked={mode === "plantation"} onChange={() => setMode("plantation")} /> Plantation</label>
-      </div>
-      <label className="field">Date<input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>
-      <label className="field">Emplacement
-        <select value={espaceId} onChange={(e) => setEspaceId(e.target.value)}>
-          <option value="">— Non précisé —</option>
-          {espaces.map((e) => <option key={e.id} value={e.id}>{e.nom}</option>)}
-        </select>
-      </label>
-      {!espaces.length && <p className="small muted">Créez vos planches, carrés ou pots dans <A to="/jardin/plan">Mon jardin → Plan</A> pour suivre la rotation.</p>}
-      <label className="field">Variété<input type="text" list="var-culture" placeholder="Ex. : Cœur de bœuf, Noire de Crimée…" value={variete} onChange={(e) => setVariete(e.target.value)} /><datalist id="var-culture">{varietesDe(getState(), planteId).map((v) => <option key={v} value={v} />)}</datalist></label>
-      <label className="field">Note (quantité, origine des graines…)<input type="text" value={note} onChange={(e) => setNote(e.target.value)} /></label>
-      <div className="row" style={{ marginTop: 10 }}>
-        <button className="btn primary" onClick={() => { upsert("cultures", { id: uid(), planteId, variete: variete.trim() || undefined, date, mode, espaceId: espaceId || undefined, note: note || undefined }); toast("Noté dans Mon jardin"); onDone(); }}>Enregistrer</button>
-        <button className="btn ghost" onClick={onDone}>Annuler</button>
-      </div>
     </div>
   );
 }

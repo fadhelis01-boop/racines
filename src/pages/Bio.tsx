@@ -1,7 +1,7 @@
 import { LABELS, PRATIQUES, THEMES_ECO, ecoScore } from "../data/bio";
 import { useStore, toggleFait } from "../lib/store";
 import { useRoute, href, go } from "../lib/router";
-import { Listen, A } from "../components/ui";
+import { Listen, A, Titre } from "../components/ui";
 
 const ONGLETS: [string, string][] = [["score", "📊 Mon éco-score"], ["labels", "🏷️ Les labels"], ["guides", "📘 Jardiner bio et sobre"]];
 
@@ -9,7 +9,7 @@ export default function Bio() {
   const onglet = useRoute().query.get("t") ?? "score";
   return (
     <div>
-      <h1>🌿 Jardin bio et écoresponsable</h1>
+      <Titre ico="compost" emoji="🌿">Jardin bio et écoresponsable</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Cultiver selon les principes de l'agriculture biologique, acheter les bons produits, et réduire l'empreinte de son jardin : énergie, eau, plastique, biodiversité.</p>
       <div className="chips" role="tablist" style={{ margin: "10px 0 14px" }}>
         {ONGLETS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/bio?t=${k}`)}>{l}</button>)}

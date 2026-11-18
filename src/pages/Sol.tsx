@@ -3,7 +3,7 @@ import { TYPES_SOL, QUESTIONS_SOL, interpreterSol, PH_CHOU, SOL_PLANTE } from ".
 import { plante } from "../data/index";
 import { useStore, setSettings, today } from "../lib/store";
 import { useRoute, href, go } from "../lib/router";
-import { Back, Listen, A, toast } from "../components/ui";
+import { Back, Listen, A, toast, Titre } from "../components/ui";
 import { Vignette, srcVignette } from "../components/Ico";
 
 const ONGLETS: [string, string][] = [["test", "🧪 Identifier mon sol"], ["types", "🌍 Les types de sol"], ["ph", "🎨 Acide ou calcaire ?"], ["vie", "🐛 Un sol vivant"]];
@@ -15,7 +15,7 @@ export default function Sol() {
   return (
     <div>
       <Back />
-      <h1>🌍 Mon sol</h1>
+      <Titre ico="sol" emoji="🌍">Mon sol</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Connaître sa terre, c'est savoir quoi planter, comment l'arroser et comment la nourrir. Pas besoin de laboratoire : quelques tests de 5 minutes avec une poignée de terre, du vinaigre et un chou rouge.</p>
       {sol && onglet !== "test" && <div className="callout ok small"><b>Votre sol (test du {new Date(sol.date).toLocaleDateString("fr-FR")})</b>{[typeSol(sol.texture)?.nom, ...sol.traits.map((t) => typeSol(t)?.nom)].filter(Boolean).join(" · ")} <a href={href("/sol?t=test")}>Voir ou refaire</a></div>}
       <div className="chips" role="tablist" style={{ margin: "10px 0 14px" }}>

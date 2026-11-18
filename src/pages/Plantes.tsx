@@ -1,8 +1,9 @@
+import { usePaquets } from "../lib/paquets";
 import { href } from "../lib/router";
 import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { PLANTES, CATEGORIES } from "../data/index";
-import { Tile } from "../components/ui";
+import { Tile, VoirPlus, Titre } from "../components/ui";
 import { norm } from "../lib/garden";
 import { useStore } from "../lib/store";
 import type { Categorie } from "../data/types";
@@ -33,9 +34,10 @@ export default function Plantes() {
       (!couleur || (p.couleurs ?? []).includes(couleur as never)) &&
       (!nq || norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" ")).includes(nq)),
   ).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
+  const paquet = usePaquets(list, [q, cat, lieu, facile, filtres.join(","), couleur].join("|"));
   return (
     <div>
-      <h1>🌱 Les plantes</h1>
+      <Titre ico="plantes" emoji="🌱">Les plantes</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>{PLANTES.length} fiches : culture pas à pas, calendrier, associations, maladies, vidéos, et ce que vos animaux peuvent en manger.</p>
       <div className="row small" style={{ gap: 8, marginBottom: 8 }}>
         <a className="chip" href={href("/interieur")}>🌿 Plantes d'intérieur et aromates (avec ou sans lampe)</a>
@@ -71,11 +73,13 @@ export default function Plantes() {
           <button key={k} className={`chip ${couleur === k ? "on" : ""}`} onClick={() => setCouleur(k)}><span style={{ width: 12, height: 12, borderRadius: 6, background: col, border: "1px solid var(--line)", display: "inline-block" }} />{l}</button>
         ))}
       </div>
+      <p className="small muted" aria-live="polite">{list.length} plante{list.length > 1 ? "s" : ""}</p>
       <div className="grid">
-        {list.map((p) => (
+        {paquet.visibles.map((p) => (
           <Tile key={p.id} to={`/plante/${p.id}`} id={p.id} emoji={p.emoji} title={p.nom} sub={p.latin} badge={<div className="row" style={{ gap: 4, marginTop: 4 }}><span className="badge">{["", "Facile", "Moyen", "Exigeant"][p.difficulte]}</span><span className="badge green">{CATEGORIES[p.categorie].label}</span></div>} />
         ))}
       </div>
+      <VoirPlus reste={paquet.reste} onPlus={paquet.plus} quoi="plantes" />
       {!list.length && <p className="muted">Aucune plante ne correspond.</p>}
     </div>
   );

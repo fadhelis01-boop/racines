@@ -1,12 +1,12 @@
 import { ANIMAUX, GUIDES } from "../data/index";
-import { Tile, Section } from "../components/ui";
+import { Tile, Section, Titre } from "../components/ui";
 import { href } from "../lib/router";
 
 export default function Animaux() {
   const guides = GUIDES.filter((g) => g.rubrique === "animaux" || g.rubrique === "boucherie");
   return (
     <div>
-      <h1>🐔 Les animaux</h1>
+      <Titre ico="animaux" emoji="🐔">Les animaux</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Soins quotidiens, alimentation avec le jardin, santé, fumier, services rendus au potager et réglementation, pour chaque animal.</p>
       <div className="grid-sm" style={{ marginBottom: 14 }}>
         <a className="btn big primary" href={href("/diagnostic-animal")}>⚕️ Un animal ne va pas bien</a>

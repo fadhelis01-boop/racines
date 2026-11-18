@@ -3,7 +3,7 @@ import { NUTRIMENTS, BESOINS_PLANTES, ENGRAIS_NATURELS, ERREURS_ENGRAIS, NUTRITI
 import { SOL_PLANTE } from "../data/sols";
 import { PLANTES, ANIMAUX, plante, animal, probleme, lienVers } from "../data/index";
 import { useRoute, href, go } from "../lib/router";
-import { Back, Listen, A } from "../components/ui";
+import { Back, Listen, A, Titre } from "../components/ui";
 import { Vignette, srcVignette } from "../components/Ico";
 
 export default function Nutrition() {
@@ -12,7 +12,7 @@ export default function Nutrition() {
   return (
     <div>
       <Back />
-      <h1>🍽️ Nourrir ses plantes et ses animaux</h1>
+      <Titre ico="engrais-vert" emoji="🍽️">Nourrir ses plantes et ses animaux</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Ce dont chacun a besoin, expliqué simplement : pour les légumes, les fruits, les fleurs, les plantes en pot et d'intérieur, et pour chaque animal de la basse-cour.</p>
       <div className="chips" role="tablist" style={{ margin: "10px 0 14px" }}>
         {[["plantes", "🌱 Les plantes"], ["engrais", "🧺 Les engrais naturels"], ["animaux", "🐔 Les animaux"]].map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/nutrition?t=${k}`)}>{l}</button>)}

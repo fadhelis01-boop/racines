@@ -1,10 +1,11 @@
+import { chargerWiki } from "../lib/wiki";
 import { useRef, useState } from "react";
 import { useStore, setSettings, exportBackup, importBackup } from "../lib/store";
 import { ZONES } from "../data/index";
 import type { ZoneId } from "../data/calendrier";
 import { chercherVille } from "../lib/meteo";
 import { frenchVoices, preview, useTts } from "../lib/tts";
-import { download, toast, toutesLesPhotos } from "../components/ui";
+import { download, toast, toutesLesPhotos, Titre } from "../components/ui";
 import { promptInstall, usePwa, isIos, isStandalone, checkForAppUpdate } from "../lib/pwa";
 import { isoDate } from "../lib/store";
 import { href } from "../lib/router";
@@ -21,7 +22,7 @@ export default function Reglages() {
 
   return (
     <div>
-      <h1>⚙️ Réglages</h1>
+      <Titre ico="reglages" emoji="⚙️">Réglages</Titre>
 
       <h2>Mon jardin</h2>
       <div className="card stack">
@@ -128,7 +129,7 @@ export default function Reglages() {
         <p className="small">Les photos des fiches viennent d'Internet et sont gardées sur l'appareil quand vous les voyez. Pour tout consulter sans connexion (jardin sans réseau, voyage), téléchargez-les une fois (environ {Math.round(toutesLesPhotos().length * 0.045)} Mo).</p>
         <button className="btn" onClick={async (e) => {
           const b = e.currentTarget; b.disabled = true;
-          const all = toutesLesPhotos(); let ok = 0;
+          await chargerWiki(); const all = toutesLesPhotos(); let ok = 0;
           for (let i = 0; i < all.length; i += 6) {
             await Promise.all(all.slice(i, i + 6).map((u) => fetch(u, { mode: "cors" }).then((r) => { if (r.ok) ok++; }).catch(() => undefined)));
             b.textContent = `Téléchargement… ${Math.min(i + 6, all.length)} / ${all.length}`;

@@ -3,11 +3,11 @@ import { useState } from "react";
 import { useStore, upsert, remove, uid, today, getState, type Ruche, type Visite, type MethodeVarroa } from "../lib/store";
 import { RACES } from "../data/races";
 import { href } from "../lib/router";
-import { toast, download, Empty } from "../components/ui";
+import { toast, download, Empty, Titre } from "../components/ui";
 import { couleurReine, COULEURS_REINE, METHODES_VARROA, valeurVarroa, niveauVarroa, seuilsVarroa, LIB_NIVEAU, pertesHiver, derniereVisite, dernierComptage, alertesRucher, registreTraitementsCsv, visitesCsv, PRODUITS_VARROA, TYPES_RUCHE, ORIGINES, vivantes, type NiveauVarroa } from "../lib/rucher";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
-const COUL: Record<NiveauVarroa, string> = { ok: "var(--ok, #2a9d4b)", surveiller: "var(--sun, #e0a100)", traiter: "var(--danger, #c33)" };
+const COUL: Record<NiveauVarroa, string> = { ok: "var(--green)", surveiller: "var(--sun)", traiter: "var(--danger)" };
 
 function Pastille({ annee }: { annee?: number }) {
   if (!annee) return null;
@@ -24,9 +24,9 @@ export default function Rucher() {
   return (
     <div>
       <p className="small"><a href={href("/jardin/animaux")}>← Mes animaux</a> · <a href={href("/animal/abeille")}>Fiche abeille</a></p>
-      <h1>🐝 Mon rucher</h1>
+      <Titre ico="abeille" emoji="🐝">Mon rucher</Titre>
       <p className="muted">Chaque ruche suivie une par une : visites, comptages de varroa avec seuil d'alerte, registre des traitements, pertes d'hiver.</p>
-      <p className="small">📖 Les mots du rucher (touchez-les) : <MotsLexique texte="couvain, varroa, opercule, hausse, essaimage." /></p>
+      <details className="box small"><summary>📖 Les mots du rucher</summary><p style={{ margin: "6px 0 0" }}>Touchez un mot pour son explication : <MotsLexique texte="couvain, varroa, opercule, hausse, essaimage." /></p></details>
       <div className="chips" style={{ margin: "8px 0" }}>
         <a className="chip" href={href("/guide/api-calendrier")}>📅 L'année au rucher</a>
         <a className="chip" href={href("/guide/api-visite")}>🔍 Faire une visite</a>
@@ -34,7 +34,7 @@ export default function Rucher() {
         <a className="chip" href={href("/diagnostic-animal?animal=abeille")}>⚕️ Diagnostic de la ruche</a>
       </div>
       {alertes.length > 0 && (
-        <div className="card" style={{ borderLeft: "4px solid var(--danger, #c33)" }}>
+        <div className="card" style={{ borderLeft: "4px solid var(--danger)" }}>
           <b>À faire au rucher</b>
           <ul className="small" style={{ margin: "6px 0 0" }}>{alertes.map((a, i) => <li key={i} style={{ color: a.grave ? "var(--danger)" : undefined }}>{a.texte}</li>)}</ul>
         </div>
@@ -194,9 +194,9 @@ function CourbeVarroa() {
       <b>📉 Varroa sur 12 mois</b>
       <p className="small muted">Chaque comptage est comparé au seuil de traitement de sa saison : au-dessus de la ligne rouge, il faut traiter.</p>
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 520 }} role="img" aria-label="Évolution du varroa par ruche">
-        <rect x={P} y={y(max)} width={W - P - 6} height={y(1) - y(max)} fill="rgba(200,50,50,.08)" />
-        <line x1={P} x2={W - 6} y1={y(1)} y2={y(1)} stroke="#c33" strokeDasharray="4 3" />
-        <text x={P + 2} y={y(1) - 3} fontSize="9" fill="#c33">seuil de traitement</text>
+        <rect x={P} y={y(max)} width={W - P - 6} height={y(1) - y(max)} style={{ fill: "var(--danger-soft)" }} />
+        <line x1={P} x2={W - 6} y1={y(1)} y2={y(1)} style={{ stroke: "var(--danger)" }} strokeDasharray="4 3" />
+        <text x={P + 2} y={y(1) - 3} fontSize="9" style={{ fill: "var(--danger)" }}>seuil de traitement</text>
         <line x1={P} x2={P} y1={8} y2={H - P} stroke="currentColor" opacity=".3" />
         <line x1={P} x2={W - 6} y1={H - P} y2={H - P} stroke="currentColor" opacity=".3" />
         <text x={P} y={H - 8} fontSize="9" fill="currentColor" opacity=".6">{fr(d0)}</text>

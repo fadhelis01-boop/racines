@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../lib/store";
 import { href, useRoute } from "../lib/router";
-import { Back, Listen } from "../components/ui";
+import { Back, Listen, Titre } from "../components/ui";
 import { Vignette } from "../components/Ico";
 import { COUVAISON, datesCouvee } from "../lib/elevage";
 
@@ -59,7 +59,7 @@ export default function Calculs() {
   return (
     <div>
       <Back />
-      <h1>🧮 Calculs pratiques</h1>
+      <Titre ico="creer" emoji="🧮">Calculs pratiques</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Des ordres de grandeur pour acheter juste et prévoir : compost, terreau, quantités à planter pour la famille, eau de pluie, poules. Les chiffres réels varient avec le sol, le climat et les variétés.</p>
       <div className="chips" style={{ margin: "8px 0 4px" }}>
         <a className="chip" href="#/calculs?s=compost" onClick={(e) => { e.preventDefault(); document.getElementById("compost")?.scrollIntoView(); }}>♻️ Compost et fumier</a>

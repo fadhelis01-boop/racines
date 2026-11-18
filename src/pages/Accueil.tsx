@@ -69,7 +69,7 @@ export default function Accueil() {
         <a className="brand" href={href("/")}><Logo /> Racines</a>
         <div className="grow" />
       </div>
-      <h1>{salut} 🌿</h1>
+      <h1>{salut}</h1>
       <p className="muted" style={{ marginTop: -6 }}>
         {now.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · {saison}
       </p>
@@ -152,7 +152,7 @@ export default function Accueil() {
         </div>
       </div>}
 
-      <div className="grid-sm" style={{ marginTop: 14 }}>
+      <div className="grid-sm grid-actions" style={{ marginTop: 14 }}>
         <a className="btn big" href={href(appart ? "/diagnostic?interieur=1" : "/diagnostic")}><Ico nom="diagnostic" emoji="⚕️" taille={40} /> Ma plante est malade</a>
         <a className="btn big" href={href("/identifier")}><Ico nom="photo" emoji="📷" taille={40} /> Je ne connais pas son nom</a>
         {appart ? <>
@@ -168,10 +168,10 @@ export default function Accueil() {
         {perso.length ? (
           <div className="card">
             {perso.map((p) => (
-              <div key={p.key} className={`task ${s.fait[p.key] ? "done" : ""}`}>
-                <input type="checkbox" checked={!!s.fait[p.key]} onChange={() => toggleFait(p.key)} aria-label="Fait" />
+              <label key={p.key} className={`task ${s.fait[p.key] ? "done" : ""}`}>
+                <input type="checkbox" checked={!!s.fait[p.key]} onChange={() => toggleFait(p.key)} />
                 <span>{p.emoji} <a href={href(p.href)} style={{ color: p.urgent ? "var(--danger)" : undefined }}>{p.texte}</a></span>
-              </div>
+              </label>
             ))}
           </div>
         ) : (
@@ -189,10 +189,10 @@ export default function Accueil() {
         const travaux = sections.flatMap((x) => t[x.k].map((txt, i) => ({ x, txt, key: `${now.getFullYear()}-${mois}:${x.k}:${i}` }))).filter((w) => abeilles || !/ruche|varroa|abeille/i.test(w.txt));
         const essentiels = travaux.slice(0, 5);
         const tache = (w: typeof travaux[number]) => (
-          <div key={w.key} className={`task ${s.fait[w.key] ? "done" : ""}`}>
-            <input type="checkbox" checked={!!s.fait[w.key]} onChange={() => toggleFait(w.key)} aria-label="Fait" />
+          <label key={w.key} className={`task ${s.fait[w.key] ? "done" : ""}`}>
+            <input type="checkbox" checked={!!s.fait[w.key]} onChange={() => toggleFait(w.key)} />
             <span><span aria-hidden="true">{w.x.e}</span> {w.txt}</span>
-          </div>
+          </label>
         );
         return (
           <Section title={`À faire en ${MOIS_NOMS[mois - 1]}`} right={<A to="/calendrier" className="small">Tout le calendrier →</A>}>

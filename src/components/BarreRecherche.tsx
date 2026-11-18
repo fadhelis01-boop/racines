@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { rechercher } from "../lib/search";
+import type { rechercher as Rechercher } from "../lib/search";
 import { go, href } from "../lib/router";
 import { Vignette } from "./Ico";
 
@@ -10,7 +10,10 @@ export default function BarreRecherche() {
   const [open, setOpen] = useState(false);
   const [i, setI] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const res = q.trim().length >= 2 ? rechercher(q, 8) : [];
+  // Le moteur de recherche (et tout son index) n'est chargé qu'au premier usage de la barre
+  const [moteur, setMoteur] = useState<typeof Rechercher | null>(null);
+  const charger = () => { if (!moteur) void import("../lib/search").then((m) => setMoteur(() => m.rechercher)); };
+  const res = moteur && q.trim().length >= 2 ? moteur(q, 8) : [];
   useEffect(() => {
     const f = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
     const fermer = () => { setOpen(false); setQ(""); };
@@ -26,8 +29,9 @@ export default function BarreRecherche() {
           type="search"
           placeholder="Rechercher une plante, une fleur, un arbre, une maladie, un terme…"
           value={q}
-          onChange={(e) => { setQ(e.target.value); setOpen(true); setI(0); }}
-          onFocus={() => setOpen(true)}
+          onChange={(e) => { charger(); setQ(e.target.value); setOpen(true); setI(0); }}
+          onFocus={() => { charger(); setOpen(true); }}
+          onPointerEnter={charger}
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") { e.preventDefault(); setI(Math.min(i + 1, res.length)); }
             if (e.key === "ArrowUp") { e.preventDefault(); setI(Math.max(i - 1, 0)); }

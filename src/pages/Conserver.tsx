@@ -5,7 +5,7 @@ import { PLANTES, plante, GUIDES } from "../data/index";
 import { CONSERV, METHODES_CONSERV, RENDEMENTS, CALENDRIER_CONSERVES, TEMPS_TRAITEMENT, majorationAltitude, type MethodeConserv } from "../data/conservation";
 import { proposer, selLacto, sucreConfiture, LIEUX, GARDE_DEFAUT, finDeGarde, numeroLot, alertesStocks, planAnnee, stocksCsv, arrondi, type Materiel } from "../lib/conserverie";
 import { useRoute, href, go } from "../lib/router";
-import { Listen, toast, download, Photo, Videos } from "../components/ui";
+import { Listen, toast, download, Photo, Videos, Titre } from "../components/ui";
 import { MOIS_NOMS } from "../data/util";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
@@ -17,10 +17,10 @@ export default function Conserver() {
   const onglet = route.query.get("t") ?? "methodes";
   return (
     <div>
-      <h1>🥫 Conserver ses récoltes</h1>
+      <Titre ico="recolte" emoji="🥫">Conserver ses récoltes</Titre>
       <p className="muted">Toutes les façons de manger son jardin toute l'année, de la cave à la confiture, avec les règles de sécurité et un garde-manger pour suivre ses bocaux.</p>
       <div className="callout warn" style={{ margin: "8px 0" }}><b>⚠️ Sécurité d'abord</b> Tomates : toujours acidifier. Ail, herbes et légumes à l'huile : au réfrigérateur seulement. Bocal bombé ou qui pétille : on jette sans goûter. <a href={href("/guide/cs-securite")}>Les règles →</a></div>
-      <p className="small">📖 Les mots de la conserverie (touchez-les) : <MotsLexique texte="blanchir, pasteuriser, stériliser, autoclave, conserve acide / peu acide, botulisme, lacto-fermentation, saumure, pectine." /></p>
+      <details className="box small"><summary>📖 Les mots de la conserverie</summary><p style={{ margin: "6px 0 0" }}>Touchez un mot pour son explication : <MotsLexique texte="blanchir, pasteuriser, stériliser, autoclave, conserve acide / peu acide, botulisme, lacto-fermentation, saumure, pectine." /></p></details>
       <div className="chips" role="tablist" style={{ margin: "8px 0 12px" }}>
         {ONGLETS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/conserver?t=${k}`)}>{l}</button>)}
       </div>
@@ -207,7 +207,7 @@ function Calendrier() {
     <div>
       <p className="small muted">Les pics de récolte décident des journées de conserves. Repères en climat tempéré : avancez de 2 à 4 semaines dans le Midi, retardez en montagne.</p>
       {[...Array(12)].map((_, i) => { const k = ((m - 1 + i) % 12) + 1; return (
-        <div key={k} className="card" style={{ marginTop: 8, borderLeft: k === m ? "4px solid var(--accent, #2a9d4b)" : undefined }}>
+        <div key={k} className="card" style={{ marginTop: 8, borderLeft: k === m ? "4px solid var(--green)" : undefined }}>
           <b>{MOIS_NOMS[k - 1]}{k === m ? " (ce mois-ci)" : ""}</b>
           <ul className="ticks small" style={{ margin: "4px 0 0" }}>{CALENDRIER_CONSERVES[k].map((x) => <li key={x}>{x}</li>)}</ul>
         </div>); })}
@@ -235,7 +235,7 @@ function GardeManger({ prefill, kg }: { prefill: string; kg: string }) {
   return (
     <div>
       {(al.depasses.length > 0 || al.bientot.length > 0) && (
-        <div className="card" style={{ borderLeft: "4px solid var(--danger, #c33)" }}>
+        <div className="card" style={{ borderLeft: "4px solid var(--danger)" }}>
           <b>À consommer en priorité</b>
           <ul className="small" style={{ margin: "4px 0 0" }}>{[...al.depasses, ...al.bientot].map((s) => <li key={s.id}>{s.produit} ({s.quantite} {s.unite}, {LIEUX[s.lieu].toLowerCase()}) : avant le {fr(finDeGarde(s))}</li>)}</ul>
         </div>

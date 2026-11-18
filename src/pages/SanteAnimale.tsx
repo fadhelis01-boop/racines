@@ -4,7 +4,7 @@ import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../data/maladies-animales";
 import { diagnostiquerAnimal } from "../lib/sante-animale";
 import { ANIMAUX, animal } from "../data/index";
 import { useRoute, href } from "../lib/router";
-import { Back, Listen, Videos, A, Empty } from "../components/ui";
+import { Back, Listen, Videos, A, Empty, Titre } from "../components/ui";
 import { Vignette } from "../components/Ico";
 
 const URGENCE = ["", "À surveiller", "Vétérinaire dans les jours qui viennent", "URGENCE : vétérinaire aujourd'hui"];
@@ -26,7 +26,7 @@ export function DiagnosticAnimal() {
   return (
     <div>
       <Back />
-      <h1>⚕️ Mon animal ne va pas bien</h1>
+      <Titre ico="sante" emoji="⚕️">Mon animal ne va pas bien</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Deux questions pour orienter vers les causes les plus probables et savoir s'il faut appeler le vétérinaire. Ce n'est pas un diagnostic : en cas de doute, appelez.</p>
       <div className="callout warn"><b>Appelez le vétérinaire sans attendre</b> si l'animal ne mange plus depuis plus de 12 h (lapin) ou 24 h, respire bouche ouverte, saigne, a le ventre gonflé, se roule, ou si plusieurs animaux meurent brutalement (et dans ce cas, prévenez aussi la DDPP).</div>
       {step === 0 && (
@@ -96,7 +96,7 @@ export default function MaladieAnimaleFiche({ id }: { id?: string }) {
       <Back />
       <div style={{ marginTop: 8 }}>
         <span className="badge">Santé des animaux</span> <Urgence u={m.urgence} />
-        <h1 style={{ marginTop: 8 }}>⚕️ {m.nom}</h1>
+        <Titre ico="sante" emoji="⚕️" style={{ marginTop: 8 }}>{m.nom}</Titre>
         <Listen id={`ma-${m.id}`} title={m.nom} blocks={lecture} label="Écouter la fiche" />
       </div>
       {m.urgence === 3 && <div className="callout danger"><b>Urgence</b> Appelez votre vétérinaire aujourd'hui. Les gestes ci-dessous aident en attendant, ils ne remplacent pas les soins.</div>}

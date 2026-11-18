@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useStore, setSettings, update, today, toggleFait, type Situation } from "../lib/store";
 import { ZONES, animal } from "../data/index";
 import { href } from "../lib/router";
-import { Back, Listen, toast, A } from "../components/ui";
+import { Back, Listen, toast, A, Titre } from "../components/ui";
 import { Vignette } from "../components/Ico";
 import type { ZoneId } from "../data/calendrier";
 
@@ -111,7 +111,7 @@ export default function Demenagement() {
   return (
     <div>
       <Back />
-      <h1>📦 Je déménage</h1>
+      <Titre ico="maison-jardin" emoji="📦">Je déménage</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>D'un appartement vers une maison avec jardin, ou l'inverse : une liste à cocher pour ne rien perdre en route (plantes, graines, animaux, démarches), puis l'appli s'adapte à votre nouveau lieu. Vos récoltes, notes, graines, favoris et « Mes plantes » sont toujours conservés.</p>
 
       <div className="card stack">

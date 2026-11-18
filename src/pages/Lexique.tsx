@@ -4,7 +4,7 @@ import { lienVers } from "../data/index";
 import { useRoute, href } from "../lib/router";
 import { norm } from "../lib/garden";
 import { youtube } from "../data/util";
-import { Listen } from "../components/ui";
+import { Listen, Titre } from "../components/ui";
 import { Vignette, srcVignette } from "../components/Ico";
 
 export default function Lexique() {
@@ -20,7 +20,7 @@ export default function Lexique() {
   }, [cible]);
   return (
     <div>
-      <h1>📖 Lexique du jardinier</h1>
+      <Titre ico="lexique" emoji="📖">Lexique du jardinier</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>{LEXIQUE.length} termes techniques expliqués simplement, avec une photo quand c'est possible, la fiche ou le tutoriel qui montre le geste, et une vidéo.</p>
       <div className="search"><input type="search" placeholder="Chercher un terme : butter, gourmand, pH, bouture…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Chercher dans le lexique" /></div>
       {!q && (

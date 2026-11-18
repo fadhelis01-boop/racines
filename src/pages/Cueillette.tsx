@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { GESTES_RECOLTE } from "../data/cueillette";
 import { plante } from "../data/index";
 import { useRoute, href } from "../lib/router";
-import { Back, Listen, Galerie, wikiOf } from "../components/ui";
+import { Back, Listen, Galerie, wikiOf, Titre } from "../components/ui";
 import { srcVignette, Vignette } from "../components/Ico";
 import { youtube } from "../data/util";
 
@@ -13,7 +13,7 @@ export default function Cueillette() {
   return (
     <div>
       <Back />
-      <h1>🧺 Bien cueillir et récolter</h1>
+      <Titre ico="recolte-action" emoji="🧺">Bien cueillir et récolter</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Le bon moment et le bon geste pour chaque type de récolte : on cueille sans abîmer la plante, elle produit plus longtemps et la récolte se garde mieux. Chaque fiche de plante renvoie ici, avec sa période de récolte selon votre climat.</p>
       <div className="callout info small"><b>Règles communes</b>Outils propres et affûtés ; récolte au frais (matin ou soir) ; feuillage sec pour ne pas propager les maladies ; un panier ou une caisse, pas un sac où tout s'écrase ; on met à l'ombre tout de suite.</div>
       <div className="chips" style={{ margin: "10px 0" }}>

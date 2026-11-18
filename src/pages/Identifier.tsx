@@ -3,7 +3,7 @@ import { useStore, upsert, uid, today } from "../lib/store";
 import { identifyPlantNet, identifyClaude, claudeErrorMessage, savePhoto, type PlantNetResult, type ClaudeDiag } from "../lib/identify";
 import { plante, probleme, animal } from "../data/index";
 import { href } from "../lib/router";
-import { Back, Listen, A, toast } from "../components/ui";
+import { Back, Listen, A, toast, Titre } from "../components/ui";
 import IdentGuidee from "../components/IdentGuidee";
 
 export default function Identifier() {
@@ -49,7 +49,7 @@ export default function Identifier() {
   return (
     <div>
       <Back />
-      <h1>🔎 Je ne connais pas le nom de ma plante</h1>
+      <Titre ico="identifier" emoji="🔎">Je ne connais pas le nom de ma plante</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Une plante, un arbre, un fruit, une fleur, un insecte, une feuille malade… Prenez une ou plusieurs photos nettes, en gros plan, à la lumière du jour.</p>
 
       {!photos.length && !avecCle && (

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { href, useRoute } from "../lib/router";
 import { Vignette } from "../components/Ico";
 import { rechercher, ressembleSymptome, parleAnimal } from "../lib/search";
-import { Listen } from "../components/ui";
+import { Listen, Titre } from "../components/ui";
 
 export default function Recherche() {
   const route = useRoute();
@@ -12,7 +12,7 @@ export default function Recherche() {
   const res = rechercher(q);
   return (
     <div>
-      <h1>🔍 Rechercher</h1>
+      <Titre ico="recherche" emoji="🔍">Rechercher</Titre>
       <div className="search"><input type="search" autoFocus placeholder="Plante, nom courant, symptôme, technique… (ex. : caoutchouc, feuilles jaunes, rempotage)" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Rechercher" /></div>
       {q.length >= 3 && ressembleSymptome(q) && parleAnimal(q) && (
         <a className="callout warn row" href={href("/diagnostic-animal")} style={{ textDecoration: "none", color: "inherit", display: "flex" }}>

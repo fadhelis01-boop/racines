@@ -5,7 +5,7 @@ import { recommander, relations, plantesVertes, type Profil } from "../lib/garde
 import { moisAffiches } from "../lib/calendar";
 import { MOIS_NOMS } from "../data/util";
 import { href, go } from "../lib/router";
-import { Listen, MonthGrid, toast, A } from "../components/ui";
+import { Listen, MonthGrid, toast, A, Titre } from "../components/ui";
 import type { Situation } from "../lib/store";
 
 const OBJ = [
@@ -38,7 +38,7 @@ export default function Creer() {
 
   return (
     <div>
-      <h1>👨‍🌾 Créer mon potager</h1>
+      <Titre ico="creer" emoji="👨‍🌾">Créer mon potager</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Cinq questions, et Racines vous propose quoi cultiver, comment installer votre potager et le planning de votre première année.</p>
       <div className="progress" style={{ margin: "10px 0 16px" }}><div style={{ width: `${(step / 4) * 100}%` }} /></div>
 

@@ -1,31 +1,31 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { href, go } from "../lib/router";
 import { play, pause, useTts } from "../lib/tts";
 import { MOIS_COURTS, youtube, tiktok } from "../data/util";
 import { ACTIONS, type Action, moisAffiches } from "../lib/calendar";
 import { useStore, update, toggleFavori } from "../lib/store";
 import type { Plante } from "../data/types";
-import wiki from "../data/wiki.json";
+import { useWiki, wikiCharge, type PhotoLibre } from "../lib/wiki";
 import localImages from "../data/local-images.json";
 const LOCAL = new Set(localImages as string[]);
 import { loadPhoto } from "../lib/photos";
+import { Ico } from "./Ico";
 
 export const A = ({ to, children, className }: { to: string; children: ReactNode; className?: string }) => (
   <a href={href(to)} className={className}>{children}</a>
 );
 
-export type PhotoLibre = { img: string; full: string; page: string; auteur: string; licence: string };
-const WIKI = wiki as unknown as Record<string, { photos: PhotoLibre[]; article: string }>;
-export const wikiOf = (id: string) => WIKI[id];
-export const toutesLesPhotos = () => [...Object.values(WIKI).flatMap((w) => (w.photos ?? []).map((p) => p.img)), ...[...LOCAL].map((id) => `./img/${id}.webp`)];
+export type { PhotoLibre };
+export const wikiOf = (id: string) => wikiCharge()?.[id];
+export const toutesLesPhotos = () => [...Object.values(wikiCharge() ?? {}).flatMap((w) => (w.photos ?? []).map((p) => p.img)), ...[...LOCAL].map((id) => `./img/${id}.webp`)];
 
 // Photo libre (Wikimedia) ou, à défaut, l'emoji de la fiche
 export function Photo({ id, emoji, alt }: { id: string; emoji: string; alt: string; credit?: boolean }) {
-  const w = WIKI[id];
-  const [err, setErr] = useState(false);
+  const w = useWiki()?.[id];
+  const [etat, setEtat] = useState<"local" | "wiki" | "err">(LOCAL.has(id) ? "local" : "wiki");
   const local = `./img/${id}.webp`;
-  const [src, setSrc] = useState<string | undefined>(LOCAL.has(id) ? local : w?.photos?.[0]?.img);
-  if (err || !src) return <span aria-hidden="true">{emoji}</span>;
+  const src = etat === "local" ? local : etat === "wiki" ? w?.photos?.[0]?.img : undefined;
+  if (!src) return <span aria-hidden="true">{emoji}</span>;
   return (
     <>
       <img
@@ -33,10 +33,7 @@ export function Photo({ id, emoji, alt }: { id: string; emoji: string; alt: stri
         alt={alt}
         loading="lazy"
         crossOrigin={src.startsWith("http") ? "anonymous" : undefined}
-        onError={() => {
-          if (src === local && w?.photos?.[0]) setSrc(w.photos[0].img);
-          else setErr(true);
-        }}
+        onError={() => setEtat(etat === "local" ? "wiki" : "err")}
       />
 
     </>
@@ -44,7 +41,7 @@ export function Photo({ id, emoji, alt }: { id: string; emoji: string; alt: stri
 }
 
 export function Credit({ id, index = 0 }: { id: string; index?: number }) {
-  const ph = WIKI[id]?.photos?.[index];
+  const ph = useWiki()?.[id]?.photos?.[index];
   if (!ph || (LOCAL.has(id) && index === 0)) return null;
   return (
     <div className="credit">
@@ -55,7 +52,7 @@ export function Credit({ id, index = 0 }: { id: string; index?: number }) {
 
 // Plusieurs vues de la plante (feuille, ensemble, fleur…) avec agrandissement
 export function Galerie({ id, emoji, alt, photoFirst }: { id: string; emoji: string; alt: string; photoFirst?: boolean }) {
-  const photos = WIKI[id]?.photos ?? [];
+  const photos = useWiki()?.[id]?.photos ?? [];
   const [i, setI] = useState(0);
   const [zoom, setZoom] = useState(false);
   const local = LOCAL.has(id) && !(photoFirst && photos.length);
@@ -260,4 +257,23 @@ export function download(name: string, blob: Blob) {
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
+/** Bouton « Voir plus » qui se déclenche aussi tout seul quand on arrive en bas de la liste. */
+export function VoirPlus({ reste, onPlus, quoi = "résultats" }: { reste: number; onPlus: () => void; quoi?: string }) {
+  const ref = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !reste || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) onPlus(); }, { rootMargin: "400px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reste, onPlus]);
+  if (!reste) return null;
+  return <button ref={ref} className="btn" style={{ width: "100%", marginTop: 12 }} onClick={onPlus}>Voir plus ({reste} autres {quoi})</button>;
+}
+
+/** Titre de page : une illustration de la famille d'icônes de Racines, l'émoji seulement en secours. */
+export function Titre({ ico, emoji, children, style }: { ico: string; emoji: string; children: ReactNode; style?: React.CSSProperties }) {
+  return <h1 className="titre-page" style={style}><Ico nom={ico} emoji={emoji} taille={44} /><span>{children}</span></h1>;
 }

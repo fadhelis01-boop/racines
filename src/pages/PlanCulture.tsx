@@ -4,7 +4,7 @@ import { PLANTES, plante } from "../data/index";
 import { MARAICH, TEMPS_METHODE } from "../data/maraichage";
 import { planifier, plantsParPlanche, successions, engraisVertPour, nurserie, tempsDeTravail, occupation } from "../lib/plan-culture";
 import { useRoute, href, go } from "../lib/router";
-import { Back, Listen, toast, download } from "../components/ui";
+import { Back, Listen, toast, download, Titre } from "../components/ui";
 import { Vignette } from "../components/Ico";
 import { EXPORTS } from "../lib/exports";
 
@@ -17,7 +17,7 @@ export default function PlanCulture() {
   return (
     <div>
       <Back />
-      <h1>📋 Plan de culture</h1>
+      <Titre ico="calendrier" emoji="📋">Plan de culture</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Pour un potager qui produit en continu : séries de semis échelonnées, nombre de plants et de graines, plants par planche, successions sur une même planche, calendrier de la nurserie et temps de travail. Valeurs indicatives, à ajuster avec votre expérience.</p>
       <div className="chips" role="tablist" style={{ margin: "10px 0 14px" }}>
         {ONGLETS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/plan-culture?t=${k}`)}>{l}</button>)}

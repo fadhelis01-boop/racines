@@ -1,3 +1,5 @@
+import { GROUPES, entreeVisible } from "./lib/menu";
+import { useWiki, chargerWikiPlusTard } from "./lib/wiki";
 import { lazy, Suspense, useEffect } from "react";
 import { useRoute, href } from "./lib/router";
 import { useLoaded, useStore } from "./lib/store";
@@ -78,7 +80,29 @@ export default function App() {
   const onboarded = useStore((s) => s.settings.onboarded);
   const appart = useStore((s) => s.settings.situation === "appartement");
   const debutant = useStore((s) => !!s.settings.debutant);
-  const animaux = useStore((s) => s.settings.animauxActifs || s.troupeaux.length > 0);
+  const profil = useStore((s) => ({ situation: s.settings.situation, animaux: s.settings.animauxActifs || s.troupeaux.length > 0, abeilles: s.troupeaux.some((t) => t.animalId === "abeille") || s.ruches.length > 0, debutant: !!s.settings.debutant }));
+  useWiki(); // re-rend les pages quand les photos libres sont chargées
+  useEffect(() => { chargerWikiPlusTard(); }, []);
+  // Onglets : flèches gauche/droite, Début/Fin (motif ARIA « tabs »), et onglet actif toujours visible
+  useEffect(() => {
+    const f = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (t.getAttribute?.("role") !== "tab") return;
+      const liste = [...(t.closest("[role=tablist]")?.querySelectorAll<HTMLElement>("[role=tab]") ?? [])];
+      const i = liste.indexOf(t);
+      const j = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? liste.length - 1 : -2;
+      if (j === -2 || !liste.length) return;
+      e.preventDefault();
+      const cible = liste[(j + liste.length) % liste.length];
+      cible.focus(); cible.click(); cible.scrollIntoView({ block: "nearest", inline: "nearest" });
+    };
+    document.addEventListener("keydown", f);
+    return () => document.removeEventListener("keydown", f);
+  }, []);
+  useEffect(() => {
+    const id = setTimeout(() => document.querySelectorAll<HTMLElement>(".chips[role=tablist] [aria-selected=true]").forEach((x) => x.scrollIntoView({ block: "nearest", inline: "nearest" })), 50);
+    return () => clearTimeout(id);
+  }, [route]);
   const nav = (debutant ? [NAV[0], { to: "/debuter", label: "Je débute", i: "🌱", ico: "plantes" }, ...NAV.slice(1)] : NAV).map((n) => (n.to === "/jardin" && appart ? { ...n, label: "Mes plantes", i: "🌿", ico: "mesplantes" } : n.to === "/creer" && appart ? { ...n, label: "Mon potager d'intérieur" } : n));
   const { updateReady } = usePwa();
   const [p0, p1] = route.parts;
@@ -135,12 +159,19 @@ export default function App() {
     <div className="app">
       <nav className="side" aria-label="Navigation principale">
         <a className="brand" href={href("/")}><Logo /> Racines</a>
-        {nav.filter((n) => n.to !== "/animaux" || animaux).map((n, i) => (
-          <span key={n.to}>
-            {i === (debutant ? 6 : 5) && <div className="sep" />}
-            <a href={href(n.to)} className={isOn(n.to) ? "on" : ""}><Ico nom={n.ico} emoji={n.i} taille={26} /> {n.label}</a>
-          </span>
+        {["/", "/jardin", "/plantes", "/sante"].map((to) => nav.find((n) => n.to === to)!).map((n) => (
+          <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><Ico nom={n.ico} emoji={n.i} taille={26} /> {n.label}</a>
         ))}
+        {GROUPES.map((g) => {
+          const es = g.entrees.filter((e) => e.to !== "/jardin" && entreeVisible(e, profil));
+          if (!es.length) return null;
+          return (
+            <div key={g.titre} className="side-groupe">
+              <div className="side-titre">{g.titre.replace(/^\S+\s/, "")}</div>
+              {es.map((e) => <a key={e.to} href={href(e.to)} className={isOn(e.to) ? "on" : ""}><Ico nom={e.ico} emoji={e.emoji} taille={22} /> {e.label}</a>)}
+            </div>
+          );
+        })}
       </nav>
       <main className="main">
         {route.path !== "/recherche" && <BarreRecherche />}

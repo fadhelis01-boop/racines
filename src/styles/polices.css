@@ -1,0 +1,8 @@
+/* Polices hébergées dans l'appli (sous licence OFL) : fonctionnent hors connexion, sans appel à Google */
+@font-face { font-family: 'Nunito'; font-style: normal; font-display: swap; font-weight: 400; src: url('../../node_modules/@fontsource/nunito/files/nunito-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-display: swap; font-weight: 600; src: url('../../node_modules/@fontsource/nunito/files/nunito-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-display: swap; font-weight: 700; src: url('../../node_modules/@fontsource/nunito/files/nunito-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-display: swap; font-weight: 800; src: url('../../node_modules/@fontsource/nunito/files/nunito-latin-800-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-display: swap; font-weight: 900; src: url('../../node_modules/@fontsource/nunito/files/nunito-latin-900-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: normal; font-display: swap; font-weight: 600; src: url('../../node_modules/@fontsource/fraunces/files/fraunces-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Fraunces'; font-style: normal; font-display: swap; font-weight: 700; src: url('../../node_modules/@fontsource/fraunces/files/fraunces-latin-700-normal.woff2') format('woff2'); }

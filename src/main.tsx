@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import "./styles/polices.css";
 import "./styles/app.css";
 import { loadState } from "./lib/store";
 import { requestPersistence } from "./lib/db";

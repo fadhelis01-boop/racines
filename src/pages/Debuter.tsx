@@ -2,7 +2,7 @@ import { TROIS_ERREURS, PREMIER_MOIS, DEUXIEME_SAISON, INCREVABLES, AROMATES_FAC
 import { plante } from "../data/index";
 import { useStore, toggleFait } from "../lib/store";
 import { useRoute, href, go } from "../lib/router";
-import { Listen, Tile } from "../components/ui";
+import { Listen, Tile, Titre } from "../components/ui";
 
 const ONGLETS: [string, string][] = [["parcours", "📅 Mon premier mois"], ["saison2", "🌿 Ma deuxième saison"], ["increvables", "💪 Plantes increvables"], ["aromates", "🌿 Aromates faciles"], ["potager", "🥗 Premier potager"], ["courses", "🛒 Liste de courses"], ["offrir", "🎁 Offrir une plante"]];
 
@@ -10,7 +10,7 @@ export default function Debuter() {
   const onglet = useRoute().query.get("t") ?? "parcours";
   return (
     <div>
-      <h1>🌱 Je débute</h1>
+      <Titre ico="demarrer" emoji="🌱">Je débute</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>« Je n'ai pas la main verte » n'existe pas : les plantes meurent presque toujours pour les mêmes 3 raisons. Évitez-les, commencez petit, avec des plantes qui pardonnent, et l'appli vous guide semaine après semaine.</p>
       <div className="grid">
         {TROIS_ERREURS.map((e) => <div key={e.titre} className="card"><b>{e.e} {e.titre}</b><p className="small" style={{ margin: "4px 0 0" }}>{e.texte}</p></div>)}
