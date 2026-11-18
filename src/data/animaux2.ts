@@ -31,7 +31,7 @@ export const ANIMAUX2: Animal[] = [
     produits: ["Compagnie, équitation, traction", "Fumier"],
     cohabitation: "Avec ânes : bonne entente mais rations différentes (l'âne grossit plus vite). Avec moutons : pâturage alterné bénéfique.",
     video: "cheval au pré soins quotidiens débutant",
-    soins: [{ type: "Maréchal-ferrant (parage)", tousLesJours: 50 }, { type: "Vaccin grippe-tétanos", tousLesJours: 365 }, { type: "Dentiste équin", tousLesJours: 365 }],
+    soins: [{ type: "Maréchal-ferrant (parage)", tousLesJours: 50 }, { type: "Vaccin grippe-tétanos", tousLesJours: 365 }, { type: "Dentiste équin", tousLesJours: 365 }, { type: "Coproscopie", tousLesJours: 180 }],
   },
   {
     id: "dindon", nom: "Dindes et dindons", emoji: "🦃", wiki: "Dinde domestique",
@@ -52,7 +52,7 @@ export const ANIMAUX2: Animal[] = [
     reglementation: ["Volaille : déclaration en mairie (Cerfa 15472) et mesures influenza aviaire.", "Abattage familial autorisé pour la consommation du foyer."],
     produits: ["Viande", "Œufs (gros, au printemps)"],
     video: "élever des dindes de noël débutant",
-    soins: [{ type: "Nettoyage de l'abri", tousLesJours: 60 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }],
+    soins: [{ type: "Nettoyage de l'abri", tousLesJours: 60 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }, { type: "Vérifier le niveau de risque influenza aviaire", tousLesJours: 30, mois: [10, 11, 12, 1, 2, 3] }],
   },
   {
     id: "pigeon", nom: "Pigeons de chair et d'ornement", emoji: "🕊️", wiki: "Pigeon biset",
@@ -73,6 +73,6 @@ export const ANIMAUX2: Animal[] = [
     reglementation: ["Volaille au sens sanitaire : déclaration en mairie et mesures influenza aviaire.", "Pigeons voyageurs : réglementation spécifique (fédération colombophile, vaccination obligatoire)."],
     produits: ["Pigeonneaux (viande fine)", "Colombine"],
     video: "élever des pigeons de chair volière débutant",
-    soins: [{ type: "Vaccin paramyxovirose", tousLesJours: 365 }],
+    soins: [{ type: "Vaccin paramyxovirose", tousLesJours: 365 }, { type: "Nettoyage du pigeonnier", tousLesJours: 30 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }],
   },
 ];

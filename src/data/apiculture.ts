@@ -5,6 +5,7 @@ import type { MaladieAnimale } from "./maladies-animales";
 // vérifiez auprès de votre GDSA, de votre vétérinaire ou sur le site de l'ANMV.
 
 export const SIGNES_ABEILLES: Record<string, { label: string; emoji: string }> = {
+  frelons: { label: "Frelons en vol stationnaire devant la ruche, butineuses qui ne sortent plus", emoji: "🐝" },
   "couvain-mosaique": { label: "Couvain en mosaïque (cellules vides au milieu du couvain operculé)", emoji: "🧩" },
   "opercules-affaisses": { label: "Opercules affaissés, percés ou foncés", emoji: "🕳️" },
   "odeur-ruche": { label: "Odeur désagréable à l'ouverture (colle, aigre, pourri)", emoji: "👃" },
@@ -87,6 +88,11 @@ export const MALADIES_ABEILLES: MaladieAnimale[] = [
     explication: "La reine est morte (visite brutale, essaimage, vieillesse) et la colonie n'a pas pu en élever une nouvelle.",
     quoiFaire: ["Vérifiez 2 fois à 8 jours d'écart (une jeune reine peut ne pas encore pondre).", "Donnez un cadre d'œufs d'une autre ruche : la colonie élèvera une reine ; ou introduisez une reine fécondée en cagette.", "Avec des ouvrières pondeuses installées : réunissez la colonie à une colonie saine (méthode du papier journal)."],
     prevention: ["Visites calmes, reines de moins de 2-3 ans, surveiller la ponte après chaque essaimage."] },
+  { id: "frelon-asiatique", nom: "Frelon asiatique (prédateur)", especes: A, signesIds: ["frelons", "ruche-legere", "abeilles-mortes"], alias: ["frelon asiatique", "frelons", "vespa velutina", "paralysie de butinage", "frelons devant la ruche"], urgence: 2,
+    signes: "De juillet à novembre, frelons sombres à bande orange en vol stationnaire devant la planche d'envol ; les butineuses n'osent plus sortir, l'activité chute, les réserves fondent.",
+    explication: "Le frelon asiatique chasse les abeilles au retour de butinage. Plus que les abeilles tuées, c'est la « paralysie de butinage » qui affaiblit la colonie avant l'hiver.",
+    quoiFaire: ["Réduire les entrées (muselières, réducteurs à mailles de 5,5 mm).", "Harpe électrique devant les ruches les plus attaquées.", "Nourrir si la colonie ne rentre plus rien ; réunir les colonies faibles.", "Signaler les nids à la mairie ou à la plateforme régionale : destruction par un professionnel."],
+    prevention: ["Colonies fortes à l'entrée de l'été.", "Pièges uniquement sélectifs et près des ruchers attaqués, selon les consignes de votre GDSA."] },
 ];
 
 export const VARROA_ENRICHI: Partial<MaladieAnimale> = {

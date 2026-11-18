@@ -54,7 +54,7 @@ export interface Couvee { id: string; espece: string; debut: string; oeufs: numb
 // Rucher : ruches suivies une par une, visites, traitements (registre)
 export interface Ruche { id: string; nom: string; type?: string; origine?: string; race?: string; reineAnnee?: number; installee?: string; morte?: string; cause?: string; note?: string }
 export type MethodeVarroa = "chute" | "sucre" | "alcool";
-export interface Visite { id: string; rucheId: string; date: string; reine?: "vue" | "oeufs" | "non"; couvain?: number; miel?: number; pollen?: number; humeur?: 1 | 2 | 3; cellules?: "non" | "essaimage" | "remplacement"; varroaMethode?: MethodeVarroa; varroaValeur?: number; varroaJours?: number; action?: string; note?: string }
+export interface Visite { id: string; rucheId: string; date: string; reine?: "vue" | "oeufs" | "non"; couvain?: number; miel?: number; pollen?: number; humeur?: 1 | 2 | 3; cellules?: "non" | "essaimage" | "remplacement"; varroaMethode?: MethodeVarroa; varroaValeur?: number; varroaJours?: number; poids?: number; action?: string; note?: string }
 export interface TraitementApi { id: string; rucheIds: string[]; produit: string; lot?: string; debut: string; fin?: string; dose?: string; ordonnance?: string; note?: string }
 // Garde-manger : bocaux, congélateur, cave
 export type LieuStock = "placard" | "cave" | "congelateur" | "refrigerateur";

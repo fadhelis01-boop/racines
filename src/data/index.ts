@@ -12,6 +12,7 @@ import { GUIDES_RECUP, ETAPES_EN_PLUS, ALIAS_CULTIVARS } from "./guides-recup";
 import { GUIDES_MARAICHAGE } from "./guides-maraichage";
 import { GUIDES_APICULTURE } from "./guides-apiculture";
 import { GUIDES_CONSERVERIE } from "./guides-conserverie";
+import { GUIDES_EXPERT } from "./guides-expert";
 import { MALADIES_ANIMALES } from "./maladies-animales";
 import { CONTENANT, RENDEMENT, PROFONDEUR, GERMINATION } from "./cultures-complements";
 import { JARDIN2 } from "./jardin2";
@@ -44,7 +45,7 @@ export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUI
   }
   for (const p of PLANTES) p.amis = p.amis.filter((a) => !p.ennemis.includes(a));
 }
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX, ...GUIDES_ELEVAGE, ...GUIDES_RECUP, ...GUIDES_MARAICHAGE, ...GUIDES_APICULTURE, ...GUIDES_CONSERVERIE].map((g) => (ETAPES_EN_PLUS[g.id] ? { ...g, etapes: [...g.etapes, ...ETAPES_EN_PLUS[g.id]] } : g)).map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
+export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX, ...GUIDES_ELEVAGE, ...GUIDES_RECUP, ...GUIDES_MARAICHAGE, ...GUIDES_APICULTURE, ...GUIDES_CONSERVERIE, ...GUIDES_EXPERT].map((g) => (ETAPES_EN_PLUS[g.id] ? { ...g, etapes: [...g.etapes, ...ETAPES_EN_PLUS[g.id]] } : g)).map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
 const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 

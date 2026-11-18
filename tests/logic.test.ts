@@ -31,6 +31,7 @@ import { couleurReine, valeurVarroa, niveauVarroa, pertesHiver, alertesRucher, r
 import { dernierSoin } from "../src/lib/calendar";
 import { RACES } from "../src/data/races";
 import { DEUXIEME_SAISON } from "../src/data/debuter";
+import { VARIETES } from "../src/data/varietes";
 import { LEXIQUE } from "../src/data/lexique";
 import { ANIMAUX } from "../src/data/index";
 import { proposer, numeroLot, finDeGarde, alertesStocks, planAnnee, selLacto, sucreConfiture } from "../src/lib/conserverie";
@@ -480,6 +481,38 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   const emoji12 = /[\u{1F7E0}-\u{1F7EB}\u{1FA70}-\u{1FAFF}\u{1F90C}-\u{1F90F}\u{1F9C3}-\u{1F9CA}]/u;
   const tous = [...PLANTES.map((p) => p.emoji), ...GUIDES.map((g) => g.emoji), ...ANIMAUX.map((a) => a.emoji), ...LEXIQUE.map((t) => t.terme)];
   ok(!tous.some((e) => emoji12.test(e)), `aucun émoji illisible sous Windows 10 (trouvés : ${tous.filter((e) => emoji12.test(e)).join(" ")})`);
+}
+
+// Audit expert : exactitude, frelon, porc, variétés, guides, soins, pesée des ruches
+{
+  const fr = (q: string, attendu: string, k = 3) => { const r = rechercher(q, k).map((h) => h.titre); ok(r.some((t) => t.startsWith(attendu)), `expert « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+  fr("frelons devant la ruche", "Frelon asiatique", 1);
+  fr("miellerie", "La miellerie");
+  fr("castration porcelet", "Élever un ou deux porcs");
+  fr("potager d'hiver", "Le potager d'hiver", 1);
+  fr("semer un noyau", "Produire ses plants", 1);
+  fr("éclaircir les pommes", "Arboriculture");
+  fr("consanguinité", "Reproduction et sélection", 1);
+  fr("pâturage tournant", "Pâturage tournant", 1);
+  fr("tailler un forsythia", "Tailler les rosiers", 1);
+  fr("transporter des chèvres", "Transporter ses animaux");
+  fr("verticilliose", "Verticilliose", 1);
+  fr("black rot", "Black-rot", 1);
+  fr("puceron cendré", "Puceron cendré", 1);
+  fr("peser la ruche", "Mon rucher", 1);
+  fr("pomme de terre résistante mildiou", "Pomme de terre", 1);
+  ok(!/Reine-Claude dorée et mirabelle sont plutôt autofertiles/.test(JSON.stringify(PLANTES)), "Reine-Claude dorée corrigée");
+  ok(/un tiers des cadres/.test(JSON.stringify(GUIDES.find((g) => g.id === "api-produits"))), "renouvellement d'un tiers des cadres");
+  ok(MALADIES_ANIMALES.some((m) => m.id === "frelon-asiatique") && MALADIES_ANIMALES.some((m) => m.id === "rouget-porc"), "frelon et rouget dans le diagnostic animal");
+  ok(diagnostiquerAnimal("abeille", ["frelons"])[0]?.m.id === "frelon-asiatique", "frelons devant la ruche → frelon asiatique");
+  const porc = ANIMAUX.find((a) => a.id === "cochon")!;
+  ok(porc.maladies.length >= 4 && porc.soins.length >= 3 && porc.reglementation.some((r) => /castration/i.test(r)), "fiche porc complète");
+  ok(ANIMAUX.every((a) => a.soins.length >= 2), `chaque espèce a au moins 2 soins réguliers (${ANIMAUX.filter((a) => a.soins.length < 2).map((a) => a.id).join(",")})`);
+  ok(PLANTES.filter((p) => ["legume", "fruit", "arbre"].includes(p.categorie)).every((p) => VARIETES[p.id] || /variét/i.test(JSON.stringify(p))), "chaque légume et fruitier a des variétés");
+  const ruches = [{ id: "a", nom: "R1" }];
+  const visites = [{ id: "v1", rucheId: "a", date: "2026-11-01", poids: 34 }, { id: "v2", rucheId: "a", date: "2026-12-10", poids: 27 }];
+  ok(alertesRucher({ ruches, visites, traitementsApi: [] }, "2026-12-12").some((x) => /27 kg/.test(x.texte)), "alerte ruche trop légère en hiver");
+  ok(!alertesRucher({ ruches, visites, traitementsApi: [] }, "2026-06-12").some((x) => /kg/.test(x.texte)), "pas d'alerte de poids en été");
 }
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);

@@ -129,7 +129,7 @@ function Temps() {
           </table>
         </div>
       ))}
-      <p className="small muted">✅ produit acide (pH sous 4,6) · 🔴 peu acide : risque de botulisme, stérilisation sous pression recommandée. Temps comptés à partir de la reprise de l'ébullition, bocaux couverts de 2 à 3 cm d'eau. Repères indicatifs : suivez aussi la notice de vos bocaux et de votre appareil. <a href={href("/guide/cs-temps")}>Explications →</a></p>
+      <p className="small muted">✅ produit acide (pH sous 4,6) · 🔴 peu acide : risque de botulisme, stérilisation sous pression recommandée. Temps comptés à partir de la reprise de l'ébullition, bocaux couverts de 2 à 3 cm d'eau. Repères indicatifs à vérifier : la notice de vos bocaux et de votre stérilisateur fait foi, et les tableaux officiels (guides des fabricants, recommandations sanitaires) priment sur cette page. <a href={href("/guide/cs-temps")}>Explications →</a></p>
     </div>
   );
 }

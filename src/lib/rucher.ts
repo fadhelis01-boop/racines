@@ -57,6 +57,12 @@ export function pertesHiver(ruches: Ruche[], annee: number) {
 export function derniereVisite(s: Pick<State, "visites">, rucheId: string) {
   return s.visites.filter((v) => v.rucheId === rucheId).sort((a, b) => b.date.localeCompare(a.date))[0];
 }
+export function dernieresPesees(s: Pick<State, "visites">, rucheId: string) {
+  return s.visites.filter((v) => v.rucheId === rucheId && v.poids != null).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 2);
+}
+/** Seuil d'alerte de poids total (Dadant 10 cadres, bois compris) d'octobre à mars : en dessous, réserves insuffisantes. */
+export const POIDS_ALERTE_HIVER = 30;
+
 export function dernierComptage(s: Pick<State, "visites">, rucheId: string) {
   return s.visites.filter((v) => v.rucheId === rucheId && valeurVarroa(v) != null).sort((a, b) => b.date.localeCompare(a.date))[0];
 }
@@ -72,6 +78,9 @@ export function alertesRucher(s: Pick<State, "ruches" | "visites" | "traitements
     }
     const v = derniereVisite(s, r.id);
     if (v?.reine === "non" && !s.visites.some((x) => x.rucheId === r.id && x.date > v.date)) out.push({ rucheId: r.id, texte: `${r.nom} : ni reine ni œufs vus à la dernière visite. Revérifiez dans 8 jours (orphelinage ?).`, grave: false });
+    const [p1] = dernieresPesees(s, r.id);
+    const mois = Number(aujourdhui.slice(5, 7));
+    if (p1 && (mois >= 10 || mois <= 3) && p1.poids! < POIDS_ALERTE_HIVER) out.push({ rucheId: r.id, texte: `${r.nom} : ${p1.poids} kg à la dernière pesée, réserves probablement insuffisantes. Candi posé sur la grappe (hiver) ou sirop épais (automne).`, grave: true });
     if (v?.cellules === "essaimage") out.push({ rucheId: r.id, texte: `${r.nom} : cellules d'essaimage vues. Divisez ou donnez de la place sans tarder.`, grave: false });
   }
   for (const t of s.traitementsApi.filter((x) => !x.fin)) {
@@ -95,10 +104,10 @@ export function registreTraitementsCsv(s: Pick<State, "ruches" | "traitementsApi
 /** Visites au format tableur : le carnet de visites. */
 export function visitesCsv(s: Pick<State, "ruches" | "visites">) {
   const esc = (x: string | number | undefined) => `"${String(x ?? "").replace(/"/g, '""')}"`;
-  const lignes = [["Date", "Ruche", "Reine", "Cadres de couvain", "Cadres de miel", "Cadres de pollen", "Humeur", "Cellules royales", "Varroa", "Intervention", "Note"].map(esc).join(";")];
+  const lignes = [["Date", "Ruche", "Reine", "Cadres de couvain", "Cadres de miel", "Cadres de pollen", "Humeur", "Cellules royales", "Varroa", "Poids (kg)", "Intervention", "Note"].map(esc).join(";")];
   for (const v of [...s.visites].sort((a, b) => a.date.localeCompare(b.date))) {
     const val = valeurVarroa(v);
-    lignes.push([v.date, s.ruches.find((r) => r.id === v.rucheId)?.nom, v.reine === "vue" ? "vue" : v.reine === "oeufs" ? "œufs vus" : v.reine === "non" ? "ni reine ni œufs" : "", v.couvain, v.miel, v.pollen, v.humeur ? ["", "douce", "nerveuse", "agressive"][v.humeur] : "", v.cellules === "essaimage" ? "essaimage" : v.cellules === "remplacement" ? "remplacement" : "", val != null ? `${val} ${METHODES_VARROA[v.varroaMethode!].unite}` : "", v.action, v.note].map(esc).join(";"));
+    lignes.push([v.date, s.ruches.find((r) => r.id === v.rucheId)?.nom, v.reine === "vue" ? "vue" : v.reine === "oeufs" ? "œufs vus" : v.reine === "non" ? "ni reine ni œufs" : "", v.couvain, v.miel, v.pollen, v.humeur ? ["", "douce", "nerveuse", "agressive"][v.humeur] : "", v.cellules === "essaimage" ? "essaimage" : v.cellules === "remplacement" ? "remplacement" : "", val != null ? `${val} ${METHODES_VARROA[v.varroaMethode!].unite}` : "", v.poids, v.action, v.note].map(esc).join(";"));
   }
   return "﻿" + lignes.join("\r\n");
 }

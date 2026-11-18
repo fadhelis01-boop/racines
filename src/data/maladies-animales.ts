@@ -162,3 +162,17 @@ Object.assign(SIGNES_ANIMAUX, SIGNES_ABEILLES);
   if (v) Object.assign(v, VARROA_ENRICHI);
 }
 MALADIES_ANIMALES.push(...MALADIES_ABEILLES);
+
+// Porcs : deux maladies fréquentes en élevage familial plein air
+MALADIES_ANIMALES.push(
+  { id: "rouget-porc", nom: "Rouget du porc", especes: ["cochon"], signesIds: ["abattu", "boiterie", "ne-mange-plus"], alias: ["rouget", "rouget du porc", "plaques rouges cochon", "losanges rouges"], urgence: 3,
+    signes: "Fièvre, abattement, plaques rouges en losange sur la peau, boiteries ; parfois mort brutale.",
+    explication: "Bactérie présente dans le sol et chez les porcs porteurs ; fréquente en plein air.",
+    quoiFaire: ["Vétérinaire rapidement : un antibiotique est efficace s'il est donné tôt.", "Isoler l'animal malade, surveiller les autres."],
+    prevention: ["Vaccination avec rappel annuel, souvent conseillée en plein air.", "Rotation des parcs."] },
+  { id: "gale-porc", nom: "Gale du porc", especes: ["cochon"], signesIds: ["gratte", "maigrit"], alias: ["gale porc", "cochon se gratte", "croutes oreilles cochon"], urgence: 2,
+    signes: "Démangeaisons intenses, le porc se frotte partout, croûtes sur les oreilles, retard de croissance.",
+    explication: "Acarien qui creuse la peau ; il passe d'un porc à l'autre et survit quelques jours dans la cabane.",
+    quoiFaire: ["Traitement vétérinaire de tous les porcs en même temps.", "Nettoyer et changer la litière, laisser la cabane vide quelques jours si possible."],
+    prevention: ["Acheter des porcelets d'un élevage sain, quarantaine de 3 semaines."] },
+);

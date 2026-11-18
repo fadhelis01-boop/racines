@@ -944,5 +944,41 @@ PROBLEMES.push({
   remedes: ["glu", "savon-noir", "tanaisie", "cendre"], gravite: 1, mois: m("4-9"),
 });
 
+// Maladies et ravageurs ajoutés par l'audit expert
+PROBLEMES.push(
+  {
+    id: "verticilliose", alias: ["verticilliose", "verticillium", "fletrissement unilateral", "tomate qui fane d un cote", "fraisier qui se dessèche", "olivier branche seche"], nom: "Verticilliose", type: "champignon", wiki: "Verticilliose",
+    cible: "Tomate, aubergine, fraisier, pomme de terre, olivier, érable, framboisier", plantes: ["tomate", "aubergine", "fraisier", "pomme-de-terre", "olivier", "framboisier"],
+    organes: ["plante", "feuilles", "racines"], signes: ["fletrissement", "jaunissement"],
+    symptomes: ["Les feuilles du bas jaunissent en « V » à partir du bord, puis flétrissent, souvent d'un seul côté de la plante.", "La plante fane aux heures chaudes et se redresse la nuit, puis ne se redresse plus.", "Tige coupée en biais : vaisseaux brunis à l'intérieur."],
+    confusion: "Ressemble à la fusariose (même brunissement des vaisseaux) : la verticilliose aime plutôt les étés frais, la fusariose la chaleur. Le traitement est le même : prévention.",
+    conditions: "Champignon du sol qui survit plus de 10 ans ; favorisé par les rotations courtes (tomates, pommes de terre, fraisiers au même endroit) et les sols froids et humides.",
+    prevention: ["Rotation longue : 4 ans sans solanacées ni fraisiers au même endroit.", "Variétés résistantes (mention « V » sur le sachet) ou plants greffés sur porte-greffe résistant.", "Arracher et jeter (pas au compost) les plantes atteintes."],
+    traitements: ["Aucun traitement curatif au jardin : on arrache, on n'y remet pas de plantes sensibles.", "En pot : changer entièrement la terre."],
+    remedes: [], gravite: 3, mois: m("6-9"),
+  },
+  {
+    id: "black-rot", alias: ["black rot", "black-rot", "pourriture noire vigne", "raisins secs noirs", "grains momifies vigne"], nom: "Black-rot de la vigne", type: "champignon", wiki: "Black rot",
+    cible: "Vigne de table et vigne de treille", plantes: ["vigne"],
+    organes: ["feuilles", "fruits"], signes: ["taches-brunes", "fruits-momifies"],
+    symptomes: ["Taches rondes brun-rouge sur les feuilles, bordées d'un liseré foncé, avec de minuscules points noirs.", "Grains qui brunissent puis se dessèchent en « momies » noires ridées restant accrochées à la grappe."],
+    confusion: "Le mildiou donne un duvet blanc sous les feuilles et des grains gris ; l'oïdium une poudre blanche et des grains qui éclatent.",
+    conditions: "Printemps et début d'été chauds et pluvieux ; le champignon passe l'hiver dans les grains momifiés.",
+    prevention: ["Retirer et détruire toutes les grappes momifiées en hiver (sur la souche et au sol).", "Aérer la souche (ébourgeonnage, effeuillage côté soleil levant).", "Variétés de table résistantes (Muscat bleu, Vanessa…)."],
+    traitements: ["Dès la floraison par temps pluvieux, traitements préventifs au cuivre à faible dose (bouillie bordelaise), en respectant les doses maximales autorisées par an."],
+    remedes: ["bouillie-bordelaise"], gravite: 2, mois: m("5-8"),
+  },
+  {
+    id: "puceron-cendre", alias: ["puceron cendre", "puceron cendré", "pommier feuilles enroulees", "puceron pommier", "pommes deformees"], nom: "Puceron cendré du pommier", type: "ravageur", wiki: "Dysaphis plantaginea",
+    cible: "Pommier (le plus nuisible de ses pucerons)", plantes: ["pommier"],
+    organes: ["feuilles", "fruits"], signes: ["colonies", "feuilles-deformees", "miellat"],
+    symptomes: ["Au printemps, feuilles fortement enroulées et crispées en bout de rameau, avec des pucerons gris-rosé couverts de cire.", "Jeunes pommes déformées, petites, qui restent dures."],
+    conditions: "Les œufs passent l'hiver sur le pommier ; les colonies explosent d'avril à juin, puis les pucerons migrent sur le plantain.",
+    prevention: ["Haies et bandes fleuries pour les auxiliaires (syrphes, coccinelles, perce-oreilles : posez des pots retournés remplis de paille dans l'arbre).", "Pas d'excès d'azote.", "Bande de glu sur le tronc contre les fourmis qui les protègent."],
+    traitements: ["Supprimer à la main les pousses très atteintes au début de l'infestation.", "Savon noir pulvérisé à l'ouverture des bourgeons, avant que les feuilles ne s'enroulent (après, le produit n'atteint plus les pucerons)."],
+    remedes: ["savon-noir", "glu"], gravite: 2, mois: m("4-6"),
+  },
+);
+
 // Organismes réglementés (feu bactérien, Xylella) : déclaration obligatoire
 PROBLEMES.push(...ORGANISMES_REGLEMENTES);

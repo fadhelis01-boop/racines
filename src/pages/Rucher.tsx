@@ -4,7 +4,7 @@ import { useStore, upsert, remove, uid, today, getState, type Ruche, type Visite
 import { RACES } from "../data/races";
 import { href } from "../lib/router";
 import { toast, download, Empty, Titre } from "../components/ui";
-import { couleurReine, COULEURS_REINE, METHODES_VARROA, valeurVarroa, niveauVarroa, seuilsVarroa, LIB_NIVEAU, pertesHiver, derniereVisite, dernierComptage, alertesRucher, registreTraitementsCsv, visitesCsv, PRODUITS_VARROA, TYPES_RUCHE, ORIGINES, vivantes, type NiveauVarroa } from "../lib/rucher";
+import { couleurReine, COULEURS_REINE, METHODES_VARROA, valeurVarroa, niveauVarroa, seuilsVarroa, LIB_NIVEAU, pertesHiver, derniereVisite, dernierComptage, alertesRucher, registreTraitementsCsv, dernieresPesees, visitesCsv, PRODUITS_VARROA, TYPES_RUCHE, ORIGINES, vivantes, type NiveauVarroa } from "../lib/rucher";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
 const COUL: Record<NiveauVarroa, string> = { ok: "var(--green)", surveiller: "var(--sun)", traiter: "var(--danger)" };
@@ -80,6 +80,7 @@ function NouvelleRuche() {
 function RucheCard({ r }: { r: Ruche }) {
   const v = useStore((s) => derniereVisite(s, r.id));
   const c = useStore((s) => dernierComptage(s, r.id));
+  const pesees = useStore((s) => dernieresPesees(s, r.id));
   const nb = useStore((s) => s.visites.filter((x) => x.rucheId === r.id).length);
   const niv = c ? niveauVarroa(c) : null;
   const age = r.reineAnnee ? new Date().getFullYear() - r.reineAnnee : null;
@@ -99,6 +100,7 @@ function RucheCard({ r }: { r: Ruche }) {
       <div className="small" style={{ marginTop: 4 }}>
         {v ? <>Dernière visite le <b>{fr(v.date)}</b> ({nb}) : {v.reine === "vue" ? "reine vue" : v.reine === "oeufs" ? "œufs vus" : v.reine === "non" ? "ni reine ni œufs" : "reine non cherchée"}{v.couvain != null ? `, ${v.couvain} cadres de couvain` : ""}{v.miel != null ? `, ${v.miel} de miel` : ""}</> : <span className="muted">Aucune visite notée</span>}
       </div>
+      {pesees[0] && <div className="small" style={{ marginTop: 4 }}>⚖️ Poids le {fr(pesees[0].date)} : <b>{pesees[0].poids} kg</b>{pesees[1] ? <> ({pesees[0].poids! - pesees[1].poids! >= 0 ? "+" : ""}{Math.round((pesees[0].poids! - pesees[1].poids!) * 10) / 10} kg depuis le {fr(pesees[1].date)}{pesees[0].poids! - pesees[1].poids! >= 2 ? " : miellée en cours" : pesees[0].poids! - pesees[1].poids! <= -2 ? " : la colonie consomme ses réserves" : ""})</> : null}</div>}
       {c && niv && <div className="small" style={{ marginTop: 4 }}>Varroa le {fr(c.date)} : <b style={{ color: COUL[niv] }}>{valeurVarroa(c)} {METHODES_VARROA[c.varroaMethode!].unite} ({LIB_NIVEAU[niv]})</b></div>}
       <details className="box"><summary>Modifier la reine</summary>
         <div className="row" style={{ marginTop: 6 }}>
@@ -113,7 +115,7 @@ function RucheCard({ r }: { r: Ruche }) {
 
 function VisiteForm() {
   const ruches = useStore((s) => s.ruches.filter((r) => !r.morte));
-  const vide = { rucheId: ruches[0]?.id ?? "", date: today(), reine: "" as "" | "vue" | "oeufs" | "non", couvain: "", miel: "", pollen: "", humeur: "" as "" | "1" | "2" | "3", cellules: "" as "" | "non" | "essaimage" | "remplacement", methode: "" as "" | MethodeVarroa, valeur: "", jours: "3", action: "", note: "" };
+  const vide = { rucheId: ruches[0]?.id ?? "", date: today(), reine: "" as "" | "vue" | "oeufs" | "non", couvain: "", miel: "", pollen: "", humeur: "" as "" | "1" | "2" | "3", cellules: "" as "" | "non" | "essaimage" | "remplacement", poids: "", methode: "" as "" | MethodeVarroa, valeur: "", jours: "3", action: "", note: "" };
   const [f, setF] = useState(vide);
   const rid = ruches.some((r) => r.id === f.rucheId) ? f.rucheId : ruches[0]?.id;
   const essai: Visite = { id: "", rucheId: rid, date: f.date, varroaMethode: f.methode || undefined, varroaValeur: f.valeur === "" ? undefined : Number(f.valeur), varroaJours: Number(f.jours) || 1 };
@@ -131,6 +133,7 @@ function VisiteForm() {
         <input type="number" min="0" max="40" placeholder="Cadres de miel" value={f.miel} onChange={(e) => setF({ ...f, miel: e.target.value })} />
         <input type="number" min="0" max="30" placeholder="Cadres de pollen" value={f.pollen} onChange={(e) => setF({ ...f, pollen: e.target.value })} />
         <select value={f.humeur} onChange={(e) => setF({ ...f, humeur: e.target.value as typeof f.humeur })} aria-label="Humeur"><option value="">Humeur</option><option value="1">Douce</option><option value="2">Nerveuse</option><option value="3">Agressive</option></select>
+        <label className="small">Poids de la ruche (kg)<input type="number" min="5" max="120" step="0.5" value={f.poids} onChange={(e) => setF({ ...f, poids: e.target.value })} /></label>
         <select value={f.cellules} onChange={(e) => setF({ ...f, cellules: e.target.value as typeof f.cellules })} aria-label="Cellules royales"><option value="">Cellules royales : non regardé</option><option value="non">Pas de cellules royales</option><option value="essaimage">Cellules d'essaimage (bas des cadres)</option><option value="remplacement">Cellules de remplacement (milieu)</option></select>
       </div>
       <details className="box" open={!!f.methode}><summary>🦠 Comptage du varroa</summary>
@@ -145,7 +148,7 @@ function VisiteForm() {
       <input type="text" placeholder="Intervention (hausse posée, division, nourrissement, cadres changés…)" value={f.action} onChange={(e) => setF({ ...f, action: e.target.value })} style={{ marginTop: 6 }} />
       <input type="text" placeholder="Note" value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} style={{ marginTop: 6 }} />
       <button className="btn primary sm" style={{ marginTop: 8 }} disabled={!rid} onClick={() => {
-        upsert("visites", { id: uid(), rucheId: rid, date: f.date, reine: f.reine || undefined, couvain: num(f.couvain), miel: num(f.miel), pollen: num(f.pollen), humeur: f.humeur ? (Number(f.humeur) as 1 | 2 | 3) : undefined, cellules: f.cellules || undefined, varroaMethode: f.methode && f.valeur !== "" ? f.methode : undefined, varroaValeur: f.methode && f.valeur !== "" ? Number(f.valeur) : undefined, varroaJours: f.methode === "chute" ? Number(f.jours) || 1 : undefined, action: f.action || undefined, note: f.note || undefined });
+        upsert("visites", { id: uid(), rucheId: rid, date: f.date, reine: f.reine || undefined, couvain: num(f.couvain), miel: num(f.miel), pollen: num(f.pollen), humeur: f.humeur ? (Number(f.humeur) as 1 | 2 | 3) : undefined, cellules: f.cellules || undefined, poids: num(f.poids), varroaMethode: f.methode && f.valeur !== "" ? f.methode : undefined, varroaValeur: f.methode && f.valeur !== "" ? Number(f.valeur) : undefined, varroaJours: f.methode === "chute" ? Number(f.jours) || 1 : undefined, action: f.action || undefined, note: f.note || undefined });
         setF({ ...vide, rucheId: rid, methode: f.methode });
         toast("Visite notée");
       }}>Enregistrer la visite</button>
@@ -165,7 +168,7 @@ function Historique() {
         {liste.slice(0, 40).map((v) => { const val = valeurVarroa(v); const niv = niveauVarroa(v); return (
           <tr key={v.id}>
             <td>{fr(v.date)}<br /><b>{ruches.find((r) => r.id === v.rucheId)?.nom ?? "?"}</b></td>
-            <td>{[v.reine === "vue" ? "reine vue" : v.reine === "oeufs" ? "œufs" : v.reine === "non" ? "ni reine ni œufs" : "", v.couvain != null ? `couvain ${v.couvain}` : "", v.miel != null ? `miel ${v.miel}` : "", v.cellules === "essaimage" ? "cellules d'essaimage" : v.cellules === "remplacement" ? "cellules de remplacement" : "", v.action ?? "", v.note ?? ""].filter(Boolean).join(" · ")}{val != null && niv && <><br /><span style={{ color: COUL[niv] }}>varroa {val} {METHODES_VARROA[v.varroaMethode!].unite}</span></>}</td>
+            <td>{[v.reine === "vue" ? "reine vue" : v.reine === "oeufs" ? "œufs" : v.reine === "non" ? "ni reine ni œufs" : "", v.couvain != null ? `couvain ${v.couvain}` : "", v.miel != null ? `miel ${v.miel}` : "", v.cellules === "essaimage" ? "cellules d'essaimage" : v.cellules === "remplacement" ? "cellules de remplacement" : "", v.poids != null ? `${v.poids} kg` : "", v.action ?? "", v.note ?? ""].filter(Boolean).join(" · ")}{val != null && niv && <><br /><span style={{ color: COUL[niv] }}>varroa {val} {METHODES_VARROA[v.varroaMethode!].unite}</span></>}</td>
             <td><button className="btn sm ghost" onClick={() => remove("visites", v.id)} aria-label="Supprimer">🗑</button></td>
           </tr>); })}
       </tbody></table>
@@ -225,6 +228,7 @@ function Traitements() {
   return (
     <div className="card" style={{ marginTop: 12 }}>
       <b>💊 Registre des traitements</b>
+      <p className="small callout warn" style={{ margin: "6px 0" }}>Liste de médicaments donnée à titre d'exemple, à vérifier : seuls comptent les médicaments autorisés pour l'abeille, listés dans l'index officiel des médicaments vétérinaires (ANSES-ANMV) ; demandez à votre vétérinaire ou à votre GDSA.</p>
       <p className="small muted">Obligatoire : date, médicament, numéro de lot, ruches traitées, et l'ordonnance ou la facture conservée 5 ans. N'utilisez que des médicaments autorisés pour l'abeille.</p>
       <div className="grid-sm">
         <select value={f.produit} onChange={(e) => setF({ ...f, produit: e.target.value })} aria-label="Médicament">{PRODUITS_VARROA.map((x) => <option key={x}>{x}</option>)}<option>Autre</option></select>

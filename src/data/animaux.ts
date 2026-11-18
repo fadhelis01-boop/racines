@@ -115,7 +115,7 @@ export const ANIMAUX: Animal[] = [
     produits: ["Œufs : ramassés chaque jour, non lavés (la cuticule protège des bactéries), ils se gardent 3 à 4 semaines à température stable. Lavés, au réfrigérateur et à consommer vite.", "Test de fraîcheur : dans un verre d'eau, un œuf frais reste au fond couché ; un œuf qui flotte est à jeter.", "Viande des coqs en surnombre et des poules de réforme (voir le tutoriel d'abattage et de préparation)."],
     cohabitation: "Possible avec canards (prévoir de l'eau propre séparée : les canards salissent tout), pintades, oies (attention aux jars agressifs). Éloignez les poussins des adultes les premières semaines. Les chiens doivent être éduqués dès le départ.",
     video: "élever des poules pondeuses débutant poulailler",
-    soins: [{ type: "Inspection poux rouges", tousLesJours: 14 }, { type: "Nettoyage complet du poulailler", tousLesJours: 90 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }],
+    soins: [{ type: "Inspection poux rouges", tousLesJours: 14 }, { type: "Nettoyage complet du poulailler", tousLesJours: 90 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }, { type: "Vérifier le niveau de risque influenza aviaire", tousLesJours: 30, mois: [10, 11, 12, 1, 2, 3] }],
   },
   {
     id: "canard", nom: "Canards", emoji: "🦆", wiki: "Canard domestique",
@@ -154,7 +154,7 @@ export const ANIMAUX: Animal[] = [
     produits: ["Œufs plus gros et plus riches que ceux des poules (pâtisserie)", "Viande (Barbarie, Rouen, Pékin)", "Duvet"],
     cohabitation: "Avec les poules : possible, mais l'eau du poulailler sera vite sale ; deux abreuvoirs séparés.",
     video: "élever des canards coureurs indiens limaces potager",
-    soins: [{ type: "Nettoyage du bassin", tousLesJours: 7 }],
+    soins: [{ type: "Nettoyage du bassin", tousLesJours: 7 }, { type: "Nettoyage de l'abri et de la litière", tousLesJours: 60 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }, { type: "Vérifier le niveau de risque influenza aviaire", tousLesJours: 30, mois: [10, 11, 12, 1, 2, 3] }],
   },
   {
     id: "oie", nom: "Oies", emoji: "🦢", wiki: "Oie domestique",
@@ -181,7 +181,7 @@ export const ANIMAUX: Animal[] = [
     reglementation: ["Volaille : déclaration en mairie, mesures influenza aviaire."],
     produits: ["Viande, graisse (conserve), duvet", "Œufs au printemps"],
     video: "élever des oies au verger débutant",
-    soins: [{ type: "Nettoyage de l'abri et de la litière", tousLesJours: 60 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }],
+    soins: [{ type: "Nettoyage de l'abri et de la litière", tousLesJours: 60 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }, { type: "Vérifier le niveau de risque influenza aviaire", tousLesJours: 30, mois: [10, 11, 12, 1, 2, 3] }],
   },
   {
     id: "pintade", nom: "Pintades", emoji: "🐦", wiki: "Pintade de Numidie",
@@ -204,7 +204,7 @@ export const ANIMAUX: Animal[] = [
     reglementation: ["Volaille : déclaration en mairie, mesures influenza aviaire."],
     produits: ["Viande fine au goût de gibier", "Petits œufs très bons"],
     video: "élever des pintades conseils",
-    soins: [{ type: "Inspection poux rouges", tousLesJours: 14 }, { type: "Nettoyage complet du poulailler", tousLesJours: 90 }],
+    soins: [{ type: "Inspection poux rouges", tousLesJours: 14 }, { type: "Nettoyage complet du poulailler", tousLesJours: 90 }, { type: "Coproscopie / vermifuge si besoin", tousLesJours: 180 }, { type: "Vérifier le niveau de risque influenza aviaire", tousLesJours: 30, mois: [10, 11, 12, 1, 2, 3] }],
   },
   {
     id: "caille", nom: "Cailles", emoji: "🐤", wiki: "Caille du Japon",
@@ -306,7 +306,7 @@ export const ANIMAUX: Animal[] = [
     produits: ["Viande maigre", "Crottin", "Fourrure / laine (angora : tonte ou épilation régulière)"],
     cohabitation: "Avec les cochons d'Inde : déconseillé (besoins et maladies différents). Avec les poules : possible dans un grand espace, mais attention aux maladies et aux coups de bec.",
     video: "élever des lapins en enclos conseils alimentation foin",
-    soins: [{ type: "Vaccin myxomatose + VHD", tousLesJours: 365 }, { type: "Coupe des griffes", tousLesJours: 60 }],
+    soins: [{ type: "Vaccin myxomatose + VHD", tousLesJours: 365 }, { type: "Coupe des griffes", tousLesJours: 60 }, { type: "Nettoyage complet du clapier", tousLesJours: 30 }, { type: "Coproscopie (coccidiose)", tousLesJours: 180 }],
   },
   {
     id: "chevre", nom: "Chèvres", emoji: "🐐", wiki: "Chèvre",
@@ -378,7 +378,7 @@ export const ANIMAUX: Animal[] = [
     produits: ["Lait (1 à 4 L par jour selon la race), fromage, yaourts", "Viande de chevreau", "Mohair (chèvre angora)"],
     cohabitation: "Avec les moutons : possible, mais les minéraux diffèrent (le cuivre utile à la chèvre est toxique pour le mouton). Avec les ânes : bonne entente, mais vermifuges et clôtures adaptés à chacun.",
     video: "débuter avec des chèvres naines soins quotidiens parage onglons",
-    soins: [{ type: "Parage des onglons", tousLesJours: 50 }, { type: "Coproscopie", tousLesJours: 120 }, { type: "Vaccin entérotoxémie (rappel)", tousLesJours: 365 }],
+    soins: [{ type: "Parage des onglons", tousLesJours: 50 }, { type: "Coproscopie", tousLesJours: 120 }, { type: "Vaccin entérotoxémie (rappel)", tousLesJours: 365 }, { type: "Vaccin FCO si votre zone est concernée (avis vétérinaire)", tousLesJours: 365, mois: [3, 4, 5] }],
   },
   {
     id: "mouton", nom: "Moutons", emoji: "🐑", wiki: "Mouton",
@@ -440,7 +440,7 @@ export const ANIMAUX: Animal[] = [
     produits: ["Laine (filage, feutrage, isolation, paillage)", "Viande d'agneau (en abattoir)", "Lait (races laitières)"],
     cohabitation: "Avec les ânes : excellent (l'âne peut même protéger les moutons des chiens errants). Avec les chèvres : attention aux minéraux et aliments qui contiennent du cuivre.",
     video: "éco-pâturage moutons Ouessant débuter soins",
-    soins: [{ type: "Parage des onglons", tousLesJours: 60 }, { type: "Coproscopie", tousLesJours: 120 }, { type: "Tonte", tousLesJours: 365 }],
+    soins: [{ type: "Parage des onglons", tousLesJours: 60 }, { type: "Coproscopie", tousLesJours: 120 }, { type: "Tonte", tousLesJours: 365, mois: [5, 6] }, { type: "Vaccin entérotoxémie (rappel)", tousLesJours: 365 }, { type: "Vaccin FCO si votre zone est concernée (avis vétérinaire)", tousLesJours: 365, mois: [3, 4, 5] }],
   },
   {
     id: "ane", nom: "Ânes", emoji: "🐴", wiki: "Âne",
@@ -491,7 +491,7 @@ export const ANIMAUX: Animal[] = [
     produits: ["Lait d'ânesse (cosmétique, alimentaire : traite délicate et peu de lait)", "Compagnie, traction"],
     cohabitation: "Avec moutons et chèvres : bonne entente en général. Avec des chevaux : possible, mais l'âne ne doit pas manger autant que le cheval.",
     video: "soins quotidiens âne alimentation paille fourbure",
-    soins: [{ type: "Parage des sabots (maréchal)", tousLesJours: 70 }, { type: "Vaccin grippe-tétanos", tousLesJours: 365 }, { type: "Coproscopie", tousLesJours: 180 }],
+    soins: [{ type: "Parage des sabots (maréchal)", tousLesJours: 70 }, { type: "Vaccin grippe-tétanos", tousLesJours: 365 }, { type: "Coproscopie", tousLesJours: 180 }, { type: "Dentiste équin", tousLesJours: 365 }],
   },
   {
     id: "abeille", nom: "Abeilles (ruche familiale)", emoji: "🐝", wiki: "Apis mellifera",
@@ -543,18 +543,29 @@ export const ANIMAUX: Animal[] = [
     eau: "Abondante, abreuvoir solide (il renverse tout).",
     quotidien: ["Nourrir, abreuver, observer."], hebdo: ["Nettoyer la cabane, déplacer le parc si possible."], mensuel: ["Contrôle des parasites."],
     saisons: { printemps: ["Arrivée des porcelets (sevrés, 8 semaines)."], ete: ["Bauge et ombre indispensables (coups de chaleur)."], automne: ["Engraissement sur les glands et les fruits."], hiver: ["Abattage traditionnel en abattoir."] },
-    sante: [{ signe: "Fièvre, taches rouges sur la peau, mortalité", action: "Suspicion de peste porcine (maladie à déclaration obligatoire) : vétérinaire immédiatement." }],
-    maladies: [{ nom: "Peste porcine africaine", signes: "Fièvre, hémorragies, mort.", prevention: "Biosécurité (clôture double contre les sangliers), aucun reste de cuisine.", soin: "Aucun ; abattage obligatoire." }],
+    sante: [
+      { signe: "Fièvre, taches rouges sur la peau, mortalité", action: "Suspicion de peste porcine (maladie à déclaration obligatoire) : vétérinaire immédiatement." },
+      { signe: "Plaques rouges en losange sur la peau, fièvre, boiterie", action: "Rouget probable : vétérinaire (antibiotique) ; vaccination du reste du groupe." },
+      { signe: "Se gratte contre tout, croûtes sur les oreilles", action: "Gale : traitement vétérinaire de tous les porcs et nettoyage de la cabane." },
+      { signe: "Halète, couché, refuse de bouger par forte chaleur", action: "Coup de chaleur : ombre, bauge, arrosage progressif du corps, eau fraîche." },
+    ],
+    maladies: [
+      { nom: "Peste porcine africaine", signes: "Fièvre, hémorragies, mort.", prevention: "Biosécurité (clôture double contre les sangliers), aucun reste de cuisine.", soin: "Aucun ; abattage obligatoire." },
+      { nom: "Rouget du porc", signes: "Fièvre, plaques rouges en losange, boiteries, parfois mort brutale.", prevention: "Vaccination (rappel annuel, souvent conseillée en plein air).", soin: "Antibiotique vétérinaire, efficace si traité tôt." },
+      { nom: "Gale sarcoptique", signes: "Démangeaisons intenses, croûtes (oreilles), retard de croissance.", prevention: "Animaux achetés sains, quarantaine.", soin: "Traitement vétérinaire de tout le groupe." },
+      { nom: "Vers (ascaris, strongles)", signes: "Amaigrissement, toux, taches blanches sur le foie à l'abattage.", prevention: "Rotation des parcs, coproscopie.", soin: "Vermifuge vétérinaire après analyse." },
+    ],
     reproduction: ["Déconseillée aux débutants (verrats dangereux, portées nombreuses)."],
     fumier: { valeur: "Fumier riche, à composter impérativement (parasites, germes).", usage: ["Composté 6 mois minimum avant usage."] },
     auJardin: ["Défrichage et « labour » d'une parcelle avant sa mise en culture : en quelques semaines, il retourne le sol, mange racines et larves et le fertilise."],
     reglementation: [
       "Déclaration obligatoire à l'EDE et identification, même pour un seul porc (y compris un porc de compagnie), registre d'élevage, inscription à la base nationale.",
-      "Biosécurité obligatoire contre la peste porcine africaine (clôtures, formation du détenteur).",
+      "Biosécurité obligatoire contre la peste porcine africaine : clôtures empêchant tout contact avec les sangliers, aliment à l'abri, tenue réservée ; selon le type de détention, formation biosécurité et plan écrit exigés (renseignez-vous auprès de la DDPP ou du GDS).",
+      "Castration sans anesthésie ni antidouleur interdite ; coupe systématique des queues et des dents interdite.",
       "Abattage : en abattoir ; l'abattage familial à la ferme est encadré (étourdissement obligatoire, consommation familiale exclusive) : renseignez-vous auprès de la DDPP avant toute chose.",
     ],
     produits: ["Viande, charcuterie, saindoux"],
     video: "élever un cochon en plein air famille",
-    soins: [{ type: "Coproscopie", tousLesJours: 180 }],
+    soins: [{ type: "Coproscopie", tousLesJours: 180 }, { type: "Vaccin rouget (rappel)", tousLesJours: 365 }, { type: "Contrôle des clôtures (biosécurité)", tousLesJours: 30 }],
   },
 ];

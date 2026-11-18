@@ -17,6 +17,7 @@ import { SOL_PLANTE, TYPES_SOL } from "../data/sols";
 import { FRUITIERS } from "../data/cultures-complements";
 import { srcVignette } from "../components/Ico";
 import { CONSERV, METHODES_CONSERV } from "../data/conservation";
+import { VARIETES, LIB_TYPE_VARIETE } from "../data/varietes";
 import { AjoutCulture } from "../components/AjoutCulture";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
@@ -73,6 +74,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
     ...(p.recolteConseil ? [`Récolte. ${p.recolteConseil}`] : []),
     ...(p.conservation || CONSERV[p.id]?.texte ? [`Conservation. ${p.conservation ?? CONSERV[p.id]!.texte}`] : []),
     ...(CONSERV[p.id] ? [`Au frais : ${CONSERV[p.id].frais}. Méthodes possibles : ${CONSERV[p.id].methodes.map((m) => METHODES_CONSERV[m].nom).join(", ")}.${CONSERV[p.id].cave ? " En cave : " + CONSERV[p.id].cave + "." : ""}${CONSERV[p.id].varietes ? " Variétés de garde : " + CONSERV[p.id].varietes + "." : ""}`] : []),
+    ...(VARIETES[p.id] ? [`Variétés conseillées : ${VARIETES[p.id].map((v) => `${v.nom}, ${v.note}`).join(" ")}`] : []),
     ...(p.astuces ?? []).map((a) => `Astuce. ${a}`),
     ...(p.toxique ? [`Attention, toxicité. ${p.toxique}`] : []),
     ...(p.animaux ? [`Pour vos animaux. ${p.animaux}`] : []),
@@ -192,6 +194,13 @@ export default function PlanteFiche({ id }: { id?: string }) {
               </>
             );
           })()}
+          {VARIETES[p.id] && (
+            <>
+              <h2>Variétés conseillées</h2>
+              <ul className="ticks">{VARIETES[p.id].map((v) => <li key={v.nom}><b>{v.nom}</b> {v.types.map((t) => <span key={t} className={`badge ${t === "R" ? "green" : t === "G" ? "sun" : ""}`} style={{ marginRight: 4 }}>{LIB_TYPE_VARIETE[t]}</span>)}<br /><span className="small">{v.note}</span></li>)}</ul>
+              <p className="small muted">Repères courants en France : demandez aussi aux jardiniers et pépiniéristes de votre région quelles variétés réussissent chez vous.</p>
+            </>
+          )}
           {(p.conservation || CONSERV[p.id]) && (() => { const c = CONSERV[p.id]; return (<>
             <h2>Conservation</h2>
             {(p.conservation ?? c?.texte) && <p>{p.conservation ?? c?.texte}</p>}

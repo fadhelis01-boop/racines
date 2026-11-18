@@ -12,6 +12,7 @@ import { STATUT_REMEDE } from "../src/data/reglementation";
 import { RACES } from "../src/data/races";
 import { MARAICH } from "../src/data/maraichage";
 import { CONSERV, METHODES_CONSERV, RENDEMENTS } from "../src/data/conservation";
+import { VARIETES } from "../src/data/varietes";
 import { ALIAS_GUIDES } from "../src/data/guides-balcon";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales";
 // Contrôle de cohérence du contenu, exécuté à chaque build.
@@ -68,6 +69,8 @@ for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.include
   for (const k of Object.keys(ALIAS_GUIDES)) if (!GUIDES.some((g) => g.id === k)) errors.push(`alias de tutoriel pour un id inconnu « ${k} »`);
   dup("maladie animale", MALADIES_ANIMALES);
   for (const k of Object.keys(MARAICH)) if (!PLANTES.some((p) => p.id === k)) errors.push(`maraîchage : plante inconnue « ${k} »`);
+  for (const k of Object.keys(VARIETES)) if (!PLANTES.some((p) => p.id === k)) errors.push(`variétés : plante inconnue « ${k} »`);
+  for (const p of PLANTES.filter((x) => ["legume", "fruit", "arbre"].includes(x.categorie))) if (!VARIETES[p.id] && !/variét/i.test(JSON.stringify(p))) errors.push(`variétés manquantes pour « ${p.id} »`);
   for (const k of Object.keys(CONSERV)) if (!PLANTES.some((p) => p.id === k)) errors.push(`conservation : plante inconnue « ${k} »`);
   for (const p of PLANTES.filter((x) => ["legume", "aromatique", "fruit", "arbre"].includes(x.categorie))) if (!CONSERV[p.id]) errors.push(`conservation : données manquantes pour « ${p.id} »`);
   for (const m of Object.values(METHODES_CONSERV)) if (!GUIDES.some((g) => g.id === m.guide)) errors.push(`conservation : guide inconnu « ${m.guide} »`);

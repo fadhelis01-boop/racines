@@ -64,7 +64,7 @@ export const FRUITS: Plante[] = [
     plantation: m("11-3"), recolte: m("7-9"), taille: m("8-9"),
     espacement: "5 à 6 m", delai: "3 à 5 ans", joursRecolte: 1095,
     amis: [], ennemis: [],
-    intro: "Rustique et généreux. Reine-claude, mirabelle, quetsche : beaucoup sont autofertiles.",
+    intro: "Rustique et généreux. Mirabelle et quetsche sont autofertiles ; les reines-claudes donnent mieux avec une autre variété de prunier à proximité.",
     etapes: ["Plantation d'hiver, sol frais et profond."],
     entretien: ["Taille légère en fin d'été ; éclaircissage des fruits les années de forte charge (branches fragiles)."],
     recolteConseil: "Fruits souples, qui se détachent facilement.",

@@ -132,7 +132,7 @@ const PHRASES: [RegExp, string][] = [
 
 // Intentions de débutant : la page qui répond vraiment à la question passe en tête
 const INTENTIONS: [RegExp, string[]][] = [
-  [/(tue|tuer|meurent|meurt|crevent).*(plantes?|tout)|main verte|increvable|indestructible|qui ne meur|qui meurt pas|plantes? faciles?|debutant|debuter|je debute|commencer le jardinage|par ou commencer|robuste|resistante/, ["/debuter", "/interieur?t=catalogue&facile=1"]],
+  [/(tue|tuer|meurent|meurt|crevent).*(plantes?|tout)|main verte|increvable|indestructible|qui ne meur|qui meurt pas|plantes? faciles?|debutant|debuter|je debute|commencer le jardinage|par ou commencer|plantes? (robustes?|resistantes?)$/, ["/debuter", "/interieur?t=catalogue&facile=1"]],
   [/feuilles? (marron|brunes?|seches?|grillees?)|bouts? (des feuilles )?(marron|bruns?|secs?)/, ["/probleme/air-sec", "/probleme/soif", "/probleme/coup-soleil", "/probleme/pourriture-racines"]],
   [/betes? blanches?|bestioles? blanches?|insectes? blancs?|coton blanc|duvet blanc sur (la )?plante|petites? mouches? blanches?/, ["/probleme/cochenilles", "/probleme/aleurode"]],
   [/^(arroser|arrosage|comment arroser|arroser (une|mes|ma|les) plantes?|combien arroser|quand arroser)$/, ["/guide/arrosage-bien-arroser", "/guide/eau-arrosage-interieur"]],
@@ -166,6 +166,9 @@ const INTENTIONS: [RegExp, string[]][] = [
   [/budget|pas cher|sans argent|petit budget|economiser|gratuit|combien (ca )?coute (un |le )?potager/, ["/guide/jardin-sans-argent"]],
   [/chats?.*(besoins|crottes|font caca|grattent|potager|jardinieres?|bac)|chiens?.*(potager|creusent|urinent)/, ["/guide/nuisibles-predateurs"]],
   [/arros.*hiver|hiver.*arros|arroser (quand il )?(gele|fait froid)/, ["/guide/hivernage-pots", "/guide/arrosage-bien-arroser"]],
+  [/potager (d |en )hiver|legumes? d hiver|(que|quoi) (recolter|cultiver|planter) (en|pour l) hiver/, ["/guide/potager-hiver"]],
+  [/pes(er|ee|ees) (la |les |une |mes )?ruches?|poids (de la |des |d une )?ruches?|balance (de )?ruche/, ["/rucher", "/guide/api-nourrissement"]],
+  [/vendre (son |du |mon )?miel|etiquet.*miel/, ["/guide/api-miellerie", "/guide/api-produits"]],
   [/^registre$|registre (d )?elevage|registre des (animaux|mouvements)/, ["/guide/registre-elevage"]],
   [/abeilles? (mortes?|tremblantes?|qui tremblent|qui meurent|par terre|rampent)|(mortalite|mortes?) devant (la )?ruche|tas d abeilles mortes/, ["/maladie-animale/intoxication-abeilles", "/maladie-animale/maladie-noire", "/maladie-animale/famine"]],
   [/couvain (troue|en mosaique|clairseme|irregulier)|odeur.*(ruche|couvain)|opercules? (affaisse|perce)/, ["/maladie-animale/loque-americaine", "/maladie-animale/loque-europeenne", "/maladie-animale/orpheline"]],
