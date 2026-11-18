@@ -125,7 +125,7 @@ export const AROMATES_INT: AromateInt[] = [
     demarrer: "Une tige achetée au rayon fruits et légumes, base dans un verre d'eau : racines en 2 semaines, puis en pot.",
     arroser: "Régulier.", recolter: "Coupez les tiges les plus grosses à la base.",
     duree: "Vivace en intérieur.", piege: "Le froid." },
-  { nom: "Oignons verts et poireaux en repousse", emoji: "🧅", facile: 1,
+  { nom: "Oignons verts et poireaux en repousse", emoji: "🌱", facile: 1,
     sansLampe: "Toute fenêtre.", avecLampe: "Plus rapide.",
     demarrer: "Gardez 3 cm de base avec racines dans un verre d'eau ou en pot.",
     arroser: "Changez l'eau tous les 2 jours.", recolter: "Coupez les feuilles vertes : 2 à 3 repousses.",

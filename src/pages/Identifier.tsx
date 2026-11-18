@@ -107,7 +107,7 @@ export default function Identifier() {
             )}
           </div>
           <div className="card">
-            <h3>🩺 Plante, maladie, ravageur (Claude)</h3>
+            <h3>⚕️ Plante, maladie, ravageur (Claude)</h3>
             <p className="small muted">Analyse complète : identification, problèmes de santé probables, ce qu'il faut vérifier et les gestes à faire. Elle consomme de l'énergie dans des centres de données : gardez-la pour les cas où l'identification sans photo et le diagnostic guidé ne suffisent pas. Avec votre clé personnelle (quelques centimes par analyse).</p>
             <label className="field">Votre question (facultatif)<input type="text" placeholder="Ex. : pourquoi mes feuilles de tomate jaunissent ?" value={question} onChange={(e) => setQuestion(e.target.value)} /></label>
             {settings.claudeKey ? (

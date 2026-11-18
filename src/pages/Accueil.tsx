@@ -1,11 +1,11 @@
-import { Ico, Vignette } from "../components/Ico";
+import { Ico } from "../components/Ico";
 import { useEffect, useState } from "react";
 import { useStore, toggleFait } from "../lib/store";
 import { meteo, alertes, emojiMeteo, type Meteo } from "../lib/meteo";
 import { lune } from "../lib/lune";
 import { travauxDuMois, plantesDuMois, tachesPerso, ACTIONS, type Action } from "../lib/calendar";
 import { MOIS_NOMS } from "../data/util";
-import { PREMIER_MOIS } from "../data/debuter";
+import { PREMIER_MOIS, DEUXIEME_SAISON } from "../data/debuter";
 import { A, Listen, Section } from "../components/ui";
 import { href } from "../lib/router";
 import { Logo } from "../App";
@@ -82,6 +82,17 @@ export default function Accueil() {
         const toutes = PREMIER_MOIS.flatMap((w) => w.taches);
         const prochaine = toutes.find((x) => !s.fait["deb:" + x.id]);
         const faites = toutes.length - toutes.filter((x) => !s.fait["deb:" + x.id]).length;
+        if (!prochaine) {
+          const t2 = DEUXIEME_SAISON.flatMap((w) => w.taches).filter((x) => !(appart && x.jardin));
+          const p2 = t2.find((x) => !s.fait["s2:" + x.id]);
+          const f2 = t2.length - t2.filter((x) => !s.fait["s2:" + x.id]).length;
+          return p2 ? (
+            <a className="card row" href={href("/debuter?t=saison2")} style={{ textDecoration: "none", color: "inherit", flexWrap: "nowrap", borderColor: "var(--green)", borderWidth: 2, marginTop: 10 }}>
+              <span style={{ fontSize: 34 }}>🌿</span>
+              <span style={{ flex: 1 }}><b>Ma deuxième saison · {f2} / {t2.length}</b><br /><span className="small">{p2.t}</span></span>
+            </a>
+          ) : null;
+        }
         return prochaine ? (
           <a className="card row" href={href("/debuter")} style={{ textDecoration: "none", color: "inherit", flexWrap: "nowrap", borderColor: "var(--green)", borderWidth: 2, marginTop: 10 }}>
             <span style={{ fontSize: 34 }}>🌱</span>
@@ -142,7 +153,7 @@ export default function Accueil() {
       </div>}
 
       <div className="grid-sm" style={{ marginTop: 14 }}>
-        <a className="btn big" href={href(appart ? "/diagnostic?interieur=1" : "/diagnostic")}><Ico nom="diagnostic" emoji="🩺" taille={40} /> Ma plante est malade</a>
+        <a className="btn big" href={href(appart ? "/diagnostic?interieur=1" : "/diagnostic")}><Ico nom="diagnostic" emoji="⚕️" taille={40} /> Ma plante est malade</a>
         <a className="btn big" href={href("/identifier")}><Ico nom="photo" emoji="📷" taille={40} /> Je ne connais pas son nom</a>
         {appart ? <>
           <a className="btn big" href={href("/jardin/mesplantes")}><Ico nom="mesplantes" emoji="🌿" taille={40} /> Mes plantes</a>
@@ -168,36 +179,47 @@ export default function Accueil() {
         )}
       </Section>
 
-      {s.cultures.length === 0 && s.plantes.length === 0 && <p className="small muted" style={{ marginBottom: -6 }}>Le calendrier ci-dessous dit ce qui se fait ce mois-ci <b>pour ceux qui cultivent ces plantes</b> : pas d'inquiétude si vous n'en avez aucune.</p>}
-      <Section title={`À faire en ${MOIS_NOMS[mois - 1]}`} right={<A to="/calendrier" className="small">Tout le calendrier →</A>}>
-        <div className="grid">
-          {(["semisAbri", "repiquage", "semisPlace", "plantation", "recolte"] as Action[]).map((a) =>
-            pm[a].length ? (
-              <div key={a} className="card">
-                <b className="row" style={{ gap: 6 }}><Ico nom={({ semisAbri: "semisAbri", semisPlace: "semisPlace", plantation: "plantation", recolte: "recolte-action", taille: "taille", floraison: "floraison" } as Record<string, string>)[a]} emoji={ACTIONS[a].emoji} taille={28} /> {ACTIONS[a].verbe}</b>
-                <div className="chips" style={{ marginTop: 8 }}>
-                  {pm[a].slice(0, 14).map((p) => <a key={p.id} className="chip" href={href(`/plante/${p.id}`)}><Vignette id={p.id} emoji={p.emoji} taille={22} /> {p.nom}</a>)}
-                  {pm[a].length > 14 && <A to="/calendrier" className="chip">+{pm[a].length - 14}</A>}
-                </div>
-              </div>
-            ) : null,
-          )}
-        </div>
-        {sections.map((x) => (
-          <div key={x.k} className="card">
-            <b className="row" style={{ gap: 6 }}><Ico nom={({ potager: "legume", verger: "arbre", serre: "serre", compost: "compost", interieur: "interieur", animaux: "animaux", balcon: "balcon" } as Record<string, string>)[x.k]} emoji={x.e} taille={28} /> {x.t}</b>
-            {t[x.k].map((txt, i) => {
-              const key = `${now.getFullYear()}-${mois}:${x.k}:${i}`;
-              return (
-                <div key={key} className={`task ${s.fait[key] ? "done" : ""}`}>
-                  <input type="checkbox" checked={!!s.fait[key]} onChange={() => toggleFait(key)} aria-label="Fait" />
-                  <span>{txt}</span>
-                </div>
-              );
-            })}
+      {(() => {
+        // D'abord les plantes de la personne, puis quelques repères du mois, le reste replié
+        const mes = new Set([...s.cultures.filter((c) => !c.fini).map((c) => c.planteId), ...s.plantes.map((p) => p.planteId)]);
+        const actions = (["semisAbri", "repiquage", "semisPlace", "plantation", "recolte"] as Action[]);
+        const pourMoi = actions.map((a) => ({ a, ps: pm[a].filter((p) => mes.has(p.id)) })).filter((x) => x.ps.length);
+        const general = actions.filter((a) => pm[a].length).slice(0, 3);
+        const abeilles = s.troupeaux.some((x) => x.animalId === "abeille") || s.ruches.length > 0;
+        const travaux = sections.flatMap((x) => t[x.k].map((txt, i) => ({ x, txt, key: `${now.getFullYear()}-${mois}:${x.k}:${i}` }))).filter((w) => abeilles || !/ruche|varroa|abeille/i.test(w.txt));
+        const essentiels = travaux.slice(0, 5);
+        const tache = (w: typeof travaux[number]) => (
+          <div key={w.key} className={`task ${s.fait[w.key] ? "done" : ""}`}>
+            <input type="checkbox" checked={!!s.fait[w.key]} onChange={() => toggleFait(w.key)} aria-label="Fait" />
+            <span><span aria-hidden="true">{w.x.e}</span> {w.txt}</span>
           </div>
-        ))}
-      </Section>
+        );
+        return (
+          <Section title={`À faire en ${MOIS_NOMS[mois - 1]}`} right={<A to="/calendrier" className="small">Tout le calendrier →</A>}>
+            {pourMoi.length > 0 && (
+              <div className="card" style={{ borderColor: "var(--green)", borderWidth: 2 }}>
+                <b>🌱 Pour vos plantes</b>
+                {pourMoi.map(({ a, ps }) => (
+                  <div key={a} className="small" style={{ marginTop: 6 }}>{ACTIONS[a].emoji} <b>{ACTIONS[a].verbe}</b> : {ps.map((p, k) => <span key={p.id}>{k ? ", " : ""}<a href={href(`/plante/${p.id}`)}>{p.nom}</a></span>)}</div>
+                ))}
+              </div>
+            )}
+            {!pourMoi.length && <p className="small muted" style={{ margin: "0 0 6px" }}>Quelques idées pour ce mois-ci. Notez vos cultures dans <A to="/jardin">Mon jardin</A> et cette rubrique ne parlera plus que de vos plantes.</p>}
+            <div className="card">
+              <b>💡 Les essentiels du mois</b>
+              {essentiels.map(tache)}
+              {general.length > 0 && (
+                <div className="small" style={{ marginTop: 8 }}>
+                  {general.map((a) => <div key={a} style={{ marginTop: 4 }}>{ACTIONS[a].emoji} {ACTIONS[a].verbe} : {pm[a].slice(0, 5).map((p, k) => <span key={p.id}>{k ? ", " : ""}<a href={href(`/plante/${p.id}`)}>{p.nom}</a></span>)}{pm[a].length > 5 ? <> et <A to="/calendrier">{pm[a].length - 5} autres</A></> : null}</div>)}
+                </div>
+              )}
+              {travaux.length > essentiels.length && (
+                <details className="box" style={{ marginTop: 8 }}><summary>Tous les travaux du mois ({travaux.length})</summary>{travaux.slice(5).map(tache)}</details>
+              )}
+            </div>
+          </Section>
+        );
+      })()}
       <p className="small muted center" style={{ marginTop: 24 }}>Climat : {ZONES.find((z) => z.id === settings.zone)?.nom} · <A to="/reglages">modifier</A></p>
     </div>
   );

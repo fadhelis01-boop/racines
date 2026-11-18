@@ -166,7 +166,7 @@ export const INTERIEUR2: Plante[] = [
     sosies: [{ id: "kentia", nom: "Kentia", difference: "Voir la fiche kentia : moins de tiges, vert plus sombre, plus tolérant à l'ombre." }],
   },
   {
-    ...base, id: "collier-perles", nom: "Collier de perles", latin: "Curio rowleyanus", emoji: "🟢", wiki: "Curio rowleyanus", difficulte: 2, expo: ["soleil", "mi-ombre"], eau: "faible",
+    ...base, id: "collier-perles", nom: "Collier de perles", latin: "Curio rowleyanus", emoji: "🌱", wiki: "Curio rowleyanus", difficulte: 2, expo: ["soleil", "mi-ombre"], eau: "faible",
     alias: ["plante perles", "senecio", "string of pearls", "plante qui pend", "succulente"], latins: ["Senecio rowleyanus"], sansDangerAnimaux: false, tailleAdulte: "Tiges retombantes jusqu'à 1 m", soins: { arrosageEte: 10, arrosageHiver: 25, engrais: 45, rempotageAns: 2 },
     intro: "Succulente retombante aux feuilles en billes. Elle demande beaucoup de lumière et pourrit à la moindre eau stagnante.",
     lumiere: "Très vive, un peu de soleil doux.", arrosageDetail: "Quand les perles commencent à se rider légèrement.", humidite: "Air sec.", temperature: "15 à 25 °C, hiver frais.", rempotage: "Pot large et peu profond (racines superficielles).",
@@ -174,7 +174,7 @@ export const INTERIEUR2: Plante[] = [
     problemes: ["pourriture-racines", "manque-lumiere", "cochenilles"], toxique: "Toxique pour chats et chiens (troubles digestifs).",
   },
   {
-    ...base, id: "succulentes", nom: "Succulentes (crassula, echeveria, haworthia…)", latin: "Crassula ovata, Echeveria, Haworthia…", emoji: "🪨", wiki: "Crassula ovata", difficulte: 1, expo: ["soleil"], eau: "faible",
+    ...base, id: "succulentes", nom: "Succulentes (crassula, echeveria, haworthia…)", latin: "Crassula ovata, Echeveria, Haworthia…", emoji: "⛰️", wiki: "Crassula ovata", difficulte: 1, expo: ["soleil"], eau: "faible",
     alias: ["plante grasse", "arbre de jade", "plante porte-bonheur", "echeveria", "haworthia", "crassula", "sedum", "kalanchoe", "plante à argent"], latins: ["Crassula ovata", "Crassula", "Echeveria", "Haworthia", "Haworthiopsis", "Sedum", "Graptopetalum", "Pachyphytum", "Sempervivum", "Gasteria", "Aeonium"], sansDangerAnimaux: false, tailleAdulte: "5 cm à 1 m (arbre de jade)", soins: { arrosageEte: 14, arrosageHiver: 30, engrais: 60, rempotageAns: 3 },
     intro: "Plantes à feuilles charnues : beaucoup de lumière, très peu d'eau. Les haworthias supportent un peu moins de lumière que les autres.",
     lumiere: "Maximum : fenêtre sud ou ouest (haworthia : est ou ouest).", arrosageDetail: "Par trempage quand la terre est sèche, très peu en hiver.", humidite: "Air sec.", temperature: "Hiver frais (10-15 °C) idéal.", rempotage: "Tous les 2-3 ans, substrat cactées.",
@@ -247,7 +247,7 @@ export const INTERIEUR2: Plante[] = [
     problemes: ["soif", "pourriture-racines"], toxique: "Non toxique pour chats et chiens.",
   },
   {
-    ...base, id: "dionee", nom: "Dionée (plante carnivore)", latin: "Dionaea muscipula", emoji: "🪤", wiki: "Dionaea muscipula", difficulte: 3, expo: ["soleil"], eau: "fort",
+    ...base, id: "dionee", nom: "Dionée (plante carnivore)", latin: "Dionaea muscipula", emoji: "🦗", wiki: "Dionaea muscipula", difficulte: 3, expo: ["soleil"], eau: "fort",
     alias: ["plante carnivore", "attrape-mouche", "dionée attrape-mouche", "sarracenia", "droséra"], latins: ["Dionaea", "Sarracenia", "Drosera capensis", "Nepenthes"], sansDangerAnimaux: true, tailleAdulte: "10 cm", soins: { arrosageEte: 2, arrosageHiver: 7 },
     intro: "Plante de tourbière qui meurt dans du terreau, avec de l'eau du robinet ou sans repos hivernal froid : trois erreurs qui tuent la plupart des dionées vendues.",
     lumiere: "Plein soleil : fenêtre sud, ou dehors sur un balcon l'été.", arrosageDetail: "Soucoupe toujours remplie de 1-2 cm d'EAU DE PLUIE ou déminéralisée (jamais d'eau du robinet).", humidite: "Moyenne.", temperature: "Repos d'hiver obligatoire à 2-8 °C de novembre à février (rebord froid, pièce non chauffée).", rempotage: "Fibre de coco lavée + sable de silice (ou sphaigne vivante), sans engrais ni terreau ; évitez la tourbe, issue de tourbières détruites.",

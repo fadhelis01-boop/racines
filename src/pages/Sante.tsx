@@ -13,7 +13,7 @@ export default function Sante() {
   const list = PROBLEMES.filter((p) => (!type || p.type === type) && (!interieur || p.interieur) && (!nq || norm(p.nom + " " + p.cible + " " + p.symptomes.join(" ")).includes(nq))).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
   return (
     <div>
-      <h1>🩺 Santé des plantes</h1>
+      <h1>⚕️ Santé des plantes</h1>
       <p className="muted small" style={{ marginTop: -6 }}>Maladies, ravageurs, carences et troubles de culture, avec des solutions naturelles autorisées au jardin familial.</p>
       <div className="grid-sm" style={{ marginBottom: 14 }}>
         <a className="btn big primary" href={href("/diagnostic")}>🔎 Diagnostic guidé</a>
@@ -30,13 +30,13 @@ export default function Sante() {
         <div className="search"><input type="search" placeholder="Rechercher : pucerons, taches, tomate…" value={q} onChange={(e) => setQ(e.target.value)} /></div>
         <div className="chips scroll-x" style={{ margin: "10px 0" }}>
           <button className={`chip ${!type ? "on" : ""}`} onClick={() => setType("")}>Tous</button>
-          {Object.entries(TYPES_PROBLEME).map(([k, v]) => <button key={k} className={`chip ${type === k ? "on" : ""}`} onClick={() => setType(k)}><Ico nom={k} emoji="🩺" taille={22} /> {v}</button>)}
+          {Object.entries(TYPES_PROBLEME).map(([k, v]) => <button key={k} className={`chip ${type === k ? "on" : ""}`} onClick={() => setType(k)}><Ico nom={k} emoji="⚕️" taille={22} /> {v}</button>)}
           <button className={`chip ${interieur ? "on" : ""}`} onClick={() => setInterieur(!interieur)}>🌿 Intérieur</button>
         </div>
         <div className="grid">
           {list.map((p) => (
             <a key={p.id} className="tile" href={href(`/probleme/${p.id}`)}>
-              <div className="ph" style={{ aspectRatio: "16/9" }}><Photo id={p.id} emoji="🩺" alt="" /></div>
+              <div className="ph" style={{ aspectRatio: "16/9" }}><Photo id={p.id} emoji="⚕️" alt="" /></div>
               <div className="bd">
                 <div className="t">{p.nom}</div>
                 <div className="s">{p.cible}</div>

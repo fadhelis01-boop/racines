@@ -30,6 +30,9 @@ import { besoinEau } from "../src/components/PlanVisuel";
 import { couleurReine, valeurVarroa, niveauVarroa, pertesHiver, alertesRucher, registreTraitementsCsv } from "../src/lib/rucher";
 import { dernierSoin } from "../src/lib/calendar";
 import { RACES } from "../src/data/races";
+import { DEUXIEME_SAISON } from "../src/data/debuter";
+import { LEXIQUE } from "../src/data/lexique";
+import { ANIMAUX } from "../src/data/index";
 import { proposer, numeroLot, finDeGarde, alertesStocks, planAnnee, selLacto, sucreConfiture } from "../src/lib/conserverie";
 import { CONSERV, METHODES_CONSERV, majorationAltitude } from "../src/data/conservation";
 import { MALADIES_ANIMALES } from "../src/data/maladies-animales";
@@ -453,6 +456,31 @@ cs("conserver les pommes", "La cave et le fruitier");
 cs("eau de vie", "Fruits à l'eau-de-vie");
 ok(!rechercher("trop de soleil", 3).some((h) => h.titre.startsWith("J'ai trop de")), "« trop de soleil » ne part pas vers les surplus");
 ok(rechercher("fumier", 1)[0]?.titre.startsWith("Fumier"), "fumier reste le fumier");
+
+// Audit débutant passionné : recherche, lexique, deuxième saison, émojis lisibles sous Windows 10
+const deb = (q: string, attendu: string, k = 3) => { const r = rechercher(q, k).map((h) => h.titre); ok(r.some((t) => t.startsWith(attendu)), `débutant « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+deb("que planter en novembre", "Calendrier du mois", 1);
+deb("que semer maintenant", "Calendrier du mois", 1);
+deb("semis qui meurent", "Fonte des semis", 1);
+deb("graines qui ne germent pas", "Récolter et conserver ses graines");
+deb("outils de base", "La liste de courses");
+deb("potager avec enfants", "Jardiner avec des enfants", 1);
+deb("budget potager", "Jardiner sans argent", 1);
+deb("faut il arroser en hiver", "Hiverner les plantes en pot", 1);
+deb("fourmis", "Fourmis", 1);
+deb("ail quand planter", "Ail", 1);
+ok(!rechercher("combien de temps pour avoir des tomates", 3).some((h) => /blanchiment|stérilisation/.test(h.titre)), "« combien de temps pour avoir des tomates » ne part plus vers la conserverie");
+ok(!rechercher("tailler les tomates", 3).some((h) => /blanchiment/.test(h.titre)), "« tailler les tomates » sans conserverie");
+ok(rechercher("que planter pour mes poules", 1)[0]?.titre.startsWith("Cultiver pour nourrir"), "« que planter pour mes poules » reste vers les animaux");
+ok(["blanchir", "pasteuriser", "steriliser", "autoclave", "couvain", "varroa", "opercule", "hausse", "essaimage", "biner", "sarcler", "rusticite", "npk", "lacto", "saumure", "pectine", "botulisme"].every((id) => LEXIQUE.some((t) => t.id === id)), "lexique complété (conserverie, abeilles, gestes)");
+ok(decouper("Blanchir les haricots puis compter le varroa et le couvain").filter((x) => x.id).length === 3, "mots expliqués au toucher dans les nouveaux textes");
+ok(!decouper("Les plants de tomates sont prêts").some((x) => x.id === "plant"), "« plant » n'est pas souligné partout");
+ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flatMap((w) => w.taches).every((t) => !t.lien || !t.lien[0].startsWith("/guide/") || GUIDES.some((g) => `/guide/${g.id}` === t.lien![0])), "deuxième saison : liens vers des tutoriels existants");
+{
+  const emoji12 = /[\u{1F7E0}-\u{1F7EB}\u{1FA70}-\u{1FAFF}\u{1F90C}-\u{1F90F}\u{1F9C3}-\u{1F9CA}]/u;
+  const tous = [...PLANTES.map((p) => p.emoji), ...GUIDES.map((g) => g.emoji), ...ANIMAUX.map((a) => a.emoji), ...LEXIQUE.map((t) => t.terme)];
+  ok(!tous.some((e) => emoji12.test(e)), `aucun émoji illisible sous Windows 10 (trouvés : ${tous.filter((e) => emoji12.test(e)).join(" ")})`);
+}
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

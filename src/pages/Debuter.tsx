@@ -1,10 +1,10 @@
-import { TROIS_ERREURS, PREMIER_MOIS, INCREVABLES, AROMATES_FACILES, POTAGER_FACILE, COURSES, OFFRIR } from "../data/debuter";
+import { TROIS_ERREURS, PREMIER_MOIS, DEUXIEME_SAISON, INCREVABLES, AROMATES_FACILES, POTAGER_FACILE, COURSES, OFFRIR } from "../data/debuter";
 import { plante } from "../data/index";
 import { useStore, toggleFait } from "../lib/store";
 import { useRoute, href, go } from "../lib/router";
 import { Listen, Tile } from "../components/ui";
 
-const ONGLETS: [string, string][] = [["parcours", "📅 Mon premier mois"], ["increvables", "💪 Plantes increvables"], ["aromates", "🌿 Aromates faciles"], ["potager", "🥗 Premier potager"], ["courses", "🛒 Liste de courses"], ["offrir", "🎁 Offrir une plante"]];
+const ONGLETS: [string, string][] = [["parcours", "📅 Mon premier mois"], ["saison2", "🌿 Ma deuxième saison"], ["increvables", "💪 Plantes increvables"], ["aromates", "🌿 Aromates faciles"], ["potager", "🥗 Premier potager"], ["courses", "🛒 Liste de courses"], ["offrir", "🎁 Offrir une plante"]];
 
 export default function Debuter() {
   const onglet = useRoute().query.get("t") ?? "parcours";
@@ -21,6 +21,7 @@ export default function Debuter() {
         {ONGLETS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/debuter?t=${k}`)}>{l}</button>)}
       </div>
       {onglet === "parcours" && <Parcours />}
+      {onglet === "saison2" && <Saison2 />}
       {onglet === "increvables" && <Liste items={INCREVABLES.map((x) => ({ id: x.id, texte: x.pourquoi }))} intro="Elles supportent les oublis et la lumière moyenne. Choisissez-en une ou deux selon votre fenêtre." suite={["/interieur?t=catalogue&facile=1", "Toutes les plantes faciles du catalogue"]} />}
       {onglet === "aromates" && <Liste items={AROMATES_FACILES.map((x) => ({ id: x.id, texte: x.conseil }))} intro="Les aromates les plus faciles d'abord. Le basilic est facile dehors l'été, beaucoup moins à l'intérieur." suite={["/interieur?t=aromates", "Tous les aromates en intérieur, avec ou sans lampe"]} />}
       {onglet === "potager" && <Liste items={POTAGER_FACILE.map((x) => ({ id: x.id, texte: `${x.ou} · ${x.conseil}` }))} intro="Commencez par 3 ou 4 de ces cultures sur 2 à 10 m² (ou 2 jardinières). Une réussite la première année donne envie de continuer." suite={["/amenagements", "Quelle méthode de potager pour moi ?"]} />}
@@ -37,6 +38,7 @@ function Parcours() {
   return (
     <div>
       <div className="row between"><b>Votre progression : {ok} / {total}</b>{ok === total && <span className="badge green">🎉 Premier mois réussi !</span>}</div>
+      {ok === total && <p className="callout ok small"><b>Et maintenant ?</b> Votre deuxième saison vous fait découvrir le compost, les semis, les boutures et les conserves, un geste à la fois. <a href={href("/debuter?t=saison2")}>Commencer →</a></p>}
       <div className="progress" style={{ margin: "6px 0 12px" }}><div style={{ width: `${(ok / total) * 100}%` }} /></div>
       {PREMIER_MOIS.map((w) => (
         <div key={w.semaine} className="card">
@@ -49,6 +51,33 @@ function Parcours() {
           ))}
         </div>
       ))}
+    </div>
+  );
+}
+
+function Saison2() {
+  const fait = useStore((s) => s.fait);
+  const appart = useStore((s) => s.settings.situation === "appartement");
+  const themes = DEUXIEME_SAISON.map((w) => ({ ...w, taches: w.taches.filter((t) => !(appart && t.jardin)) }));
+  const total = themes.reduce((n, w) => n + w.taches.length, 0);
+  const ok = themes.reduce((n, w) => n + w.taches.filter((t) => fait["s2:" + t.id]).length, 0);
+  return (
+    <div>
+      <p className="small">Le premier mois vous a appris à garder une plante en vie. Cette saison, à votre rythme, vous découvrez un geste nouveau à la fois. Rien n'est obligatoire : cochez ce que vous avez essayé.</p>
+      <div className="row between"><b>Votre progression : {ok} / {total}</b>{ok === total && <span className="badge green">🎉 Jardinier confirmé !</span>}</div>
+      <div className="progress" style={{ margin: "6px 0 12px" }}><div style={{ width: `${total ? (ok / total) * 100 : 0}%` }} /></div>
+      {themes.map((w) => (
+        <div key={w.theme} className="card">
+          <b>{w.theme}</b>
+          {w.taches.map((t) => (
+            <label key={t.id} className={`task ${fait["s2:" + t.id] ? "done" : ""}`} style={{ cursor: "pointer" }}>
+              <input type="checkbox" checked={!!fait["s2:" + t.id]} onChange={() => toggleFait("s2:" + t.id)} />
+              <span>{t.t}{t.lien && <> · <a href={href(t.lien[0])} onClick={(e) => e.stopPropagation()}>{t.lien[1]} →</a></>}</span>
+            </label>
+          ))}
+        </div>
+      ))}
+      {ok === total && <p className="small">Vous pouvez maintenant afficher tous les niveaux dans les <a href={href("/guides")}>tutoriels</a> et désactiver le mode débutant dans les <a href={href("/reglages")}>réglages</a>.</p>}
     </div>
   );
 }
@@ -68,7 +97,7 @@ function Liste({ items, intro, suite }: { items: { id: string; texte: string }[]
 function Courses() {
   const situation = useStore((s) => s.settings.situation);
   const cles: ("interieur" | "balcon" | "jardin")[] = situation === "appartement" ? ["interieur"] : situation === "balcon" ? ["interieur", "balcon"] : ["interieur", "jardin"];
-  const titres = { interieur: "🪟 Pour des plantes d'intérieur", balcon: "🏢 Pour un petit potager de balcon", jardin: "🏡 Pour un premier potager au jardin (10 m²)" };
+  const titres = { interieur: "🌤️ Pour des plantes d'intérieur", balcon: "🏢 Pour un petit potager de balcon", jardin: "🏡 Pour un premier potager au jardin (10 m²)" };
   return (
     <div>
       <p className="small">Le strict nécessaire, adapté à votre lieu (modifiable dans les réglages). Les prix sont des ordres de grandeur.</p>

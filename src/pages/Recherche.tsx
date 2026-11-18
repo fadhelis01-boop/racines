@@ -21,7 +21,7 @@ export default function Recherche() {
       )}
       {q.length >= 3 && ressembleSymptome(q) && !parleAnimal(q) && (
         <a className="callout info row" href={href("/diagnostic")} style={{ textDecoration: "none", color: "inherit", display: "flex" }}>
-          <span>🩺 Cela ressemble à un symptôme : lancez le <b>diagnostic guidé</b> pour trouver la cause la plus probable.</span>
+          <span>⚕️ Cela ressemble à un symptôme : lancez le <b>diagnostic guidé</b> pour trouver la cause la plus probable.</span>
         </a>
       )}
       {res.length > 0 && (

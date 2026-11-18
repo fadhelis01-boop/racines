@@ -16,7 +16,7 @@ export default function Nutrition() {
       <p className="muted small" style={{ marginTop: -6 }}>Ce dont chacun a besoin, expliqué simplement : pour les légumes, les fruits, les fleurs, les plantes en pot et d'intérieur, et pour chaque animal de la basse-cour.</p>
       <div className="chips" role="tablist" style={{ margin: "10px 0 14px" }}>
         {[["plantes", "🌱 Les plantes"], ["engrais", "🧺 Les engrais naturels"], ["animaux", "🐔 Les animaux"]].map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/nutrition?t=${k}`)}>{l}</button>)}
-        <a className="chip" href={href("/sol")}>🟫 Identifier mon sol</a>
+        <a className="chip" href={href("/sol")}>🌍 Identifier mon sol</a>
       </div>
       {onglet === "plantes" && <Plantes />}
       {onglet === "engrais" && <Engrais />}

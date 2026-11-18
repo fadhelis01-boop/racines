@@ -121,7 +121,7 @@ export const GUIDES_CONSERVERIE: Guide[] = [
     ],
     video: "séchoir solaire fait maison fruits", liens: ["tomate", "pommier", "prunier", "cs-sel-huile-fumage", "graines-maison"] }),
 
-  g({ id: "cs-congelation", titre: "Congeler ses récoltes : la méthode complète", emoji: "🧊", niveau: 1, duree: "Variable",
+  g({ id: "cs-congelation", titre: "Congeler ses récoltes : la méthode complète", emoji: "❄️", niveau: 1, duree: "Variable",
     resume: "Blanchir, congeler à plat, emballer sans air, combien de temps garder chaque produit, décongeler, et que faire en cas de panne.",
     alias: ["congeler", "congelation", "congeler les haricots", "congeler les tomates", "congeler les courgettes", "congeler les fruits", "congeler les herbes", "duree congelation", "combien de temps au congelateur", "recongeler", "decongeler", "panne de congelateur", "brulure de congelation", "pesto congele"],
     etapes: [

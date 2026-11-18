@@ -141,7 +141,7 @@ function CartePlante({ mp, e }: { mp: MaPlante; e: ReturnType<typeof echeances> 
           })()}
           <div className="row">
             <button className="btn sm" onClick={() => { upsert("plantes", marquer(mp, "rempotage")); toast("Rempotage noté"); }}>🏺 Rempotée aujourd'hui</button>
-            <a className="btn sm" href={href(`/diagnostic?plante=${mp.planteId}`)}>🩺 Un souci ?</a>
+            <a className="btn sm" href={href(`/diagnostic?plante=${mp.planteId}`)}>⚕️ Un souci ?</a>
           </div>
           <label className="field small">Arroser tous les … jours (vide = automatique : {intervalleArrosage({ ...mp, frequence: undefined })} j en ce moment)
             <div className="row"><input type="number" min="1" value={freq} onChange={(ev) => setFreq(ev.target.value)} style={{ width: 100 }} /><button className="btn sm" onClick={() => { upsert("plantes", { ...mp, frequence: freq ? Number(freq) : undefined }); toast("Rythme enregistré"); }}>OK</button></div>

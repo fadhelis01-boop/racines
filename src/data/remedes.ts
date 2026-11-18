@@ -88,7 +88,7 @@ export const REMEDES: Remede[] = [
     contre: ["oidium"],
   },
   {
-    id: "soufre", nom: "Soufre mouillable", emoji: "🟡",
+    id: "soufre", nom: "Soufre mouillable", emoji: "💛",
     role: "Fongicide minéral autorisé en agriculture biologique, contre l'oïdium, la tavelure, la rouille. Il a aussi un effet sur les acariens.",
     ingredients: ["Soufre mouillable du commerce (jardinerie), à la dose indiquée sur l'emballage"],
     preparation: ["Suivez strictement l'étiquette."],
@@ -173,7 +173,7 @@ export const REMEDES: Remede[] = [
     contre: ["vers-blancs", "otiorhynque", "sciarides"],
   },
   {
-    id: "glu", nom: "Panneaux et bandes engluées", emoji: "🟨",
+    id: "glu", nom: "Panneaux et bandes engluées", emoji: "📒",
     role: "Les panneaux jaunes piègent aleurodes, sciarides et pucerons ailés ; les bleus, les thrips. La bande de glu autour du tronc bloque fourmis et chenilles.",
     ingredients: ["Panneaux ou bandes du commerce"],
     preparation: [],

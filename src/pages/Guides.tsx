@@ -1,3 +1,4 @@
+import { useStore } from "../lib/store";
 import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { GUIDES, RUBRIQUES } from "../data/index";
@@ -9,14 +10,20 @@ import type { Rubrique } from "../data/types";
 export default function Guides() {
   const [q, setQ] = useState("");
   const [rub, setRub] = useState<Rubrique | "">("");
+  const debutant = useStore((s) => !!s.settings.debutant);
+  const [niveau, setNiveau] = useState<0 | 1 | 2 | 3>(debutant ? 1 : 0);
   const nq = norm(q);
-  const list = GUIDES.filter((g) => (!rub || g.rubrique === rub) && (!nq || norm(g.titre + " " + g.resume).includes(nq)));
+  const list = GUIDES.filter((g) => (!rub || g.rubrique === rub) && (!niveau || g.niveau === niveau) && (!nq || norm(g.titre + " " + g.resume).includes(nq)));
   const rubs = (Object.keys(RUBRIQUES) as Rubrique[]).filter((r) => list.some((g) => g.rubrique === r));
   return (
     <div>
       <h1>📘 Tutoriels</h1>
       <p className="muted small" style={{ marginTop: -6 }}>{GUIDES.length} tutoriels pas à pas, lisibles à voix haute, avec un mode « mains dans la terre » : grandes étapes, écran toujours allumé, commandes vocales.</p>
       <div className="search"><input type="search" placeholder="Rechercher : compost, oyas, poulailler…" value={q} onChange={(e) => setQ(e.target.value)} /></div>
+      <div className="chips" style={{ marginTop: 10 }} aria-label="Niveau">
+        {([[0, "Tous les niveaux"], [1, "🌱 Facile"], [2, "Intermédiaire"], [3, "Avancé"]] as [0 | 1 | 2 | 3, string][]).map(([n, l]) => <button key={n} className={`chip ${niveau === n ? "on" : ""}`} onClick={() => setNiveau(n)}>{l}{n ? ` (${GUIDES.filter((g) => g.niveau === n).length})` : ""}</button>)}
+      </div>
+      {debutant && niveau === 1 && <p className="small muted">Mode débutant : seuls les tutoriels faciles sont affichés. <a href={href("/debuter?t=saison2")}>Votre deuxième saison →</a></p>}
       <div className="chips scroll-x" style={{ margin: "12px 0" }}>
         <button className={`chip ${!rub ? "on" : ""}`} onClick={() => setRub("")}>Tous</button>
         {(Object.keys(RUBRIQUES) as Rubrique[]).map((r) => <button key={r} className={`chip ${rub === r ? "on" : ""}`} onClick={() => setRub(r)}><Ico nom={r === "interieur" ? "interieur" : r === "animaux" ? "animaux" : r} emoji={RUBRIQUES[r].emoji} taille={22} /> {RUBRIQUES[r].label}</button>)}

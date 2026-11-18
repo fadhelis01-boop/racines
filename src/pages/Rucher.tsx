@@ -1,3 +1,4 @@
+import MotsLexique from "../components/MotsLexique";
 import { useState } from "react";
 import { useStore, upsert, remove, uid, today, getState, type Ruche, type Visite, type MethodeVarroa } from "../lib/store";
 import { RACES } from "../data/races";
@@ -25,11 +26,12 @@ export default function Rucher() {
       <p className="small"><a href={href("/jardin/animaux")}>← Mes animaux</a> · <a href={href("/animal/abeille")}>Fiche abeille</a></p>
       <h1>🐝 Mon rucher</h1>
       <p className="muted">Chaque ruche suivie une par une : visites, comptages de varroa avec seuil d'alerte, registre des traitements, pertes d'hiver.</p>
+      <p className="small">📖 Les mots du rucher (touchez-les) : <MotsLexique texte="couvain, varroa, opercule, hausse, essaimage." /></p>
       <div className="chips" style={{ margin: "8px 0" }}>
         <a className="chip" href={href("/guide/api-calendrier")}>📅 L'année au rucher</a>
         <a className="chip" href={href("/guide/api-visite")}>🔍 Faire une visite</a>
         <a className="chip" href={href("/guide/api-varroa")}>🦠 Plan varroa</a>
-        <a className="chip" href={href("/diagnostic-animal?animal=abeille")}>🩺 Diagnostic de la ruche</a>
+        <a className="chip" href={href("/diagnostic-animal?animal=abeille")}>⚕️ Diagnostic de la ruche</a>
       </div>
       {alertes.length > 0 && (
         <div className="card" style={{ borderLeft: "4px solid var(--danger, #c33)" }}>

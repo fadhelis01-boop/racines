@@ -9,7 +9,7 @@ export interface Amenagement {
 const J = ["jardin", "petit-jardin"] as const;
 
 export const AMENAGEMENTS: Amenagement[] = [
-  { id: "am-planches", nom: "Potager en planches permanentes", emoji: "🟫", famille: "potager", pour: [...J], surface: "Dès 20 m², idéal 50 à 300 m²", installation: 2, entretien: 2, cout: 1, eau: 2,
+  { id: "am-planches", nom: "Potager en planches permanentes", emoji: "🌍", famille: "potager", pour: [...J], surface: "Dès 20 m², idéal 50 à 300 m²", installation: 2, entretien: 2, cout: 1, eau: 2,
     resume: "Des bandes de culture de 80 cm à 1,20 m de large, jamais piétinées, séparées par des allées fixes. La version moderne du potager en rangs.",
     avantages: ["Peu coûteux : pas de bois ni d'apport massif", "Sol jamais tassé : moins de bêchage au fil des ans", "Facile à mécaniser (grelinette, motoculteur léger) et à agrandir", "Rotation simple : une planche = une famille de légumes"],
     inconvenients: ["Allées enherbées à tondre ou à pailler", "Demande de désherber les premières années", "Moins esthétique qu'un carré pour un petit jardin"],

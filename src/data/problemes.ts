@@ -4,11 +4,11 @@ import { ORGANISMES_REGLEMENTES } from "./agronomie";
 
 // Ce que l'on observe : sert au diagnostic guidé (« Qu'est-ce qui ne va pas ? »)
 export const SIGNES: Record<string, { label: string; organe: string; emoji: string }> = {
-  "taches-brunes": { label: "Taches brunes ou noires", organe: "feuilles", emoji: "🟤" },
-  "taches-jaunes": { label: "Taches jaunes ou décolorées", organe: "feuilles", emoji: "🟡" },
+  "taches-brunes": { label: "Taches brunes ou noires", organe: "feuilles", emoji: "🍂" },
+  "taches-jaunes": { label: "Taches jaunes ou décolorées", organe: "feuilles", emoji: "💛" },
   "feutrage-blanc": { label: "Poudre ou feutrage blanc", organe: "feuilles", emoji: "⚪" },
   "duvet-gris": { label: "Moisissure grise duveteuse", organe: "fruits", emoji: "🌫️" },
-  pustules: { label: "Petites pustules orange ou brunes (poudre au doigt)", organe: "feuilles", emoji: "🟠" },
+  pustules: { label: "Petites pustules orange ou brunes (poudre au doigt)", organe: "feuilles", emoji: "🧡" },
   "trous-feuilles": { label: "Trous dans les feuilles", organe: "feuilles", emoji: "🕳️" },
   "petits-trous": { label: "Multitude de petits trous ronds (comme des plombs)", organe: "feuilles", emoji: "⋯" },
   "feuilles-deformees": { label: "Feuilles enroulées, crispées ou cloquées", organe: "feuilles", emoji: "🌀" },
@@ -22,6 +22,7 @@ export const SIGNES: Record<string, { label: string; organe: string; emoji: stri
   colonies: { label: "Petits insectes verts, noirs ou gris en colonies", organe: "feuilles", emoji: "🐜" },
   "mouches-blanches": { label: "Nuée de petites mouches blanches qui s'envolent", organe: "feuilles", emoji: "🦟" },
   toile: { label: "Fines toiles et feuilles piquetées, ternes", organe: "feuilles", emoji: "🕸️" },
+  fourmis: { label: "Fourmis nombreuses, fourmilière au pied ou dans le pot", organe: "plante", emoji: "🐜" },
   miellat: { label: "Feuilles collantes ou couvertes de noir (suie)", organe: "feuilles", emoji: "🍯" },
   carapaces: { label: "Petites carapaces brunes ou amas cotonneux blancs", organe: "tiges", emoji: "🐚" },
   galeries: { label: "Galeries ou mines dans les feuilles ou les tiges", organe: "feuilles", emoji: "〰️" },
@@ -41,7 +42,7 @@ export const SIGNES: Record<string, { label: string; organe: string; emoji: stri
   "terre-mouillee": { label: "Terre toujours mouillée, odeur de moisi, base molle", organe: "racines", emoji: "💧" },
   gomme: { label: "Écoulement de gomme ou chancre sur le tronc", organe: "tiges", emoji: "🌲" },
   "fleurs-tombent": { label: "Fleurs ou petits fruits qui tombent", organe: "fleurs", emoji: "🍂" },
-  "fruits-momifies": { label: "Fruits pourris en cercles, puis momifiés", organe: "fruits", emoji: "🟫" },
+  "fruits-momifies": { label: "Fruits pourris en cercles, puis momifiés", organe: "fruits", emoji: "🌍" },
   "coup-soleil": { label: "Grandes plages blanches ou beiges sèches après un soleil fort", organe: "feuilles", emoji: "☀️" },
   "terre-seche": { label: "Terre sèche et légère, pot qui se soulève facilement", organe: "racines", emoji: "🏜️" },
   "feuilles-tombent": { label: "Les feuilles tombent (encore vertes ou jaunies)", organe: "feuilles", emoji: "🍂" },
@@ -49,10 +50,10 @@ export const SIGNES: Record<string, { label: string; organe: string; emoji: stri
   "feuilles-violacees": { label: "Feuilles vert sombre qui virent au violet ou au rouge", organe: "feuilles", emoji: "🍇" },
   "gouttes-feuilles": { label: "Gouttes d'eau au bout ou au bord des feuilles (la plante « pleure »)", organe: "feuilles", emoji: "💧" },
   "pas-de-fleurs": { label: "La plante ne fleurit pas (ou plus)", organe: "fleurs", emoji: "🚫" },
-  "racines-sortent": { label: "Racines qui sortent par le trou ou le dessus du pot", organe: "racines", emoji: "🪢" },
+  "racines-sortent": { label: "Racines qui sortent par le trou ou le dessus du pot", organe: "racines", emoji: "➰" },
   "vieilles-feuilles-jaunes": { label: "Seules une ou deux vieilles feuilles du bas jaunissent", organe: "feuilles", emoji: "🍁" },
   "nids-soyeux": { label: "Nids soyeux ou processions de chenilles", organe: "tiges", emoji: "🐛" },
-  "cloques-liegeuses": { label: "Petites cloques ou bosses liégeuses sous les feuilles", organe: "feuilles", emoji: "🫧" },
+  "cloques-liegeuses": { label: "Petites cloques ou bosses liégeuses sous les feuilles", organe: "feuilles", emoji: "💭" },
 };
 
 export const PROBLEMES: Probleme[] = [
@@ -919,6 +920,29 @@ export const PROBLEMES: Probleme[] = [
     remedes: ["bt"], gravite: 3, mois: m("1-4,6-8"),
   },
 ];
+
+// Fourmis : rarement nuisibles par elles-mêmes, mais alliées des pucerons
+PROBLEMES.push({
+  id: "fourmis", alias: ["fourmis", "fourmi", "fourmiliere", "fourmis dans le potager", "fourmis dans un pot", "fourmis sur les rosiers", "fourmis sur les pivoines", "fourmis rouges", "chasser les fourmis", "fourmis et pucerons"], nom: "Fourmis", type: "ravageur", wiki: "Fourmi",
+  cible: "Potager, arbres fruitiers, pots, pelouse", plantes: ["*"],
+  organes: ["plante", "racines", "fleurs"], signes: ["fourmis", "colonies", "miellat"], interieur: true,
+  symptomes: ["Fourmis qui montent et descendent le long des tiges ou du tronc : regardez au bout, il y a presque toujours des pucerons.", "Fourmilière au pied d'une plante ou dans un pot : la terre devient creuse et sèche, les racines manquent d'eau.", "Boutons de pivoine couverts de fourmis : elles lèchent le nectar, c'est sans danger."],
+  confusion: "Les fourmis ne mangent presque jamais les plantes : elles sont le signe d'un autre problème (pucerons, cochenilles) ou d'un sol très sec.",
+  conditions: "Sol sec et chaud, présence de pucerons ou de cochenilles qui produisent le miellat sucré dont elles se nourrissent.",
+  prevention: [
+    "Elles sont surtout utiles : elles aèrent le sol, mangent des larves de ravageurs et nettoient le jardin. On ne cherche pas à les tuer.",
+    "Luttez contre les pucerons (coccinelles, savon noir) : les fourmis partent d'elles-mêmes.",
+    "Arrosez et paillez : les fourmis s'installent dans les sols secs.",
+  ],
+  traitements: [
+    "Fourmilière dans un pot : plongez le pot 30 minutes dans un seau d'eau, elles déménagent ; ou rempotez.",
+    "Fourmilière dans le potager : déplacez-la à la pelle dans un pot de fleurs retourné rempli de paille, posé dessus quelques jours, puis emportez-le plus loin.",
+    "Sur un arbre fruitier : bande de glu ou de laine autour du tronc pour qu'elles ne montent plus garder les pucerons.",
+    "Les éloigner d'un passage : marc de café, cannelle, tanaisie ou menthe ; un trait de craie ou de cendre les dévie un temps.",
+    "Pas d'insecticide ni d'eau bouillante au pied des plantes (on brûle aussi les racines et la vie du sol).",
+  ],
+  remedes: ["glu", "savon-noir", "tanaisie", "cendre"], gravite: 1, mois: m("4-9"),
+});
 
 // Organismes réglementés (feu bactérien, Xylella) : déclaration obligatoire
 PROBLEMES.push(...ORGANISMES_REGLEMENTES);

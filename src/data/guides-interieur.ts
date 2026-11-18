@@ -55,7 +55,7 @@ export const GUIDES_INTERIEUR: Guide[] = [
     video: "semi hydroponie billes argile plantes intérieur tuto", liens: ["sciarides", "rempoter", "bouturage"],
   },
   {
-    id: "terrarium", titre: "Créer un terrarium (et un kokedama)", rubrique: "fabriquer", emoji: "🫙", niveau: 2, duree: "1 heure",
+    id: "terrarium", titre: "Créer un terrarium (et un kokedama)", rubrique: "fabriquer", emoji: "🥫", niveau: 2, duree: "1 heure",
     resume: "Un petit jardin sous verre qui demande très peu d'arrosage, et la boule de mousse japonaise (kokedama) : deux réalisations décoratives pour petits espaces.",
     materiel: ["Bocal ou aquarium en verre, avec ou sans couvercle", "Billes d'argile ou graviers, charbon actif (filtration), terreau, mousse", "Petites plantes de milieu humide (fittonia, petites fougères, peperomia, mousses) — jamais de succulentes dans un terrarium fermé", "Pour le kokedama : terreau + argile (ou akadama), mousse en plaque, ficelle"],
     etapes: [

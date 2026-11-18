@@ -21,7 +21,7 @@ export default function ProblemeFiche({ id }: { id?: string }) {
     <div>
       <Back />
       <div className="hero" style={{ marginTop: 8 }}>
-        <Galerie id={p.id} emoji={"🩺"} alt={p.nom} />
+        <Galerie id={p.id} emoji={"⚕️"} alt={p.nom} />
         <div>
           <span className="badge">{TYPES_PROBLEME[p.type]}</span>{" "}
           <span className={`badge ${p.gravite === 3 ? "danger" : p.gravite === 2 ? "sun" : "green"}`}>{["", "Bénin", "Sérieux", "Grave"][p.gravite]}</span>
@@ -32,9 +32,9 @@ export default function ProblemeFiche({ id }: { id?: string }) {
         </div>
       </div>
       <h2>🔍 Comment le reconnaître</h2>
-      <ul className="ticks">{p.symptomes.map((s) => <li key={s}>{s}</li>)}</ul>
+      <ul className="ticks">{p.symptomes.map((s) => <li key={s}><MotsLexique texte={s} /></li>)}</ul>
       {p.confusion && <div className="callout warn"><b>↔ À ne pas confondre</b>{p.confusion}</div>}
-      <p><b>Conditions favorables :</b> {p.conditions}</p>
+      <p><b>Conditions favorables :</b> <MotsLexique texte={p.conditions} /></p>
       <h2>🛡️ Prévention</h2>
       <ul className="ticks">{p.prevention.map((s) => <li key={s}><MotsLexique texte={s} /></li>)}</ul>
       <h2>🌿 Que faire</h2>

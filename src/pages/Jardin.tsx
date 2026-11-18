@@ -210,11 +210,11 @@ function Recoltes() {
           ))}
         </div>
       )}
-      <p className="small"><a href={href("/conserver")}>🫙 Conserver ses récoltes : méthodes, temps, garde-manger →</a></p>
+      <p className="small"><a href={href("/conserver")}>🥫 Conserver ses récoltes : méthodes, temps, garde-manger →</a></p>
       {!totaux.size && <Empty emoji="🧺">Aucune récolte notée cette année.</Empty>}
       <div className="grid-sm">
         {[...totaux.entries()].map(([id, t]) => (
-          <div key={id} className="card"><b>{plante(id)?.emoji} {plante(id)?.nom}</b><div className="small">{Object.entries(t).map(([u, v]) => `${u === "kg" ? v.toFixed(2) : v} ${u}`).join(" · ")}{valeurDe(id, t) > 0 && <span className="muted"> · ≈ {Math.round(valeurDe(id, t))} €</span>}</div>{CONSERV[id] && <a className="small" href={href(`/conserver?t=assistant&p=${id}`)}>🫙 Conserver</a>}</div>
+          <div key={id} className="card"><b>{plante(id)?.emoji} {plante(id)?.nom}</b><div className="small">{Object.entries(t).map(([u, v]) => `${u === "kg" ? v.toFixed(2) : v} ${u}`).join(" · ")}{valeurDe(id, t) > 0 && <span className="muted"> · ≈ {Math.round(valeurDe(id, t))} €</span>}</div>{CONSERV[id] && <a className="small" href={href(`/conserver?t=assistant&p=${id}`)}>🥫 Conserver</a>}</div>
         ))}
       </div>
       <BilanPluriannuel />
@@ -223,7 +223,7 @@ function Recoltes() {
           <h3 style={{ marginTop: 18 }}>Historique</h3>
           <table className="table"><tbody>
             {[...recoltes].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 50).map((r) => (
-              <tr key={r.id}><td>{new Date(r.date).toLocaleDateString("fr-FR")}</td><td>{plante(r.planteId)?.nom}{r.variete ? ` « ${r.variete} »` : ""}</td><td>{r.qte} {r.unite}</td><td style={{ whiteSpace: "nowrap" }}>{CONSERV[r.planteId] && <a className="btn sm ghost" href={href(`/conserver?t=stock&p=${r.planteId}${r.unite === "kg" ? `&kg=${r.qte}` : ""}`)} title="Noter ce qu'elle devient au garde-manger" aria-label="Mettre au garde-manger">🫙</a>}<button className="btn sm ghost" onClick={() => remove("recoltes", r.id)} aria-label="Supprimer">🗑</button></td></tr>
+              <tr key={r.id}><td>{new Date(r.date).toLocaleDateString("fr-FR")}</td><td>{plante(r.planteId)?.nom}{r.variete ? ` « ${r.variete} »` : ""}</td><td>{r.qte} {r.unite}</td><td style={{ whiteSpace: "nowrap" }}>{CONSERV[r.planteId] && <a className="btn sm ghost" href={href(`/conserver?t=stock&p=${r.planteId}${r.unite === "kg" ? `&kg=${r.qte}` : ""}`)} title="Noter ce qu'elle devient au garde-manger" aria-label="Mettre au garde-manger">🥫</a>}<button className="btn sm ghost" onClick={() => remove("recoltes", r.id)} aria-label="Supprimer">🗑</button></td></tr>
             ))}
           </tbody></table>
         </>

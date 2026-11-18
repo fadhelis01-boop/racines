@@ -61,7 +61,7 @@ export function lienVers(id: string): { href: string; label: string; emoji: stri
   const p = P.get(id);
   if (p) return { href: `/plante/${id}`, label: p.nom, emoji: p.emoji };
   const pb = PB.get(id);
-  if (pb) return { href: `/probleme/${id}`, label: pb.nom, emoji: "🩺" };
+  if (pb) return { href: `/probleme/${id}`, label: pb.nom, emoji: "⚕️" };
   const g = G.get(id);
   if (g) return { href: `/guide/${id}`, label: g.titre, emoji: g.emoji };
   const a = A.get(id);
@@ -69,7 +69,7 @@ export function lienVers(id: string): { href: string; label: string; emoji: stri
   const r = R.get(id);
   if (r) return { href: `/remede/${id}`, label: r.nom, emoji: r.emoji };
   const ma = MALADIES_ANIMALES.find((x) => x.id === id);
-  if (ma) return { href: `/maladie-animale/${id}`, label: ma.nom, emoji: "🩺" };
+  if (ma) return { href: `/maladie-animale/${id}`, label: ma.nom, emoji: "⚕️" };
   return null;
 }
 
@@ -107,7 +107,7 @@ export const FAMILLES: Record<Plante["famille"], string> = {
 export const RUBRIQUES: Record<Rubrique, { label: string; emoji: string }> = {
   demarrer: { label: "Démarrer son potager", emoji: "👨‍🌾" },
   fleurs: { label: "Fleurs", emoji: "🌸" },
-  sol: { label: "Sol et engrais", emoji: "🟫" },
+  sol: { label: "Sol et engrais", emoji: "🌍" },
   compost: { label: "Compost", emoji: "♻️" },
   arrosage: { label: "Arrosage", emoji: "💧" },
   semis: { label: "Semis et multiplication", emoji: "🌱" },

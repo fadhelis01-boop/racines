@@ -1,3 +1,4 @@
+import MotsLexique from "../components/MotsLexique";
 import { useState } from "react";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../data/maladies-animales";
 import { diagnostiquerAnimal } from "../lib/sante-animale";
@@ -25,7 +26,7 @@ export function DiagnosticAnimal() {
   return (
     <div>
       <Back />
-      <h1>🩺 Mon animal ne va pas bien</h1>
+      <h1>⚕️ Mon animal ne va pas bien</h1>
       <p className="muted small" style={{ marginTop: -6 }}>Deux questions pour orienter vers les causes les plus probables et savoir s'il faut appeler le vétérinaire. Ce n'est pas un diagnostic : en cas de doute, appelez.</p>
       <div className="callout warn"><b>Appelez le vétérinaire sans attendre</b> si l'animal ne mange plus depuis plus de 12 h (lapin) ou 24 h, respire bouche ouverte, saigne, a le ventre gonflé, se roule, ou si plusieurs animaux meurent brutalement (et dans ce cas, prévenez aussi la DDPP).</div>
       {step === 0 && (
@@ -63,7 +64,7 @@ export function DiagnosticAnimal() {
           <h2>Causes possibles, de la plus probable à la moins probable</h2>
           {res.map(({ m }) => (
             <a key={m.id} className="card row" href={href(`/maladie-animale/${m.id}`)} style={{ alignItems: "flex-start", flexWrap: "nowrap", textDecoration: "none", color: "inherit" }}>
-              <span style={{ fontSize: 28 }}>🩺</span>
+              <span style={{ fontSize: 28 }}>⚕️</span>
               <span style={{ flex: 1 }}>
                 <b>{m.nom}</b> <Urgence u={m.urgence} />
                 <p className="small" style={{ margin: "4px 0 0" }}>{m.signes}</p>
@@ -79,7 +80,7 @@ export function DiagnosticAnimal() {
       )}
       <h2>Toutes les fiches santé{a ? "" : " des animaux"}</h2>
       <div className="chips">
-        {MALADIES_ANIMALES.filter((m) => !espece || m.especes.includes(espece)).map((m) => <a key={m.id} className="chip" href={href(`/maladie-animale/${m.id}`)}>🩺 {m.nom}</a>)}
+        {MALADIES_ANIMALES.filter((m) => !espece || m.especes.includes(espece)).map((m) => <a key={m.id} className="chip" href={href(`/maladie-animale/${m.id}`)}>⚕️ {m.nom}</a>)}
       </div>
     </div>
   );
@@ -95,22 +96,22 @@ export default function MaladieAnimaleFiche({ id }: { id?: string }) {
       <Back />
       <div style={{ marginTop: 8 }}>
         <span className="badge">Santé des animaux</span> <Urgence u={m.urgence} />
-        <h1 style={{ marginTop: 8 }}>🩺 {m.nom}</h1>
+        <h1 style={{ marginTop: 8 }}>⚕️ {m.nom}</h1>
         <Listen id={`ma-${m.id}`} title={m.nom} blocks={lecture} label="Écouter la fiche" />
       </div>
       {m.urgence === 3 && <div className="callout danger"><b>Urgence</b> Appelez votre vétérinaire aujourd'hui. Les gestes ci-dessous aident en attendant, ils ne remplacent pas les soins.</div>}
       <h2>🔍 Comment le reconnaître</h2>
-      <p>{m.signes}</p>
+      <p><MotsLexique texte={m.signes} /></p>
       <h2>💡 Pourquoi</h2>
-      <p>{m.explication}</p>
-      <h2>🩹 Que faire</h2>
-      <ol className="steps">{m.quoiFaire.map((s) => <li key={s}>{s}</li>)}</ol>
+      <p><MotsLexique texte={m.explication} /></p>
+      <h2>💊 Que faire</h2>
+      <ol className="steps">{m.quoiFaire.map((s) => <li key={s}><MotsLexique texte={s} /></li>)}</ol>
       <h2>🛡️ Prévention</h2>
-      <ul className="ticks">{m.prevention.map((s) => <li key={s}>{s}</li>)}</ul>
+      <ul className="ticks">{m.prevention.map((s) => <li key={s}><MotsLexique texte={s} /></li>)}</ul>
       <div className="callout info">Médicaments : respectez toujours la dose et le <b>délai d'attente</b> avant de consommer œufs, lait ou viande. N'utilisez pas de médicaments humains ou pour chiens et chats sans avis vétérinaire.</div>
       <h2>Animaux concernés</h2>
       <div className="chips">{especes.map((x) => <a key={x!.id} className="chip" href={href(`/animal/${x!.id}`)}><Vignette id={x!.id} emoji={x!.emoji} taille={22} /> {x!.nom}</a>)}</div>
-      <p><A to={`/diagnostic-animal${especes[0] ? "?animal=" + especes[0].id : ""}`} className="btn">🩺 Diagnostic guidé des animaux</A></p>
+      <p><A to={`/diagnostic-animal${especes[0] ? "?animal=" + especes[0].id : ""}`} className="btn">⚕️ Diagnostic guidé des animaux</A></p>
       <h2>🎬 Vidéos</h2>
       <Videos id={`ma-${m.id}`} query={`${m.nom.split(" (")[0].toLowerCase()} ${especes[0]?.nom.split(" (")[0].toLowerCase() ?? ""} soigner`} />
     </div>

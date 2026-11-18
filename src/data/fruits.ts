@@ -59,7 +59,7 @@ export const FRUITS: Plante[] = [
     animaux: "Feuillage fané TOXIQUE pour chèvres, moutons, ânes, chevaux.",
   },
   {
-    id: "prunier", nom: "Prunier", latin: "Prunus domestica", categorie: "arbre", famille: "rosacees", emoji: "🟣", wiki: "Prunier domestique",
+    id: "prunier", nom: "Prunier", latin: "Prunus domestica", categorie: "arbre", famille: "rosacees", emoji: "🍑", wiki: "Prunier domestique",
     difficulte: 1, lieux: ["pleine-terre"], expo: ["soleil"], besoin: "moyen", eau: "moyen",
     plantation: m("11-3"), recolte: m("7-9"), taille: m("8-9"),
     espacement: "5 à 6 m", delai: "3 à 5 ans", joursRecolte: 1095,
@@ -91,7 +91,7 @@ export const FRUITS: Plante[] = [
     animaux: "Fruits pour les poules ; noyaux et feuilles fanées toxiques pour les herbivores.",
   },
   {
-    id: "figuier", nom: "Figuier", latin: "Ficus carica", categorie: "arbre", famille: "autres", emoji: "🟤", wiki: "Figuier commun",
+    id: "figuier", nom: "Figuier", latin: "Ficus carica", categorie: "arbre", famille: "autres", emoji: "🌰", wiki: "Figuier commun",
     difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil"], besoin: "peu", eau: "faible",
     plantation: m("3-5"), recolte: m("7-10"), taille: m("3"),
     espacement: "4 m", contenant: "bac de 50 L", delai: "2 à 3 ans", joursRecolte: 730,
@@ -214,7 +214,7 @@ export const FRUITS: Plante[] = [
     problemes: ["cochenilles", "tetranyque", "chlorose", "pucerons", "fumagine"],
   },
   {
-    id: "olivier", nom: "Olivier", latin: "Olea europaea", categorie: "arbre", famille: "autres", emoji: "🟢", wiki: "Olivier",
+    id: "olivier", nom: "Olivier", latin: "Olea europaea", categorie: "arbre", famille: "autres", emoji: "🌳", wiki: "Olivier",
     difficulte: 1, lieux: ["pleine-terre", "pot", "balcon"], expo: ["soleil"], besoin: "peu", eau: "faible",
     plantation: m("4-5"), recolte: m("10-12"), taille: m("3-4"),
     contenant: "bac de 50 L", delai: "3 à 5 ans", joursRecolte: 1095,

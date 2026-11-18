@@ -185,7 +185,7 @@ export const GUIDES_ANIMAUX: Guide[] = [
     video: "découper un poulet entier et faire un bouillon de carcasse", liens: ["abattage-volaille", "conserver-viande"],
   },
   {
-    id: "conserver-viande", titre: "Conserver la viande de la basse-cour", rubrique: "boucherie", emoji: "🧊", niveau: 2, duree: "Variable", sensible: true,
+    id: "conserver-viande", titre: "Conserver la viande de la basse-cour", rubrique: "boucherie", emoji: "❄️", niveau: 2, duree: "Variable", sensible: true,
     resume: "Réfrigération, congélation, confit, rillettes, sous vide, conserves : durées sûres et règles d'hygiène pour la volaille et le lapin.",
     etapes: [
       { titre: "La chaîne du froid d'abord", texte: "Refroidissez sous 4 °C dans l'heure qui suit l'abattage. Au réfrigérateur (0-4 °C, dans la zone la plus froide) : volaille ou lapin entiers 2 à 3 jours après le repos, morceaux 1 à 2 jours, abats et viande hachée 24 heures. Toujours couverte, sur une assiette pour éviter les écoulements sur les autres aliments." },

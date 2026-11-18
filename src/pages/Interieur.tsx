@@ -20,7 +20,7 @@ const ONGLETS: [string, string, string][] = [
   ["lampe", "💡", "Lampe de culture"],
   ["entretien", "🗓️", "Entretien et saisons"],
   ["multiplier", "✂️", "Bouturer, diviser"],
-  ["soigner", "🩺", "Problèmes"],
+  ["soigner", "⚕️", "Problèmes"],
   ["collection", "💎", "Ma collection et mes envies"],
   ["tutos", "📘", "Tous les tutoriels"],
 ];
@@ -118,7 +118,7 @@ function Aromates() {
     <div>
       <div className="callout info"><b>Les 3 règles des aromates en intérieur</b>1. La lumière décide de tout : sans lampe, comptez sur une fenêtre sud ou ouest et sur la belle saison. 2. Le pot du supermarché est un semis serré destiné à être mangé vite : divisez-le en plusieurs touffes. 3. On récolte en coupant les tiges, ce qui fait ramifier la plante.</div>
       <div className="chips" style={{ margin: "10px 0" }}>
-        <button className={`chip ${lampe === "sans" ? "on" : ""}`} onClick={() => setLampe("sans")}>🪟 Sans lampe (fenêtre)</button>
+        <button className={`chip ${lampe === "sans" ? "on" : ""}`} onClick={() => setLampe("sans")}>🌤️ Sans lampe (fenêtre)</button>
         <button className={`chip ${lampe === "avec" ? "on" : ""}`} onClick={() => setLampe("avec")}>💡 Avec lampe de culture</button>
       </div>
       {AROMATES_INT.map((a) => {
@@ -130,7 +130,7 @@ function Aromates() {
               <span style={{ flex: 1 }}>{a.nom} <span className={`badge ${["", "green", "sun", "terra"][a.facile]}`}>{["", "Facile", "Moyen", "Délicat"][a.facile]} en intérieur</span><br /><span className="small muted" style={{ fontWeight: 400 }}>{lampe === "sans" ? a.sansLampe : a.avecLampe}</span></span>
             </summary>
             <ul className="ticks small">
-              <li><b>{lampe === "sans" ? "🪟 Sans lampe" : "💡 Avec lampe"} :</b> {lampe === "sans" ? a.sansLampe : a.avecLampe}</li>
+              <li><b>{lampe === "sans" ? "🌤️ Sans lampe" : "💡 Avec lampe"} :</b> {lampe === "sans" ? a.sansLampe : a.avecLampe}</li>
               <li><b>Démarrer :</b> <MotsLexique texte={a.demarrer} /></li>
               <li><b>Arroser :</b> {a.arroser}</li>
               <li><b>Récolter :</b> {a.recolter}</li>
@@ -207,7 +207,7 @@ function Entretien() {
         <li><b>L'eau</b> : du robinet reposée une nuit convient à la plupart ; eau de pluie pour calathea, orchidées, carnivores. <a href={href("/guide/eau-arrosage-interieur")}>Quelle eau ?</a></li>
         <li>Les rappels personnalisés sont dans <a href={href("/jardin")}>Mes plantes</a> (rythme été/hiver par plante).</li>
       </ul>
-      <h2>🪨 Le bon mélange de terre</h2>
+      <h2>⛰️ Le bon mélange de terre</h2>
       <div className="card" style={{ overflowX: "auto" }}><table className="table small"><thead><tr><th>Plantes</th><th>Mélange</th></tr></thead><tbody>{SUBSTRATS.map((s) => <tr key={s.pour}><td>{s.pour}</td><td>{s.melange}</td></tr>)}</tbody></table></div>
       <p className="small"><a href={href("/guide/rempoter")}>Rempoter pas à pas →</a></p>
       <h2>🌫️ Humidité, engrais, propreté</h2>
@@ -246,7 +246,7 @@ function Soigner() {
       <a className="btn big primary" href={href("/diagnostic?interieur=1")}>🔎 Diagnostic guidé : ma plante ne va pas bien</a>
       <div className="callout warn small" style={{ marginTop: 10 }}><b>Dans 8 cas sur 10</b>c'est l'arrosage (trop, surtout l'hiver) ou la lumière (trop peu). Vérifiez la terre au doigt et la place de la plante avant de chercher un parasite.</div>
       <h2>Problèmes fréquents en intérieur ({pbs.length})</h2>
-      <div className="grid">{pbs.map((p) => <Tile key={p.id} to={`/probleme/${p.id}`} id={p.id} emoji="🩺" title={p.nom} sub={p.symptomes[0]?.slice(0, 80)} />)}</div>
+      <div className="grid">{pbs.map((p) => <Tile key={p.id} to={`/probleme/${p.id}`} id={p.id} emoji="⚕️" title={p.nom} sub={p.symptomes[0]?.slice(0, 80)} />)}</div>
     </div>
   );
 }

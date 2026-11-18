@@ -1,3 +1,4 @@
+import MotsLexique from "../components/MotsLexique";
 import { useState } from "react";
 import { useStore, upsert, remove, uid, today, getState, type LieuStock, type Stock } from "../lib/store";
 import { PLANTES, plante, GUIDES } from "../data/index";
@@ -8,7 +9,7 @@ import { Listen, toast, download, Photo, Videos } from "../components/ui";
 import { MOIS_NOMS } from "../data/util";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
-const ONGLETS: [string, string][] = [["methodes", "🫙 Méthodes"], ["assistant", "🤔 J'en ai trop"], ["temps", "⏱️ Temps"], ["calculs", "🧮 Calculs"], ["calendrier", "📅 Calendrier"], ["stock", "🏠 Garde-manger"]];
+const ONGLETS: [string, string][] = [["methodes", "🥫 Méthodes"], ["assistant", "🤔 J'en ai trop"], ["temps", "⏱️ Temps"], ["calculs", "🧮 Calculs"], ["calendrier", "📅 Calendrier"], ["stock", "🏠 Garde-manger"]];
 const AVEC_CONSERV = PLANTES.filter((p) => CONSERV[p.id]).sort((a, b) => a.nom.localeCompare(b.nom));
 
 export default function Conserver() {
@@ -16,9 +17,10 @@ export default function Conserver() {
   const onglet = route.query.get("t") ?? "methodes";
   return (
     <div>
-      <h1>🫙 Conserver ses récoltes</h1>
+      <h1>🥫 Conserver ses récoltes</h1>
       <p className="muted">Toutes les façons de manger son jardin toute l'année, de la cave à la confiture, avec les règles de sécurité et un garde-manger pour suivre ses bocaux.</p>
       <div className="callout warn" style={{ margin: "8px 0" }}><b>⚠️ Sécurité d'abord</b> Tomates : toujours acidifier. Ail, herbes et légumes à l'huile : au réfrigérateur seulement. Bocal bombé ou qui pétille : on jette sans goûter. <a href={href("/guide/cs-securite")}>Les règles →</a></div>
+      <p className="small">📖 Les mots de la conserverie (touchez-les) : <MotsLexique texte="blanchir, pasteuriser, stériliser, autoclave, conserve acide / peu acide, botulisme, lacto-fermentation, saumure, pectine." /></p>
       <div className="chips" role="tablist" style={{ margin: "8px 0 12px" }}>
         {ONGLETS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/conserver?t=${k}`)}>{l}</button>)}
       </div>
@@ -49,7 +51,7 @@ function Methodes() {
               <div className="guide-hero" style={{ maxHeight: 140, overflow: "hidden", borderRadius: 8 }}><Photo id={M.guide} emoji={M.emoji} alt={M.nom} /></div>
               <b>{M.emoji} {g?.titre ?? M.nom}</b>
               <div className="small muted">Garde : {M.garde}{M.materiel ? ` · matériel : ${({ congelateur: "congélateur", sterilisateur: "stérilisateur", deshydrateur: "déshydrateur ou séchoir", cave: "cave", pressoir: "pressoir" })[M.materiel]}` : ""}</div>
-              <div className="small">{g?.resume}</div>
+              <div className="small"><MotsLexique texte={g?.resume ?? ""} /></div>
             </a>
           );
         })}
@@ -122,12 +124,12 @@ function Temps() {
           <table className="table small" style={{ marginTop: 6 }}>
             <thead><tr><th>Produit</th>{k !== "blanchiment" && <th>0,5 L</th>}<th>{k === "blanchiment" ? "Durée" : "1 L"}</th><th>Température</th></tr></thead>
             <tbody>{TEMPS_TRAITEMENT.filter((x) => x.famille === k).map((x) => (
-              <tr key={x.produit}><td>{x.acide ? "🟢" : "🔴"} {x.produit}{x.note ? <><br /><span className="muted">{x.note}</span></> : null}</td>{k !== "blanchiment" && <td>{x.t05 ?? "-"}</td>}<td>{x.t1 ?? "-"}</td><td>{x.temp}</td></tr>
+              <tr key={x.produit}><td>{x.acide ? "✅" : "🔴"} {x.produit}{x.note ? <><br /><span className="muted">{x.note}</span></> : null}</td>{k !== "blanchiment" && <td>{x.t05 ?? "-"}</td>}<td>{x.t1 ?? "-"}</td><td>{x.temp}</td></tr>
             ))}</tbody>
           </table>
         </div>
       ))}
-      <p className="small muted">🟢 produit acide (pH sous 4,6) · 🔴 peu acide : risque de botulisme, stérilisation sous pression recommandée. Temps comptés à partir de la reprise de l'ébullition, bocaux couverts de 2 à 3 cm d'eau. Repères indicatifs : suivez aussi la notice de vos bocaux et de votre appareil. <a href={href("/guide/cs-temps")}>Explications →</a></p>
+      <p className="small muted">✅ produit acide (pH sous 4,6) · 🔴 peu acide : risque de botulisme, stérilisation sous pression recommandée. Temps comptés à partir de la reprise de l'ébullition, bocaux couverts de 2 à 3 cm d'eau. Repères indicatifs : suivez aussi la notice de vos bocaux et de votre appareil. <a href={href("/guide/cs-temps")}>Explications →</a></p>
     </div>
   );
 }

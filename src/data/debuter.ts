@@ -93,3 +93,33 @@ export const OFFRIR: { id: string; pourquoi: string }[] = [
   { id: "streptocarpus", pourquoi: "Fleurs pendant des mois, sans danger." },
   { id: "hoya", pourquoi: "Fleurs parfumées, peu d'arrosage, sans danger." },
 ];
+
+// Après le premier mois : une saison pour découvrir les gestes suivants, un par un
+export const DEUXIEME_SAISON: { theme: string; taches: { id: string; t: string; lien?: [string, string]; jardin?: boolean }[] }[] = [
+  { theme: "Nourrir la terre", taches: [
+    { id: "compost", t: "Commencer un compost (ou un lombricomposteur en appartement) avec les épluchures", lien: ["/guide/compost-tas", "Le compost"] },
+    { id: "pailler", t: "Pailler le pied de ses plantes ou de son potager : moins d'arrosage, moins d'herbes", lien: ["/guide/paillage", "Le paillage"], jardin: true },
+    { id: "engrais", t: "Comprendre quand une plante a faim (et quand elle n'en a pas besoin)", lien: ["/guide/engrais-naturels", "Les engrais naturels"] },
+  ] },
+  { theme: "Faire ses propres plants", taches: [
+    { id: "semer", t: "Réussir un premier semis à l'intérieur (tomates, basilic, salades)", lien: ["/guide/semis-interieur", "Semer"] },
+    { id: "semer-place", t: "Semer en place une culture facile : radis, haricots ou capucines", lien: ["/guide/semis-place", "Semer en place"], jardin: true },
+    { id: "bouture", t: "Faire une bouture (pothos, géranium, menthe) et l'offrir", lien: ["/guide/bouturage", "Bouturer"] },
+    { id: "rempoter", t: "Rempoter une plante devenue trop grande pour son pot", lien: ["/guide/rempoter", "Rempoter"] },
+  ] },
+  { theme: "Accueillir la vie du jardin", taches: [
+    { id: "fleurs", t: "Semer quelques fleurs pour les abeilles et les coccinelles", lien: ["/guide/jardin-pollinisateurs", "Les pollinisateurs"] },
+    { id: "hotel", t: "Installer un abri à insectes ou un tas de bois", lien: ["/guide/hotel-insectes", "L'abri à insectes"], jardin: true },
+    { id: "observer", t: "Observer une colonie de pucerons pendant 2 semaines sans la traiter : les coccinelles arrivent-elles ?", lien: ["/probleme/pucerons", "Les pucerons"] },
+  ] },
+  { theme: "Récolter et garder", taches: [
+    { id: "noter", t: "Noter ses récoltes dans Mon jardin pour voir ce que rapporte son potager", lien: ["/jardin/recoltes", "Mes récoltes"] },
+    { id: "conserver", t: "Congeler ou mettre en bocal un premier surplus (herbes, tomates, haricots)", lien: ["/conserver?t=assistant", "J'en ai trop"] },
+    { id: "graines", t: "Garder les graines d'une plante facile (haricot, tomate, capucine) pour l'an prochain", lien: ["/guide/graines-maison", "Garder ses graines"] },
+  ] },
+  { theme: "Préparer l'année suivante", taches: [
+    { id: "rotation", t: "Changer les légumes de place d'une année à l'autre", lien: ["/guide/rotation", "La rotation"], jardin: true },
+    { id: "bilan", t: "Faire le bilan : ce qui a réussi, ce qui a raté, ce qu'on a vraiment mangé", lien: ["/jardin/journal", "Mon journal"] },
+    { id: "plan", t: "Préparer son potager de l'an prochain avec l'assistant", lien: ["/creer", "Créer mon potager"] },
+  ] },
+];

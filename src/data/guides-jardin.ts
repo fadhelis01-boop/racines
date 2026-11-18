@@ -22,7 +22,7 @@ export const GUIDES_JARDIN: Guide[] = [
     video: "créer son premier potager débutant étape par étape", liens: ["methodes-culture", "rotation", "associations", "connaitre-sol", "compost-tas", "paillage"],
   },
   {
-    id: "methodes-culture", titre: "Carré potager, buttes, lasagnes, planches : quelle méthode ?", rubrique: "demarrer", emoji: "🟫", niveau: 1, duree: "1 à 3 heures par carré ou planche",
+    id: "methodes-culture", titre: "Carré potager, buttes, lasagnes, planches : quelle méthode ?", rubrique: "demarrer", emoji: "🌍", niveau: 1, duree: "1 à 3 heures par carré ou planche",
     resume: "Comparez les grandes façons de cultiver et choisissez celle qui convient à votre terrain, votre dos et votre temps.",
     materiel: ["Planches non traitées (douglas, mélèze) ou bordures", "Carton, branches, feuilles, tontes, fumier, compost, terre"],
     etapes: [
@@ -262,7 +262,7 @@ export const GUIDES_JARDIN: Guide[] = [
     video: "réussir semis intérieur tomates lumière repiquage", liens: ["fonte-semis", "creer-potager"],
   },
   {
-    id: "semis-place", titre: "Semer en pleine terre", rubrique: "semis", emoji: "🟤", niveau: 1, duree: "15 à 30 minutes par rang",
+    id: "semis-place", titre: "Semer en pleine terre", rubrique: "semis", emoji: "🌰", niveau: 1, duree: "15 à 30 minutes par rang",
     resume: "Carottes, radis, haricots, pois, betteraves, épinards : les gestes simples pour une levée régulière.",
     materiel: ["Râteau", "Cordeau", "Serfouette ou manche d'outil pour tracer le sillon", "Arrosoir à pomme fine", "Planche"],
     etapes: [

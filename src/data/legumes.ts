@@ -206,7 +206,7 @@ export const LEGUMES: Plante[] = [
     toxique: "Haricots secs crus toxiques pour l'humain aussi : toujours bien cuits.",
   },
   {
-    id: "pois", nom: "Petit pois", latin: "Pisum sativum", categorie: "legume", famille: "fabacees", emoji: "🟢", wiki: "Petit pois",
+    id: "pois", nom: "Petit pois", latin: "Pisum sativum", categorie: "legume", famille: "fabacees", emoji: "🌱", wiki: "Petit pois",
     difficulte: 1, lieux: ["pleine-terre", "pot", "balcon"], expo: ["soleil", "mi-ombre"], besoin: "ameliorant", eau: "moyen",
     semisPlace: m("2-4"), semisPlaceDoux: m("10-11"), recolte: m("5-7"),
     espacement: "rangs à 40 cm, une graine tous les 3 cm", profondeur: "3 à 4 cm", levee: "8 à 15 jours", delai: "90 à 120 jours", joursRecolte: 100,
@@ -230,7 +230,7 @@ export const LEGUMES: Plante[] = [
     animaux: "Gousses vides et fanes : régal des lapins, chèvres, moutons et poules.",
   },
   {
-    id: "feve", nom: "Fève", latin: "Vicia faba", categorie: "legume", famille: "fabacees", emoji: "🟤", wiki: "Fève",
+    id: "feve", nom: "Fève", latin: "Vicia faba", categorie: "legume", famille: "fabacees", emoji: "🌰", wiki: "Fève",
     difficulte: 1, lieux: ["pleine-terre"], expo: ["soleil"], besoin: "ameliorant", eau: "moyen",
     semisPlace: m("2-3"), semisPlaceDoux: m("10-11"), recolte: m("5-7"),
     espacement: "15 cm sur le rang, 50 cm entre rangs", profondeur: "5 cm", levee: "10 à 20 jours", delai: "90 à 150 jours", joursRecolte: 120,
@@ -327,7 +327,7 @@ export const LEGUMES: Plante[] = [
     animaux: "Excellent fourrage d'hiver pour moutons, chèvres, lapins et volailles (racines et feuilles).",
   },
   {
-    id: "betterave", nom: "Betterave", latin: "Beta vulgaris", categorie: "legume", famille: "amaranthacees", emoji: "🟣", wiki: "Betterave potagère",
+    id: "betterave", nom: "Betterave", latin: "Beta vulgaris", categorie: "legume", famille: "amaranthacees", emoji: "🍠", wiki: "Betterave potagère",
     difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil", "mi-ombre"], besoin: "moyen", eau: "moyen",
     semisAbri: m("3"), plantation: m("4-5"), semisPlace: m("4-6"), recolte: m("7-11"),
     espacement: "10-15 cm, rangs à 30 cm", profondeur: "2 cm", levee: "8 à 15 jours", delai: "80 à 100 jours", joursRecolte: 90,
@@ -377,7 +377,7 @@ export const LEGUMES: Plante[] = [
     animaux: "Feuilles et côtes pour lapins (en petite quantité), poules, chèvres.",
   },
   {
-    id: "poireau", nom: "Poireau", latin: "Allium porrum", categorie: "legume", famille: "amaryllidacees", emoji: "🧅", wiki: "Poireau",
+    id: "poireau", nom: "Poireau", latin: "Allium porrum", categorie: "legume", famille: "amaryllidacees", emoji: "🌱", wiki: "Poireau",
     difficulte: 1, lieux: ["pleine-terre"], expo: ["soleil", "mi-ombre"], besoin: "gourmand", eau: "moyen",
     semisAbri: m("2-3"), semisPlace: m("3-5"), plantation: m("5-8"), recolte: m("8-4"),
     espacement: "15 cm sur le rang, rangs à 35 cm", profondeur: "1 cm (semis), trous de 15 cm (plantation)", levee: "10 à 15 jours", delai: "120 à 200 jours", joursRecolte: 150,
@@ -396,7 +396,7 @@ export const LEGUMES: Plante[] = [
     animaux: "Déconseillé aux lapins, chiens, chats (les alliacées abîment les globules rouges). Petites quantités tolérées par les poules, sans en faire une habitude.",
   },
   {
-    id: "oignon", nom: "Oignon", latin: "Allium cepa", categorie: "legume", famille: "amaryllidacees", emoji: "🧅", wiki: "Oignon",
+    id: "oignon", nom: "Oignon", latin: "Allium cepa", categorie: "legume", famille: "amaryllidacees", emoji: "🌱", wiki: "Oignon",
     difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil"], besoin: "peu", eau: "faible",
     semisPlace: m("2-4,8-9"), plantation: m("2-4,10"), recolte: m("6-8"),
     espacement: "10 cm, rangs à 25 cm", profondeur: "bulbilles juste enfoncés, pointe affleurante", levee: "10 à 20 jours", delai: "120 à 150 jours", joursRecolte: 130,
@@ -411,7 +411,7 @@ export const LEGUMES: Plante[] = [
     animaux: "Toxique pour les chiens, chats, lapins et dangereux en quantité pour les chevaux, ânes et ruminants (anémie). À ne pas donner.",
   },
   {
-    id: "echalote", nom: "Échalote", latin: "Allium cepa var. aggregatum", categorie: "legume", famille: "amaryllidacees", emoji: "🧄", wiki: "Échalote",
+    id: "echalote", nom: "Échalote", latin: "Allium cepa var. aggregatum", categorie: "legume", famille: "amaryllidacees", emoji: "🌱", wiki: "Échalote",
     difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil"], besoin: "peu", eau: "faible",
     plantation: m("2-3,11"), recolte: m("6-7"),
     espacement: "15 cm, rangs à 25 cm", profondeur: "pointe affleurante", delai: "120 jours", joursRecolte: 120,
@@ -425,7 +425,7 @@ export const LEGUMES: Plante[] = [
     animaux: "Comme l'oignon : à éviter pour tous les animaux.",
   },
   {
-    id: "ail", nom: "Ail", latin: "Allium sativum", categorie: "legume", famille: "amaryllidacees", emoji: "🧄", wiki: "Ail cultivé",
+    id: "ail", nom: "Ail", latin: "Allium sativum", categorie: "legume", famille: "amaryllidacees", emoji: "🌱", wiki: "Ail cultivé",
     difficulte: 1, lieux: ["pleine-terre", "pot", "balcon"], expo: ["soleil"], besoin: "peu", eau: "faible",
     plantation: m("10-12,2-3"), recolte: m("6-7"),
     espacement: "10-15 cm, rangs à 25 cm", profondeur: "3 cm, pointe vers le haut", delai: "180 à 240 jours", joursRecolte: 220,

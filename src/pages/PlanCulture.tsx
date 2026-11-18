@@ -9,7 +9,7 @@ import { Vignette } from "../components/Ico";
 import { EXPORTS } from "../lib/exports";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-const ONGLETS: [string, string][] = [["planifier", "📆 Produire en continu"], ["planches", "🟫 Mes planches"], ["nurserie", "🌱 Nurserie"], ["temps", "⏱️ Temps de travail"]];
+const ONGLETS: [string, string][] = [["planifier", "📆 Produire en continu"], ["planches", "🌍 Mes planches"], ["nurserie", "🌱 Nurserie"], ["temps", "⏱️ Temps de travail"]];
 const legumes = () => PLANTES.filter((p) => MARAICH[p.id] && (p.categorie === "legume" || p.categorie === "aromatique")).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
 
 export default function PlanCulture() {

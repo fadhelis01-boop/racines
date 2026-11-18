@@ -115,7 +115,7 @@ export const JARDIN2: Plante[] = [
     animaux: "Bon fourrage pour lapins, chèvres, moutons, ânes ; les chiens et chats en mâchouillent pour se purger.",
   },
   {
-    ...sauv, id: "ronce", nom: "Ronce", latin: "Rubus fruticosus", famille: "rosacees", emoji: "🫐", wiki: "Ronce commune", expo: ["soleil", "mi-ombre"], eau: "faible",
+    ...sauv, id: "ronce", nom: "Ronce", latin: "Rubus fruticosus", famille: "rosacees", emoji: "🍇", wiki: "Ronce commune", expo: ["soleil", "mi-ombre"], eau: "faible",
     alias: ["ronces", "mûre sauvage", "mûres", "roncier"], latins: ["Rubus ulmifolius", "Rubus caesius", "Rubus armeniacus"], recolte: m("8-9"),
     intro: "Envahissante mais précieuse : mûres, abri pour les oiseaux et les hérissons, nectar pour les abeilles. On la contient plutôt qu'on l'élimine.",
     etapes: ["Coupez les tiges au ras du sol, puis arrachez la souche à la pioche ; les tiges qui touchent le sol s'y enracinent."],
@@ -279,7 +279,7 @@ export const JARDIN2: Plante[] = [
     sosies: [{ nom: "Sureau hièble (Sambucus ebulus)", difference: "Plante herbacée de 1 m qui meurt chaque hiver (pas un arbuste), ombelles de baies DRESSÉES, odeur fétide : toxique." }],
   },
   {
-    id: "murier", nom: "Mûrier et ronce sans épines", latin: "Rubus fruticosus (cultivars), Morus nigra", categorie: "fruit", famille: "rosacees", emoji: "🫐", wiki: "Mûre", difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil", "mi-ombre"], besoin: "moyen", eau: "moyen", amis: [], ennemis: ["pomme-de-terre"],
+    id: "murier", nom: "Mûrier et ronce sans épines", latin: "Rubus fruticosus (cultivars), Morus nigra", categorie: "fruit", famille: "rosacees", emoji: "🍇", wiki: "Mûre", difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil", "mi-ombre"], besoin: "moyen", eau: "moyen", amis: [], ennemis: ["pomme-de-terre"],
     plantation: m("10-3"), recolte: m("7-9"), taille: m("2,9"), alias: ["mûres", "mûrier sans épines", "mûroise", "tayberry", "loganberry", "mûrier noir"], latins: ["Morus nigra", "Morus alba", "Rubus × loganobaccus"], espacement: "2 à 3 m, palissé", delai: "2 ans", joursRecolte: 730,
     intro: "Les ronces cultivées sans épines donnent de grosses mûres sur un palissage ; le mûrier noir est un arbre aux fruits délicieux mais salissants.",
     etapes: ["Palissez les ronces cultivées sur 3 fils (comme les framboisiers non remontants)."], entretien: ["Après récolte, coupez au ras les tiges qui ont fructifié ; gardez 5-6 nouvelles tiges par pied."],
@@ -287,7 +287,7 @@ export const JARDIN2: Plante[] = [
     problemes: ["mouche-cerise", "botrytis", "oiseaux"], animaux: "Feuilles de ronce et de mûrier blanc : excellent fourrage (lapins, chèvres).",
   },
   {
-    id: "groseille-maquereau", nom: "Groseillier à maquereau", latin: "Ribes uva-crispa", categorie: "fruit", famille: "autres", emoji: "🟢", wiki: "Groseillier à maquereau", difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil", "mi-ombre"], besoin: "moyen", eau: "moyen", amis: [], ennemis: [],
+    id: "groseille-maquereau", nom: "Groseillier à maquereau", latin: "Ribes uva-crispa", categorie: "fruit", famille: "autres", emoji: "🌱", wiki: "Groseillier à maquereau", difficulte: 1, lieux: ["pleine-terre", "pot"], expo: ["soleil", "mi-ombre"], besoin: "moyen", eau: "moyen", amis: [], ennemis: [],
     plantation: m("10-3"), recolte: m("6-7"), taille: m("12-2"), alias: ["groseille à maquereau", "groseilles vertes"], latins: ["Ribes grossularia"], espacement: "1,5 m", delai: "2 ans", joursRecolte: 730,
     intro: "Arbuste épineux aux grosses baies vertes, jaunes ou rouges, acidulées. Choisissez des variétés résistantes à l'oïdium américain.",
     etapes: ["Plantation d'hiver, comme les groseilliers."], entretien: ["Taille d'aération en hiver (gants épais) : un cœur ouvert limite l'oïdium.", "Surveillez la tenthrède (fausses chenilles) au printemps."],

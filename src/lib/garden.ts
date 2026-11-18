@@ -161,8 +161,8 @@ export function recommander(pr: Profil): { plantes: Plante[]; methode: string; c
 }
 
 export const TYPES_ESPACE: Record<Espace["type"], { label: string; emoji: string }> = {
-  planche: { label: "Planche / parcelle", emoji: "🟫" },
-  carre: { label: "Carré potager", emoji: "🟩" },
+  planche: { label: "Planche / parcelle", emoji: "🌍" },
+  carre: { label: "Carré potager", emoji: "🔳" },
   bac: { label: "Bac / jardinière", emoji: "🧺" },
   pot: { label: "Pot", emoji: "🌿" },
   serre: { label: "Serre", emoji: "🏡" },

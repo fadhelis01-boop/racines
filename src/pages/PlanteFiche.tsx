@@ -133,6 +133,13 @@ export default function PlanteFiche({ id }: { id?: string }) {
       {tab === "culture" && (
         <div>
           <div className="callout ok"><b>📌 L'essentiel en 3 points</b><ol style={{ margin: "4px 0 0", paddingLeft: 20 }}>{essentiel(p, zone).map((x) => <li key={x}>{x}</li>)}</ol></div>
+          {(() => {
+            const q = (["semisAbri", "semisPlace", "plantation", "recolte"] as const).map((k) => [k, [...moisAffiches(p, k, zone)].sort((x, y) => x - y)] as const).filter(([, ms]) => ms.length);
+            if (!q.length) return null;
+            const lib = { semisAbri: "Semer à l'abri", semisPlace: "Semer dehors", plantation: "Planter", recolte: "Récolter" };
+            const plage = (ms: readonly number[]) => (ms.length > 2 && ms.every((x, i) => !i || x === ms[i - 1] + 1) ? `de ${MOIS_NOMS[ms[0] - 1]} à ${MOIS_NOMS[ms[ms.length - 1] - 1]}` : ms.map((x) => MOIS_NOMS[x - 1]).join(", "));
+            return <p className="small" style={{ margin: "6px 0 10px" }}>📅 <b>Quand ?</b> {q.map(([k, ms]) => `${lib[k]} ${plage(ms)}`).join(" · ")} <button className="btn sm ghost" onClick={() => setTab("calendrier")}>Calendrier détaillé</button></p>;
+          })()}
           {p.sosies && p.sosies.length > 0 && (
             <div className="callout warn">
               <b>👀 Ne pas confondre avec</b>
@@ -156,7 +163,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
             const ok = types.some((t) => t!.aime.includes(p.id));
             return (
               <p className="small" style={{ margin: "8px 0 0" }}>
-                {sol ? (ok ? <span className="badge green">✅ Se plaît dans votre sol ({types.map((t) => t!.nom.split(" (")[0].toLowerCase()).join(", ")})</span> : <span className="muted">Votre sol : {types.map((t) => t!.nom.split(" (")[0].toLowerCase()).join(", ")}. </span>) : <a href={href("/sol")}>🟫 Identifier mon sol</a>}
+                {sol ? (ok ? <span className="badge green">✅ Se plaît dans votre sol ({types.map((t) => t!.nom.split(" (")[0].toLowerCase()).join(", ")})</span> : <span className="muted">Votre sol : {types.map((t) => t!.nom.split(" (")[0].toLowerCase()).join(", ")}. </span>) : <a href={href("/sol")}>🌍 Identifier mon sol</a>}
                 {" · "}<a href={href(`/nutrition?p=${p.id}`)}>🍽️ Comment la nourrir</a>
               </p>
             );
@@ -243,7 +250,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
       {tab === "sante" && (
         <div>
           <div className="row" style={{ marginBottom: 10 }}>
-            <a className="btn primary" href={href(`/diagnostic?plante=${p.id}`)}>🩺 Diagnostiquer un problème</a>
+            <a className="btn primary" href={href(`/diagnostic?plante=${p.id}`)}>⚕️ Diagnostiquer un problème</a>
             <a className="btn" href={href("/identifier")}>📷 Par photo</a>
           </div>
           <div className="grid">

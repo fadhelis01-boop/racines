@@ -130,9 +130,9 @@ export default function Creer() {
           <h3>Étapes suivantes</h3>
           <div className="grid-sm">
             <a className="btn" href={href("/guide/creer-potager")}>📘 Le guide complet A à Z</a>
-            <a className="btn" href={href(pr.situation === "balcon" || pr.situation === "appartement" ? "/guide/potager-balcon" : "/guide/methodes-culture")}>🟫 Installer</a>
+            <a className="btn" href={href(pr.situation === "balcon" || pr.situation === "appartement" ? "/guide/potager-balcon" : "/guide/methodes-culture")}>🌍 Installer</a>
             <a className="btn" href={href("/amenagements")}>🗺️ Comparer les aménagements</a>
-            <a className="btn" href={href("/sol")}>🟫 Identifier mon sol</a>
+            <a className="btn" href={href("/sol")}>🌍 Identifier mon sol</a>
             <a className="btn" href={href("/guide/compost-tas")}>♻️ Démarrer le compost</a>
             <button className="btn primary" onClick={creerPlanches}>🗺️ Créer mes emplacements</button>
           </div>

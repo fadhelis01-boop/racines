@@ -69,7 +69,7 @@ function Choisir() {
         <input type="range" min={p.lieu === "appartement" ? 0.5 : 1} max={terre ? 300 : 30} step={p.lieu === "appartement" ? 0.5 : 1} value={p.surface} onChange={(e) => set("surface", Number(e.target.value))} style={{ width: "100%" }} aria-label="Surface en m²" />
         <span className="small muted">Pour débuter, 10 à 20 m² bien tenus valent mieux qu'un grand potager envahi.</span>
       </div>
-      {terre && <Question titre="3. Aujourd'hui, à cet endroit, il y a…" options={[["pelouse", "🌱 De la pelouse"], ["cultive", "🟫 Une terre déjà cultivée"], ["friche", "🌿 Une friche (herbes hautes, ronces)"], ["caillouteux", "⛰️ Un sol caillouteux ou très pauvre"], ["dur", "🧱 Du béton ou un sol pollué"]]} valeur={p.depart} choisir={(v) => set("depart", v)} />}
+      {terre && <Question titre="3. Aujourd'hui, à cet endroit, il y a…" options={[["pelouse", "🌱 De la pelouse"], ["cultive", "🌍 Une terre déjà cultivée"], ["friche", "🌿 Une friche (herbes hautes, ronces)"], ["caillouteux", "⛰️ Un sol caillouteux ou très pauvre"], ["dur", "🧱 Du béton ou un sol pollué"]]} valeur={p.depart} choisir={(v) => set("depart", v)} />}
       {terre && p.depart !== "dur" && <Question titre="4. Votre sol" aide={solEnr ? "Prérempli d'après votre test « Mon sol »." : "Pas sûr ? Faites le test « Mon sol » en 15 minutes."} options={[["inconnu", "Je ne sais pas"], ["sableux", "Sableux, sèche vite"], ["limoneux", "Fin, fait une croûte"], ["argileux", "Argileux, colle"], ["humide", "Gorgé d'eau, flaques"], ["equilibre", "Équilibré"]]} valeur={p.sol} choisir={(v) => set("sol", v)} />}
       <Question titre="5. Combien de temps par semaine ?" options={[["peu", "Moins d'1 h"], ["moyen", "1 à 3 h"], ["beaucoup", "Plus de 3 h"]]} valeur={p.temps} choisir={(v) => set("temps", v)} />
       <Question titre="6. Votre budget pour démarrer" options={[["petit", "Le moins possible"], ["moyen", "Raisonnable"], ["confortable", "Confortable"]]} valeur={p.budget} choisir={(v) => set("budget", v)} />
@@ -107,7 +107,7 @@ function Choisir() {
         );
       })}
       <div className="callout info small"><b>On peut combiner</b>Beaucoup de jardiniers mélangent : des planches ou une lasagne pour le gros du potager, un carré d'aromates près de la cuisine, des pots pour les tomates sur la terrasse, et du paillage partout. Le paillage convient à toutes les méthodes.</div>
-      <p className="small"><a href={href("/sol")}>🟫 Identifier mon sol</a> · <a href={href("/calculs?s=bacs")}>🧮 Combien de terre pour mes bacs ?</a> · <a href={href("/creer")}>👨‍🌾 Choisir quoi planter</a></p>
+      <p className="small"><a href={href("/sol")}>🌍 Identifier mon sol</a> · <a href={href("/calculs?s=bacs")}>🧮 Combien de terre pour mes bacs ?</a> · <a href={href("/creer")}>👨‍🌾 Choisir quoi planter</a></p>
     </div>
   );
 }
