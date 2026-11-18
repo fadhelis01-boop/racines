@@ -27,6 +27,10 @@ import { echeances, intervalleArrosage, marquer } from "../src/lib/mesplantes";
 import { ficheLatin } from "../src/lib/identify";
 import { plante } from "../src/data/index";
 import { besoinEau } from "../src/components/PlanVisuel";
+import { couleurReine, valeurVarroa, niveauVarroa, pertesHiver, alertesRucher, registreTraitementsCsv } from "../src/lib/rucher";
+import { dernierSoin } from "../src/lib/calendar";
+import { RACES } from "../src/data/races";
+import { MALADIES_ANIMALES } from "../src/data/maladies-animales";
 
 let fails = 0, n = 0;
 const ok = (c: boolean, m: string) => { n++; if (!c) { fails++; console.error("✗ " + m); } };
@@ -358,6 +362,53 @@ p1("vendre ses légumes", "Vendre son surplus");
 p1("bande fleurie", "Plantes de service");
 p1("voile de forçage", "Piloter un tunnel");
 p1("plaque alvéolée", "Nurserie");
+
+// Audit apiculteur : rucher, varroa, diagnostic, recherche
+ok(couleurReine(2026).nom === "blanc" && couleurReine(2027).nom === "jaune" && couleurReine(2025).nom === "bleu", "couleurs de marquage des reines");
+ok(valeurVarroa({ varroaMethode: "chute", varroaValeur: 30, varroaJours: 3 }) === 10, "chute naturelle : 30 en 3 jours = 10 par jour");
+ok(valeurVarroa({ varroaMethode: "sucre", varroaValeur: 12 }) === 4, "sucre glace : 12 varroas / 300 abeilles = 4 %");
+ok(niveauVarroa({ id: "", rucheId: "r", date: "2026-07-20", varroaMethode: "sucre", varroaValeur: 12 }) === "traiter", "4 % en juillet → traiter");
+ok(niveauVarroa({ id: "", rucheId: "r", date: "2026-07-20", varroaMethode: "chute", varroaValeur: 6, varroaJours: 3 }) === "ok", "2 varroas par jour en juillet → sous le seuil");
+ok(niveauVarroa({ id: "", rucheId: "r", date: "2026-04-10", varroaMethode: "chute", varroaValeur: 12, varroaJours: 3 }) === "traiter", "4 par jour au printemps → traiter");
+{
+  const ruches = [{ id: "a", nom: "R1", installee: "2025-05-01" }, { id: "b", nom: "R2", installee: "2025-05-01", morte: "2026-02-10", cause: "famine" }, { id: "c", nom: "R3", installee: "2025-12-01" }];
+  const p = pertesHiver(ruches, 2025);
+  ok(p.hivernees === 2 && p.mortes === 1 && p.taux === 50 && p.causes[0] === "famine", `pertes d'hiver (obtenu ${JSON.stringify(p)})`);
+  const visites = [{ id: "v", rucheId: "a", date: "2026-07-20", varroaMethode: "sucre" as const, varroaValeur: 15 }];
+  ok(alertesRucher({ ruches, visites, traitementsApi: [] }, "2026-07-25").some((x) => x.grave && x.texte.startsWith("R1")), "alerte varroa au-dessus du seuil");
+  const tr = [{ id: "t", rucheIds: ["a"], produit: "Apivar (amitraze, lanières)", lot: "L12", debut: "2026-07-26" }];
+  ok(!alertesRucher({ ruches, visites, traitementsApi: tr }, "2026-07-28").some((x) => x.grave && x.texte.startsWith("R1")), "plus d'alerte une fois traitée");
+  ok(alertesRucher({ ruches, visites, traitementsApi: tr }, "2026-10-20").some((x) => x.texte.includes("sans date de retrait")), "alerte lanières oubliées");
+  ok(/L12/.test(registreTraitementsCsv({ ruches, traitementsApi: tr })) && /R1/.test(registreTraitementsCsv({ ruches, traitementsApi: tr })), "registre des traitements exporté");
+  ok(dernierSoin({ soins: [], visites, traitementsApi: tr }, "t", "abeille", "Comptage varroa")?.date === "2026-07-20", "un comptage du rucher vaut rappel de comptage");
+  ok(dernierSoin({ soins: [], visites, traitementsApi: tr }, "t", "abeille", "Traitement varroa d'été")?.date === "2026-07-26", "un traitement d'été du registre vaut rappel");
+}
+ok(["Carnica", "Ligustica", "Caucasienne"].every((r) => RACES.abeille.some((x) => x.nom.startsWith(r))), "races d'abeilles complétées");
+ok(MALADIES_ANIMALES.filter((m) => m.especes.includes("abeille")).length >= 14, "maladies et dangers des abeilles");
+ok(/oxalique/.test(MALADIES_ANIMALES.find((m) => m.id === "varroa")!.quoiFaire.join(" ")), "varroa enrichi (acide oxalique)");
+ok(diagnostiquerAnimal("abeille", ["couvain-mosaique", "opercules-affaisses", "odeur-ruche"])[0]?.m.id === "loque-americaine", "couvain en mosaïque + opercules affaissés + odeur → loque américaine");
+ok(diagnostiquerAnimal("abeille", ["taches-diarrhee"])[0]?.m.id === "nosemose", "taches de diarrhée → nosémose");
+ok(diagnostiquerAnimal("abeille", ["ruche-legere", "abeilles-mortes"])[0]?.m.id === "famine", "ruche légère + abeilles mortes → famine");
+ok(!diagnostiquerAnimal("poule", ["couvain-mosaique"]).some((r) => r.m.especes.includes("abeille") && !r.m.especes.includes("poule")), "signes d'abeille sans effet sur les poules");
+const api = (q: string, attendu: string, k = 3) => { const r = rechercher(q, k).map((h) => h.titre); ok(r.some((t) => t.startsWith(attendu)), `apiculteur « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+api("loque américaine", "Loque américaine");
+api("essaim artificiel", "Essaimage");
+api("récupérer un essaim", "Essaimage");
+api("couleur reine 2026", "Les reines");
+api("acide oxalique", "Plan de lutte contre le varroa");
+api("sirop pour abeilles", "Nourrir les abeilles");
+api("candi", "Nourrir les abeilles");
+api("miel cristallisé", "Les produits de la ruche");
+api("dadant ou warré", "Choisir sa ruche");
+api("transhumance", "Les miellées");
+api("piqûre d'abeille", "Piqûres, allergies");
+api("gdsa", "Le réseau sanitaire");
+api("registre traitements ruches", "Mon rucher");
+api("mon rucher", "Mon rucher");
+api("abeilles qui tremblent", "Intoxication");
+api("couvain troué", "Loque");
+ok(!rechercher("reine-claude", 3).some((h) => h.titre.startsWith("Les reines")), "reine-claude reste une prune");
+ok(!rechercher("registre élevage", 3).some((h) => h.titre.startsWith("Mon rucher")), "registre d'élevage ne part pas au rucher");
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
 if (fails) process.exit(1);

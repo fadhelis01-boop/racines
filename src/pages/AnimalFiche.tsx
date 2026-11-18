@@ -42,6 +42,7 @@ export default function AnimalFiche({ id }: { id?: string }) {
       <div className="facts" style={{ marginTop: 14 }}>
         {[["Espace", a.profil.espace], ["Temps", a.profil.temps], ["Budget", a.profil.budget], ["Durée de vie", a.profil.vie], ["Bruit", a.profil.bruit]].map(([k, v]) => <div key={k} className="fact"><div className="k">{k}</div>{v}</div>)}
       </div>
+      {a.id === "abeille" && <p style={{ marginTop: 12 }}><a className="btn primary" href={href("/rucher")}>🐝 Mon rucher : visites, varroa, traitements</a> <a className="btn" href={href("/guide/api-calendrier")}>📅 L'année au rucher</a></p>}
       <div className="tabs" role="tablist">
         {TABS.map(([k, l]) => <button key={k} role="tab" aria-selected={tab === k} className={tab === k ? "on" : ""} onClick={() => setTab(k)}>{l}</button>)}
       </div>

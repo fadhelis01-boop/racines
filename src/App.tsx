@@ -39,6 +39,7 @@ const Interieur = lazy(() => import("./pages/Interieur"));
 const Cueillette = lazy(() => import("./pages/Cueillette"));
 const Demenagement = lazy(() => import("./pages/Demenagement"));
 const Amenagements = lazy(() => import("./pages/Amenagements"));
+const Rucher = lazy(() => import("./pages/Rucher"));
 import BarreRecherche from "./components/BarreRecherche";
 import { Ico } from "./components/Ico";
 
@@ -122,9 +123,10 @@ export default function App() {
     case "cueillette": page = <Cueillette />; break;
     case "demenagement": page = <Demenagement />; break;
     case "amenagements": page = <Amenagements />; break;
+    case "rucher": page = <Rucher />; break;
     default: page = <Accueil />;
   }
-  const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/interieur" && p0 === "interieur") || (to === "/sol" && p0 === "nutrition") || (to === "/animaux" && ["animal", "maladie-animale", "diagnostic-animal"].includes(p0 ?? "")));
+  const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/jardin" && p0 === "rucher") || (to === "/interieur" && p0 === "interieur") || (to === "/sol" && p0 === "nutrition") || (to === "/animaux" && ["animal", "maladie-animale", "diagnostic-animal"].includes(p0 ?? "")));
 
   return (
     <div className="app">

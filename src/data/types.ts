@@ -211,7 +211,7 @@ export interface Animal {
   produits?: string[];
   cohabitation?: string;
   video: string;
-  soins: { type: string; tousLesJours: number }[]; // rappels récurrents (vermifuge, parage…)
+  soins: { type: string; tousLesJours: number; mois?: number[] }[]; // mois : rappel seulement pendant ces mois (1-12) // rappels récurrents (vermifuge, parage…)
 }
 
 export interface TacheMois {

@@ -2,11 +2,11 @@ import { useRef, useState } from "react";
 import { ExportsCard, BilanPluriannuel, Multiplications, PartageCard } from "../components/Suivi";
 import { varietesDe } from "../lib/exports";
 import { ProductionCard, IndividusSection, CouveesCard, RegistreCard, DepensesBilanCard } from "../components/Elevage";
-import { useStore, upsert, remove, uid, today, update, type Espace, type Recolte, type Troupeau, type Soin } from "../lib/store";
+import { useStore, getState, upsert, remove, uid, today, update, type Espace, type Recolte, type Troupeau, type Soin } from "../lib/store";
 import type { Animal } from "../data/types";
 import { PLANTES, ANIMAUX, plante, animal } from "../data/index";
 import { href, go } from "../lib/router";
-import { recolteEstimee, addDays } from "../lib/calendar";
+import { recolteEstimee, addDays, dernierSoin } from "../lib/calendar";
 import { verifierRotation, TYPES_ESPACE } from "../lib/garden";
 import { savePhoto } from "../lib/photos";
 import { A, Empty, StoredPhoto, toast } from "../components/ui";
@@ -348,13 +348,13 @@ function TroupeauCard({ t, a, soins }: { t: Troupeau; a: Animal; soins: Soin[] }
       {a.soins.length > 0 && (
         <div className="small" style={{ marginTop: 6 }}>
           {a.soins.map((s) => {
-            const last = soins.find((x) => x.type === s.type);
+            const last = dernierSoin(getState(), t.id, a.id, s.type);
             const next = last ? addDays(last.date, s.tousLesJours) : null;
             return <div key={s.type}>• {s.type} : {last ? <>dernier le {new Date(last.date).toLocaleDateString("fr-FR")}, prochain vers le <b style={{ color: next! < today() ? "var(--danger)" : undefined }}>{new Date(next!).toLocaleDateString("fr-FR")}</b></> : <span className="muted">jamais noté</span>}</div>;
           })}
         </div>
       )}
-      <IndividusSection t={t} a={a} />
+      {a.id === "abeille" ? <p className="small" style={{ marginTop: 6 }}><a className="btn sm primary" href={href("/rucher")}>🐝 Ouvrir le carnet du rucher</a> <span className="muted">ruches une par une, visites, varroa, traitements</span></p> : <IndividusSection t={t} a={a} />}
       <details className="box"><summary>Noter un soin</summary>
         <div className="row" style={{ marginTop: 8 }}>
           <select value={type} onChange={(e) => setType(e.target.value)} style={{ flex: 1, minWidth: 160 }}>

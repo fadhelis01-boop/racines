@@ -71,5 +71,8 @@ export const RACES: Record<string, Race[]> = {
   abeille: [
     { nom: "Abeille noire (locale)", pour: "Rusticité", texte: "Abeille d'origine en France, sobre, adaptée au climat local ; parfois plus défensive.", rustique: true },
     { nom: "Buckfast", pour: "Douceur, production", texte: "Sélectionnée pour sa douceur et sa production, idéale pour débuter." },
+    { nom: "Carnica (carniolienne)", pour: "Douceur, hivernage économe", texte: "Très douce, hiverne en petite grappe et consomme peu, démarre vite au printemps ; essaime davantage si on ne lui donne pas de place à temps." },
+    { nom: "Ligustica (italienne)", pour: "Climat doux, production", texte: "Douce et prolifique, couleur jaune ; adaptée aux régions chaudes, elle garde un couvain important en hiver et consomme donc beaucoup de réserves, et pille volontiers." },
+    { nom: "Caucasienne", pour: "Douceur, propolis", texte: "Très douce, longue langue (trèfles) ; récolte beaucoup de propolis, démarre tard au printemps et reste sensible à la nosémose." },
   ],
 };

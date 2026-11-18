@@ -113,7 +113,8 @@ export function tachesPerso(s: State, now = new Date()): TachePerso[] {
     const a = ANIMAUX.find((x) => x.id === t.animalId);
     if (!a) continue;
     for (const soin of a.soins) {
-      const last = s.soins.filter((x) => x.troupeauId === t.id && x.type === soin.type).sort((x, y) => y.date.localeCompare(x.date))[0];
+      if (soin.mois && !soin.mois.includes(now.getMonth() + 1)) continue;
+      const last = dernierSoin(s, t.id, a.id, soin.type);
       const prochain = last ? new Date(last.prochain ?? addDays(last.date, soin.tousLesJours)) : null;
       if (!prochain) {
         out.push({ key: `soin:${t.id}:${soin.type}`, texte: `${t.nom} : ${soin.type} — pas encore noté, à planifier`, emoji: a.emoji, href: `/jardin/animaux`, quand: isoDate(now) });
@@ -124,6 +125,18 @@ export function tachesPerso(s: State, now = new Date()): TachePerso[] {
   }
   for (const c of tachesCouvees(s.couvees ?? [], now)) out.push({ ...c, emoji: "🐣", href: "/jardin/animaux" });
   return out.sort((a, b) => a.quand.localeCompare(b.quand));
+}
+
+/** Dernier soin noté ; pour les abeilles, les visites et traitements du carnet du rucher comptent aussi. */
+export function dernierSoin(s: Pick<State, "soins"> & Partial<Pick<State, "visites" | "traitementsApi">>, troupeauId: string, animalId: string, type: string): { date: string; prochain?: string } | undefined {
+  const dates: { date: string; prochain?: string }[] = s.soins.filter((x) => x.troupeauId === troupeauId && x.type === type);
+  if (animalId === "abeille") {
+    const m = (d: string) => Number(d.slice(5, 7));
+    if (type === "Comptage varroa") dates.push(...(s.visites ?? []).filter((v) => v.varroaMethode && v.varroaValeur != null).map((v) => ({ date: v.date })));
+    if (type.startsWith("Traitement varroa d'été")) dates.push(...(s.traitementsApi ?? []).filter((x) => m(x.debut) >= 6 && m(x.debut) <= 10).map((x) => ({ date: x.debut })));
+    if (type.startsWith("Traitement varroa d'hiver")) dates.push(...(s.traitementsApi ?? []).filter((x) => m(x.debut) >= 11 || m(x.debut) <= 2).map((x) => ({ date: x.debut })));
+  }
+  return dates.sort((x, y) => y.date.localeCompare(x.date))[0];
 }
 
 export function addDays(iso: string, n: number) {
@@ -180,7 +193,7 @@ export function buildIcs(s: State, opts: { mois: number; travaux: boolean; mesPl
   for (const t of s.troupeaux) {
     const a = ANIMAUX.find((x) => x.id === t.animalId);
     for (const soin of a?.soins ?? []) {
-      const last = s.soins.filter((x) => x.troupeauId === t.id && x.type === soin.type).sort((x, y) => y.date.localeCompare(x.date))[0];
+      const last = dernierSoin(s, t.id, a!.id, soin.type);
       if (!last) continue;
       const d = new Date((last.prochain ?? addDays(last.date, soin.tousLesJours)) + "T12:00:00");
       if (d > now) ev(`soin-${t.id}-${soin.type}-${isoDate(d)}`, d, `${a!.emoji} ${t.nom} : ${soin.type}`, "Rappel Racines");

@@ -530,7 +530,7 @@ export const ANIMAUX: Animal[] = [
     ],
     produits: ["Miel, cire, pollen, propolis"],
     video: "débuter en apiculture première ruche",
-    soins: [{ type: "Comptage varroa", tousLesJours: 30 }, { type: "Déclaration annuelle des ruches", tousLesJours: 365 }],
+    soins: [{ type: "Comptage varroa", tousLesJours: 30, mois: [3, 4, 5, 6, 7, 8, 9, 10] }, { type: "Traitement varroa d'été", tousLesJours: 300, mois: [7, 8, 9] }, { type: "Traitement varroa d'hiver (hors couvain)", tousLesJours: 300, mois: [12, 1] }, { type: "Contrôle des réserves (pesée)", tousLesJours: 30, mois: [9, 10, 11, 12, 1, 2, 3] }, { type: "Renouvellement des cadres de corps", tousLesJours: 300, mois: [3, 4, 5] }, { type: "Déclaration annuelle des ruches", tousLesJours: 300, mois: [9, 10, 11, 12] }],
   },
   {
     id: "cochon", nom: "Cochons (porc familial)", emoji: "🐖", wiki: "Porc domestique",

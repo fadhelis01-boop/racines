@@ -17,6 +17,7 @@ export default function Plus() {
         <a className="btn big" href={href("/calculs")} style={{ justifyContent: "flex-start" }}><Ico nom="creer" emoji="🧮" taille={36} /> Calculs pratiques</a>
         <a className="btn big" href={href("/amenagements")} style={{ justifyContent: "flex-start" }}><Ico nom="jardin" emoji="🗺️" taille={36} /> Aménager son jardin</a>
         <a className="btn big" href={href("/nutrition")} style={{ justifyContent: "flex-start" }}><Ico nom="compost" emoji="🍽️" taille={36} /> Nourrir plantes et animaux</a>
+        <a className="btn big" href={href("/rucher")} style={{ justifyContent: "flex-start" }}><Ico nom="animaux" emoji="🐝" taille={36} /> Mon rucher</a>
         <a className="btn big" href={href("/plan-culture")} style={{ justifyContent: "flex-start" }}><Ico nom="calendrier" emoji="📋" taille={36} /> Plan de culture (maraîchage)</a>
         <a className="btn big" href={href("/cueillette")} style={{ justifyContent: "flex-start" }}><Ico nom="recolte-action" emoji="🧺" taille={36} /> Bien cueillir</a>
         <a className="btn big" href={href("/demenagement")} style={{ justifyContent: "flex-start" }}><Ico nom="reglages" emoji="📦" taille={36} /> Je déménage</a>

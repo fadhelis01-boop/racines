@@ -153,3 +153,12 @@ export const MALADIES_ANIMALES: MaladieAnimale[] = [
     quoiFaire: ["Repérez le point d'entrée, réparez avant la nuit, fermez le poulailler chaque soir.", "Voir le tutoriel « Renard, fouine, rats… » pour les protections."],
     prevention: ["Porte automatique, grillage soudé à petites mailles, enterré ou rabattu, fil électrique bas."] },
 ];
+
+// Apiculture : signes, maladies et dangers propres aux abeilles ; fiche Varroa enrichie
+import { MALADIES_ABEILLES, SIGNES_ABEILLES, VARROA_ENRICHI } from "./apiculture";
+Object.assign(SIGNES_ANIMAUX, SIGNES_ABEILLES);
+{
+  const v = MALADIES_ANIMALES.find((m) => m.id === "varroa");
+  if (v) Object.assign(v, VARROA_ENRICHI);
+}
+MALADIES_ANIMALES.push(...MALADIES_ABEILLES);

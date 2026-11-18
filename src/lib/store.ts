@@ -51,6 +51,11 @@ export interface Production { id: string; troupeauId: string; date: string; type
 export type CategorieDepense = "aliment" | "litiere" | "veterinaire" | "materiel" | "achat" | "autre";
 export interface Depense { id: string; troupeauId?: string; date: string; categorie: CategorieDepense; montant: number; note?: string }
 export interface Couvee { id: string; espece: string; debut: string; oeufs: number; mode: "poule" | "couveuse"; eclos?: number; fini?: string; note?: string }
+// Rucher : ruches suivies une par une, visites, traitements (registre)
+export interface Ruche { id: string; nom: string; type?: string; origine?: string; race?: string; reineAnnee?: number; installee?: string; morte?: string; cause?: string; note?: string }
+export type MethodeVarroa = "chute" | "sucre" | "alcool";
+export interface Visite { id: string; rucheId: string; date: string; reine?: "vue" | "oeufs" | "non"; couvain?: number; miel?: number; pollen?: number; humeur?: 1 | 2 | 3; cellules?: "non" | "essaimage" | "remplacement"; varroaMethode?: MethodeVarroa; varroaValeur?: number; varroaJours?: number; action?: string; note?: string }
+export interface TraitementApi { id: string; rucheIds: string[]; produit: string; lot?: string; debut: string; fin?: string; dose?: string; ordonnance?: string; note?: string }
 export type Fenetre = "sud" | "ouest" | "est" | "nord" | "lampe" | "sombre";
 // Une plante de la maison suivie individuellement (intérieur, pots)
 export interface MaPlante {
@@ -87,6 +92,9 @@ export interface State {
   envies: Envie[];
   partages: Partage[];
   interventions: Intervention[];
+  ruches: Ruche[];
+  visites: Visite[];
+  traitementsApi: TraitementApi[];
   fait: Record<string, string>; // tâche cochée → date
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
@@ -129,6 +137,9 @@ const EMPTY: State = {
   envies: [],
   partages: [],
   interventions: [],
+  ruches: [],
+  visites: [],
+  traitementsApi: [],
   fait: {},
   videos: {},
   favoris: [],
@@ -192,7 +203,7 @@ export function isoDate(d: Date) {
 }
 
 // Ajout/modification/suppression génériques dans une liste de l'état
-type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions";
+type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions" | "ruches" | "visites" | "traitementsApi";
 export function upsert<K extends ListKey>(key: K, item: State[K][number]) {
   update((s) => {
     const list = s[key] as { id: string }[];
