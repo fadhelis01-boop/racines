@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 
-import { ProductionCard, IndividusSection, CouveesCard, RegistreCard, DepensesBilanCard } from "./Elevage";
+import { ProductionCard, IndividusSection, CouveesCard, RegistreCard, DepensesBilanCard, ReproductionCard, PerformancesCard } from "./Elevage";
 import { useStore, getState, upsert, remove, uid, today, type Troupeau, type Soin } from "../lib/store";
 import type { Animal } from "../data/types";
 import { ANIMAUX, animal } from "../data/index";
@@ -44,6 +44,8 @@ export function MesAnimaux() {
         return <TroupeauCard key={t.id} t={t} a={a} soins={mes} />;
       })}
       <CouveesCard />
+      <ReproductionCard troupeaux={troupeaux} />
+      <PerformancesCard troupeaux={troupeaux} />
       <RegistreCard troupeaux={troupeaux} />
       <DepensesBilanCard troupeaux={troupeaux} />
       <p className="small muted" style={{ marginTop: 14 }}>Ce suivi peut servir de base à votre registre d'élevage, mais il ne remplace pas les documents officiels obligatoires (registre papier ou numérique de l'EDE pour les ruminants, etc.).</p>

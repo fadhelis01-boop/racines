@@ -4,7 +4,7 @@ import type { ZoneId } from "../data/calendrier";
 import type { Culture, State } from "./store";
 import { isoDate } from "./store";
 import { MOIS_NOMS } from "../data/util";
-import { tachesCouvees } from "./elevage";
+import { tachesCouvees, tachesReproduction } from "./elevage";
 import { alertesStocks, finDeGarde } from "./conserverie";
 
 // ---------- Décalage climatique ----------
@@ -125,6 +125,7 @@ export function tachesPerso(s: State, now = new Date()): TachePerso[] {
     }
   }
   for (const c of tachesCouvees(s.couvees ?? [], now)) out.push({ ...c, emoji: "🐣", href: "/jardin/animaux" });
+  for (const r of tachesReproduction(s.reproductions ?? [], s.troupeaux, now)) out.push({ ...r, emoji: "🍼", href: "/jardin/animaux" });
   {
     const al = alertesStocks(s.stocks ?? [], isoDate(now));
     for (const x of al.depasses) out.push({ key: `stock:${x.id}:depasse`, texte: `Garde-manger : ${x.produit} (${x.quantite} ${x.unite}) à consommer en priorité, garde conseillée dépassée`, emoji: "🥫", href: "/conserver?t=stock", quand: isoDate(now), urgent: true });

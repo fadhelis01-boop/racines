@@ -176,3 +176,8 @@ MALADIES_ANIMALES.push(
     quoiFaire: ["Traitement vétérinaire de tous les porcs en même temps.", "Nettoyer et changer la litière, laisser la cabane vide quelques jours si possible."],
     prevention: ["Acheter des porcelets d'un élevage sain, quarantaine de 3 semaines."] },
 );
+
+// Maladies courantes en élevage expert (ruminants, lapins, volailles)
+import { MALADIES_ELEVAGE, SIGNES_ELEVAGE } from "./maladies-elevage";
+Object.assign(SIGNES_ANIMAUX, SIGNES_ELEVAGE);
+MALADIES_ANIMALES.push(...MALADIES_ELEVAGE.filter((m) => !MALADIES_ANIMALES.some((x) => x.id === m.id)));

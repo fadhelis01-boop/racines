@@ -3,7 +3,7 @@ import { useStore } from "../lib/store";
 import { href, useRoute } from "../lib/router";
 import { Back, Listen, Titre } from "../components/ui";
 import { Vignette } from "../components/Ico";
-import { COUVAISON, datesCouvee } from "../lib/elevage";
+import { COUVAISON, datesCouvee, GESTATION, datesMiseBas, RATIONS, foinHiver } from "../lib/elevage";
 import { besoinEau, dimensionner } from "../lib/arrosage";
 import { PLANTES, plante } from "../data/index";
 import { MOIS_NOMS } from "../data/util";
@@ -78,6 +78,8 @@ export default function Calculs() {
         <a className="chip" href="#/calculs?s=arrosage" onClick={(e) => { e.preventDefault(); document.getElementById("arrosage")?.scrollIntoView(); }}>💧 Combien arroser</a>
         <a className="chip" href="#/calculs?s=goutte" onClick={(e) => { e.preventDefault(); document.getElementById("goutte")?.scrollIntoView(); }}>🚿 Goutte-à-goutte</a>
         <a className="chip" href="#/calculs?s=animaux" onClick={(e) => { e.preventDefault(); document.getElementById("animaux")?.scrollIntoView(); }}>🐔 Combien de poules ?</a>
+        <a className="chip" href="#/calculs?s=misebas" onClick={(e) => { e.preventDefault(); document.getElementById("misebas")?.scrollIntoView(); }}>🐐 Date de mise bas</a>
+        <a className="chip" href="#/calculs?s=rations" onClick={(e) => { e.preventDefault(); document.getElementById("rations")?.scrollIntoView(); }}>🌾 Rations et foin</a>
       </div>
 
       <h2 id="compost">♻️ Compost et fumier pour ma surface</h2>
@@ -179,6 +181,12 @@ export default function Calculs() {
       <h2 id="eclosion">🐣 Date d'éclosion</h2>
       <Eclosion />
 
+      <h2 id="misebas">🐐 Date de mise bas</h2>
+      <MiseBas />
+
+      <h2 id="rations">🌾 Rations et foin pour l'hiver</h2>
+      <Rations />
+
       <h2 id="animaux">🐔 Combien de poules pour ma famille ?</h2>
       <div className="card stack">
         <div className="grid-sm">
@@ -229,6 +237,63 @@ function Eclosion() {
         <li><b>En couveuse</b> : {P.temp} ; humidité {P.humidite} ; retournement {P.retournement}.</li>
       </ul>
       <p className="small muted" style={{ margin: 0 }}>Mirer un œuf : dans le noir, une lampe torche puissante posée contre le gros bout ; un œuf fécondé montre des vaisseaux en toile d'araignée, un œuf clair reste translucide. Suivez votre couvée avec rappels dans <a href={href("/jardin/animaux")}>Mon jardin → Animaux</a>.</p>
+    </div>
+  );
+}
+
+function MiseBas() {
+  const [esp, setEsp] = useState("chevre");
+  const [saillie, setSaillie] = useState(new Date().toISOString().slice(0, 10));
+  const g = GESTATION[esp];
+  const d = datesMiseBas(esp, saillie);
+  const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  return (
+    <div className="card stack">
+      <div className="grid-sm">
+        <label className="field">Espèce<select value={esp} onChange={(e) => setEsp(e.target.value)}>{Object.entries(GESTATION).map(([k, v]) => <option key={k} value={k}>{v.nom} ({v.jours} jours)</option>)}</select></label>
+        <label className="field">Date de saillie (ou mise au mâle)<input type="date" value={saillie} onChange={(e) => setSaillie(e.target.value)} /></label>
+      </div>
+      <ul className="ticks small">
+        <li>Vérifier la gestation : {esp === "lapin" ? "palpation douce de l'abdomen" : "surveillez un retour en chaleurs"} vers le <b>{fr(d.controle)}</b>{esp === "lapin" ? "" : " (ou échographie à partir de 45 jours)"}.</li>
+        <li>Ration augmentée à partir du <b>{fr(d.rationAugmentee)}</b>.</li>
+        <li>Préparation à partir du <b>{fr(d.preparation)}</b> : {g.preparation}</li>
+        <li><b>Mise bas prévue le {fr(d.miseBas)}</b> (entre le {fr(d.debut)} et le {fr(d.fin)}).</li>
+        <li>Sevrage vers le <b>{fr(d.sevrage)}</b> : {g.sevrage}.</li>
+        <li className="muted">Première mise à la reproduction : {g.premiereMiseRepro}.</li>
+      </ul>
+      <p className="small"><a href={href("/jardin/animaux")}>Noter la saillie dans le carnet de reproduction →</a> · <a href={href("/guide/calendrier-reproduction")}>Calendrier de reproduction →</a> · <a href={href("/guide/naissances")}>Préparer les mises bas →</a></p>
+    </div>
+  );
+}
+
+function Rations() {
+  const [esp, setEsp] = useState("chevre");
+  const [nb, setNb] = useState(4);
+  const [jours, setJours] = useState(150);
+  const R = RATIONS[esp];
+  const kgJour = R.stades[0].foinKg[1];
+  const f = foinHiver(nb, kgJour, jours);
+  return (
+    <div className="card stack">
+      <label className="field">Espèce<select value={esp} onChange={(e) => setEsp(e.target.value)}>{Object.entries(RATIONS).map(([k, v]) => <option key={k} value={k}>{v.nom}</option>)}</select></label>
+      <table className="table small">
+        <thead><tr><th>Stade</th><th>Foin par jour</th><th>Concentré par jour</th></tr></thead>
+        <tbody>{R.stades.map((s) => (
+          <tr key={s.stade}><td><b>{s.stade}</b><br /><span className="muted">{s.note}</span></td><td>{s.foinKg[1] ? `${s.foinKg[0].toLocaleString("fr-FR")} à ${s.foinKg[1].toLocaleString("fr-FR")} kg` : "—"}</td><td>{s.concentreG[1] ? `${s.concentreG[0]} à ${s.concentreG[1]} g` : "aucun"}</td></tr>
+        ))}</tbody>
+      </table>
+      <p className="small muted">{R.mineraux} Repères pour un animal de {R.poids} : adaptez à l'état de chaque animal (on sent les côtes sans les voir).</p>
+      {kgJour > 0 && (
+        <>
+          <b>Foin à stocker pour l'hiver</b>
+          <div className="grid-sm">
+            <Champ label="Nombre d'animaux" value={nb} onChange={setNb} min={1} max={500} />
+            <Champ label="Jours sans herbe" value={jours} onChange={setJours} min={30} max={240} unite="jours" />
+          </div>
+          <p>Environ <b>{r(f.kg / 1000, 1)} tonne{f.kg >= 2000 ? "s" : ""}</b> de foin ({r(f.kg)} kg, pertes comprises), soit à peu près <b>{f.petitesBottes} petites bottes</b> de 18 kg ou <b>{f.grossesBalles} grosses balles rondes</b> de 250 kg.</p>
+          <p className="small muted">Repère du nombre de jours sans herbe : 90 à 120 jours en climat doux, 150 en plaine, 180 et plus en montagne. Stockez au sec et à l'abri ; un foin moisi est dangereux (listériose, aspergillose).</p>
+        </>
+      )}
     </div>
   );
 }

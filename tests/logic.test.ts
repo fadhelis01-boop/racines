@@ -13,7 +13,7 @@ import { essentiel } from "../src/lib/essentiel";
 import { remede } from "../src/data/index";
 import { STATUT_REMEDE } from "../src/data/reglementation";
 import { ecoScore, PRATIQUES } from "../src/data/bio";
-import { datesCouvee, bilan, registreCsv, tachesCouvees } from "../src/lib/elevage";
+import { datesCouvee, bilan, registreCsv, tachesCouvees, datesMiseBas, tachesReproduction, bilanFemelle, gmq, tauxPonte, foinHiver, RATIONS } from "../src/lib/elevage";
 import { EXPORTS, bilanPluriannuel, varietesDe } from "../src/lib/exports";
 import { planifier, plantsParPlanche, successions, nurserie, tempsDeTravail, engraisVertPour } from "../src/lib/plan-culture";
 import { GUIDES } from "../src/data/index";
@@ -580,6 +580,43 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   m("plan du jardin", "Plan du jardin à l'échelle", 1);
   m("abri de jardin déclaration", "Budget et règles", 1);
   ok(rechercher("composteur en palettes", 1)[0]?.titre.startsWith("Fabriquer un composteur"), "le composteur en palettes reste trouvé");
+}
+
+// Audit éleveur expert : maladies, mise bas, carnet, performances, rations
+{
+  for (const id of ["caev", "ecthyma", "toxemie-gestation", "hypocalcemie", "acidose", "carence-selenium", "diarrhee-nouveau-nes", "calculs-urinaires", "mammite", "avortements-ruminants", "tetanie-herbage", "coryza-lapin", "encephalitozoonose", "gale-oreilles-lapin", "pododermatite", "marek", "aspergillose", "oeuf-coince", "jabot", "paralysie-volaille"]) ok(MALADIES_ANIMALES.some((m) => m.id === id), `maladie ${id} au diagnostic`);
+  ok(MALADIES_ANIMALES.filter((m) => m.especes.includes("chevre")).length >= 17, "chèvre : au moins 17 maladies au diagnostic");
+  ok(diagnostiquerAnimal("chevre", ["articulations-gonflees", "boiterie"])[0]?.m.id === "caev", "genoux gonflés → CAEV");
+  ok(diagnostiquerAnimal("mouton", ["couchee-fin-gestation", "ne-mange-plus", "tremblements"])[0]?.m.id === "toxemie-gestation", "brebis couchée fin de gestation → toxémie");
+  ok(diagnostiquerAnimal("lapin", ["oreilles-croutes", "gratte"])[0]?.m.id === "gale-oreilles-lapin", "croûtes d'oreilles → gale");
+  ok(diagnostiquerAnimal("poule", ["cloaque"])[0]?.m.id === "oeuf-coince", "poule qui pousse → œuf coincé");
+  ok(!diagnostiquerAnimal("poule", ["mamelle"]).length, "les signes de mamelle ne concernent pas les poules");
+  const d = datesMiseBas("chevre", "2026-10-01");
+  ok(d.miseBas === "2027-02-28" && d.sevrage === "2027-05-14", `chèvre saillie 1/10 → mise bas 28/02, sevrage mi-mai (obtenu ${d.miseBas}, ${d.sevrage})`);
+  const l = datesMiseBas("lapin", "2026-03-01");
+  ok(l.miseBas === "2026-04-01" && l.preparation === "2026-03-29", `lapine : 31 jours, boîte à nid au 28e jour (obtenu ${l.miseBas}, ${l.preparation})`);
+  const reps = [{ id: "r1", troupeauId: "t1", femelle: "Blanchette", saillie: "2026-10-01" }];
+  const taches = tachesReproduction(reps, [{ id: "t1", animalId: "chevre", nom: "Chèvres" }], new Date("2027-02-20T12:00:00"));
+  ok(taches.some((x) => x.key.endsWith(":mb")), "rappel de mise bas dans les 14 jours");
+  const b = bilanFemelle([{ id: "a", troupeauId: "t", saillie: "2025-10-01", miseBas: "2026-03-01", nes: 2, vivants: 2 }, { id: "b", troupeauId: "t", saillie: "2024-10-01", miseBas: "2025-03-01", nes: 3, vivants: 2, difficulte: true }]);
+  ok(b.misesBas === 2 && b.parPortee === 2.5 && b.survie === 80 && b.difficultes === 1, "bilan d'une reproductrice");
+  ok(gmq([{ date: "2026-03-01", kg: 4 }, { date: "2026-03-31", kg: 10 }]) === 200, "croissance : 6 kg en 30 jours = 200 g/jour");
+  const prod = { troupeaux: [{ id: "p", animalId: "poule", nom: "Poules", nombre: 4 }], production: Array.from({ length: 30 }, (_, i) => ({ id: "o" + i, troupeauId: "p", date: `2026-06-${String(i + 1).padStart(2, "0")}`, type: "oeufs" as const, qte: 3 })) };
+  ok(tauxPonte(prod, "p", 30, "2026-06-30") === 75, "taux de ponte : 3 œufs par jour pour 4 poules = 75 %");
+  ok(foinHiver(4, 2.5, 150).kg === 1650 && foinHiver(4, 2.5, 150).grossesBalles === 7, "foin d'hiver : 4 chèvres × 2,5 kg × 150 jours + 10 %");
+  ok(RATIONS.mouton.mineraux.includes("sans cuivre") && RATIONS.chevre.mineraux.includes("avec cuivre"), "minéraux : cuivre pour la chèvre, pas pour le mouton");
+  const e = (q: string, attendu: string, k = 2) => { const r = rechercher(q, k).map((x) => x.titre); ok(r.some((t) => t.startsWith(attendu)), `éleveur « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+  e("marek", "Maladie de Marek", 1);
+  e("toxémie de gestation", "Toxémie de gestation", 1);
+  e("carence en sélénium", "Carence en sélénium", 1);
+  e("caudectomie", "Gestes sur les jeunes", 1);
+  e("poulet de chair", "Élever des volailles pour la viande", 1);
+  e("combien de foin par chèvre", "Rations des animaux", 1);
+  e("date de mise bas chèvre", "Date de mise bas", 1);
+  e("carnet d'agnelage", "Carnet de reproduction", 1);
+  e("chauffer les poussins", "Élever des poussins", 1);
+  e("mue des poules", "Ponte, lumière et mue", 1);
+  e("lapin éternue", "Coryza", 1);
 }
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);

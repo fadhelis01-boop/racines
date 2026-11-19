@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useStore, upsert, remove, uid, today, getState, type Troupeau, type TypeProduction, type TypeMouvement, type CategorieDepense } from "../lib/store";
 import { animal } from "../data/index";
 import { RACES } from "../data/races";
-import { COUVAISON, datesCouvee, PRODUITS, UNITES, bilan, registreCsv } from "../lib/elevage";
+import { COUVAISON, datesCouvee, PRODUITS, UNITES, bilan, registreCsv, GESTATION, datesMiseBas, bilanFemelle, tauxPonte, laitParFemelle, gmq } from "../lib/elevage";
 import { toast, download } from "./ui";
 import { href } from "../lib/router";
 import type { Animal } from "../data/types";
@@ -21,6 +21,8 @@ export function ProductionCard({ troupeaux }: { troupeaux: Troupeau[] }) {
   const [type, setType] = useState<TypeProduction>(types[0] ?? "oeufs");
   const [qte, setQte] = useState("");
   const [date, setDate] = useState(today());
+  const [indiv, setIndiv] = useState("");
+  const femelles = useStore((st) => st.individus.filter((x) => x.troupeauId === (t?.id ?? "") && !x.sortie && x.sexe !== "M"));
   if (!producteurs.length) return null;
   const typeOk = types.includes(type) ? type : types[0];
   const d30 = [...Array(30)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - i); return d.toISOString().slice(0, 10); }).reverse();
@@ -35,7 +37,8 @@ export function ProductionCard({ troupeaux }: { troupeaux: Troupeau[] }) {
         {types.length > 1 && <select value={typeOk} onChange={(e) => setType(e.target.value as TypeProduction)} style={{ maxWidth: 140 }} aria-label="Produit">{types.map((x) => <option key={x} value={x}>{LIB_PROD[x]}</option>)}</select>}
         <input type="number" min="0" step="any" placeholder={`Quantité (${UNITES[typeOk]})`} value={qte} onChange={(e) => setQte(e.target.value)} style={{ width: 150 }} />
         <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ width: 150 }} />
-        <button className="btn primary" disabled={qte === "" || !t} onClick={() => { upsert("production", { id: uid(), troupeauId: t!.id, date, type: typeOk, qte: Number(qte) }); setQte(""); toast("Production notée"); }}>Noter</button>
+        {typeOk === "lait" && femelles.length > 0 && <select value={indiv} onChange={(e) => setIndiv(e.target.value)} style={{ maxWidth: 160 }} aria-label="Femelle"><option value="">Tout le troupeau</option>{femelles.map((f) => <option key={f.id} value={f.id}>{f.nom}</option>)}</select>}
+        <button className="btn primary" disabled={qte === "" || !t} onClick={() => { upsert("production", { id: uid(), troupeauId: t!.id, date, type: typeOk, qte: Number(qte), individuId: typeOk === "lait" && indiv ? indiv : undefined }); setQte(""); toast("Production notée"); }}>Noter</button>
       </div>
       <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 60, marginTop: 10 }} aria-label="Production des 30 derniers jours">
         {d30.map((d) => { const n = val(d); return <div key={d} title={`${fr(d)} : ${n}`} style={{ flex: 1, height: `${(n / max) * 100}%`, minHeight: 2, background: n ? "var(--sun)" : "var(--surface-2)", borderRadius: 2 }} />; })}
@@ -192,6 +195,96 @@ export function DepensesBilanCard({ troupeaux }: { troupeaux: Troupeau[] }) {
         </div>
         <input type="text" placeholder="Note" value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} style={{ marginTop: 6 }} />
         <button className="btn sm primary" style={{ marginTop: 6 }} disabled={!f.montant} onClick={() => { upsert("depenses", { id: uid(), date: f.date, categorie: f.categorie, montant: Number(f.montant), troupeauId: f.tid || undefined, note: f.note || undefined }); setF({ ...f, montant: "", note: "" }); toast("Dépense notée"); }}>Enregistrer</button>
+      </details>
+    </div>
+  );
+}
+
+// ——— Carnet de reproduction : saillies, mises bas, bilan par femelle
+export function ReproductionCard({ troupeaux }: { troupeaux: Troupeau[] }) {
+  const mammiferes = troupeaux.filter((t) => GESTATION[t.animalId]);
+  const reps = useStore((st) => st.reproductions);
+  const individus = useStore((st) => st.individus);
+  const [tid, setTid] = useState(mammiferes[0]?.id ?? "");
+  const t = mammiferes.find((x) => x.id === tid) ?? mammiferes[0];
+  const [f, setF] = useState({ femelleId: "", femelle: "", male: "", saillie: today() });
+  if (!mammiferes.length || !t) return null;
+  const femelles = individus.filter((x) => x.troupeauId === t.id && !x.sortie && x.sexe !== "M");
+  const mesReps = reps.filter((r) => r.troupeauId === t.id).sort((a, b) => b.saillie.localeCompare(a.saillie));
+  const enCours = mesReps.filter((r) => !r.miseBas);
+  const parFemelle = [...new Set(mesReps.map((r) => r.femelleId ?? r.femelle ?? ""))].filter(Boolean);
+  const nomDe = (r: { femelleId?: string; femelle?: string }) => individus.find((x) => x.id === r.femelleId)?.nom ?? r.femelle ?? "Femelle";
+  return (
+    <div className="card" style={{ marginTop: 12 }}>
+      <b>🍼 Carnet de reproduction</b>
+      {mammiferes.length > 1 && <select value={t.id} onChange={(e) => setTid(e.target.value)} style={{ maxWidth: 200, marginLeft: 8 }} aria-label="Groupe">{mammiferes.map((x) => <option key={x.id} value={x.id}>{animal(x.animalId)?.emoji} {x.nom}</option>)}</select>}
+      {enCours.map((r) => {
+        const d = datesMiseBas(t.animalId, r.saillie);
+        return (
+          <div key={r.id} className="card" style={{ marginTop: 8, background: "var(--surface-2)" }}>
+            <b>{nomDe(r)}</b>{r.male ? ` × ${r.male}` : ""} : saillie le {fr(r.saillie)}, <b>mise bas prévue le {fr(d.miseBas)}</b> <span className="small muted">(préparation dès le {fr(d.preparation)})</span>
+            <div className="row" style={{ marginTop: 6, gap: 6 }}>
+              <button className="btn sm" onClick={() => { const n = prompt("Nombre de petits nés ?", "2"); if (n === null) return; const v = prompt("Dont vivants ?", n); const diff = confirm("Mise bas difficile (aide nécessaire) ?"); upsert("reproductions", { ...r, miseBas: today(), nes: Number(n) || 0, vivants: Number(v ?? n) || 0, difficulte: diff }); upsert("mouvements", { id: uid(), troupeauId: t.id, date: today(), type: "naissance", nombre: Number(v ?? n) || 0, note: `Mise bas de ${nomDe(r)}` }); toast("Mise bas notée (et ajoutée au registre)"); }}>Mise bas faite</button>
+              <button className="btn sm ghost" onClick={() => confirm("La saillie n'a pas pris : supprimer cette gestation ?") && remove("reproductions", r.id)}>Pas pleine</button>
+            </div>
+          </div>
+        );
+      })}
+      <details className="box" open={!mesReps.length}><summary>Noter une saillie</summary>
+        <div className="grid-sm" style={{ marginTop: 6 }}>
+          {femelles.length ? (
+            <select value={f.femelleId} onChange={(e) => setF({ ...f, femelleId: e.target.value })} aria-label="Femelle"><option value="">Femelle…</option>{femelles.map((x) => <option key={x.id} value={x.id}>{x.nom}</option>)}</select>
+          ) : <input type="text" placeholder="Nom de la femelle" value={f.femelle} onChange={(e) => setF({ ...f, femelle: e.target.value })} />}
+          <input type="text" placeholder="Mâle (nom ou origine)" value={f.male} onChange={(e) => setF({ ...f, male: e.target.value })} />
+          <label className="small">Date de saillie<input type="date" value={f.saillie} onChange={(e) => setF({ ...f, saillie: e.target.value })} /></label>
+        </div>
+        <p className="small muted">Mise bas prévue le {fr(datesMiseBas(t.animalId, f.saillie).miseBas)} ({GESTATION[t.animalId].jours} jours) : les étapes apparaîtront dans vos tâches.</p>
+        <button className="btn sm primary" disabled={!f.femelleId && !f.femelle} onClick={() => { upsert("reproductions", { id: uid(), troupeauId: t.id, femelleId: f.femelleId || undefined, femelle: f.femelleId ? undefined : f.femelle, male: f.male || undefined, saillie: f.saillie }); setF({ femelleId: "", femelle: "", male: "", saillie: today() }); toast("Saillie notée"); }}>Enregistrer</button>
+        {!femelles.length && <p className="small muted">Astuce : ajoutez vos femelles dans « Mes animaux un par un » pour les choisir dans une liste.</p>}
+      </details>
+      {parFemelle.length > 0 && (
+        <table className="table small" style={{ marginTop: 8 }}>
+          <thead><tr><th>Femelle</th><th>Mises bas</th><th>Petits par portée</th><th>Survie</th></tr></thead>
+          <tbody>{parFemelle.map((k) => { const rs = mesReps.filter((r) => (r.femelleId ?? r.femelle) === k); const b = bilanFemelle(rs); return <tr key={k}><td>{nomDe(rs[0])}</td><td>{b.misesBas}{b.difficultes ? <span className="muted"> ({b.difficultes} difficile{b.difficultes > 1 ? "s" : ""})</span> : null}</td><td>{b.parPortee || "-"}</td><td>{b.nes ? `${b.survie} %` : "-"}</td></tr>; })}</tbody>
+        </table>
+      )}
+      <p className="small"><a href={href("/calculs?s=misebas")}>Calculer une date de mise bas →</a> · <a href={href("/guide/calendrier-reproduction")}>Calendrier de reproduction →</a></p>
+    </div>
+  );
+}
+
+// ——— Performances : taux de ponte, lait par femelle, croissance des jeunes, coût de revient
+export function PerformancesCard({ troupeaux }: { troupeaux: Troupeau[] }) {
+  const st = useStore((x) => ({ production: x.production, troupeaux: x.troupeaux, individus: x.individus, pesees: x.pesees, depenses: x.depenses, ponte: x.ponte, mouvements: x.mouvements }));
+  const [p, setP] = useState({ troupeauId: troupeaux[0]?.id ?? "", nom: "", kg: "", date: today() });
+  if (!troupeaux.length) return null;
+  const an = new Date(); an.setFullYear(an.getFullYear() - 1);
+  const depuis = an.toISOString().slice(0, 10);
+  const pondeuses = troupeaux.filter((t) => (PRODUITS[t.animalId] ?? []).includes("oeufs"));
+  const laitieres = troupeaux.filter((t) => (PRODUITS[t.animalId] ?? []).includes("lait"));
+  const nomsPeses = [...new Set(st.pesees.map((x) => `${x.troupeauId}|${x.nom ?? x.individuId}`))];
+  return (
+    <div className="card" style={{ marginTop: 12 }}>
+      <b>📊 Performances</b>
+      <ul className="ticks small" style={{ marginTop: 6 }}>
+        {pondeuses.map((t) => { const tp = tauxPonte(st, t.id); return tp != null ? <li key={t.id}>{t.nom} : taux de ponte sur 30 jours <b>{tp} %</b> <span className="muted">({t.nombre} poules ; 70 à 85 % est très bon pour des hybrides, 40 à 60 % pour des races)</span></li> : null; })}
+        {laitieres.map((t) => { const l = laitParFemelle(st, t.id, depuis); const ids = Object.keys(l); return ids.length ? <li key={t.id}>{t.nom}, lait sur 12 mois : {ids.map((id) => `${st.individus.find((x) => x.id === id)?.nom ?? "?"} ${Math.round(l[id])} L`).join(" · ")}</li> : null; })}
+        {troupeaux.map((t) => { const b = bilan(st as never, depuis, t.id); const items = [b.coutOeuf ? `${(b.coutOeuf).toFixed(2)} € l'œuf` : "", b.coutLitre ? `${(b.coutLitre).toFixed(2)} € le litre` : "", b.coutKgViande ? `${(b.coutKgViande).toFixed(2)} € le kilo de viande` : ""].filter(Boolean); return items.length ? <li key={"c" + t.id}>{t.nom}, coût de revient sur 12 mois : <b>{items.join(" · ")}</b> <span className="muted">(dépenses notées ÷ production notée)</span></li> : null; })}
+      </ul>
+      <details className="box"><summary>⚖️ Peser un jeune (croissance)</summary>
+        <div className="grid-sm" style={{ marginTop: 6 }}>
+          <select value={p.troupeauId} onChange={(e) => setP({ ...p, troupeauId: e.target.value })} aria-label="Groupe">{troupeaux.map((t) => <option key={t.id} value={t.id}>{animal(t.animalId)?.emoji} {t.nom}</option>)}</select>
+          <input type="text" placeholder="Nom ou numéro du jeune" value={p.nom} onChange={(e) => setP({ ...p, nom: e.target.value })} />
+          <input type="number" step="0.01" min="0" placeholder="Poids (kg)" value={p.kg} onChange={(e) => setP({ ...p, kg: e.target.value })} />
+          <input type="date" value={p.date} onChange={(e) => setP({ ...p, date: e.target.value })} aria-label="Date" />
+        </div>
+        <button className="btn sm primary" style={{ marginTop: 6 }} disabled={!p.nom || !p.kg} onClick={() => { upsert("pesees", { id: uid(), troupeauId: p.troupeauId, nom: p.nom, date: p.date, kg: Number(p.kg) }); setP({ ...p, kg: "" }); toast("Pesée notée"); }}>Noter la pesée</button>
+        {nomsPeses.length > 0 && (
+          <table className="table small" style={{ marginTop: 8 }}><tbody>
+            {nomsPeses.map((k) => { const [tid, nom] = k.split("|"); const ps = st.pesees.filter((x) => x.troupeauId === tid && (x.nom ?? x.individuId) === nom).sort((a, b) => a.date.localeCompare(b.date)); const g = gmq(ps); return <tr key={k}><td><b>{nom}</b></td><td>{ps[ps.length - 1].kg} kg le {fr(ps[ps.length - 1].date)}</td><td>{g != null ? `${g} g/jour` : "1 pesée"}</td></tr>; })}
+          </tbody></table>
+        )}
+        <p className="small muted">Repères de croissance : agneau 200 à 300 g/jour, chevreau 150 à 200 g/jour, lapereau 30 à 40 g/jour après le sevrage. Une croissance qui stagne signale souvent des vers ou un manque de lait.</p>
       </details>
     </div>
   );

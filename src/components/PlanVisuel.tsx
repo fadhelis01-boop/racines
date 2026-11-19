@@ -68,7 +68,7 @@ export default function PlanVisuel() {
   const fs = Math.max(0.35, Math.min(terrain.l, terrain.h) / 30);
   const echelle = terrain.l >= 40 ? 10 : terrain.l >= 15 ? 5 : 1;
   const saisir = (id: string, kind: "espace" | "element", x: number, y: number) => (ev: React.PointerEvent) => {
-    (ev.target as Element).setPointerCapture?.(ev.pointerId);
+    try { (ev.target as Element).setPointerCapture?.(ev.pointerId); } catch { /* pointeur déjà relâché */ }
     const p = point(ev);
     drag.current = { id, kind, dx: p.x - x, dy: p.y - y };
     setSel(id);

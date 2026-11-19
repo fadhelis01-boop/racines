@@ -49,7 +49,10 @@ export interface Individu { id: string; troupeauId: string; nom: string; boucle?
 export type TypeMouvement = "entree" | "naissance" | "sortie" | "deces";
 export interface Mouvement { id: string; troupeauId: string; date: string; type: TypeMouvement; nombre: number; boucles?: string; provenance?: string; note?: string }
 export type TypeProduction = "oeufs" | "lait" | "miel" | "laine" | "viande";
-export interface Production { id: string; troupeauId: string; date: string; type: TypeProduction; qte: number }
+export interface Production { id: string; troupeauId: string; date: string; type: TypeProduction; qte: number; individuId?: string }
+// Carnet de reproduction (mammifères) et pesées des jeunes
+export interface Reproduction { id: string; troupeauId: string; femelleId?: string; femelle?: string; male?: string; saillie: string; miseBas?: string; nes?: number; vivants?: number; difficulte?: boolean; note?: string }
+export interface Pesee { id: string; troupeauId: string; individuId?: string; nom?: string; date: string; kg: number }
 export type CategorieDepense = "aliment" | "litiere" | "veterinaire" | "materiel" | "achat" | "autre";
 export interface Depense { id: string; troupeauId?: string; date: string; categorie: CategorieDepense; montant: number; note?: string }
 export interface Couvee { id: string; espece: string; debut: string; oeufs: number; mode: "poule" | "couveuse"; eclos?: number; fini?: string; note?: string }
@@ -105,6 +108,8 @@ export interface State {
   traitementsApi: TraitementApi[];
   stocks: Stock[];
   elementsPlan: ElementPlan[];
+  reproductions: Reproduction[];
+  pesees: Pesee[];
   fait: Record<string, string>; // tâche cochée → date
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
@@ -152,6 +157,8 @@ const EMPTY: State = {
   traitementsApi: [],
   stocks: [],
   elementsPlan: [],
+  reproductions: [],
+  pesees: [],
   fait: {},
   videos: {},
   favoris: [],
@@ -215,7 +222,7 @@ export function isoDate(d: Date) {
 }
 
 // Ajout/modification/suppression génériques dans une liste de l'état
-type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions" | "ruches" | "visites" | "traitementsApi" | "stocks" | "elementsPlan";
+type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions" | "ruches" | "visites" | "traitementsApi" | "stocks" | "elementsPlan" | "reproductions" | "pesees";
 export function upsert<K extends ListKey>(key: K, item: State[K][number]) {
   update((s) => {
     const list = s[key] as { id: string }[];
