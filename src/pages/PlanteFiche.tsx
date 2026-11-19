@@ -2,7 +2,7 @@ import MotsLexique from "../components/MotsLexique";
 import { Ico, Vignette } from "../components/Ico";
 import { useState } from "react";
 import { plante, probleme, CATEGORIES, FAMILLES } from "../data/index";
-import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty, imprimer } from "../components/ui";
+import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty, imprimer, Sommaire } from "../components/ui";
 import { useStore, getState } from "../lib/store";
 const getSol = () => getState().settings.sol;
 import { href } from "../lib/router";
@@ -131,6 +131,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
         : <div className="callout danger"><b>⚠️ Toxicité</b>{p.toxique}</div>)}
       {p.comestible && <div className="callout info"><b>🍽️ Comestible ?</b>{p.comestible} <span className="small muted">Ne consommez jamais une plante sauvage sans identification certaine (voir « Cueillir les plantes sauvages sans danger »).</span></div>}
 
+      <Sommaire />
       <div className="tabs" role="tablist">
         {[["culture", "Culture"], ["calendrier", "Calendrier"], ["voisins", "Voisins"], ["sante", "Santé"], ["animaux", "Animaux"], ["videos", "Vidéos"]]
           .filter(([k]) => !(interieur && (k === "calendrier" || k === "voisins")))

@@ -12,7 +12,8 @@ import { Logo } from "../App";
 import type { Plante } from "../data/types";
 import { ZONES } from "../data/index";
 import { aFaire, marquer } from "../lib/mesplantes";
-import { upsert } from "../lib/store";
+import { upsert, setSettings } from "../lib/store";
+import { rappelSauvegarde } from "../lib/sauvegarde";
 
 export function filtreSituation(sit: string) {
   return (p: Plante) =>
@@ -73,6 +74,17 @@ export default function Accueil() {
       <p className="muted" style={{ marginTop: -6 }}>
         {now.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })} · {saison}
       </p>
+      {(() => {
+        const r = rappelSauvegarde(s, now);
+        return r && (
+          <div className="card row" role="status" style={{ marginBottom: 12, borderLeft: "4px solid var(--sun)" }}>
+            <span style={{ fontSize: 24 }} aria-hidden>💾</span>
+            <div className="grow small"><b>Pensez à sauvegarder</b> : {r.saisies} saisies sont seulement sur cet appareil{r.jours === null ? ", jamais sauvegardées" : `, dernière sauvegarde il y a ${r.jours} jours`}.</div>
+            <A to="/reglages?s=sauvegarde" className="btn sm primary">Sauvegarder</A>
+            <button className="btn sm" onClick={() => setSettings({ rappelSauvegardeEcarte: new Date().toISOString() })}>Plus tard</button>
+          </div>
+        );
+      })()}
       <div className="row" style={{ marginBottom: 12 }}>
         <Listen id="jour" title="Le programme du jour" blocks={blocsLecture} label="Écouter le programme du jour" />
         {(settings.situation === "appartement" || settings.situation === "balcon") && <A to="/interieur" className="btn sm">🌿 Intérieur et aromates</A>}

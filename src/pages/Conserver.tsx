@@ -5,7 +5,7 @@ import { PLANTES, plante, GUIDES } from "../data/index";
 import { CONSERV, METHODES_CONSERV, RENDEMENTS, CALENDRIER_CONSERVES, TEMPS_TRAITEMENT, majorationAltitude, type MethodeConserv } from "../data/conservation";
 import { proposer, selLacto, sucreConfiture, LIEUX, GARDE_DEFAUT, finDeGarde, numeroLot, alertesStocks, planAnnee, stocksCsv, arrondi, type Materiel } from "../lib/conserverie";
 import { useRoute, href, go } from "../lib/router";
-import { Listen, toast, download, Photo, Videos, imprimer, Titre } from "../components/ui";
+import { Listen, toast, download, Photo, Videos, imprimer, Titre, Sommaire, Scene } from "../components/ui";
 import { MOIS_NOMS } from "../data/util";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
@@ -21,6 +21,7 @@ export default function Conserver() {
       <p className="muted">Toutes les façons de manger son jardin toute l'année, de la cave à la confiture, avec les règles de sécurité et un garde-manger pour suivre ses bocaux.</p>
       <div className="callout warn" style={{ margin: "8px 0" }}><b>⚠️ Sécurité d'abord</b> Tomates : toujours acidifier. Ail, herbes et légumes à l'huile : au réfrigérateur seulement. Bocal bombé ou qui pétille : on jette sans goûter. <a href={href("/guide/cs-securite")}>Les règles →</a></div>
       <details className="box small"><summary>📖 Les mots de la conserverie</summary><p style={{ margin: "6px 0 0" }}>Touchez un mot pour son explication : <MotsLexique texte="blanchir, pasteuriser, stériliser, autoclave, conserve acide / peu acide, botulisme, lacto-fermentation, saumure, pectine." /></p></details>
+      <Sommaire />
       <div className="chips" role="tablist" style={{ margin: "8px 0 12px" }}>
         {ONGLETS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/conserver?t=${k}`)}>{l}</button>)}
       </div>
@@ -78,7 +79,7 @@ function Assistant({ initial }: { initial: string }) {
   return (
     <div>
       <div className="card">
-        <b>J'ai trop de…</b>
+        <b data-titre>J'ai trop de…</b>
         <div className="grid-sm" style={{ marginTop: 6 }}>
           <select value={pid} onChange={(e) => setPid(e.target.value)} aria-label="Récolte">{AVEC_CONSERV.map((x) => <option key={x.id} value={x.id}>{x.emoji} {x.nom}</option>)}</select>
           <label className="small">Quantité (kg)<input type="number" min="0.1" step="0.5" value={kg} onChange={(e) => setKg(e.target.value)} /></label>
@@ -91,7 +92,7 @@ function Assistant({ initial }: { initial: string }) {
       </div>
       {p && c && (
         <div className="card" style={{ marginTop: 10 }}>
-          <b>{p.emoji} {p.nom}</b> <span className="small muted">— au frais : {c.frais}</span>
+          <b data-titre>{p.emoji} {p.nom}</b> <span className="small muted">— au frais : {c.frais}</span>
           {c.nonCongel && <div className="small">🚫 Ne se congèle pas : {c.nonCongel}</div>}
           <ol style={{ paddingLeft: 18, marginTop: 8 }}>
             {res.map((r, i) => { const M = METHODES_CONSERV[r.methode]; return (
@@ -156,7 +157,7 @@ function Calculs() {
   return (
     <div>
       <div className="card">
-        <b>📦 Combien de bocaux avec ma récolte ?</b>
+        <b data-titre>📦 Combien de bocaux avec ma récolte ?</b>
         <div className="row" style={{ marginTop: 6 }}>
           <select value={rid} onChange={(e) => setRid(e.target.value)} aria-label="Préparation">{RENDEMENTS.map((x) => <option key={x.id} value={x.id}>{x.nom}</option>)}</select>
           <input type="number" min="0" step="0.5" value={kg} onChange={(e) => setKg(e.target.value)} style={{ width: 90 }} aria-label="Quantité" /> <span className="small">{r.par.replace(/^kg/, "kg")}</span>
@@ -164,7 +165,7 @@ function Calculs() {
         <p>➡️ Environ <b>{arrondi((Number(kg) || 0) * r.facteur)} {r.unite}</b>{r.unite === "L" ? ` (≈ ${Math.ceil(((Number(kg) || 0) * r.facteur) / 0.5)} bocaux de 0,5 L)` : ""}. <span className="small muted">{r.note}</span></p>
       </div>
       <div className="card" style={{ marginTop: 10 }}>
-        <b>🧂 Sel de la lacto-fermentation</b>
+        <b data-titre>🧂 Sel de la lacto-fermentation</b>
         <div className="row" style={{ marginTop: 6 }}>
           <label className="small">Légumes râpés (kg)<input type="number" min="0" step="0.5" value={kgL} onChange={(e) => setKgL(e.target.value)} style={{ width: 90 }} /></label>
           <label className="small">ou saumure (litres)<input type="number" min="0" step="0.5" value={lS} onChange={(e) => setLS(e.target.value)} style={{ width: 90 }} /></label>
@@ -172,7 +173,7 @@ function Calculs() {
         <p className="small">Légumes râpés ou émincés : <b>{sl.rape} g de sel</b> (2 %). Légumes en morceaux : <b>{sl.saumure} g de sel</b> dans {lS} L d'eau non chlorée (30 g/L). Sel non iodé, sans antiagglomérant.</p>
       </div>
       <div className="card" style={{ marginTop: 10 }}>
-        <b>🍓 Sucre de la confiture</b>
+        <b data-titre>🍓 Sucre de la confiture</b>
         <div className="row" style={{ marginTop: 6 }}>
           <label className="small">Fruits préparés (kg)<input type="number" min="0" step="0.5" value={kgC} onChange={(e) => setKgC(e.target.value)} style={{ width: 90 }} /></label>
           <select value={taux} onChange={(e) => setTaux(e.target.value)} aria-label="Taux de sucre"><option value="1000">Classique (1 kg/kg)</option><option value="800">Traditionnelle (800 g/kg)</option><option value="700">Moins sucrée (700 g/kg)</option><option value="500">Allégée (500 g/kg)</option></select>
@@ -180,7 +181,7 @@ function Calculs() {
         <p className="small">Prévoir <b>{sc.sucre} kg de sucre</b>. {sc.allegee ? <b style={{ color: "var(--danger)" }}>Allégée : pasteurisez les pots 10 à 15 min et gardez-les au frais après ouverture.</b> : "Se garde 1 an au placard, fermée bouillante avec une capsule neuve."}</p>
       </div>
       <div className="card" style={{ marginTop: 10 }}>
-        <b>📋 Mes conserves pour l'année</b>
+        <b data-titre>📋 Mes conserves pour l'année</b>
         <p className="small muted">Combien en ouvrez-vous par mois, et pendant combien de mois ? L'appli calcule les bocaux et la récolte nécessaire.</p>
         <table className="table small"><tbody>
           {plan.map((l, i) => (
@@ -236,7 +237,7 @@ function GardeManger({ prefill, kg }: { prefill: string; kg: string }) {
     <div>
       {(al.depasses.length > 0 || al.bientot.length > 0) && (
         <div className="card" style={{ borderLeft: "4px solid var(--danger)" }}>
-          <b>À consommer en priorité</b>
+          <b data-titre>À consommer en priorité</b>
           <ul className="small" style={{ margin: "4px 0 0" }}>{[...al.depasses, ...al.bientot].map((s) => <li key={s.id}>{s.produit} ({s.quantite} {s.unite}, {LIEUX[s.lieu].toLowerCase()}) : avant le {fr(finDeGarde(s))}</li>)}</ul>
         </div>
       )}
@@ -258,7 +259,7 @@ function GardeManger({ prefill, kg }: { prefill: string; kg: string }) {
         <button className={`chip ${!filtre ? "on" : ""}`} onClick={() => setFiltre("")}>Tout ({stocks.filter((s) => s.quantite > 0).length})</button>
         {(Object.keys(LIEUX) as LieuStock[]).map((l) => <button key={l} className={`chip ${filtre === l ? "on" : ""}`} onClick={() => setFiltre(l)}>{LIEUX[l]} ({stocks.filter((s) => s.quantite > 0 && s.lieu === l).length})</button>)}
       </div>
-      {!actifs.length ? <p className="muted small">Votre garde-manger est vide. Ajoutez vos bocaux, sachets congelés et réserves de cave : l'appli vous rappellera ce qu'il faut consommer en premier.</p> : (
+      {!actifs.length ? <div className="empty"><Scene ico="recolte-action" emoji="🥫" taille={96} /><p className="muted small">Votre garde-manger est vide. Ajoutez vos bocaux, sachets congelés et réserves de cave : l'appli vous rappellera ce qu'il faut consommer en premier.</p></div> : (
         <table className="table small"><tbody>
           {actifs.map((s) => { const fin = finDeGarde(s); const urgent = fin < today(); return (
             <tr key={s.id}>

@@ -26,6 +26,8 @@ export interface Settings {
   sol?: { texture: string; traits: string[]; date: string }; // résultat du test « Mon sol »
   debutant?: boolean; // parcours « Je débute » mis en avant
   notifs?: boolean; // rappels sur le téléphone
+  derniereSauvegarde?: string; // date ISO de la dernière sauvegarde exportée
+  rappelSauvegardeEcarte?: string; // date ISO où le rappel de sauvegarde a été écarté
 }
 
 export type TypeEspace = "planche" | "carre" | "bac" | "pot" | "serre" | "interieur" | "verger";
@@ -85,6 +87,7 @@ export interface MaPlante {
 }
 
 export interface State {
+  schema?: number; // version du format des données (voir lib/sauvegarde.ts)
   settings: Settings;
   espaces: Espace[];
   cultures: Culture[];
@@ -133,7 +136,7 @@ export const DEFAULT_SETTINGS: Settings = {
   lune: true,
 };
 
-const EMPTY: State = {
+export const EMPTY: State = {
   settings: DEFAULT_SETTINGS,
   espaces: [],
   cultures: [],
@@ -164,6 +167,7 @@ const EMPTY: State = {
   favoris: [],
   plantes: [],
   prix: {},
+  schema: SCHEMA,
 };
 
 let state: State = EMPTY;
@@ -173,6 +177,7 @@ const emit = () => listeners.forEach((l) => l());
 
 export async function loadState() {
   const saved = await dbGet<Partial<State>>("state");
+  if (saved && (saved.schema ?? 1) > SCHEMA) console.warn("Données enregistrées par une version plus récente de Racines");
   if (saved) state = migrate({ ...EMPTY, ...saved, settings: { ...DEFAULT_SETTINGS, ...(saved.settings ?? {}) } });
   if (saved && saved.settings && (saved.settings as Partial<Settings>).lune === undefined && state.settings.situation === "appartement") state = { ...state, settings: { ...state.settings, lune: false } };
   loaded = true;
@@ -264,16 +269,19 @@ export async function exportBackup(): Promise<Blob> {
     const b = await dbGet<Blob>(k);
     if (b) photos[k] = await blobToDataUrl(b);
   }
-  const data = { app: "racines", version: 1, date: new Date().toISOString(), state: { ...state, settings: { ...state.settings, claudeKey: "", plantnetKey: "" } }, photos };
+  const date = new Date().toISOString();
+  const data = { app: "racines", version: SCHEMA, date, state: { ...state, schema: SCHEMA, settings: { ...state.settings, claudeKey: "", plantnetKey: "", derniereSauvegarde: date } }, photos };
+  setSettings({ derniereSauvegarde: date });
   return new Blob([JSON.stringify(data)], { type: "application/json" });
 }
 
 export async function importBackup(file: File) {
   const data = JSON.parse(await file.text());
   if (data?.app !== "racines" || !data.state) throw new Error("Ce fichier n'est pas une sauvegarde Racines.");
+  if ((data.state.schema ?? data.version ?? 1) > SCHEMA) throw new Error("Cette sauvegarde vient d'une version plus récente de Racines : mettez l'application à jour (Réglages › Rechercher une mise à jour) puis recommencez.");
   const keys = { claudeKey: state.settings.claudeKey, plantnetKey: state.settings.plantnetKey };
   for (const [k, v] of Object.entries(data.photos ?? {})) await dbSet(k, await (await fetch(v as string)).blob());
-  update(() => ({ ...EMPTY, ...data.state, settings: { ...DEFAULT_SETTINGS, ...data.state.settings, ...keys } }));
+  update(() => migrate({ ...EMPTY, ...data.state, settings: { ...DEFAULT_SETTINGS, ...data.state.settings, ...keys } }));
   applyAppearance();
 }
 
@@ -286,15 +294,27 @@ export function blobToDataUrl(b: Blob): Promise<string> {
   });
 }
 
-// Les plantes d'intérieur notées comme « cultures » (anciennes versions) deviennent des « Mes plantes »
+// ---------- Migrations du format des données ----------
+// Chaque migration fait passer les données de la version n à n + 1 ; elles s'enchaînent au chargement
+// et à la restauration d'une sauvegarde. Pour changer le format : ajouter une fonction ici et
+// augmenter SCHEMA dans lib/sauvegarde.ts (un test vérifie qu'il y a une migration par version).
 import { plante as ficheDe } from "../data/index";
-function migrate(s: State): State {
-  const restantes: Culture[] = [];
-  const plantes = [...(s.plantes ?? [])];
-  for (const c of s.cultures) {
-    const f = ficheDe(c.planteId);
-    if (f?.categorie === "interieur") plantes.push({ id: c.id, planteId: c.planteId, surnom: f.nom.split(" (")[0], depuis: c.date, arrosages: [], engrais: [], rempotages: [], photos: [] });
-    else restantes.push(c);
-  }
-  return { ...s, cultures: restantes, plantes };
+import { SCHEMA } from "./sauvegarde";
+export const MIGRATIONS: ((s: State) => State)[] = [
+  // 1 → 2 : les plantes d'intérieur notées comme « cultures » deviennent des « Mes plantes »
+  (s) => {
+    const restantes: Culture[] = [];
+    const plantes = [...(s.plantes ?? [])];
+    for (const c of s.cultures) {
+      const f = ficheDe(c.planteId);
+      if (f?.categorie === "interieur") plantes.push({ id: c.id, planteId: c.planteId, surnom: f.nom.split(" (")[0], depuis: c.date, arrosages: [], engrais: [], rempotages: [], photos: [] });
+      else restantes.push(c);
+    }
+    return { ...s, cultures: restantes, plantes };
+  },
+];
+export function migrate(s: State): State {
+  let v = s.schema ?? 1;
+  while (v < SCHEMA && MIGRATIONS[v - 1]) s = MIGRATIONS[v - 1](s), v++;
+  return { ...s, schema: Math.max(v, s.schema ?? 1) };
 }

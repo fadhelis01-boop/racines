@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PLANTES, SIGNES, plante, TYPES_PROBLEME } from "../data/index";
+import { PictoSigne } from "../components/PictoSigne";
 import { useRoute, href } from "../lib/router";
 import { diagnostiquer, norm } from "../lib/garden";
 import { Back, Listen, Titre } from "../components/ui";
@@ -64,7 +65,7 @@ export default function Diagnostic() {
             {signesOrgane.map(([k, s]) => (
               <label key={k} className="row" style={{ cursor: "pointer", padding: "6px 0" }}>
                 <input type="checkbox" checked={signes.includes(k)} onChange={() => setSignes(signes.includes(k) ? signes.filter((x) => x !== k) : [...signes, k])} style={{ width: 22, height: 22 }} />
-                <span>{s.emoji} {s.label}</span>
+                <span className="row" style={{ gap: 8, flexWrap: "nowrap" }}><PictoSigne id={k} />{s.label}</span>
               </label>
             ))}
           </div>
@@ -72,7 +73,7 @@ export default function Diagnostic() {
             {Object.entries(SIGNES).filter(([k]) => !signesOrgane.some(([j]) => j === k)).map(([k, s]) => (
               <label key={k} className="row" style={{ cursor: "pointer", padding: "4px 0" }}>
                 <input type="checkbox" checked={signes.includes(k)} onChange={() => setSignes(signes.includes(k) ? signes.filter((x) => x !== k) : [...signes, k])} />
-                <span>{s.emoji} {s.label}</span>
+                <span className="row" style={{ gap: 8, flexWrap: "nowrap" }}><PictoSigne id={k} />{s.label}</span>
               </label>
             ))}
           </details>

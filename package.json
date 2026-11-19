@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "vite",
     "check": "rolldown scripts/check-data.ts --platform node --format esm -o .tmp/check.mjs --log-level warn && node .tmp/check.mjs",
-    "smoke": "rolldown tests/logic.test.ts --platform node --format esm -o .tmp/logic.mjs --log-level warn && node .tmp/logic.mjs",
+    "smoke": "rolldown tests/tous.test.ts --platform node --format esm -o .tmp/tous.mjs --log-level warn && node .tmp/tous.mjs",
+    "test:recherche": "rolldown tests/recherche.seul.ts --platform node --format esm -o .tmp/recherche.mjs --log-level warn && node .tmp/recherche.mjs",
+    "test:logique": "rolldown tests/logic.seul.ts --platform node --format esm -o .tmp/logique.mjs --log-level warn && node .tmp/logique.mjs",
     "typecheck": "tsc --noEmit",
     "build": "npm run gen && npm run check && npm run smoke && tsc --noEmit && vite build",
     "preview": "vite preview",

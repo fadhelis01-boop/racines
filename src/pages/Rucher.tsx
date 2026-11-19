@@ -5,11 +5,14 @@ import { RACES } from "../data/races";
 import { PLANTES } from "../data/index";
 import { MOIS_NOMS } from "../data/util";
 import { href } from "../lib/router";
-import { toast, download, Empty, Titre } from "../components/ui";
+import { toast, download, Empty, Titre, Sommaire } from "../components/ui";
 import { couleurReine, COULEURS_REINE, METHODES_VARROA, valeurVarroa, niveauVarroa, seuilsVarroa, LIB_NIVEAU, pertesHiver, derniereVisite, dernierComptage, alertesRucher, registreTraitementsCsv, dernieresPesees, forceColonie, recolteParRuche, siropHiver, visitesCsv, PRODUITS_VARROA, TYPES_RUCHE, ORIGINES, vivantes, type NiveauVarroa } from "../lib/rucher";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
 const COUL: Record<NiveauVarroa, string> = { ok: "var(--green)", surveiller: "var(--sun)", traiter: "var(--danger)" };
+
+// Couleurs des séries de graphiques : jetons du thème (lisibles en clair et en sombre)
+const SERIES = [1, 2, 3, 4, 5, 6, 7].map((n) => `var(--serie-${n})`);
 
 function Pastille({ annee }: { annee?: number }) {
   if (!annee) return null;
@@ -27,6 +30,7 @@ export default function Rucher() {
     <div>
       <p className="small"><a href={href("/jardin/animaux")}>← Mes animaux</a> · <a href={href("/animal/abeille")}>Fiche abeille</a></p>
       <Titre ico="abeille" emoji="🐝">Mon rucher</Titre>
+      <Sommaire />
       <p className="muted">Chaque ruche suivie une par une : visites, comptages de varroa avec seuil d'alerte, registre des traitements, pertes d'hiver.</p>
       <details className="box small"><summary>📖 Les mots du rucher</summary><p style={{ margin: "6px 0 0" }}>Touchez un mot pour son explication : <MotsLexique texte="couvain, varroa, opercule, hausse, essaimage." /></p></details>
       <div className="chips" style={{ margin: "8px 0" }}>
@@ -37,7 +41,7 @@ export default function Rucher() {
       </div>
       {alertes.length > 0 && (
         <div className="card" style={{ borderLeft: "4px solid var(--danger)" }}>
-          <b>À faire au rucher</b>
+          <b data-titre>À faire au rucher</b>
           <ul className="small" style={{ margin: "6px 0 0" }}>{alertes.map((a, i) => <li key={i} style={{ color: a.grave ? "var(--danger)" : undefined }}>{a.texte}</li>)}</ul>
         </div>
       )}
@@ -130,7 +134,7 @@ function VisiteForm() {
   const num = (x: string) => (x === "" ? undefined : Number(x));
   return (
     <div className="card" style={{ marginTop: 12 }}>
-      <b>📝 Noter une visite</b>
+      <b data-titre>📝 Noter une visite</b>
       <div className="grid-sm" style={{ marginTop: 6 }}>
         <select value={rid} onChange={(e) => setF({ ...f, rucheId: e.target.value })} aria-label="Ruche">{ruches.map((r) => <option key={r.id} value={r.id}>{r.nom}</option>)}</select>
         <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} aria-label="Date" />
@@ -198,11 +202,11 @@ function CourbeVarroa() {
   const max = Math.max(1.5, ...pts.map((p) => p.r));
   const x = (d: string) => P + ((new Date(d + "T12:00:00").getTime() - t0) / (t1 - t0)) * (W - P - 6);
   const y = (r: number) => H - P - (r / max) * (H - P - 8);
-  const palette = ["#2f6fd6", "#d33", "#2a9d4b", "#a050c0", "#e08000", "#008c9e", "#806040"];
+  const palette = SERIES;
   const ids = [...new Set(pts.map((p) => p.v.rucheId))];
   return (
     <div className="card" style={{ marginTop: 12 }}>
-      <b>📉 Varroa sur 12 mois</b>
+      <b data-titre>📉 Varroa sur 12 mois</b>
       <p className="small muted">Chaque comptage est comparé au seuil de traitement de sa saison : au-dessus de la ligne rouge, il faut traiter.</p>
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 520 }} role="img" aria-label="Évolution du varroa par ruche">
         <rect x={P} y={y(max)} width={W - P - 6} height={y(1) - y(max)} style={{ fill: "var(--danger-soft)" }} />
@@ -216,8 +220,8 @@ function CourbeVarroa() {
           const s = pts.filter((p) => p.v.rucheId === id).sort((a, b) => a.v.date.localeCompare(b.v.date));
           const c = palette[i % palette.length];
           return <g key={id}>
-            <polyline points={s.map((p) => `${x(p.v.date)},${y(p.r)}`).join(" ")} fill="none" stroke={c} strokeWidth="1.5" />
-            {s.map((p) => <circle key={p.v.id} cx={x(p.v.date)} cy={y(p.r)} r="3" fill={c}><title>{`${ruches.find((r) => r.id === id)?.nom} le ${fr(p.v.date)} : ${valeurVarroa(p.v)} ${METHODES_VARROA[p.v.varroaMethode!].unite}`}</title></circle>)}
+            <polyline points={s.map((p) => `${x(p.v.date)},${y(p.r)}`).join(" ")} fill="none" style={{ stroke: c }} strokeWidth="1.5" />
+            {s.map((p) => <circle key={p.v.id} cx={x(p.v.date)} cy={y(p.r)} r="3" style={{ fill: c }}><title>{`${ruches.find((r) => r.id === id)?.nom} le ${fr(p.v.date)} : ${valeurVarroa(p.v)} ${METHODES_VARROA[p.v.varroaMethode!].unite}`}</title></circle>)}
           </g>;
         })}
       </svg>
@@ -235,7 +239,7 @@ function Traitements() {
   const tri = [...traitements].sort((a, b) => b.debut.localeCompare(a.debut));
   return (
     <div className="card" style={{ marginTop: 12 }}>
-      <b>💊 Registre des traitements</b>
+      <b data-titre>💊 Registre des traitements</b>
       <p className="small callout warn" style={{ margin: "6px 0" }}>Liste de médicaments donnée à titre d'exemple, à vérifier : seuls comptent les médicaments autorisés pour l'abeille, listés dans l'index officiel des médicaments vétérinaires (ANSES-ANMV) ; demandez à votre vétérinaire ou à votre GDSA.</p>
       <p className="small muted">Obligatoire : date, médicament, numéro de lot, ruches traitées, et l'ordonnance ou la facture conservée 5 ans. N'utilisez que des médicaments autorisés pour l'abeille.</p>
       <div className="grid-sm">
@@ -274,7 +278,7 @@ function Pertes() {
   const now = vivantes(ruches, today()).length;
   return (
     <div className="card" style={{ marginTop: 12 }}>
-      <b>❄️ Pertes d'hiver</b> <span className="small muted">— {now} colonie{now > 1 ? "s" : ""} en vie aujourd'hui</span>
+      <b data-titre>❄️ Pertes d'hiver</b> <span className="small muted">— {now} colonie{now > 1 ? "s" : ""} en vie aujourd'hui</span>
       {!hivers.length ? <p className="small muted">Les pertes se calculent du 1er novembre au 30 avril, à partir des colonies notées « perdues ».</p> : (
         <table className="table small" style={{ marginTop: 6 }}><tbody>
           {hivers.map((h) => <tr key={h.a}><td>Hiver {h.a}-{h.a + 1}</td><td>{h.mortes} / {h.hivernees} colonies perdues</td><td><b style={{ color: h.taux > 20 ? "var(--danger)" : undefined }}>{h.taux} %</b></td><td className="muted">{h.causes.join(", ")}</td></tr>)}
@@ -296,16 +300,16 @@ function ForceColonies() {
   const max = Math.max(10, ...series.flatMap((x) => x.pts.map((p) => p.cadres)));
   const x = (d: string) => P + ((new Date(d).getTime() - t0) / (t1 - t0)) * (W - P - 6);
   const y = (c: number) => H - P - (c / max) * (H - P - 8);
-  const pal = ["#2f6fd6", "#d33", "#2a9d4b", "#a050c0", "#e08000", "#008c9e", "#806040"];
+  const pal = SERIES;
   return (
     <div className="card" style={{ marginTop: 12 }}>
-      <b>💪 Force des colonies</b>
+      <b data-titre>💪 Force des colonies</b>
       <p className="small muted">Cadres couverts d'abeilles à chaque visite : une colonie forte en sortie d'hiver en couvre 5 à 6, plus de 10 en pleine saison. Une colonie qui reste faible au printemps est à réunir ou à remérer.</p>
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 520 }} role="img" aria-label="Évolution du nombre de cadres d'abeilles par ruche">
         <line x1={P} x2={P} y1={8} y2={H - P} stroke="currentColor" opacity=".3" />
         <line x1={P} x2={W - 6} y1={H - P} y2={H - P} stroke="currentColor" opacity=".3" />
         {[5, 10].filter((k) => k <= max).map((k) => <g key={k}><line x1={P} x2={W - 6} y1={y(k)} y2={y(k)} stroke="currentColor" opacity=".12" /><text x={2} y={y(k) + 3} fontSize="8" fill="currentColor" opacity=".6">{k}</text></g>)}
-        {series.map((sr, i) => <g key={sr.r.id}><polyline points={sr.pts.map((p) => `${x(p.date)},${y(p.cadres)}`).join(" ")} fill="none" stroke={pal[i % pal.length]} strokeWidth="1.5" />{sr.pts.map((p) => <circle key={p.date} cx={x(p.date)} cy={y(p.cadres)} r="2.5" fill={pal[i % pal.length]}><title>{`${sr.r.nom} le ${fr(p.date)} : ${p.cadres} cadres`}</title></circle>)}</g>)}
+        {series.map((sr, i) => <g key={sr.r.id}><polyline points={sr.pts.map((p) => `${x(p.date)},${y(p.cadres)}`).join(" ")} fill="none" style={{ stroke: pal[i % pal.length] }} strokeWidth="1.5" />{sr.pts.map((p) => <circle key={p.date} cx={x(p.date)} cy={y(p.cadres)} r="2.5" style={{ fill: pal[i % pal.length] }}><title>{`${sr.r.nom} le ${fr(p.date)} : ${p.cadres} cadres`}</title></circle>)}</g>)}
       </svg>
       <div className="small">{series.map((sr, i) => <span key={sr.r.id} style={{ marginRight: 10 }}><span style={{ color: pal[i % pal.length] }}>●</span> {sr.r.nom}</span>)}</div>
     </div>
@@ -359,7 +363,7 @@ function CalendrierMellifere() {
   const suggestions = (m: number) => mell.filter((p) => !mes.has(p.id) && (p.floraison as number[]).includes(m) && p.sansDangerAnimaux !== false && p.categorie !== "toxique").slice(0, 4);
   return (
     <div className="card" style={{ marginTop: 12 }}>
-      <b>🌼 Calendrier mellifère du jardin</b>
+      <b data-titre>🌼 Calendrier mellifère du jardin</b>
       <p className="small muted">Les abeilles butinent jusqu'à 3 km, mais les fleurs du jardin comptent dans les périodes creuses. Plantes mellifères de vos cultures et de vos fiches « Mes plantes », par mois de floraison :</p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 2, alignItems: "end", height: 70 }} aria-label="Nombre de plantes mellifères en fleur par mois">
         {parMois.map((l, i) => <div key={i} title={`${MOIS_NOMS[i]} : ${l.map((p) => p.nom).join(", ") || "rien"}`} style={{ height: `${Math.max(4, Math.min(100, l.length * 20))}%`, background: l.length ? "var(--sun)" : "var(--danger-soft)", borderRadius: 3 }} />)}

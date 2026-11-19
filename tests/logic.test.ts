@@ -45,8 +45,10 @@ import { proposer, numeroLot, finDeGarde, alertesStocks, planAnnee, selLacto, su
 import { CONSERV, METHODES_CONSERV, majorationAltitude } from "../src/data/conservation";
 import { MALADIES_ANIMALES } from "../src/data/maladies-animales";
 
-let fails = 0, n = 0;
-const ok = (c: boolean, m: string) => { n++; if (!c) { fails++; console.error("✗ " + m); } };
+import { ok } from "./outils";
+import { filtrerMenu, raccourcis } from "../src/lib/menu";
+import { migrate, MIGRATIONS, EMPTY } from "../src/lib/store";
+import { SCHEMA, rappelSauvegarde, nombreSaisies, tailleLisible, ilYa } from "../src/lib/sauvegarde";
 
 // Décalage climatique
 ok([...shiftMonths([5], 0)].join() === "5", "sans décalage");
@@ -696,5 +698,30 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   b("traire une chèvre", "Traire une chèvre");
 }
 
-console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
-if (fails) process.exit(1);
+
+// Audit développeur : version des données, migrations, rappel de sauvegarde
+{
+  ok(MIGRATIONS.length === SCHEMA - 1, `une migration par version (${MIGRATIONS.length} pour la version ${SCHEMA})`);
+  const ancien = { ...EMPTY, schema: undefined, cultures: [{ id: "c1", planteId: "monstera", date: "2025-01-01", mode: "plantation" as const }, { id: "c2", planteId: "tomate", date: "2025-05-01", mode: "plantation" as const }] };
+  const m = migrate(ancien);
+  ok(m.schema === SCHEMA && m.cultures.length === 1 && m.plantes.length === 1, "migration 1 → 2 : plante d'intérieur déplacée, version à jour");
+  ok(migrate(m).plantes.length === 1, "une migration ne s'applique qu'une fois");
+  const plein = { ...EMPTY, recoltes: Array.from({ length: 6 }, (_, i) => ({ id: "r" + i, planteId: "tomate", date: "2026-07-01", qte: 1, unite: "kg" as const })) };
+  ok(nombreSaisies(plein) === 6, "comptage des saisies");
+  ok(rappelSauvegarde(EMPTY) === null, "pas de rappel sans saisies");
+  ok(rappelSauvegarde(plein)?.jours === null, "rappel si jamais sauvegardé");
+  const now = new Date("2026-11-19T12:00:00Z");
+  ok(rappelSauvegarde({ ...plein, settings: { ...plein.settings, derniereSauvegarde: "2026-11-01T12:00:00Z" } }, now) === null, "pas de rappel moins de 30 jours après une sauvegarde");
+  ok(rappelSauvegarde({ ...plein, settings: { ...plein.settings, derniereSauvegarde: "2026-09-01T12:00:00Z" } }, now)?.jours === 79, "rappel après 30 jours");
+  ok(rappelSauvegarde({ ...plein, settings: { ...plein.settings, rappelSauvegardeEcarte: "2026-11-10T12:00:00Z" } }, now) === null, "rappel écarté pour 30 jours");
+  ok(tailleLisible(2_500_000) === "2,4 Mo" && ilYa("2026-11-18T12:00:00Z", now) === "hier", "affichage taille et date");
+}
+
+// Audit UX : menu Plus cherchable, raccourcis
+{
+  ok(filtrerMenu("ruche").some((e) => e.to === "/rucher"), "menu : « ruche » trouve Mon rucher");
+  ok(filtrerMenu("conserves").some((e) => e.to === "/conserver"), "menu : « conserves » trouve Conserver");
+  ok(filtrerMenu("SOL").some((e) => e.to === "/sol"), "menu : recherche sans majuscules ni accents");
+  ok(filtrerMenu("x").length === 0, "menu : saisie trop courte, rien");
+  ok(raccourcis({ "/rucher": 5, "/sol": 1, "/calculs": 3 }).map((e) => e.to).join() === "/rucher,/calculs", "raccourcis : les plus ouverts, au moins 2 fois");
+}

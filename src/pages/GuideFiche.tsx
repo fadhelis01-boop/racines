@@ -3,7 +3,8 @@ import MotsLexique from "../components/MotsLexique";
 import { useEffect, useState } from "react";
 import { lienVers, RUBRIQUES } from "../data/index";
 import { guideComplet } from "../data/guides-complets";
-import { Back, Listen, Videos, A, Empty, Photo, imprimer } from "../components/ui";
+import { Back, Listen, Videos, A, Empty, Photo, imprimer, BandeauRubrique } from "../components/ui";
+import { schemasDuGuide } from "../components/Schemas";
 import { youtube } from "../data/util";
 import TableFumiers from "../components/TableFumiers";
 import { href } from "../lib/router";
@@ -44,9 +45,10 @@ export default function GuideFiche({ id }: { id?: string }) {
       <Back />
       <span className="badge green" style={{ marginTop: 8 }}>{RUBRIQUES[g.rubrique].emoji} {RUBRIQUES[g.rubrique].label}</span>
       <h1 style={{ marginTop: 8 }}>{g.emoji} {g.titre}</h1>
-      <div className="guide-hero"><Photo id={g.id} emoji="" alt="" /></div>
+      <div className="guide-hero"><Photo id={g.id} emoji="" alt="" repli={<BandeauRubrique rubrique={g.rubrique} emoji={g.emoji} />} /></div>
       {(g.id === "connaitre-sol" || g.id === "engrais-naturels") && <a className="callout ok row" href={href(g.id === "connaitre-sol" ? "/sol" : "/nutrition")} style={{ display: "flex", textDecoration: "none", color: "inherit" }}><span>{g.id === "connaitre-sol" ? "🧪 Faites le test guidé « Mon sol » : 7 questions, et l'appli vous dit quel est votre sol, comment l'améliorer et ce qui s'y plaît." : "🍽️ Voir les besoins de chaque plante et de chaque animal, expliqués simplement."}</span></a>}
       <p>{g.resume}</p>
+      {schemasDuGuide(g.id).map(({ id, C }) => <C key={id} />)}
       <div className="row">
         <span className="badge">{["", "Facile", "Intermédiaire", "Avancé"][g.niveau]}</span>
         <span className="badge green">⏱ {g.duree}</span>

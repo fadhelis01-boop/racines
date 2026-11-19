@@ -4,7 +4,7 @@ import { PLANTES, plante } from "../data/index";
 import { MARAICH, TEMPS_METHODE } from "../data/maraichage";
 import { planifier, plantsParPlanche, successions, engraisVertPour, nurserie, tempsDeTravail, occupation } from "../lib/plan-culture";
 import { useRoute, href, go } from "../lib/router";
-import { Back, Listen, toast, download, Titre } from "../components/ui";
+import { Back, Listen, toast, download, Titre, Sommaire } from "../components/ui";
 import { Vignette } from "../components/Ico";
 import { EXPORTS } from "../lib/exports";
 import { economiePlanche, classementCultures, PRIX_BIO, PANIERS_TYPES, paniersPossibles } from "../lib/economie";
@@ -20,6 +20,7 @@ export default function PlanCulture() {
       <Back />
       <Titre ico="calendrier" emoji="📋">Plan de culture</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Pour un potager qui produit en continu : séries de semis échelonnées, nombre de plants et de graines, plants par planche, successions sur une même planche, calendrier de la nurserie et temps de travail. Valeurs indicatives, à ajuster avec votre expérience.</p>
+      <Sommaire />
       <div className="chips" role="tablist" style={{ margin: "10px 0 14px" }}>
         {ONGLETS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/plan-culture?t=${k}`)}>{l}</button>)}
       </div>
@@ -212,7 +213,7 @@ function Economie() {
   return (
     <div>
       <div className="card stack">
-        <b>💶 Économie d'une planche</b>
+        <b data-titre>💶 Économie d'une planche</b>
         <div className="grid-sm">
           <label className="field">Culture<select value={cid} onChange={(ev) => { setCid(ev.target.value); setPrix(""); }}>{Object.keys(MARAICH).sort((a, b) => (plante(a)?.nom ?? a).localeCompare(plante(b)?.nom ?? b)).map((id) => <option key={id} value={id}>{plante(id)?.nom ?? id}</option>)}</select></label>
           <label className="field">Surface (m²)<input type="number" min="1" value={surf} onChange={(ev) => setSurf(Number(ev.target.value) || 1)} /></label>
@@ -233,7 +234,7 @@ function Economie() {
 
       {plan.length > 0 && (
         <div className="card" style={{ marginTop: 12 }}>
-          <b>Votre plan de culture {an}</b>
+          <b data-titre>Votre plan de culture {an}</b>
           <p className="small">{plan.length} cultures notées sur vos planches : chiffre d'affaires possible <b>{totPlan.ca} €</b>, marge <b>{totPlan.marge} €</b>, environ <b>{Math.round(totPlan.h)} h</b> de travail, soit <b>{totPlan.h ? Math.round((totPlan.marge / totPlan.h) * 10) / 10 : 0} €/h</b> avant charges fixes.</p>
         </div>
       )}
@@ -249,7 +250,7 @@ function Economie() {
       </div>
 
       <div className="card" style={{ marginTop: 12 }}>
-        <b>🧺 Paniers de saison</b>
+        <b data-titre>🧺 Paniers de saison</b>
         <label className="field" style={{ maxWidth: 260 }}>Surface cultivée (m²)<input type="number" min="10" step="10" value={surfTotale} onChange={(ev) => setSurfTotale(Number(ev.target.value) || 10)} /></label>
         <p className="small">Environ <b>{paniersPossibles(surfTotale)} paniers par semaine</b> sur l'année (repère : 25 à 35 m² cultivés par panier hebdomadaire, selon le climat et les abris).</p>
         <div className="grid">{PANIERS_TYPES.map((pn) => <div key={pn.saison} className="card" style={{ background: "var(--surface-2)" }}><b>{pn.saison}</b> <span className="badge">≈ {pn.valeur} €</span><ul className="ticks small" style={{ margin: "4px 0 0" }}>{pn.contenu.map((c) => <li key={c}>{c}</li>)}</ul></div>)}</div>

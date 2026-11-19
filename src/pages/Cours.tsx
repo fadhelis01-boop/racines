@@ -1,4 +1,7 @@
 import { Titre } from "../components/ui";
+import { SCHEMAS } from "../components/Schemas";
+// Schémas montrés dans chaque leçon
+const SCHEMAS_LECON: Record<string, string[]> = { sol: ["horizons"], plante: ["azote"], fertilite: ["rotation", "azote"], protection: ["varroa"] };
 import { PARCOURS_AGRONOMIE, QUIZ } from "../data/pedagogie";
 import { GUIDES } from "../data/index";
 import { LEXIQUE } from "../data/lexique";
@@ -24,6 +27,7 @@ export default function Cours() {
             <div className="row between"><b>{l.emoji} {l.titre}</b><label className="small"><input type="checkbox" checked={!!fait[`cours:${l.id}`]} onChange={() => toggleFait(`cours:${l.id}`)} /> Leçon terminée</label></div>
             <p className="small" style={{ margin: "6px 0 2px" }}><b>À la fin de la leçon, vous saurez :</b></p>
             <ul className="ticks small" style={{ margin: 0 }}>{l.objectifs.map((o) => <li key={o}>{o}</li>)}</ul>
+            {(SCHEMAS_LECON[l.id] ?? []).length > 0 && <details className="box small" style={{ marginTop: 8 }}><summary>🖼️ Le schéma de la leçon</summary>{SCHEMAS.filter((x) => SCHEMAS_LECON[l.id].includes(x.id)).map(({ id, C }) => <C key={id} />)}</details>}
             <p className="small" style={{ margin: "8px 0 2px" }}><b>Lire</b></p>
             <div className="chips">{guides.map((g) => <a key={g!.id} className="chip" href={href(`/guide/${g!.id}`)}>{g!.emoji} {g!.titre}{QUIZ[g!.id] ? (fait[`quiz:${g!.id}`] ? " ✓" : " · quiz") : ""}</a>)}</div>
             <p className="small" style={{ margin: "8px 0 2px" }}><b>Pratiquer</b></p>

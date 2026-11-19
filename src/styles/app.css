@@ -25,6 +25,9 @@
   /* Échelle typographique : 7 tailles seulement */
   --t-xs: 0.78rem; --t-sm: 0.88rem; --t-md: 1rem; --t-lg: 1.15rem; --t-xl: 1.35rem; --t-2xl: 1.75rem; --t-3xl: 2.6rem;
   /* Espacements */
+  /* Couleurs des graphiques (séries) et du plan du jardin : redéfinies en mode sombre */
+  --serie-1: #2f6fd6; --serie-2: #d33a2c; --serie-3: #2a9d4b; --serie-4: #a050c0; --serie-5: #c97200; --serie-6: #008c9e; --serie-7: #806040;
+  --plan-fond: #e8efd9; --plan-grille: #cdd9b8; --plan-texte: #14321a; --plan-trait: #222;
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px;
   color-scheme: light;
 }
@@ -49,6 +52,8 @@
     --danger-soft: #3d1f1d;
     --info: #8cbfe8;
     --info-soft: #1d2d3b;
+    --serie-1: #7fb0ff; --serie-2: #ff8a80; --serie-3: #6fd68f; --serie-4: #d29bf0; --serie-5: #ffb35c; --serie-6: #5fd3e0; --serie-7: #d0b08a;
+    --plan-fond: #24301f; --plan-grille: #34452e; --plan-texte: #e2ecd8; --plan-trait: #e2ecd8;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     color-scheme: dark;
   }
@@ -58,6 +63,9 @@
   --green: #7cc488; --green-2: #96d6a0; --green-soft: #22372a; --terra: #e8946a; --terra-soft: #3b271d;
   --sun: #f0c24d; --sun-soft: #3a3118; --sun-text: #f0c24d; --terra-text: #e8946a; --danger: #ff8a80; --danger-soft: #3d1f1d; --info: #8cbfe8; --info-soft: #1d2d3b;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3); color-scheme: dark;
+  --serie-1: #7fb0ff; --serie-2: #ff8a80; --serie-3: #6fd68f; --serie-4: #d29bf0; --serie-5: #ffb35c; --serie-6: #5fd3e0; --serie-7: #d0b08a;
+  --plan-fond: #24301f; --plan-grille: #34452e; --plan-texte: #e2ecd8; --plan-trait: #e2ecd8;
+
 }
 :root[data-texte="grand"] { --fs: 18px; }
 :root[data-texte="tres-grand"] { --fs: 21px; }

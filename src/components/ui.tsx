@@ -20,12 +20,12 @@ export const wikiOf = (id: string) => wikiCharge()?.[id];
 export const toutesLesPhotos = () => [...Object.values(wikiCharge() ?? {}).flatMap((w) => (w.photos ?? []).map((p) => p.img)), ...[...LOCAL].map((id) => `./img/${id}.webp`)];
 
 // Photo libre (Wikimedia) ou, à défaut, l'emoji de la fiche
-export function Photo({ id, emoji, alt }: { id: string; emoji: string; alt: string; credit?: boolean }) {
+export function Photo({ id, emoji, alt, repli }: { id: string; emoji: string; alt: string; credit?: boolean; repli?: ReactNode }) {
   const w = useWiki()?.[id];
   const [etat, setEtat] = useState<"local" | "wiki" | "err">(LOCAL.has(id) ? "local" : "wiki");
   const local = `./img/${id}.webp`;
   const src = etat === "local" ? local : etat === "wiki" ? w?.photos?.[0]?.img : undefined;
-  if (!src) return <span aria-hidden="true">{emoji}</span>;
+  if (!src) return repli ? <>{repli}</> : <span aria-hidden="true">{emoji}</span>;
   return (
     <>
       <img
@@ -220,8 +220,43 @@ export function Section({ title, children, right }: { title: string; children: R
   );
 }
 
-export function Empty({ emoji, children }: { emoji: string; children: ReactNode }) {
-  return <div className="empty"><div className="e">{emoji}</div>{children}</div>;
+// État vide illustré : une petite scène (cercle, sol, pousses) autour de l'icône dessinée de la rubrique.
+// L'icône est déduite de l'emoji quand elle n'est pas précisée.
+const ICO_DE_EMOJI: Record<string, string> = { "🌱": "semis", "🗺️": "jardin", "🧺": "recolte", "📓": "lexique", "🏺": "semis", "🐝": "abeille", "🐔": "animaux", "🌿": "interieur", "🥫": "recolte-action", "🐐": "animaux", "📋": "calendrier" };
+export function Scene({ ico, emoji, taille = 120 }: { ico?: string; emoji: string; taille?: number }) {
+  return (
+    <div style={{ position: "relative", width: taille, height: taille, margin: "0 auto 8px" }} aria-hidden="true">
+      <svg viewBox="0 0 120 120" width={taille} height={taille} style={{ position: "absolute", inset: 0 }}>
+        <circle cx="60" cy="56" r="50" style={{ fill: "var(--green-soft)" }} />
+        <circle cx="94" cy="22" r="9" style={{ fill: "var(--sun-soft)", stroke: "var(--sun)" }} strokeWidth="1.5" />
+        <path d="M8 96 Q60 84 112 96 L112 120 L8 120 z" style={{ fill: "var(--terra-soft)" }} />
+        <g style={{ stroke: "var(--green)" }} strokeWidth="2" fill="none" strokeLinecap="round"><path d="M22 96 q0 -10 -6 -14 M22 96 q0 -8 6 -12" /><path d="M100 95 q0 -9 -5 -12 M100 95 q0 -7 5 -10" /></g>
+      </svg>
+      <div style={{ position: "absolute", left: 0, right: 0, top: taille * 0.18, textAlign: "center" }}><Ico nom={ico ?? ICO_DE_EMOJI[emoji] ?? ""} emoji={emoji} taille={taille * 0.48} /></div>
+    </div>
+  );
+}
+export function Empty({ emoji, ico, children }: { emoji: string; ico?: string; children: ReactNode }) {
+  if (emoji === "🤷") return <div className="empty"><div className="e">{emoji}</div>{children}</div>;
+  return <div className="empty"><Scene ico={ico} emoji={emoji} />{children}</div>;
+}
+
+// Illustration de remplacement d'un tutoriel sans photo : paysage aux couleurs du thème et icône de la rubrique
+const ICO_RUBRIQUE: Record<string, string> = { demarrer: "demarrer", fleurs: "fleur", sol: "sol", compost: "compost", arrosage: "arrosage", semis: "semis", serre: "serre", balcon: "balcon", interieur: "interieur", fabriquer: "fabriquer", recolte: "recolte", animaux: "animaux", boucherie: "boucherie", securite: "securite" };
+export function BandeauRubrique({ rubrique, emoji, plein }: { rubrique: string; emoji: string; plein?: boolean }) {
+  return (
+    <div className="bandeau-rubrique" aria-hidden="true" style={{ position: "relative", ...(plein ? { height: "100%" } : { aspectRatio: "16 / 6" }), borderRadius: plein ? 0 : 14, overflow: "hidden", background: "linear-gradient(var(--sun-soft), var(--surface))" }}>
+      <svg viewBox="0 0 400 150" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+        <circle cx="330" cy="38" r="20" style={{ fill: "var(--sun)" }} opacity=".55" />
+        <path d="M0 110 Q90 70 190 100 T400 92 L400 150 L0 150 z" style={{ fill: "var(--green-soft)" }} />
+        <path d="M0 128 Q120 104 240 124 T400 120 L400 150 L0 150 z" style={{ fill: "var(--terra-soft)" }} />
+        <g style={{ stroke: "var(--green)" }} strokeWidth="2" fill="none" strokeLinecap="round" opacity=".7">
+          {[40, 70, 300, 360].map((x) => <path key={x} d={`M${x} 128 q0 -14 -8 -20 M${x} 128 q0 -11 8 -16`} />)}
+        </g>
+      </svg>
+      <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center" }}><Ico nom={ICO_RUBRIQUE[rubrique] ?? ""} emoji={emoji} taille={plein ? 64 : 96} /></div>
+    </div>
+  );
 }
 
 export function StoredPhoto({ k, className }: { k: string; className?: string }) {
@@ -286,4 +321,34 @@ export function imprimer(selecteur?: string) {
   window.addEventListener("afterprint", fin);
   window.print();
   setTimeout(fin, 1000);
+}
+
+// Sommaire des pages longues : une ligne de puces vers chaque titre (h2, ou élément marqué data-titre)
+// de la page. Se met à jour quand le contenu change (onglets, cartes qui apparaissent).
+export function Sommaire({ min = 3 }: { min?: number }) {
+  const ref = useRef<HTMLElement>(null);
+  const [titres, setTitres] = useState<{ id: string; t: string }[]>([]);
+  useEffect(() => {
+    const page = ref.current?.parentElement;
+    if (!page) return;
+    const lire = () => {
+      const els = [...page.querySelectorAll<HTMLElement>("h2, [data-titre]")].filter((e) => !e.closest("nav.sommaire") && e.offsetParent !== null);
+      const t = els.map((e, i) => {
+        if (!e.id) e.id = "s-" + i + "-" + (e.textContent ?? "").toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").slice(0, 30);
+        const d = e.dataset.titre; // data-titre seul (valeur « true ») : on prend le texte du titre
+        return { id: e.id, t: (d && d !== "true" ? d : e.textContent || "").trim() };
+      }).filter((x) => x.t);
+      setTitres((avant) => (JSON.stringify(avant) === JSON.stringify(t) ? avant : t));
+    };
+    lire();
+    const mo = new MutationObserver(() => lire());
+    mo.observe(page, { childList: true, subtree: true });
+    return () => mo.disconnect();
+  }, []);
+  return (
+    <nav ref={ref} className="sommaire chips small" aria-label="Sur cette page" style={{ margin: "6px 0 10px", display: titres.length >= min ? undefined : "none" }}>
+      <span className="muted" style={{ alignSelf: "center" }}>Sur cette page :</span>
+      {titres.map((x) => <a key={x.id} className="chip" href={`#${x.id}`} onClick={(e) => { e.preventDefault(); document.getElementById(x.id)?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>{x.t}</a>)}
+    </nav>
+  );
 }

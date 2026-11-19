@@ -70,6 +70,8 @@ function docs(): Doc[] {
     { principal: false, animal: true, href: "/jardin/animaux", emoji: "🍼", titre: "Carnet de reproduction et performances de l'élevage", type: "Outil", noms: norm("carnet de reproduction | carnet d agnelage | saillies | mises bas | taux de ponte | cout de revient | croissance | pesee | lait par chevre"), texte: norm("bilan femelle prolificite survie gain moyen quotidien") },
     { principal: false, href: "/agronome", emoji: "🧮", titre: "Outils de l'agronome : texture, chaulage, bilan humique, azote, degrés-jours", type: "Outil", noms: norm("outils de l agronome | chaulage | bilan humique | fumure azotee | triangle des textures | degres jours"), texte: norm("ph calcaire chaux matiere organique compost azote temperature") },
     { principal: false, href: "/cours", emoji: "🎓", titre: "Comprendre l'agronomie : parcours en 5 leçons avec quiz", type: "Outil", noms: norm("comprendre l agronomie | cours d agronomie | lecons | parcours | quiz | apprendre"), texte: norm("sol plante eau fertilite protection des cultures") },
+    { principal: false, href: "/creer", emoji: "👨‍🌾", titre: "Créer mon potager : un plan pour la première année", type: "Outil", noms: norm("creer mon potager | creer un potager | faire un potager | premier potager | commencer un potager"), texte: "" },
+    { principal: false, href: "/guides", emoji: "📚", titre: "Tous les tutoriels (à lire ou imprimer)", type: "Outil", noms: norm("tutoriels | tous les tutoriels | guides | imprimer | impression | version papier"), texte: "" },
     { principal: false, href: "/references", emoji: "📚", titre: "Sources et références", type: "Outil", noms: norm("sources | references | bibliographie | pour aller plus loin | organismes"), texte: norm("inrae itab chambres d agriculture fredon anses itsap gds") },
     { principal: false, href: "/plan-culture?t=economie", emoji: "💶", titre: "Économie d'une planche : chiffre d'affaires, marge, €/heure, paniers", type: "Outil", noms: norm("economie d une planche | rentabilite | prix de vente | chiffre d affaires | marge | paniers | amap | combien rapporte"), texte: norm("maraichage vente directe bio legumes remuneration heure") },
     { principal: false, href: "/calendrier", emoji: "📅", titre: "Calendrier du mois : que semer, planter, récolter maintenant", type: "Outil", noms: norm("calendrier | calendrier du potager | que planter ce mois | que semer maintenant | quoi semer | travaux du mois | calendrier lunaire | semis du mois | plantations du mois"), texte: norm("janvier fevrier mars avril mai juin juillet aout septembre octobre novembre decembre semis plantation recolte") },
@@ -142,8 +144,12 @@ const PHRASES: [RegExp, string][] = [
   [/arrosage automatique/g, "arrosage automatique programmateur"],
 ];
 
-// Intentions de débutant : la page qui répond vraiment à la question passe en tête
-const INTENTIONS: [RegExp, string[]][] = [
+// Intentions de débutant : la page qui répond vraiment à la question passe en tête.
+// Table déclarative : [motif, pages visées dans l'ordre]. Chaque motif ne se déclenche qu'en début
+// de mot (« ration » ne réagit plus à « déclaration », « secher » à « dessécher ») ; les exemples
+// de questions et leur page attendue sont vérifiés à chaque build (tests/recherche.test.ts).
+export const debutDeMot = (re: RegExp) => new RegExp(`(?:^|[^a-z0-9])(?:${re.source})`);
+const INTENTIONS_BRUTES: [RegExp, string[]][] = [
   [/(tue|tuer|meurent|meurt|crevent).*(plantes?|tout)|main verte|increvable|indestructible|qui ne meur|qui meurt pas|plantes? faciles?|debutant|debuter|je debute|commencer le jardinage|par ou commencer|plantes? (robustes?|resistantes?)$/, ["/debuter", "/interieur?t=catalogue&facile=1"]],
   [/feuilles? (marron|brunes?|seches?|grillees?)|bouts? (des feuilles )?(marron|bruns?|secs?)/, ["/probleme/air-sec", "/probleme/soif", "/probleme/coup-soleil", "/probleme/pourriture-racines"]],
   [/betes? blanches?|bestioles? blanches?|insectes? blancs?|coton blanc|duvet blanc sur (la )?plante|petites? mouches? blanches?/, ["/probleme/cochenilles", "/probleme/aleurode"]],
@@ -204,7 +210,7 @@ const INTENTIONS: [RegExp, string[]][] = [
   [/(combien de |quantite de )?sucre (pour (le )?)?sirop|sirop (de )?nourrissement|calcul (du )?sirop/, ["/rucher", "/guide/api-nourrissement"]],
   [/rayon de butinage|distance de butinage|jusqu ou vont les abeilles/, ["/guide/api-miellees", "/guide/api-pesticides"]],
   [/neonicotin|pesticides?.*(abeilles?|ruches?|rucher)|(abeilles?|ruches?).*pesticides?|mortalite massive/, ["/guide/api-pesticides", "/maladie-animale/intoxication-abeilles"]],
-  [/(ne pondent|pondent plus|arret de ponte|plus d oeufs).*(hiver|automne|novembre|decembre)|mue des poules|poules? (qui )?(perd|perdent) (ses|leurs) plumes|eclairer (le )?poulailler|lumiere (dans le |au )?poulailler/, ["/guide/ponte-lumiere-mue", "/maladie-animale/arret-ponte"]],
+  [/(ne pond(ent)?|pond(ent)? plus|arret de ponte|plus d oeufs).*(hiver|automne|novembre|decembre)|mue des poules|poules? (qui )?(perd|perdent) (ses|leurs) plumes|eclairer (le )?poulailler|lumiere (dans le |au )?poulailler/, ["/guide/ponte-lumiere-mue", "/maladie-animale/arret-ponte"]],
   [/prix de vente|chiffre d affaires|rentabilite|rentable|marge (par|au) m|combien rapporte|vivre (du|de son) (potager|maraichage)|paniers? (amap|de legumes|hebdomadaires?)|combien de paniers/, ["/plan-culture?t=economie", "/guide/devenir-maraicher"]],
   [/(faire|fabriquer) (son |du |mon )?terreau|terreau maison|terreau de semis/, ["/guide/produire-ses-plants"]],
   [/tunnel (pas cher|maison|de recup)|fabriquer un tunnel|mini tunnel/, ["/guide/tunnel-petit-prix", "/guide/chassis"]],
@@ -238,6 +244,7 @@ const INTENTIONS: [RegExp, string[]][] = [
   [/liste de courses|quoi acheter|que faut il acheter|materiel (pour )?(debuter|commencer)/, ["/debuter?t=courses"]],
   [/potager facile|legumes? faciles?|premier potager|legumes? pour debutant/, ["/debuter?t=potager", "/creer"]],
 ];
+export const INTENTIONS: [RegExp, string[]][] = INTENTIONS_BRUTES.map(([re, c]) => [debutDeMot(re), c]);
 
 const radical = (t: string) => { const r = t.replace(/(ements|ement|ations|ation|ages|age|eurs|eur|ees|ee|ers|er|es|s|x)$/, ""); return r.length >= 4 ? r : t; };
 const echappe = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -245,6 +252,9 @@ const echappe = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // Mots de 5 lettres : début de mot. Au-delà : n'importe où.
 const contient = (hay: string, tok: string) =>
   tok.length >= 6 ? hay.includes(tok) : tok.length === 5 ? new RegExp(`(^|[^a-z0-9])${echappe(tok)}`).test(hay) : new RegExp(`(^|[^a-z0-9])${echappe(tok)}(s|x)?($|[^a-z0-9])`).test(hay);
+
+// Pages visées par les intentions qui n'existent pas dans le moteur (vérifié par les tests)
+export const ciblesInconnues = () => { const h = new Set(docs().map((d) => d.href)); return [...new Set(INTENTIONS.flatMap(([, c]) => c))].filter((x) => !h.has(x)); };
 
 export function rechercher(q: string, limit = 60): Hit[] {
   let nq = norm(q.trim()).replace(/['’-]/g, " ").replace(/\s+/g, " ");

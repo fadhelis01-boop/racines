@@ -46,3 +46,17 @@ export const GROUPES: { titre: string; entrees: Entree[] }[] = [
 
 export interface Profil { situation: string; animaux: boolean; abeilles: boolean; debutant: boolean }
 export const entreeVisible = (e: Entree, s: Profil, tout = false) => tout || !e.si || (e.si === "animaux" && s.animaux) || (e.si === "abeilles" && s.abeilles) || (e.si === "terre" && s.situation !== "appartement") || (e.si === "confirme" && !s.debutant && s.situation !== "appartement");
+
+// Recherche dans le menu : tous les mots de la saisie (au pluriel ou à la terminaison près) dans le nom ou la description
+const sansAccent = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/œ/g, "oe");
+export function filtrerMenu(q: string): Entree[] {
+  const mots = sansAccent(q).split(/[^a-z0-9]+/).filter((m) => m.length > 1);
+  if (!mots.length) return [];
+  return GROUPES.flatMap((g) => g.entrees).filter((e) => { const t = sansAccent(`${e.label} ${e.desc}`); return mots.every((m) => t.includes(m.length > 5 ? m.slice(0, m.length - 2) : m)); });
+}
+
+// Raccourcis : les rubriques les plus ouvertes depuis ce menu (compteur gardé sur l'appareil)
+export function raccourcis(usage: Record<string, number>, n = 4): Entree[] {
+  const toutes = GROUPES.flatMap((g) => g.entrees);
+  return Object.entries(usage).filter(([, c]) => c >= 2).sort((a, b) => b[1] - a[1]).map(([to]) => toutes.find((e) => e.to === to)).filter((e): e is Entree => !!e).slice(0, n);
+}

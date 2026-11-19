@@ -3,7 +3,7 @@ import { Ico } from "../components/Ico";
 import { useState } from "react";
 import { GUIDES, RUBRIQUES } from "../data/index";
 import { href } from "../lib/router";
-import { Photo, Titre } from "../components/ui";
+import { Photo, Titre, BandeauRubrique } from "../components/ui";
 import { norm } from "../lib/garden";
 import type { Rubrique } from "../data/types";
 
@@ -37,7 +37,7 @@ export default function Guides() {
           <div className="grid">
             {list.filter((g) => g.rubrique === r).slice(0, replie && !ouvertes.includes(r) ? 6 : undefined).map((g) => (
               <a key={g.id} className="tile" href={href(`/guide/${g.id}`)}>
-                <div className="ph" style={{ aspectRatio: "16/9" }}><Photo id={g.id} emoji={g.emoji} alt="" /></div>
+                <div className="ph" style={{ aspectRatio: "16/9" }}><Photo id={g.id} emoji={g.emoji} alt="" repli={<BandeauRubrique rubrique={g.rubrique} emoji={g.emoji} plein />} /></div>
                 <div className="bd">
                 <b>{g.titre}</b>
                 <div className="small muted" style={{ margin: "4px 0" }}>{g.resume}</div>

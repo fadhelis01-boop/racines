@@ -10,6 +10,9 @@ import { promptInstall, usePwa, isIos, isStandalone, checkForAppUpdate } from ".
 import { isoDate } from "../lib/store";
 import { href } from "../lib/router";
 import { ExportsCard } from "../components/Suivi";
+import { ilYa, nombreSaisies, tailleLisible, SCHEMA } from "../lib/sauvegarde";
+import { getState } from "../lib/store";
+import { useEffect } from "react";
 
 export default function Reglages() {
   const s = useStore((x) => x.settings);
@@ -142,8 +145,9 @@ export default function Reglages() {
       <h2>Exporter en tableur</h2>
       <ExportsCard />
 
-      <h2>Sauvegarde</h2>
+      <h2 id="sauvegarde">Sauvegarde</h2>
       <div className="card stack">
+        <EtatStockage derniere={s.derniereSauvegarde} />
         <p className="small">Vos données (cultures, récoltes, journal et photos, animaux, réglages) sont sur cet appareil uniquement. Sauvegardez-les régulièrement, ou pour les transférer sur un autre appareil.</p>
         <div className="row">
           <button className="btn primary" onClick={async () => { download(`racines-sauvegarde-${isoDate(new Date())}.json`, await exportBackup()); }}>⬇️ Exporter ma sauvegarde</button>
@@ -159,5 +163,29 @@ export default function Reglages() {
         <p>Aucune publicité, aucun traceur, aucun compte.</p>
       </div>
     </div>
+  );
+}
+
+// Place occupée, dernière sauvegarde, protection contre l'effacement automatique par le navigateur
+function EtatStockage({ derniere }: { derniere?: string }) {
+  const [est, setEst] = useState<{ usage: number; quota: number } | null>(null);
+  const [protege, setProtege] = useState<boolean | null>(null);
+  useEffect(() => {
+    navigator.storage?.estimate?.().then((e) => setEst({ usage: e.usage ?? 0, quota: e.quota ?? 0 })).catch(() => {});
+    navigator.storage?.persisted?.().then(setProtege).catch(() => {});
+    if (location.hash.includes("s=sauvegarde")) setTimeout(() => document.getElementById("sauvegarde")?.scrollIntoView({ behavior: "smooth" }), 100);
+  }, []);
+  const saisies = nombreSaisies(getState());
+  const vieille = !derniere || Date.now() - new Date(derniere).getTime() > 30 * 86_400_000;
+  return (
+    <table className="table small"><tbody>
+      <tr><td>Dernière sauvegarde</td><td><b style={{ color: vieille && saisies >= 5 ? "var(--danger)" : undefined }}>{ilYa(derniere)}</b></td></tr>
+      <tr><td>Saisies enregistrées</td><td>{saisies}</td></tr>
+      {est && <tr><td>Place occupée sur l'appareil</td><td>{tailleLisible(est.usage)}{est.quota ? ` sur ${tailleLisible(est.quota)} disponibles` : ""}</td></tr>}
+      {protege !== null && (
+        <tr><td>Protection contre l'effacement</td><td>{protege ? "✅ activée" : <button className="btn sm" onClick={async () => { const ok = await navigator.storage.persist(); setProtege(ok); toast(ok ? "Données protégées" : "Le navigateur n'a pas accepté : installez l'application sur l'écran d'accueil, puis réessayez"); }}>Protéger mes données</button>}</td></tr>
+      )}
+      <tr><td>Format des données</td><td>version {SCHEMA}</td></tr>
+    </tbody></table>
   );
 }

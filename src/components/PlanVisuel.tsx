@@ -79,6 +79,8 @@ export default function PlanVisuel() {
     if (!svg) return;
     const clone = svg.cloneNode(true) as SVGSVGElement;
     clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    // L'image exportée garde les couleurs claires, quel que soit le thème de l'écran
+    clone.style.cssText += ";--plan-fond:#e8efd9;--plan-grille:#cdd9b8;--plan-texte:#14321a;--plan-trait:#222";
     const w = 2000, h = Math.round((2000 * terrain.h) / terrain.l);
     clone.setAttribute("width", String(w)); clone.setAttribute("height", String(h));
     const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml;charset=utf-8" }));
@@ -115,7 +117,7 @@ export default function PlanVisuel() {
       <svg
         ref={svgRef}
         viewBox={`0 0 ${terrain.l} ${terrain.h}`}
-        style={{ width: "100%", background: "#e8efd9", borderRadius: 10, touchAction: "none", border: "1px solid var(--line)" }}
+        style={{ width: "100%", background: "var(--plan-fond)", borderRadius: 10, touchAction: "none", border: "1px solid var(--line)" }}
         onPointerMove={(ev) => {
           if (!drag.current) return;
           const p = point(ev);
@@ -128,8 +130,8 @@ export default function PlanVisuel() {
         role="img"
         aria-label={`Plan du jardin, ${terrain.l} m sur ${terrain.h} m`}
       >
-        {Array.from({ length: Math.floor(terrain.l) + 1 }, (_, i) => <line key={"v" + i} x1={i} y1={0} x2={i} y2={terrain.h} stroke="#cdd9b8" strokeWidth={0.03} />)}
-        {Array.from({ length: Math.floor(terrain.h) + 1 }, (_, i) => <line key={"h" + i} x1={0} y1={i} x2={terrain.l} y2={i} stroke="#cdd9b8" strokeWidth={0.03} />)}
+        {Array.from({ length: Math.floor(terrain.l) + 1 }, (_, i) => <line key={"v" + i} x1={i} y1={0} x2={i} y2={terrain.h} style={{ stroke: "var(--plan-grille)" }} strokeWidth={0.03} />)}
+        {Array.from({ length: Math.floor(terrain.h) + 1 }, (_, i) => <line key={"h" + i} x1={0} y1={i} x2={terrain.l} y2={i} style={{ stroke: "var(--plan-grille)" }} strokeWidth={0.03} />)}
         {/* Ombres portées à midi, dirigées vers le nord, sous tout le reste */}
         {ombre && elements.filter((z) => z.hauteur && ["arbre", "haie", "maison", "abri"].includes(z.type)).map((z) => {
           const L = (z.hauteur ?? 0) * OMBRE_MIDI[ombre];
@@ -165,7 +167,7 @@ export default function PlanVisuel() {
             <g key={z.id} onPointerDown={saisir(z.id, "element", z.x, z.y)} style={{ cursor: "grab" }}>
               <ellipse cx={z.x + z.l / 2} cy={z.y + z.p / 2} rx={z.l / 2} ry={z.p / 2} fill={ELEMENTS.arbre.fill} stroke={sel === z.id ? "#1d3b22" : ELEMENTS.arbre.stroke} strokeWidth={sel === z.id ? 0.12 : 0.05} />
               <circle cx={z.x + z.l / 2} cy={z.y + z.p / 2} r={0.2} fill="#6b4a2b" />
-              <text x={z.x + z.l / 2} y={z.y + z.p / 2 + fs * 1.4} fontSize={fs} textAnchor="middle" fill="#14321a">{nom}</text>
+              <text x={z.x + z.l / 2} y={z.y + z.p / 2 + fs * 1.4} fontSize={fs} textAnchor="middle" style={{ fill: "var(--plan-texte)" }}>{nom}</text>
             </g>
           );
         })}
@@ -177,8 +179,8 @@ export default function PlanVisuel() {
         </g>
         {/* Barre d'échelle */}
         <g transform={`translate(0.5 ${terrain.h - 0.6})`}>
-          <rect width={echelle} height={0.15} fill="#222" />
-          <text y={-0.15} fontSize={Math.max(0.35, fs * 0.9)} fill="#222">{echelle} m</text>
+          <rect width={echelle} height={0.15} style={{ fill: "var(--plan-trait)" }} />
+          <text y={-0.15} fontSize={Math.max(0.35, fs * 0.9)} style={{ fill: "var(--plan-trait)" }}>{echelle} m</text>
         </g>
       </svg>
       <div className="legend">

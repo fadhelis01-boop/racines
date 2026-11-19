@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../lib/store";
-import { href, useRoute } from "../lib/router";
+import { href, useRoute, go } from "../lib/router";
 import { Back, Listen, Titre } from "../components/ui";
 import { Vignette } from "../components/Ico";
 import { COUVAISON, datesCouvee, GESTATION, datesMiseBas, RATIONS, foinHiver } from "../lib/elevage";
@@ -36,6 +36,15 @@ const FAMILLE: { id: string; nom: string; emoji: string; parPers: number; unite:
   { id: "radis", nom: "Radis", emoji: "🌶️", parPers: 0.5, unite: "m² par semis", m2: 0.5, note: "semez un rang toutes les 2 semaines" },
 ];
 
+// Trois onglets au lieu d'une page de 11 écrans ; les anciens liens « ?s=section » ouvrent le bon onglet
+type OngletCalcul = "jardin" | "eau" | "animaux";
+const ONGLETS_CALCULS: [OngletCalcul, string][] = [["jardin", "🌱 Jardin"], ["eau", "💧 Eau"], ["animaux", "🐔 Animaux"]];
+const SECTIONS_CALCULS: [string, string, OngletCalcul][] = [
+  ["compost", "♻️ Compost et fumier", "jardin"], ["bacs", "🌿 Terreau des bacs", "jardin"], ["famille", "👪 Nourrir la famille", "jardin"],
+  ["eau", "🌧️ Eau de pluie", "eau"], ["arrosage", "💧 Combien arroser", "eau"], ["goutte", "🚿 Goutte-à-goutte", "eau"],
+  ["eclosion", "🐣 Éclosion", "animaux"], ["misebas", "🐐 Mise bas", "animaux"], ["rations", "🌾 Rations et foin", "animaux"], ["animaux", "🐔 Combien de poules ?", "animaux"],
+];
+
 export default function Calculs() {
   const zone = useStore((s) => s.settings.situation);
   const jardin = zone === "jardin" || zone === "petit-jardin";
@@ -55,7 +64,9 @@ export default function Calculs() {
   const dim = dimensionner({ debitRobinetLmin: robinet, debitGoutteurLh: goutteur, espacementCm: espG, longueurM: longueur, largeurM: largeur, besoinL: be.litresM2Semaine, arrosagesSemaine: freq, nbLignes });
   // animaux
   const [oeufs, setOeufs] = useState(12), [prixAliment, setPrixAliment] = useState(0.6);
-  const section = useRoute().query.get("s");
+  const { query } = useRoute();
+  const section = query.get("s");
+  const onglet = (query.get("t") as OngletCalcul | null) ?? SECTIONS_CALCULS.find((x) => x[0] === section)?.[2] ?? "jardin";
   useEffect(() => { if (section) setTimeout(() => document.getElementById(section)?.scrollIntoView({ block: "start" }), 100); }, [section]);
 
   const litresBac = (lon * lar * hau) / 1000;
@@ -70,18 +81,14 @@ export default function Calculs() {
       <Back />
       <Titre ico="creer" emoji="🧮">Calculs pratiques</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Des ordres de grandeur pour acheter juste et prévoir : compost, terreau, quantités à planter pour la famille, eau de pluie, poules. Les chiffres réels varient avec le sol, le climat et les variétés.</p>
-      <div className="chips" style={{ margin: "8px 0 4px" }}>
-        <a className="chip" href="#/calculs?s=compost" onClick={(e) => { e.preventDefault(); document.getElementById("compost")?.scrollIntoView(); }}>♻️ Compost et fumier</a>
-        <a className="chip" href="#/calculs?s=bacs" onClick={(e) => { e.preventDefault(); document.getElementById("bacs")?.scrollIntoView(); }}>🌿 Terreau des bacs</a>
-        <a className="chip" href="#/calculs?s=famille" onClick={(e) => { e.preventDefault(); document.getElementById("famille")?.scrollIntoView(); }}>👪 Nourrir la famille</a>
-        <a className="chip" href="#/calculs?s=eau" onClick={(e) => { e.preventDefault(); document.getElementById("eau")?.scrollIntoView(); }}>🌧️ Eau de pluie</a>
-        <a className="chip" href="#/calculs?s=arrosage" onClick={(e) => { e.preventDefault(); document.getElementById("arrosage")?.scrollIntoView(); }}>💧 Combien arroser</a>
-        <a className="chip" href="#/calculs?s=goutte" onClick={(e) => { e.preventDefault(); document.getElementById("goutte")?.scrollIntoView(); }}>🚿 Goutte-à-goutte</a>
-        <a className="chip" href="#/calculs?s=animaux" onClick={(e) => { e.preventDefault(); document.getElementById("animaux")?.scrollIntoView(); }}>🐔 Combien de poules ?</a>
-        <a className="chip" href="#/calculs?s=misebas" onClick={(e) => { e.preventDefault(); document.getElementById("misebas")?.scrollIntoView(); }}>🐐 Date de mise bas</a>
-        <a className="chip" href="#/calculs?s=rations" onClick={(e) => { e.preventDefault(); document.getElementById("rations")?.scrollIntoView(); }}>🌾 Rations et foin</a>
+      <div className="chips" role="tablist" style={{ margin: "8px 0 4px" }}>
+        {ONGLETS_CALCULS.map(([k, l]) => <button key={k} role="tab" aria-selected={onglet === k} className={`chip ${onglet === k ? "on" : ""}`} onClick={() => go(`/calculs?t=${k}`)}>{l}</button>)}
+      </div>
+      <div className="chips small" style={{ margin: "4px 0 8px" }}>
+        {SECTIONS_CALCULS.filter((x) => x[2] === onglet).map(([id, l]) => <a key={id} className="chip" href={href(`/calculs?s=${id}`)} onClick={(e) => { e.preventDefault(); document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); }}>{l}</a>)}
       </div>
 
+      {onglet === "jardin" && <>
       <h2 id="compost">♻️ Compost et fumier pour ma surface</h2>
       <div className="card stack">
         <Champ label="Surface cultivée" value={surface} onChange={setSurface} max={5000} unite="m²" />
@@ -132,6 +139,8 @@ export default function Calculs() {
         <p className="small"><b>Surface cultivée nécessaire :</b> environ {r(surfaceTotale)} m², plus 30 à 50 % pour les allées, soit {r(surfaceTotale * 1.4)} m². Un potager de 50 m² bien mené couvre une grande partie des légumes d'été d'une famille de 4 ; l'autonomie toute l'année demande 100 à 200 m².</p>
       </div>
 
+      </>}
+      {onglet === "eau" && <>
       <h2 id="eau">🌧️ Eau de pluie récupérable</h2>
       <div className="card stack">
         <div className="grid-sm">
@@ -178,6 +187,8 @@ export default function Calculs() {
         <p className="small"><a href={href("/guide/arrosage-automatique")}>Installer un arrosage automatique →</a> · <a href={href("/guide/irrigation-raisonnee")}>Irrigation raisonnée →</a></p>
       </div>
 
+      </>}
+      {onglet === "animaux" && <>
       <h2 id="eclosion">🐣 Date d'éclosion</h2>
       <Eclosion />
 
@@ -212,6 +223,7 @@ export default function Calculs() {
           </ul>
         </details>
       </div>
+      </>}
       <Listen id="calculs" title="Calculs pratiques" blocks={[`Pour ${surface} mètres carrés : ${r(surface * 2)} à ${r(surface * 3)} kilos de compost par an.`, `Pour ${oeufs} œufs par semaine : ${poules} poules.`, `Pour ${pers} personnes : environ ${r(surfaceTotale * 1.4)} mètres carrés de potager avec les allées.`]} label="Écouter le résumé" />
     </div>
   );
