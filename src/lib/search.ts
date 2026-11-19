@@ -1,4 +1,5 @@
-import { PLANTES, PROBLEMES, REMEDES, GUIDES, ANIMAUX, SIGNES } from "../data/index";
+import { GUIDES_COMPLETS } from "../data/guides-complets";
+import { PLANTES, PROBLEMES, REMEDES, ANIMAUX, SIGNES } from "../data/index";
 import { norm } from "./garden";
 import { LEXIQUE } from "../data/lexique";
 import { MALADIES_ANIMALES } from "../data/maladies-animales";
@@ -88,7 +89,7 @@ function docs(): Doc[] {
     { principal: false, href: "/calculs", emoji: "🧮", titre: "Calculs pratiques", type: "Outil", noms: norm("calcul | calculs | combien | quantite | combien de poules | combien de compost | combien de terreau | combien planter"), texte: norm("compost fumier terreau famille eau de pluie poules") },
     { principal: false, href: "/amenagements", emoji: "🗺️", titre: "Aménager son jardin : les façons de faire comparées", type: "Outil", noms: norm("amenager | amenagement | amenager jardin | organiser jardin | plan du jardin | idees jardin"), texte: norm("potager carre butte lasagnes jardin foret verger prairie mare") },
     ...REMEDES.map((r) => ({ principal: false, href: `/remede/${r.id}`, emoji: r.emoji, titre: r.nom, type: "Remède", noms: norm(r.nom), texte: norm([r.role, ...r.usage].join(" ")) })),
-    ...GUIDES.map((g) => ({ animal: g.rubrique === "animaux" || g.rubrique === "boucherie", principal: false, id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm([g.titre, g.resume, ...(g.alias ?? [])].join(" | ")), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
+    ...GUIDES_COMPLETS.map((g) => ({ animal: g.rubrique === "animaux" || g.rubrique === "boucherie", principal: false, id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm([g.titre, g.resume, ...(g.alias ?? [])].join(" | ")), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
   ];
   return DOCS;
 }

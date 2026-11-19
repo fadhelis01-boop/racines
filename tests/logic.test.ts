@@ -16,7 +16,7 @@ import { ecoScore, PRATIQUES } from "../src/data/bio";
 import { datesCouvee, bilan, registreCsv, tachesCouvees, datesMiseBas, tachesReproduction, bilanFemelle, gmq, tauxPonte, foinHiver, RATIONS } from "../src/lib/elevage";
 import { EXPORTS, bilanPluriannuel, varietesDe } from "../src/lib/exports";
 import { planifier, plantsParPlanche, successions, nurserie, tempsDeTravail, engraisVertPour } from "../src/lib/plan-culture";
-import { GUIDES } from "../src/data/index";
+import { GUIDES_COMPLETS as GUIDES } from "../src/data/guides-complets";
 import { SUBSTRATS } from "../src/data/interieur-hub";
 import { decouper } from "../src/lib/lexique-texte";
 import { diagnostiquerAnimal } from "../src/lib/sante-animale";

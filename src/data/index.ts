@@ -5,19 +5,8 @@ import { FRUITS } from "./fruits";
 import { INTERIEUR } from "./interieur";
 import { INTERIEUR2, ENRICH } from "./interieur2";
 import { INTERIEUR3 } from "./interieur3";
-import { ENVAHISSANTES, GUIDES_AGRO } from "./agronomie";
-import { GUIDES_BIO } from "./bio";
-import { GUIDES_ELEVAGE } from "./guides-elevage";
-import { GUIDES_RECUP, ETAPES_EN_PLUS, ALIAS_CULTIVARS } from "./guides-recup";
-import { GUIDES_MARAICHAGE } from "./guides-maraichage";
-import { GUIDES_APICULTURE } from "./guides-apiculture";
-import { GUIDES_CONSERVERIE } from "./guides-conserverie";
-import { GUIDES_EXPERT } from "./guides-expert";
-import { GUIDES_HORTICULTURE } from "./guides-horticulture";
-import { GUIDES_METIERS } from "./guides-metiers";
-import { GUIDES_ELEVEUR } from "./guides-eleveur";
-import { GUIDES_BIO_LOWTECH } from "./guides-bio-lowtech";
-import { GUIDE_SEUILS, GUIDE_API_PESTICIDES } from "./pedagogie";
+import { ENVAHISSANTES } from "./agronomie";
+import { ALIAS_CULTIVARS } from "./guides-recup";
 import { MALADIES_ANIMALES } from "./maladies-animales";
 import { CONTENANT, RENDEMENT, PROFONDEUR, GERMINATION } from "./cultures-complements";
 import { JARDIN2 } from "./jardin2";
@@ -31,12 +20,6 @@ import { STATUT_REMEDE } from "./reglementation";
 const REMEDES = [...REMEDES0, ...REMEDES_MAISON];
 Object.assign(STATUT_REMEDE, STATUT_MAISON);
 import { ANIMAUX as ANIMAUX1 } from "./animaux";
-import { GUIDES_JARDIN } from "./guides-jardin";
-import { GUIDES_MAISON } from "./guides-maison";
-import { GUIDES_ANIMAUX } from "./guides-animaux";
-import { GUIDES_INTERIEUR } from "./guides-interieur";
-import { GUIDES_JARDIN2 } from "./guides-jardin2";
-import { GUIDES_BALCON, ALIAS_GUIDES } from "./guides-balcon";
 import { ANIMAUX2 } from "./animaux2";
 import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
@@ -56,7 +39,11 @@ export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUI
   }
   for (const p of PLANTES) p.amis = p.amis.filter((a) => !p.ennemis.includes(a));
 }
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX, ...GUIDES_ELEVAGE, ...GUIDES_RECUP, ...GUIDES_MARAICHAGE, ...GUIDES_APICULTURE, ...GUIDES_CONSERVERIE, ...GUIDES_EXPERT, ...GUIDES_HORTICULTURE, ...GUIDES_METIERS, ...GUIDES_ELEVEUR, GUIDE_SEUILS, GUIDE_API_PESTICIDES, ...GUIDES_BIO_LOWTECH].map((g) => (ETAPES_EN_PLUS[g.id] ? { ...g, etapes: [...g.etapes, ...ETAPES_EN_PLUS[g.id]] } : g)).map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
+// Tutoriels : seuls les résumés (titre, rubrique, mots-clés…) sont chargés au démarrage ;
+// le texte complet est dans guides-complets.ts, chargé à l'ouverture d'un tutoriel ou par la recherche.
+import guidesMeta from "./guides-meta.json";
+export type GuideMeta = Omit<Guide, "etapes" | "materiel" | "conseils" | "erreurs" | "video">;
+export const GUIDES: GuideMeta[] = guidesMeta as GuideMeta[];
 const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 

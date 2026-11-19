@@ -1,7 +1,8 @@
 import { Quiz, Sources } from "../components/Quiz";
 import MotsLexique from "../components/MotsLexique";
 import { useEffect, useState } from "react";
-import { guide, lienVers, RUBRIQUES } from "../data/index";
+import { lienVers, RUBRIQUES } from "../data/index";
+import { guideComplet } from "../data/guides-complets";
 import { Back, Listen, Videos, A, Empty, Photo, imprimer } from "../components/ui";
 import { youtube } from "../data/util";
 import TableFumiers from "../components/TableFumiers";
@@ -13,7 +14,7 @@ import type { EtapeGuide, Guide } from "../data/types";
 const etapeTexte = (e: EtapeGuide, i: number) => [`Étape ${i + 1}. ${e.titre}.`, e.texte, e.attention ? `Attention : ${e.attention}` : "", e.astuce ? `Astuce : ${e.astuce}` : ""].filter(Boolean).join(" ");
 
 export default function GuideFiche({ id }: { id?: string }) {
-  const g = id ? guide(id) : undefined;
+  const g = id ? guideComplet(id) : undefined; // texte complet, chargé avec cette page seulement
   const sensibleOk = useStore((s) => s.settings.sensible);
   const [accord, setAccord] = useState(false);
   const [pasAPas, setPasAPas] = useState(false);

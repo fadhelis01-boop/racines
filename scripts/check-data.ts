@@ -21,7 +21,8 @@ import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales
 import { ENRICH } from "../src/data/interieur2";
 import { TRAITS } from "../src/data/traits";
 import { LEXIQUE } from "../src/data/lexique";
-import { PLANTES, PROBLEMES, REMEDES, GUIDES, ANIMAUX, SIGNES, AUXILIAIRES, CALENDRIER, lienVers } from "../src/data/index";
+import { PLANTES, PROBLEMES, REMEDES, GUIDES as GUIDES_META, ANIMAUX, SIGNES, AUXILIAIRES, CALENDRIER, lienVers } from "../src/data/index";
+import { GUIDES_COMPLETS as GUIDES } from "../src/data/guides-complets";
 
 const errors: string[] = [];
 const ids = new Set<string>();
@@ -31,6 +32,7 @@ const dup = (kind: string, arr: { id: string }[]) => {
     ids.add(x.id);
   }
 };
+if (GUIDES_META.length !== GUIDES.length || GUIDES_META.some((m, i) => m.id !== GUIDES[i].id || m.titre !== GUIDES[i].titre)) errors.push("résumés des tutoriels pas à jour : lancez npm run gen");
 dup("plante", PLANTES); dup("problème", PROBLEMES); dup("remède", REMEDES); dup("guide", GUIDES); dup("animal", ANIMAUX); dup("auxiliaire", AUXILIAIRES);
 
 const P = new Set(PLANTES.map((p) => p.id));
