@@ -1,6 +1,7 @@
 import MotsLexique from "../components/MotsLexique";
 import { useState } from "react";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../data/maladies-animales";
+import { TEMPERATURES } from "../data/maladies-amateur";
 import { diagnostiquerAnimal } from "../lib/sante-animale";
 import { ANIMAUX, animal } from "../data/index";
 import { useRoute, href } from "../lib/router";
@@ -29,6 +30,13 @@ export function DiagnosticAnimal() {
       <Titre ico="sante" emoji="⚕️">Mon animal ne va pas bien</Titre>
       <p className="muted small" style={{ marginTop: -6 }}>Deux questions pour orienter vers les causes les plus probables et savoir s'il faut appeler le vétérinaire. Ce n'est pas un diagnostic : en cas de doute, appelez.</p>
       <div className="callout warn"><b>Appelez le vétérinaire sans attendre</b> si l'animal ne mange plus depuis plus de 12 h (lapin) ou 24 h, respire bouche ouverte, saigne, a le ventre gonflé, se roule, ou si plusieurs animaux meurent brutalement (et dans ce cas, prévenez aussi la DDPP).</div>
+      <details className="box small" style={{ margin: "8px 0" }}>
+        <summary>🌡️ Températures normales et premiers gestes</summary>
+        <table className="table small" style={{ marginTop: 6 }}><thead><tr><th>Espèce</th><th>Normale (rectale)</th><th>Fièvre</th></tr></thead><tbody>
+          {TEMPERATURES.map((t) => <tr key={t.espece}><td>{t.espece}</td><td><b>{t.normale}</b></td><td>{t.fievre}</td></tr>)}
+        </tbody></table>
+        <p style={{ margin: "6px 0 0" }}>Isolez l'animal au calme et au sec, eau à disposition, rien de forcé dans la bouche d'un animal couché, aucun médicament humain. <a href={href("/guide/veterinaire-urgences")}>Le vétérinaire, les urgences et la pharmacie →</a></p>
+      </details>
       {step === 0 && (
         <div className="card">
           <h3>1. Quel animal ?</h3>

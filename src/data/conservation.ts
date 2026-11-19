@@ -31,6 +31,11 @@ export interface ConservPlante {
 }
 
 export const CONSERV: Record<string, ConservPlante> = {
+  lentille: { frais: "Graines sèches : plusieurs années au sec", methodes: ["sechage", "congelation"], texte: "48 heures au congélateur après récolte (bruche), puis bocal fermé au sec" },
+  "pois-chiche": { frais: "Pois frais : 3 jours ; secs : plusieurs années", methodes: ["sechage", "congelation", "sterilisation"], texte: "48 heures au congélateur, puis bocal au sec" },
+  salsifis: { frais: "1 semaine au réfrigérateur", methodes: ["terre", "cave", "congelation"], cave: "2 à 3 mois en sable frais" },
+  kaki: { frais: "Plusieurs semaines au frais, à blettir à température ambiante", methodes: ["frais", "congelation", "sechage"] },
+  grenadier: { frais: "1 à 2 mois au frais et au sec", methodes: ["frais", "congelation", "jus"] },
   tomate: { frais: "5 à 7 jours à température ambiante, jamais au réfrigérateur", methodes: ["sterilisation", "congelation", "sechage", "sucre", "vinaigre", "lacto"], nonCongel: "crue pour la salade (devient molle)", varietes: "Tomates charnues pour coulis et séchage : roma, cœur de bœuf, San Marzano", acide: true },
   aubergine: { frais: "1 semaine au frais (10 °C)", methodes: ["congelation", "huile", "lacto"], nonCongel: "crue (devient spongieuse) : grillez-la avant" },
   poivron: { frais: "1 à 2 semaines au réfrigérateur", methodes: ["congelation", "sechage", "lacto", "vinaigre", "huile", "fumage"] },

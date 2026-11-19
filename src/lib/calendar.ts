@@ -93,6 +93,7 @@ export function recolteEstimee(c: Culture): Date | null {
 
 export interface TachePerso { key: string; texte: string; emoji: string; href: string; quand: string; urgent?: boolean }
 
+import { attentesEnCours, soinsAPrevoir, texteAttente } from "./attente";
 // Tâches personnelles pour les 14 prochains jours
 export function tachesPerso(s: State, now = new Date()): TachePerso[] {
   const out: TachePerso[] = [];
@@ -124,6 +125,17 @@ export function tachesPerso(s: State, now = new Date()): TachePerso[] {
       }
     }
   }
+  // Soins dont la prochaine date a été notée (un animal précis, ou un soin hors calendrier : vaccin, rappel…)
+  for (const so of soinsAPrevoir(s.soins, now)) {
+    const t = s.troupeaux.find((x) => x.id === so.troupeauId);
+    const a = t && ANIMAUX.find((x) => x.id === t.animalId);
+    if (!t || !a || (!so.individuId && a.soins.some((x) => x.type === so.type))) continue;
+    const ind = (s.individus ?? []).find((i) => i.id === so.individuId);
+    const p = new Date(so.prochain + "T12:00:00");
+    out.push({ key: `soinp:${so.id}`, texte: `${ind ? ind.nom + " (" + t.nom + ")" : t.nom} : ${so.type} ${p < now ? "en retard (prévu le " : "prévu le "}${p.toLocaleDateString("fr-FR")}${p < now ? ")" : ""}`, emoji: a.emoji, href: "/jardin/animaux", quand: so.prochain!, urgent: p < now });
+  }
+  // Délais d'attente en cours : ne pas consommer œufs, lait, viande
+  for (const at of attentesEnCours(s.soins, s.troupeaux, s.individus ?? [], now)) out.push({ key: `att:${at.soinId}:${at.produit}`, texte: texteAttente(at), emoji: "🚫", href: "/jardin/animaux", quand: isoDate(now), urgent: true });
   for (const c of tachesCouvees(s.couvees ?? [], now)) out.push({ ...c, emoji: "🐣", href: "/jardin/animaux" });
   for (const r of tachesReproduction(s.reproductions ?? [], s.troupeaux, now)) out.push({ ...r, emoji: "🍼", href: "/jardin/animaux" });
   {

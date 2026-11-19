@@ -46,6 +46,9 @@ import { CONSERV, METHODES_CONSERV, majorationAltitude } from "../src/data/conse
 import { MALADIES_ANIMALES } from "../src/data/maladies-animales";
 
 import { ok } from "./outils";
+import { attentesEnCours, soinsAPrevoir, finAttente } from "../src/lib/attente";
+import { animauxPossibles, REPERES, themeDuGuide } from "../src/lib/choisir-animal";
+import { TEMPERATURES } from "../src/data/maladies-amateur";
 import { filtrerMenu, raccourcis } from "../src/lib/menu";
 import { migrate, MIGRATIONS, EMPTY } from "../src/lib/store";
 import { SCHEMA, rappelSauvegarde, nombreSaisies, tailleLisible, ilYa } from "../src/lib/sauvegarde";
@@ -724,4 +727,32 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   ok(filtrerMenu("SOL").some((e) => e.to === "/sol"), "menu : recherche sans majuscules ni accents");
   ok(filtrerMenu("x").length === 0, "menu : saisie trop courte, rien");
   ok(raccourcis({ "/rucher": 5, "/sol": 1, "/calculs": 3 }).map((e) => e.to).join() === "/rucher,/calculs", "raccourcis : les plus ouverts, au moins 2 fois");
+}
+
+// Audit jardinier et éleveur amateur : délais d'attente, rappels par animal, comparateur, contenus
+{
+  const tr = [{ id: "t1", animalId: "poule", nom: "Poules" }];
+  const so = [{ id: "s1", troupeauId: "t1", type: "Vermifuge", date: "2026-11-10", attente: { oeufs: 7 } }];
+  ok(finAttente("2026-11-10", 7) === "2026-11-17", "fin du délai d'attente");
+  ok(attentesEnCours(so, tr, [], new Date("2026-11-15T12:00:00")).length === 1, "délai en cours le 15");
+  ok(attentesEnCours(so, tr, [], new Date("2026-11-17T12:00:00")).length === 1, "dernier jour d'attente compris");
+  ok(attentesEnCours(so, tr, [], new Date("2026-11-18T12:00:00")).length === 0, "délai terminé le 18");
+  ok(attentesEnCours([{ ...so[0], date: "2026-11-20" }], tr, [], new Date(2026, 10, 20, 0, 30)).length === 1, "soin noté juste après minuit : délai actif le jour même");
+  const soins2 = [
+    { id: "a", troupeauId: "t2", individuId: "i1", type: "Vaccin", date: "2025-11-20", prochain: "2026-11-25" },
+    { id: "b", troupeauId: "t2", individuId: "i2", type: "Vaccin", date: "2026-06-01", prochain: "2027-06-01" },
+  ];
+  ok(soinsAPrevoir(soins2, new Date("2026-11-19T12:00:00")).map((x) => x.id).join() === "a", "rappel de vaccin par animal dans les 14 jours");
+  ok(soinsAPrevoir([...soins2, { id: "c", troupeauId: "t2", individuId: "i1", type: "Vaccin", date: "2026-11-19", prochain: "2027-11-19" }], new Date("2026-11-19T12:00:00")).length === 0, "un nouveau soin remplace l'ancien rappel");
+  const anx = ANIMAUX.map((a) => ({ id: a.id, profil: a.profil }));
+  ok(ANIMAUX.every((a) => REPERES[a.id]), "repères de coût et de place pour chaque animal");
+  const petit = animauxPossibles(anx, { surface: 40, minutes: 15, budgetDepart: 800, debutant: true }).filter((x) => x.ok).map((x) => x.a.id);
+  ok(petit.includes("poule") && !petit.includes("chevre") && !petit.includes("ane"), `40 m², 15 min, 800 € : poules oui, chèvres et ânes non (${petit.join(",")})`);
+  ok(themeDuGuide("api-varroa", "animaux").includes("Abeilles") && themeDuGuide("veterinaire-urgences", "animaux").includes("Débuter"), "tutoriels rangés par thème");
+  for (const id of ["fco-mhe", "gale-poux-ruminants", "tiques", "pneumonie-ruminants", "lymphadenite-caseuse", "trichomonose", "paramyxovirose-pigeon", "newcastle", "gourme", "tetanos", "dents-sabots-equides", "ppa", "diarrhee-porcelets"]) ok(MALADIES_ANIMALES.some((m) => m.id === id), `maladie ${id}`);
+  for (const e of ["cochon", "ane", "cheval", "pigeon"]) ok(MALADIES_ANIMALES.filter((m) => m.especes.includes(e)).length >= 7, `au moins 7 maladies pour ${e}`);
+  ok(TEMPERATURES.length >= 6, "tableau des températures normales");
+  for (const id of ["lentille", "pois-chiche", "salsifis", "kaki", "grenadier", "ail-des-ours", "seigle", "feverole", "sarrasin"]) ok(PLANTES.some((p) => p.id === id), `plante ${id}`);
+  ok(PLANTES.find((p) => p.id === "ail-des-ours")!.sosies!.some((x) => /muguet/i.test(x.nom)), "ail des ours : sosie mortel signalé");
+  for (const id of ["veterinaire-urgences", "debuter-animaux", "rapaces-volailles", "verger-protection"]) ok(GUIDES.some((g) => g.id === id), `guide ${id}`);
 }

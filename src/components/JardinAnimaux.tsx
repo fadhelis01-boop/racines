@@ -11,6 +11,9 @@ import { addDays, dernierSoin } from "../lib/calendar";
 
 
 import { Empty, toast } from "./ui";
+import { attentesEnCours, texteAttente, PRODUITS, type Produit } from "../lib/attente";
+// Produits consommés selon l'espèce (pour les délais d'attente)
+const PRODUITS_ESPECE = (id: string): Produit[] => (["poule", "canard", "oie", "pintade", "caille", "dindon"].includes(id) ? ["oeufs", "viande"] : ["chevre", "mouton", "ane", "cheval"].includes(id) ? ["lait", "viande"] : id === "abeille" ? ["miel"] : ["viande"]);
 
 
 
@@ -56,6 +59,12 @@ export function MesAnimaux() {
 export function TroupeauCard({ t, a, soins }: { t: Troupeau; a: Animal; soins: Soin[] }) {
   const [type, setType] = useState(a.soins[0]?.type ?? "Autre soin");
   const [date, setDate] = useState(today());
+  const [indiv, setIndiv] = useState("");
+  const [prochain, setProchain] = useState("");
+  const [attente, setAttente] = useState<Partial<Record<Produit, number>>>({});
+  const individus = useStore((s) => (s.individus ?? []).filter((i) => i.troupeauId === t.id && !i.sortie));
+  const tousIndividus = useStore((s) => s.individus);
+  const enCours = attentesEnCours(soins, [t], tousIndividus ?? []);
   const [note, setNote] = useState("");
   return (
     <div className="card" style={{ marginTop: 12 }}>
@@ -63,6 +72,7 @@ export function TroupeauCard({ t, a, soins }: { t: Troupeau; a: Animal; soins: S
         <div><a href={href(`/animal/${a.id}`)}><b>{a.emoji} {t.nom}</b></a> <span className="badge">{t.nombre}</span></div>
         <button className="btn sm danger" onClick={() => confirm(`Supprimer « ${t.nom} » et son historique ?`) && remove("troupeaux", t.id)} aria-label="Supprimer">🗑</button>
       </div>
+      {enCours.length > 0 && <div className="callout warn small" role="status" style={{ marginTop: 6 }}>{enCours.map((x) => <div key={x.soinId + x.produit}>🚫 {texteAttente(x)}</div>)}</div>}
       {a.soins.length > 0 && (
         <div className="small" style={{ marginTop: 6 }}>
           {a.soins.map((s) => {
@@ -80,11 +90,24 @@ export function TroupeauCard({ t, a, soins }: { t: Troupeau; a: Animal; soins: S
           </select>
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={{ width: 160 }} />
         </div>
-        <input type="text" placeholder="Détail (produit, dose, délai d'attente…)" value={note} onChange={(e) => setNote(e.target.value)} style={{ marginTop: 8 }} />
-        <button className="btn primary sm" style={{ marginTop: 8 }} onClick={() => { upsert("soins", { id: uid(), troupeauId: t.id, type, date, note: note || undefined }); setNote(""); toast("Soin noté"); }}>Enregistrer</button>
+        {individus.length > 0 && (
+          <label className="field small" style={{ marginTop: 8 }}>Animal soigné<select value={indiv} onChange={(e) => setIndiv(e.target.value)}><option value="">Tout le groupe</option>{individus.map((i) => <option key={i.id} value={i.id}>{i.nom}{i.boucle ? ` (${i.boucle})` : ""}</option>)}</select></label>
+        )}
+        <input type="text" placeholder="Détail (produit, dose, n° d'ordonnance…)" value={note} onChange={(e) => setNote(e.target.value)} style={{ marginTop: 8 }} />
+        <label className="field small" style={{ marginTop: 8 }}>À refaire le (facultatif : rappel de vaccin, 2e vermifuge…)<input type="date" value={prochain} onChange={(e) => setProchain(e.target.value)} /></label>
+        {/(vermifuge|vaccin|traitement|vétérinaire|antibio|soin)/i.test(type) && (
+          <fieldset className="box small" style={{ marginTop: 8 }}>
+            <legend>🚫 Délai d'attente (jours, sur la notice ou l'ordonnance)</legend>
+            <div className="grid-sm">
+              {PRODUITS_ESPECE(a.id).map((p) => <label key={p} className="field">{PRODUITS[p]}<input type="number" min="0" value={attente[p] ?? ""} onChange={(e) => setAttente({ ...attente, [p]: e.target.value === "" ? undefined : Number(e.target.value) })} /></label>)}
+            </div>
+            <span className="muted">Pendant ce délai, l'accueil et l'agenda rappellent de ne pas consommer ces produits. Sans indication, demandez au vétérinaire : en élevage familial, beaucoup de médicaments ne sont pas autorisés chez les animaux dont on mange les produits.</span>
+          </fieldset>
+        )}
+        <button className="btn primary sm" style={{ marginTop: 8 }} onClick={() => { const att = Object.fromEntries(Object.entries(attente).filter(([, v]) => v)); upsert("soins", { id: uid(), troupeauId: t.id, type, date, note: note || undefined, individuId: indiv || undefined, prochain: prochain || undefined, attente: Object.keys(att).length ? att : undefined }); setNote(""); setProchain(""); setAttente({}); toast("Soin noté"); }}>Enregistrer</button>
         {soins.length > 0 && (
           <table className="table small" style={{ marginTop: 8 }}><tbody>
-            {soins.slice(0, 20).map((s) => <tr key={s.id}><td>{new Date(s.date).toLocaleDateString("fr-FR")}</td><td>{s.type}</td><td>{s.note}</td><td><button className="btn sm ghost" onClick={() => remove("soins", s.id)} aria-label="Supprimer">🗑</button></td></tr>)}
+            {soins.slice(0, 20).map((s) => <tr key={s.id}><td>{new Date(s.date).toLocaleDateString("fr-FR")}</td><td>{s.type}{s.individuId ? ` · ${individus.find((i) => i.id === s.individuId)?.nom ?? ""}` : ""}</td><td>{s.note}{s.attente ? ` · attente : ${Object.entries(s.attente).map(([p, j]) => `${PRODUITS[p as Produit]} ${j} j`).join(", ")}` : ""}{s.prochain ? ` · à refaire le ${new Date(s.prochain).toLocaleDateString("fr-FR")}` : ""}</td><td><button className="btn sm ghost" onClick={() => remove("soins", s.id)} aria-label="Supprimer">🗑</button></td></tr>)}
           </tbody></table>
         )}
       </details>

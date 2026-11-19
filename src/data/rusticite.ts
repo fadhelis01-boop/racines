@@ -75,6 +75,8 @@ export const COMPLEMENTS: Record<string, Complement> = {
   prunier: { rusticite: -25, feuillage: "caduc", hauteur: "4 à 6 m", floraison: [3, 4], mellifere: true, sansDangerAnimaux: false },
   pecher: { rusticite: -20, feuillage: "caduc", hauteur: "3 à 5 m", floraison: [3], mellifere: true, sansDangerAnimaux: false },
   figuier: { rusticite: -12, feuillage: "caduc", hauteur: "3 à 8 m", sansDangerAnimaux: false },
+  kaki: { rusticite: -15, feuillage: "caduc", hauteur: "4 à 8 m", sansDangerAnimaux: true },
+  grenadier: { rusticite: -11, feuillage: "caduc", hauteur: "2 à 5 m", sansDangerAnimaux: true },
   noyer: { rusticite: -25, feuillage: "caduc", hauteur: "noyer 15 à 25 m, noisetier 3 à 6 m", floraison: [2, 3, 4], mellifere: false, sansDangerAnimaux: false },
   agrumes: { rusticite: -5, feuillage: "persistant", hauteur: "1 à 3 m en pot", floraison: [3, 4, 5], mellifere: true, sansDangerAnimaux: false },
   olivier: { rusticite: -12, feuillage: "persistant", hauteur: "3 à 10 m", floraison: [5, 6], mellifere: false, sansDangerAnimaux: true },

@@ -13,6 +13,7 @@ export interface DonneesMaraich {
 const d = (rang: number, interRang: number, motte: number, fenetre: number, rdt: number, germ: number, unite: "kg" | "pièces" = "kg"): DonneesMaraich => ({ rang, interRang, motte, fenetre, rdt, unite, germ });
 
 export const MARAICH: Record<string, DonneesMaraich> = {
+  lentille: d(3, 25, 0, 2, 0.15, 0.85), "pois-chiche": d(10, 40, 0, 2, 0.2, 0.85), salsifis: d(10, 30, 0, 16, 1.5, 0.7),
   tomate: d(50, 70, 7, 12, 5, 0.85), aubergine: d(50, 70, 8, 10, 3, 0.75), poivron: d(40, 50, 8, 12, 2.5, 0.7),
   courgette: d(80, 100, 4, 12, 6, 0.85), concombre: d(50, 100, 4, 8, 6, 0.85), courge: d(100, 150, 4, 4, 3, 0.85),
   melon: d(80, 100, 4, 6, 3, 0.8), pasteque: d(100, 150, 4, 4, 3, 0.8),

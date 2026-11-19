@@ -181,3 +181,8 @@ MALADIES_ANIMALES.push(
 import { MALADIES_ELEVAGE, SIGNES_ELEVAGE } from "./maladies-elevage";
 Object.assign(SIGNES_ANIMAUX, SIGNES_ELEVAGE);
 MALADIES_ANIMALES.push(...MALADIES_ELEVAGE.filter((m) => !MALADIES_ANIMALES.some((x) => x.id === m.id)));
+
+// Maladies ajoutées après l'audit « éleveur amateur » (FCO, gale, tiques, pneumonie, Newcastle, gourme, tétanos, PPA…)
+import { MALADIES_AMATEUR, SIGNES_AMATEUR } from "./maladies-amateur";
+Object.assign(SIGNES_ANIMAUX, SIGNES_AMATEUR);
+MALADIES_ANIMALES.push(...MALADIES_AMATEUR.filter((m) => !MALADIES_ANIMALES.some((x) => x.id === m.id)));

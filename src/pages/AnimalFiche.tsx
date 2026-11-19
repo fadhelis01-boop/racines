@@ -1,3 +1,4 @@
+import { REPERES, fourchette } from "../lib/choisir-animal";
 import { MALADIES_ANIMALES } from "../data/maladies-animales";
 import { useEffect, useState } from "react";
 import { RACES } from "../data/races";
@@ -40,7 +41,7 @@ export default function AnimalFiche({ id }: { id?: string }) {
         </div>
       </div>
       <div className="facts" style={{ marginTop: 14 }}>
-        {[["Espace", a.profil.espace], ["Temps", a.profil.temps], ["Budget", a.profil.budget], ["Durée de vie", a.profil.vie], ["Bruit", a.profil.bruit]].map(([k, v]) => <div key={k} className="fact"><div className="k">{k}</div>{v}</div>)}
+        {[["Espace", a.profil.espace], ["Temps", a.profil.temps], ["Budget par mois", a.profil.budget], ...(REPERES[a.id] ? [["Coût de départ", `${fourchette(REPERES[a.id].depart)} pour ${REPERES[a.id].groupe} (animaux, abri, clôture, matériel)`]] : []), ["Durée de vie", a.profil.vie], ["Bruit", a.profil.bruit]].map(([k, v]) => <div key={k} className="fact"><div className="k">{k}</div>{v}</div>)}
       </div>
       {a.id === "abeille" && <p style={{ marginTop: 12 }}><a className="btn primary" href={href("/rucher")}>🐝 Mon rucher : visites, varroa, traitements</a> <a className="btn" href={href("/guide/api-calendrier")}>📅 L'année au rucher</a></p>}
       <div className="tabs" role="tablist">

@@ -45,7 +45,8 @@ export interface Intervention { id: string; espaceId: string; date: string; type
 export interface Note { id: string; date: string; texte: string; photo?: string; planteId?: string }
 export interface Graine { id: string; planteId: string; variete: string; annee: number; qte?: string }
 export interface Troupeau { id: string; animalId: string; nom: string; nombre: number; depuis?: string; notes?: string }
-export interface Soin { id: string; troupeauId: string; type: string; date: string; prochain?: string; note?: string }
+// individuId : soin d'un seul animal ; attente : délais (jours) avant de consommer œufs, lait, viande ou miel
+export interface Soin { id: string; troupeauId: string; type: string; date: string; prochain?: string; note?: string; individuId?: string; attente?: { oeufs?: number; lait?: number; viande?: number; miel?: number } }
 // Élevage : animaux suivis un par un, registre des mouvements, production, dépenses, couvées
 export interface Individu { id: string; troupeauId: string; nom: string; boucle?: string; naissance?: string; race?: string; sexe?: "F" | "M"; sortie?: string; note?: string }
 export type TypeMouvement = "entree" | "naissance" | "sortie" | "deces";

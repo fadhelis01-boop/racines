@@ -4,6 +4,19 @@ export type TypeVariete = "P" | "T" | "R" | "G" | "A" | "F";
 export const LIB_TYPE_VARIETE: Record<TypeVariete, string> = { P: "Précoce", T: "Tardive", R: "Résistante", G: "De garde", A: "Ancienne", F: "Facile, productive" };
 
 export const VARIETES: Record<string, { nom: string; types: TypeVariete[]; note: string }[]> = {
+  lentille: [
+    { nom: "Lentille verte du Puy (type)", types: ["A"], note: "Petite lentille verte marbrée, tenue à la cuisson ; sol pauvre et sec." },
+    { nom: "Lentille blonde de Saint-Flour", types: ["A"], note: "Lentille de pays, grosse et douce, adaptée au climat frais." },
+    { nom: "Lentille corail (rouge)", types: ["F"], note: "Cuisson rapide, demande un été chaud." },
+  ],
+  "pois-chiche": [
+    { nom: "Kabuli (gros grain clair)", types: ["F"], note: "Le pois chiche de cuisine courant ; demande un été chaud et sec." },
+    { nom: "Desi (petit grain foncé)", types: ["R"], note: "Plus rustique et plus tolérant aux maladies, petits grains." },
+  ],
+  salsifis: [
+    { nom: "Scorsonère « Géante noire de Russie »", types: ["F"], note: "Racine noire longue, la plus productive et la plus facile." },
+    { nom: "Salsifis « Mammouth »", types: ["A"], note: "Racine claire au goût fin, demande une terre très meuble." },
+  ],
   aubergine: [
     { nom: "Black Beauty", types: ["F"], note: "Grosse aubergine violet foncé, classique et productive." },
     { nom: "Barbentane", types: ["P", "A"], note: "Longue, précoce, adaptée aux étés courts." },

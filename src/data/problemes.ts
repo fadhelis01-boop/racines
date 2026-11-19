@@ -982,3 +982,7 @@ PROBLEMES.push(
 
 // Organismes réglementés (feu bactérien, Xylella) : déclaration obligatoire
 PROBLEMES.push(...ORGANISMES_REGLEMENTES);
+
+// Problèmes ajoutés après l'audit « jardinier amateur » (punaises, hoplocampe, galle du collet, ToBRFV, mousse)
+import { PROBLEMES_AMATEUR } from "./problemes-amateur";
+PROBLEMES.push(...PROBLEMES_AMATEUR.filter((p) => !PROBLEMES.some((x) => x.id === p.id)));

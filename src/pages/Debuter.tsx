@@ -4,7 +4,7 @@ import { useStore, toggleFait } from "../lib/store";
 import { useRoute, href, go } from "../lib/router";
 import { Listen, Tile, Titre } from "../components/ui";
 
-const ONGLETS: [string, string][] = [["parcours", "📅 Mon premier mois"], ["saison2", "🌿 Ma deuxième saison"], ["increvables", "💪 Plantes increvables"], ["aromates", "🌿 Aromates faciles"], ["potager", "🥗 Premier potager"], ["courses", "🛒 Liste de courses"], ["offrir", "🎁 Offrir une plante"]];
+const ONGLETS: [string, string][] = [["parcours", "📅 Mon premier mois"], ["saison2", "🌿 Ma deuxième saison"], ["increvables", "💪 Plantes increvables"], ["aromates", "🌿 Aromates faciles"], ["potager", "🥗 Premier potager"], ["courses", "🛒 Liste de courses"], ["animaux", "🐔 Des animaux"], ["offrir", "🎁 Offrir une plante"]];
 
 export default function Debuter() {
   const onglet = useRoute().query.get("t") ?? "parcours";
@@ -26,6 +26,7 @@ export default function Debuter() {
       {onglet === "aromates" && <Liste items={AROMATES_FACILES.map((x) => ({ id: x.id, texte: x.conseil }))} intro="Les aromates les plus faciles d'abord. Le basilic est facile dehors l'été, beaucoup moins à l'intérieur." suite={["/interieur?t=aromates", "Tous les aromates en intérieur, avec ou sans lampe"]} />}
       {onglet === "potager" && <Liste items={POTAGER_FACILE.map((x) => ({ id: x.id, texte: `${x.ou} · ${x.conseil}` }))} intro="Commencez par 3 ou 4 de ces cultures sur 2 à 10 m² (ou 2 jardinières). Une réussite la première année donne envie de continuer." suite={["/amenagements", "Quelle méthode de potager pour moi ?"]} />}
       {onglet === "courses" && <Courses />}
+      {onglet === "animaux" && <Animaux />}
       {onglet === "offrir" && <Liste items={OFFRIR.map((x) => ({ id: x.id, texte: x.pourquoi }))} intro="Des plantes faciles et sans danger pour les animaux : le cadeau qui ne culpabilise personne." />}
     </div>
   );
@@ -108,6 +109,24 @@ function Courses() {
         </div>
       ))}
       <div className="callout warn small"><b>Inutile au début</b>Billes d'argile au fond des pots (elles ne drainent pas, un pot percé suffit), brumisateur, gadgets « auto-arrosants » sans réserve, engrais « miracle ».</div>
+    </div>
+  );
+}
+
+// Débuter avec des animaux : les étapes et les liens utiles
+function Animaux() {
+  const etapes: [string, string, string][] = [
+    ["🤔", "Choisir l'espèce selon sa place, son temps et son budget", "/animaux"],
+    ["📝", "Faire les déclarations (mairie pour les volailles, EDE pour chèvres, moutons et porcs)", "/guide/debuter-animaux"],
+    ["⚕️", "Trouver un vétérinaire qui soigne les animaux de ferme, préparer la pharmacie", "/guide/veterinaire-urgences"],
+    ["🏠", "Préparer l'abri, la clôture, l'eau et un mois de nourriture", "/guide/poulailler"],
+    ["🧳", "Accueillir les nouveaux : quarantaine et transition alimentaire", "/guide/integrer-animaux"],
+    ["📒", "Noter les animaux dans Mon jardin : les rappels de soins se font tout seuls", "/jardin/animaux"],
+  ];
+  return (
+    <div>
+      <p className="small">Trois poules sont le meilleur premier élevage : peu de place, 10 minutes par jour, des œufs dès le premier printemps. Avant d'acheter, suivez ces étapes dans l'ordre.</p>
+      <ol className="steps">{etapes.map(([e, t, to]) => <li key={t}><a href={href(to)}>{e} {t} →</a></li>)}</ol>
     </div>
   );
 }
