@@ -4,6 +4,9 @@ import { href, useRoute } from "../lib/router";
 import { Back, Listen, Titre } from "../components/ui";
 import { Vignette } from "../components/Ico";
 import { COUVAISON, datesCouvee } from "../lib/elevage";
+import { besoinEau, dimensionner } from "../lib/arrosage";
+import { PLANTES, plante } from "../data/index";
+import { MOIS_NOMS } from "../data/util";
 
 // Calculs pratiques : quantités indicatives, arrondies, pour un jardin familial
 const Champ = ({ label, value, onChange, min = 0, max = 10000, step = 1, unite }: { label: string; value: number; onChange: (n: number) => void; min?: number; max?: number; step?: number; unite?: string }) => (
@@ -44,6 +47,12 @@ export default function Calculs() {
   const [pers, setPers] = useState(4);
   // eau
   const [toit, setToit] = useState(40), [pluie, setPluie] = useState(60);
+  const climat = useStore((s) => s.settings.zone);
+  const [ap, setAp] = useState("tomate"), [moisA, setMoisA] = useState(7), [paille, setPaille] = useState(true), [pluieSem, setPluieSem] = useState(0);
+  const [robinet, setRobinet] = useState(12), [goutteur, setGoutteur] = useState(2), [espG, setEspG] = useState(30), [longueur, setLongueur] = useState(40), [largeur, setLargeur] = useState(0.6), [nbLignes, setNbLignes] = useState(4), [freq, setFreq] = useState(3);
+  const pA = plante(ap);
+  const be = besoinEau(climat, moisA, pA?.eau ?? "moyen", { paillage: paille, pluieMm: pluieSem });
+  const dim = dimensionner({ debitRobinetLmin: robinet, debitGoutteurLh: goutteur, espacementCm: espG, longueurM: longueur, largeurM: largeur, besoinL: be.litresM2Semaine, arrosagesSemaine: freq, nbLignes });
   // animaux
   const [oeufs, setOeufs] = useState(12), [prixAliment, setPrixAliment] = useState(0.6);
   const section = useRoute().query.get("s");
@@ -66,6 +75,8 @@ export default function Calculs() {
         <a className="chip" href="#/calculs?s=bacs" onClick={(e) => { e.preventDefault(); document.getElementById("bacs")?.scrollIntoView(); }}>🌿 Terreau des bacs</a>
         <a className="chip" href="#/calculs?s=famille" onClick={(e) => { e.preventDefault(); document.getElementById("famille")?.scrollIntoView(); }}>👪 Nourrir la famille</a>
         <a className="chip" href="#/calculs?s=eau" onClick={(e) => { e.preventDefault(); document.getElementById("eau")?.scrollIntoView(); }}>🌧️ Eau de pluie</a>
+        <a className="chip" href="#/calculs?s=arrosage" onClick={(e) => { e.preventDefault(); document.getElementById("arrosage")?.scrollIntoView(); }}>💧 Combien arroser</a>
+        <a className="chip" href="#/calculs?s=goutte" onClick={(e) => { e.preventDefault(); document.getElementById("goutte")?.scrollIntoView(); }}>🚿 Goutte-à-goutte</a>
         <a className="chip" href="#/calculs?s=animaux" onClick={(e) => { e.preventDefault(); document.getElementById("animaux")?.scrollIntoView(); }}>🐔 Combien de poules ?</a>
       </div>
 
@@ -128,9 +139,41 @@ export default function Calculs() {
         <ul className="ticks small">
           <li><b>Récupérable ce mois-ci :</b> environ {r(toit * pluie * 0.8)} L (1 mm de pluie sur 1 m² = 1 L, moins 20 % de pertes).</li>
           <li><b>Une forte pluie de 10 mm</b> remplit déjà {r(toit * 10 * 0.8)} L : une cuve de {toit * 10 * 0.8 > 500 ? "1 000 L ou plus" : "300 à 500 L"} se justifie.</li>
-          <li><b>Besoin d'un potager en été :</b> 3 à 5 L par m² et par semaine paillé, le double sans paillage.</li>
+          <li><b>Besoin d'un potager en été :</b> de 10 à 30 L par m² et par semaine selon le climat et la culture (voir le calcul ci-dessous), environ 30 % de moins avec un paillage.</li>
         </ul>
         <p className="small"><a href={href("/guide/recuperateur-pluie")}>Installer un récupérateur →</a></p>
+      </div>
+
+      <h2 id="arrosage">💧 Combien arroser ?</h2>
+      <div className="card stack">
+        <div className="grid-sm">
+          <label className="field">Culture<select value={ap} onChange={(e) => setAp(e.target.value)}>{PLANTES.filter((p) => ["legume", "fruit", "arbre", "aromatique", "fleur", "ornement"].includes(p.categorie)).sort((a, b) => a.nom.localeCompare(b.nom)).map((p) => <option key={p.id} value={p.id}>{p.nom}</option>)}</select></label>
+          <label className="field">Mois<select value={moisA} onChange={(e) => setMoisA(Number(e.target.value))}>{MOIS_NOMS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}</select></label>
+          <Champ label="Pluie tombée cette semaine" value={pluieSem} onChange={setPluieSem} max={200} unite="mm" />
+          <label className="field"><span><input type="checkbox" checked={paille} onChange={(e) => setPaille(e.target.checked)} /> Sol paillé</span></label>
+        </div>
+        <p><b>{pA?.nom}</b> en {MOIS_NOMS[moisA - 1]} : environ <b>{be.litresM2Semaine} L par m² et par semaine</b>{be.litresM2Semaine ? `, soit ${r(be.litresM2Semaine / 2)} L par m² deux fois par semaine` : " : pas d'arrosage nécessaire"}.</p>
+        <p className="small muted">Calcul : évaporation moyenne du mois dans votre climat ({r(be.etp, 1)} mm par jour) × besoin de la plante ({be.kc}) × 7 jours{paille ? ", moins 30 % grâce au paillage" : ""}, moins 80 % de la pluie de la semaine. 1 mm = 1 L par m². Les jeunes plants et les plantes en pot demandent des arrosages plus fréquents ; vérifiez toujours au doigt ou au tensiomètre.</p>
+      </div>
+
+      <h2 id="goutte">🚿 Dimensionner un goutte-à-goutte</h2>
+      <div className="card stack">
+        <div className="grid-sm">
+          <Champ label="Débit du robinet (test du seau)" value={robinet} onChange={setRobinet} min={1} max={100} step={0.5} unite="L/min" />
+          <Champ label="Débit d'un goutteur" value={goutteur} onChange={setGoutteur} min={0.5} max={8} step={0.5} unite="L/h" />
+          <Champ label="Espacement des goutteurs" value={espG} onChange={setEspG} min={10} max={100} unite="cm" />
+          <Champ label="Longueur totale de tuyau" value={longueur} onChange={setLongueur} min={1} max={2000} unite="m" />
+          <Champ label="Nombre de lignes" value={nbLignes} onChange={setNbLignes} min={1} max={100} />
+          <Champ label="Largeur arrosée par ligne" value={largeur} onChange={setLargeur} min={0.2} max={2} step={0.1} unite="m" />
+          <Champ label="Arrosages par semaine" value={freq} onChange={setFreq} min={1} max={7} />
+        </div>
+        <ul className="ticks small">
+          <li><b>{dim.goutteurs} goutteurs</b>, débit total {r(dim.debitTotalLh)} L/h. Votre robinet en alimente au plus <b>{dim.maxParSecteur}</b> à la fois{dim.secteurs > 1 ? <> : prévoyez <b>{dim.secteurs} secteurs</b> arrosés l'un après l'autre (programmateur multi-voies).</> : " : un seul secteur suffit."}</li>
+          <li>Besoin de la surface ({r(longueur * largeur, 1)} m², avec le besoin calculé ci-dessus) : <b>{r(dim.litresSemaine)} L par semaine</b>, soit <b>{dim.minutesParArrosage} minutes</b> par arrosage, {dim.arrosagesSemaine} fois par semaine{dim.secteurs > 1 ? " et par secteur" : ""}.</li>
+          {dim.alerteLongueur && <li style={{ color: "var(--danger)" }}>Lignes de plus de 50 m : le débit baisse en bout de ligne. Coupez-les en plusieurs départs ou utilisez des goutteurs autorégulants.</li>}
+          <li>Test du seau : chronométrez le remplissage d'un seau de 10 L robinet grand ouvert ; débit = 10 ÷ secondes × 60.</li>
+        </ul>
+        <p className="small"><a href={href("/guide/arrosage-automatique")}>Installer un arrosage automatique →</a> · <a href={href("/guide/irrigation-raisonnee")}>Irrigation raisonnée →</a></p>
       </div>
 
       <h2 id="eclosion">🐣 Date d'éclosion</h2>

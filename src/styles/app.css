@@ -286,8 +286,9 @@ label.row > input[type="checkbox"], label.row > input[type="radio"] { flex-shrin
 /* Étiquettes de bocaux : seules les étiquettes s'impriment */
 @media print {
   body * { visibility: hidden; }
-  .etiquettes, .etiquettes * { visibility: visible; }
-  .etiquettes { position: absolute; left: 0; top: 0; width: 100%; }
+  .etiquettes, .etiquettes *, .plan-imprimable, .plan-imprimable * { visibility: visible; }
+  .etiquettes, .plan-imprimable { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; }
+  .no-print { display: none !important; }
 }
 
 /* Fiches : la photo ne cache plus l'essentiel sur téléphone */

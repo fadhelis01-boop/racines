@@ -123,9 +123,9 @@ function Plan() {
           <button className="btn primary" disabled={!nom.trim()} onClick={() => { upsert("espaces", { id: uid(), nom: nom.trim(), type, surface: surface ? Number(surface) : undefined }); setNom(""); setSurface(""); }}>Ajouter</button>
         </div>
       </div>
-      {espaces.length > 0 && <PlanVisuel />}
+      <PlanVisuel />
       {espaces.length > 0 && <ArrosageSemaine />}
-      {!espaces.length && <Empty emoji="🗺️">Aucun emplacement. Commencez par « Planche 1 », « Planche 2 »… ou utilisez l'assistant <A to="/creer">Créer mon potager</A>.</Empty>}
+      {!espaces.length && <Empty emoji="🗺️">Aucune planche de culture pour l'instant. Ajoutez « Planche 1 », « Planche 2 »… ci-dessus, ou utilisez l'assistant <A to="/creer">Créer mon potager</A>. Le plan ci-dessus sert aussi à dessiner tout le jardin (maison, arbres, allées).</Empty>}
       <div className="grid" style={{ marginTop: 12 }}>
         {espaces.map((e) => {
           const cs = cultures.filter((c) => c.espaceId === e.id).sort((a, b) => b.date.localeCompare(a.date));

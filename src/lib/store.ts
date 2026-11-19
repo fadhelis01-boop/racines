@@ -8,6 +8,8 @@ import type { ZoneId } from "../data/calendrier";
 export type Situation = "jardin" | "petit-jardin" | "balcon" | "appartement";
 
 export interface Settings {
+  planNord?: number; // orientation du nord sur le plan du jardin (degrés, 0 = en haut)
+  planTerrain?: { l: number; h: number };
   onboarded: boolean;
   zone: ZoneId;
   situation: Situation;
@@ -59,6 +61,9 @@ export interface TraitementApi { id: string; rucheIds: string[]; produit: string
 // Garde-manger : bocaux, congélateur, cave
 export type LieuStock = "placard" | "cave" | "congelateur" | "refrigerateur";
 export interface Stock { id: string; produit: string; planteId?: string; methode: string; lieu: LieuStock; date: string; quantite: number; unite: string; lot?: string; gardeMois: number; note?: string }
+// Plan du jardin : éléments de paysage placés à l'échelle (en mètres)
+export type TypeElementPlan = "maison" | "terrasse" | "allee" | "arbre" | "haie" | "massif" | "eau" | "abri" | "compost" | "arrosage";
+export interface ElementPlan { id: string; type: TypeElementPlan; nom?: string; x: number; y: number; l: number; p: number; hauteur?: number; planteId?: string }
 export type Fenetre = "sud" | "ouest" | "est" | "nord" | "lampe" | "sombre";
 // Une plante de la maison suivie individuellement (intérieur, pots)
 export interface MaPlante {
@@ -99,6 +104,7 @@ export interface State {
   visites: Visite[];
   traitementsApi: TraitementApi[];
   stocks: Stock[];
+  elementsPlan: ElementPlan[];
   fait: Record<string, string>; // tâche cochée → date
   videos: Record<string, string>; // vidéo préférée par fiche
   favoris: string[];
@@ -145,6 +151,7 @@ const EMPTY: State = {
   visites: [],
   traitementsApi: [],
   stocks: [],
+  elementsPlan: [],
   fait: {},
   videos: {},
   favoris: [],
@@ -208,7 +215,7 @@ export function isoDate(d: Date) {
 }
 
 // Ajout/modification/suppression génériques dans une liste de l'état
-type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions" | "ruches" | "visites" | "traitementsApi" | "stocks";
+type ListKey = "espaces" | "cultures" | "recoltes" | "notes" | "graines" | "troupeaux" | "soins" | "plantes" | "individus" | "mouvements" | "production" | "depenses" | "couvees" | "multiplications" | "envies" | "partages" | "interventions" | "ruches" | "visites" | "traitementsApi" | "stocks" | "elementsPlan";
 export function upsert<K extends ListKey>(key: K, item: State[K][number]) {
   update((s) => {
     const list = s[key] as { id: string }[];

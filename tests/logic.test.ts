@@ -26,12 +26,14 @@ import { plantesVertes } from "../src/lib/garden";
 import { echeances, intervalleArrosage, marquer } from "../src/lib/mesplantes";
 import { ficheLatin } from "../src/lib/identify";
 import { plante } from "../src/data/index";
-import { besoinEau } from "../src/components/PlanVisuel";
+import { besoinEau } from "../src/lib/plan";
 import { couleurReine, valeurVarroa, niveauVarroa, pertesHiver, alertesRucher, registreTraitementsCsv } from "../src/lib/rucher";
 import { dernierSoin } from "../src/lib/calendar";
 import { RACES } from "../src/data/races";
 import { DEUXIEME_SAISON } from "../src/data/debuter";
 import { VARIETES } from "../src/data/varietes";
+import { besoinEau as besoinEauMois, dimensionner } from "../src/lib/arrosage";
+import { hauteurMax, OMBRE_MIDI, ELEMENTS } from "../src/lib/plan";
 import { LEXIQUE } from "../src/data/lexique";
 import { ANIMAUX } from "../src/data/index";
 import { proposer, numeroLot, finDeGarde, alertesStocks, planAnnee, selLacto, sucreConfiture } from "../src/lib/conserverie";
@@ -542,6 +544,42 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   h("hellébore", "Hellébore", 1);
   h("nénuphar", "Nénuphar", 1);
   ok(!rechercher("séchage", 1)[0]?.titre.startsWith("Jardiner avec la sécheresse"), "« séchage » reste la conserverie");
+}
+
+// Audit métiers : arrosage, arboriculture, pépinière, paysage, plan
+{
+  const b = besoinEauMois("tempere", 7, "fort", {});
+  ok(b.litresM2Semaine === 33, `tomate en juillet, climat tempéré : 4,5 × 1,05 × 7 ≈ 33 L/m²/semaine (obtenu ${b.litresM2Semaine})`);
+  ok(besoinEauMois("tempere", 7, "fort", { paillage: true }).litresM2Semaine === 23, "paillage : -30 %");
+  ok(besoinEauMois("tempere", 7, "fort", { pluieMm: 50 }).litresM2Semaine === 0, "une semaine de 50 mm de pluie : pas d'arrosage");
+  ok(besoinEauMois("mediterraneen", 7, "moyen", {}).litresM2Semaine > besoinEauMois("montagne", 7, "moyen", {}).litresM2Semaine, "plus de besoin en climat méditerranéen qu'en montagne");
+  const d = dimensionner({ debitRobinetLmin: 12, debitGoutteurLh: 2, espacementCm: 30, longueurM: 40, largeurM: 0.6, besoinL: 20, arrosagesSemaine: 3, nbLignes: 4 });
+  ok(d.goutteurs === 133 && d.maxParSecteur === 288 && d.secteurs === 1, `goutte-à-goutte : 133 goutteurs, 288 max par secteur (obtenu ${d.goutteurs}, ${d.maxParSecteur})`);
+  ok(d.litresSemaine === 480 && d.minutesParArrosage === 36, `480 L par semaine en 3 fois = 36 min (obtenu ${d.litresSemaine}, ${d.minutesParArrosage})`);
+  ok(dimensionner({ debitRobinetLmin: 6, debitGoutteurLh: 4, espacementCm: 30, longueurM: 200, largeurM: 0.6, besoinL: 20, nbLignes: 2 }).secteurs === 10, "petit débit : plusieurs secteurs");
+  ok(dimensionner({ debitRobinetLmin: 12, debitGoutteurLh: 2, espacementCm: 30, longueurM: 120, largeurM: 0.6, besoinL: 20, nbLignes: 1 }).alerteLongueur, "alerte ligne trop longue");
+  ok(hauteurMax("4 à 8 m") === 8 && hauteurMax("1,5 à 4 m") === 4 && hauteurMax(undefined) === 0, "hauteur adulte lue dans la fiche");
+  ok(OMBRE_MIDI.hiver > OMBRE_MIDI.equinoxe && OMBRE_MIDI.equinoxe > OMBRE_MIDI.ete, "ombre d'hiver plus longue qu'en été");
+  ok(Object.keys(ELEMENTS).length === 10, "10 éléments de paysage sur le plan");
+  const m = (q: string, attendu: string, k = 2) => { const r = rechercher(q, k).map((x) => x.titre); ok(r.some((t) => t.startsWith(attendu)), `métiers « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+  m("forage", "Puits, forage", 1);
+  m("puits", "Puits, forage", 1);
+  m("palmette", "Les formes fruitières", 1);
+  m("palette végétale", "Concevoir son jardin", 1);
+  m("drainage jardin", "Drainer un terrain", 1);
+  m("clôture", "Clôtures, cache-vue", 1);
+  m("faire une terrasse", "Allées et terrasses", 1);
+  m("concevoir son jardin", "Concevoir son jardin", 1);
+  m("planter un verger", "Planter un verger", 1);
+  m("arrosage enterré", "Installer un arrosage automatique", 1);
+  m("combien d'eau pour mes tomates", "Combien arroser", 1);
+  m("dimensionner goutte à goutte", "Dimensionner un goutte-à-goutte", 1);
+  m("tailler la vigne", "Tailler chaque fruitier", 1);
+  m("muret en pierre sèche", "Monter un muret", 1);
+  m("terrain en pente", "Jardin accessible et jardin en pente", 1);
+  m("plan du jardin", "Plan du jardin à l'échelle", 1);
+  m("abri de jardin déclaration", "Budget et règles", 1);
+  ok(rechercher("composteur en palettes", 1)[0]?.titre.startsWith("Fabriquer un composteur"), "le composteur en palettes reste trouvé");
 }
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
