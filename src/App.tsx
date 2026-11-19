@@ -43,6 +43,9 @@ const Demenagement = lazy(() => import("./pages/Demenagement"));
 const Amenagements = lazy(() => import("./pages/Amenagements"));
 const Rucher = lazy(() => import("./pages/Rucher"));
 const Conserver = lazy(() => import("./pages/Conserver"));
+const Agronome = lazy(() => import("./pages/Agronome"));
+const Cours = lazy(() => import("./pages/Cours"));
+const References = lazy(() => import("./pages/References"));
 import BarreRecherche from "./components/BarreRecherche";
 import { Ico } from "./components/Ico";
 
@@ -151,6 +154,9 @@ export default function App() {
     case "amenagements": page = <Amenagements />; break;
     case "rucher": page = <Rucher />; break;
     case "conserver": page = <Conserver />; break;
+    case "agronome": page = <Agronome />; break;
+    case "cours": page = <Cours />; break;
+    case "references": page = <References />; break;
     default: page = <Accueil />;
   }
   const isOn = (to: string) => (to === "/" ? route.path === "/" : route.path.startsWith(to) || (to === "/plantes" && p0 === "plante") || (to === "/sante" && ["diagnostic", "probleme", "remede"].includes(p0 ?? "")) || (to === "/guides" && p0 === "guide") || (to === "/jardin" && p0 === "rucher") || (to === "/interieur" && p0 === "interieur") || (to === "/sol" && p0 === "nutrition") || (to === "/animaux" && ["animal", "maladie-animale", "diagnostic-animal"].includes(p0 ?? "")));

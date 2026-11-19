@@ -5,7 +5,7 @@ import { PLANTES, plante, GUIDES } from "../data/index";
 import { CONSERV, METHODES_CONSERV, RENDEMENTS, CALENDRIER_CONSERVES, TEMPS_TRAITEMENT, majorationAltitude, type MethodeConserv } from "../data/conservation";
 import { proposer, selLacto, sucreConfiture, LIEUX, GARDE_DEFAUT, finDeGarde, numeroLot, alertesStocks, planAnnee, stocksCsv, arrondi, type Materiel } from "../lib/conserverie";
 import { useRoute, href, go } from "../lib/router";
-import { Listen, toast, download, Photo, Videos, Titre } from "../components/ui";
+import { Listen, toast, download, Photo, Videos, imprimer, Titre } from "../components/ui";
 import { MOIS_NOMS } from "../data/util";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
@@ -271,7 +271,7 @@ function GardeManger({ prefill, kg }: { prefill: string; kg: string }) {
       )}
       <div className="row" style={{ marginTop: 8, gap: 6 }}>
         {stocks.length > 0 && <button className="btn sm" onClick={() => download("garde-manger.csv", new Blob([stocksCsv(getState().stocks)], { type: "text/csv;charset=utf-8" }))}>Exporter (tableur)</button>}
-        <button className="btn sm" disabled={!aImprimer.length} onClick={() => window.print()}>🏷️ Imprimer les étiquettes ({aImprimer.length})</button>
+        <button className="btn sm" disabled={!aImprimer.length} onClick={() => imprimer(".etiquettes")}>🏷️ Imprimer les étiquettes ({aImprimer.length})</button>
       </div>
       {aImprimer.length > 0 && <Etiquettes stocks={aImprimer} />}
       <p className="small muted" style={{ marginTop: 10 }}>Rappels : les produits dont la garde conseillée est dépassée ou proche apparaissent dans vos tâches, ainsi qu'une tournée hebdomadaire de la cave d'octobre à avril. <a href={href("/guide/cs-cave")}>Bien tenir sa cave →</a> · <a href={href("/guide/cs-atelier-collectif")}>Cahier de fabrication en atelier →</a></p>

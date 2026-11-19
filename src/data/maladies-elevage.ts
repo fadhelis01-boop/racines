@@ -13,7 +13,7 @@ export const SIGNES_ELEVAGE: Record<string, { label: string; emoji: string }> = 
   avortement: { label: "Avortement ou petits mort-nés", emoji: "⚠️" },
   "jeunes-faibles": { label: "Jeunes faibles, raides, qui tètent mal ou ne se lèvent pas", emoji: "🍼" },
   "articulations-gonflees": { label: "Articulations (genoux) gonflées, boiterie qui s'installe", emoji: "🦵" },
-  paralysie: { label: "Paralysie d'une patte, d'une aile ou du cou", emoji: "🧊" },
+  paralysie: { label: "Paralysie d'une patte, d'une aile ou du cou", emoji: "🛑" },
   "jabot-anormal": { label: "Jabot gonflé, dur ou mou et odorant le matin", emoji: "🎈" },
   cloaque: { label: "Poule qui pousse sans pondre, cloaque gonflé ou organe qui sort", emoji: "🔴" },
   "plaies-pattes": { label: "Plaies, croûtes ou boules sous les pattes", emoji: "🐾" },

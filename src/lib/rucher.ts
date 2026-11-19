@@ -127,3 +127,21 @@ export const PRODUITS_VARROA = [
 ];
 export const TYPES_RUCHE = ["Dadant 10 cadres", "Dadant 12 cadres", "Langstroth", "Warré", "Kényane", "Ruchette 5-6 cadres", "Autre"];
 export const ORIGINES = ["Essaim acheté", "Essaim naturel capturé", "Division de mes ruches", "Paquet d'abeilles", "Ruche achetée peuplée", "Autre"];
+
+// ——— Force des colonies, récolte par ruche, sirop
+/** Cadres couverts d'abeilles au fil des visites (indicateur de force de la colonie). */
+export function forceColonie(s: Pick<State, "visites">, rucheId: string) {
+  return s.visites.filter((v) => v.rucheId === rucheId && v.cadresAbeilles != null).sort((a, b) => a.date.localeCompare(b.date)).map((v) => ({ date: v.date, cadres: v.cadresAbeilles! }));
+}
+/** Miel récolté par ruche pour une année (kg), trié du meilleur au moins bon. */
+export function recolteParRuche(s: Pick<State, "visites" | "ruches">, annee: number) {
+  const tot: Record<string, number> = {};
+  for (const v of s.visites) if (v.mielRecolte && v.date.startsWith(String(annee))) tot[v.rucheId] = (tot[v.rucheId] ?? 0) + v.mielRecolte;
+  return s.ruches.filter((r) => tot[r.id] != null).map((r) => ({ ruche: r, kg: Math.round(tot[r.id] * 10) / 10 })).sort((a, b) => b.kg - a.kg);
+}
+/** Sirop épais (2 kg de sucre pour 1 L d'eau) pour combler les réserves manquantes avant l'hiver. */
+export function siropHiver(poidsActuel: number, poidsCible: number) {
+  const manque = Math.max(0, poidsCible - poidsActuel);
+  const sucre = Math.round(manque * 10) / 10; // repère : environ 1 kg de sucre pour 1 kg de réserves stockées
+  return { manque: Math.round(manque * 10) / 10, sucreKg: sucre, eauL: Math.round((sucre / 2) * 10) / 10, siropL: Math.round((sucre * 0.62 + sucre / 2) * 10) / 10 };
+}

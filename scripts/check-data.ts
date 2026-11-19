@@ -13,6 +13,7 @@ import { RACES } from "../src/data/races";
 import { MARAICH } from "../src/data/maraichage";
 import { CONSERV, METHODES_CONSERV, RENDEMENTS } from "../src/data/conservation";
 import { VARIETES } from "../src/data/varietes";
+import { QUIZ, PARCOURS_AGRONOMIE } from "../src/data/pedagogie";
 import { ALIAS_GUIDES } from "../src/data/guides-balcon";
 import { MALADIES_ANIMALES, SIGNES_ANIMAUX } from "../src/data/maladies-animales";
 // Contrôle de cohérence du contenu, exécuté à chaque build.
@@ -69,6 +70,8 @@ for (const s of Object.keys(SIGNES)) if (!PROBLEMES.some((p) => p.signes.include
   for (const k of Object.keys(ALIAS_GUIDES)) if (!GUIDES.some((g) => g.id === k)) errors.push(`alias de tutoriel pour un id inconnu « ${k} »`);
   dup("maladie animale", MALADIES_ANIMALES);
   for (const k of Object.keys(MARAICH)) if (!PLANTES.some((p) => p.id === k)) errors.push(`maraîchage : plante inconnue « ${k} »`);
+  for (const [id, qs] of Object.entries(QUIZ)) { if (!GUIDES.some((g) => g.id === id)) errors.push(`quiz : guide inconnu « ${id} »`); for (const q of qs) if (q.bonne < 0 || q.bonne >= q.choix.length) errors.push(`quiz ${id} : réponse hors des choix (« ${q.q} »)`); }
+  for (const l of PARCOURS_AGRONOMIE) { for (const g of l.guides) if (!GUIDES.some((x) => x.id === g)) errors.push(`parcours ${l.id} : guide inconnu « ${g} »`); for (const m of l.mots) if (!LEXIQUE.some((t) => t.id === m)) errors.push(`parcours ${l.id} : mot inconnu « ${m} »`); }
   for (const k of Object.keys(VARIETES)) if (!PLANTES.some((p) => p.id === k)) errors.push(`variétés : plante inconnue « ${k} »`);
   for (const p of PLANTES.filter((x) => ["legume", "fruit", "arbre"].includes(x.categorie))) if (!VARIETES[p.id] && !/variét/i.test(JSON.stringify(p))) errors.push(`variétés manquantes pour « ${p.id} »`);
   for (const k of Object.keys(CONSERV)) if (!PLANTES.some((p) => p.id === k)) errors.push(`conservation : plante inconnue « ${k} »`);

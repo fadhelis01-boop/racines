@@ -2,9 +2,11 @@ import MotsLexique from "../components/MotsLexique";
 import { useState } from "react";
 import { useStore, upsert, remove, uid, today, getState, type Ruche, type Visite, type MethodeVarroa } from "../lib/store";
 import { RACES } from "../data/races";
+import { PLANTES } from "../data/index";
+import { MOIS_NOMS } from "../data/util";
 import { href } from "../lib/router";
 import { toast, download, Empty, Titre } from "../components/ui";
-import { couleurReine, COULEURS_REINE, METHODES_VARROA, valeurVarroa, niveauVarroa, seuilsVarroa, LIB_NIVEAU, pertesHiver, derniereVisite, dernierComptage, alertesRucher, registreTraitementsCsv, dernieresPesees, visitesCsv, PRODUITS_VARROA, TYPES_RUCHE, ORIGINES, vivantes, type NiveauVarroa } from "../lib/rucher";
+import { couleurReine, COULEURS_REINE, METHODES_VARROA, valeurVarroa, niveauVarroa, seuilsVarroa, LIB_NIVEAU, pertesHiver, derniereVisite, dernierComptage, alertesRucher, registreTraitementsCsv, dernieresPesees, forceColonie, recolteParRuche, siropHiver, visitesCsv, PRODUITS_VARROA, TYPES_RUCHE, ORIGINES, vivantes, type NiveauVarroa } from "../lib/rucher";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
 const COUL: Record<NiveauVarroa, string> = { ok: "var(--green)", surveiller: "var(--sun)", traiter: "var(--danger)" };
@@ -45,6 +47,10 @@ export default function Rucher() {
       {actives.length > 0 && <VisiteForm />}
       {visites.some((v) => valeurVarroa(v) != null) && <CourbeVarroa />}
       {ruches.length > 0 && <Traitements />}
+      {visites.some((v) => v.cadresAbeilles != null) && <ForceColonies />}
+      {ruches.length > 0 && <Recoltes />}
+      {ruches.length > 0 && <Sirop />}
+      <CalendrierMellifere />
       {ruches.length > 0 && <Pertes />}
       {ruches.some((r) => r.morte) && (
         <details className="box"><summary>Colonies mortes ou retirées ({ruches.filter((r) => r.morte).length})</summary>
@@ -115,7 +121,7 @@ function RucheCard({ r }: { r: Ruche }) {
 
 function VisiteForm() {
   const ruches = useStore((s) => s.ruches.filter((r) => !r.morte));
-  const vide = { rucheId: ruches[0]?.id ?? "", date: today(), reine: "" as "" | "vue" | "oeufs" | "non", couvain: "", miel: "", pollen: "", humeur: "" as "" | "1" | "2" | "3", cellules: "" as "" | "non" | "essaimage" | "remplacement", poids: "", methode: "" as "" | MethodeVarroa, valeur: "", jours: "3", action: "", note: "" };
+  const vide = { rucheId: ruches[0]?.id ?? "", date: today(), reine: "" as "" | "vue" | "oeufs" | "non", couvain: "", miel: "", pollen: "", humeur: "" as "" | "1" | "2" | "3", cellules: "" as "" | "non" | "essaimage" | "remplacement", poids: "", cadresAb: "", mielR: "", methode: "" as "" | MethodeVarroa, valeur: "", jours: "3", action: "", note: "" };
   const [f, setF] = useState(vide);
   const rid = ruches.some((r) => r.id === f.rucheId) ? f.rucheId : ruches[0]?.id;
   const essai: Visite = { id: "", rucheId: rid, date: f.date, varroaMethode: f.methode || undefined, varroaValeur: f.valeur === "" ? undefined : Number(f.valeur), varroaJours: Number(f.jours) || 1 };
@@ -132,6 +138,8 @@ function VisiteForm() {
         <input type="number" min="0" max="30" placeholder="Cadres de couvain" value={f.couvain} onChange={(e) => setF({ ...f, couvain: e.target.value })} />
         <input type="number" min="0" max="40" placeholder="Cadres de miel" value={f.miel} onChange={(e) => setF({ ...f, miel: e.target.value })} />
         <input type="number" min="0" max="30" placeholder="Cadres de pollen" value={f.pollen} onChange={(e) => setF({ ...f, pollen: e.target.value })} />
+        <input type="number" min="0" max="30" placeholder="Cadres couverts d'abeilles" value={f.cadresAb} onChange={(e) => setF({ ...f, cadresAb: e.target.value })} aria-label="Cadres couverts d'abeilles (force de la colonie)" />
+        <label className="small">Miel récolté (kg)<input type="number" min="0" max="200" step="0.5" value={f.mielR} onChange={(e) => setF({ ...f, mielR: e.target.value })} /></label>
         <select value={f.humeur} onChange={(e) => setF({ ...f, humeur: e.target.value as typeof f.humeur })} aria-label="Humeur"><option value="">Humeur</option><option value="1">Douce</option><option value="2">Nerveuse</option><option value="3">Agressive</option></select>
         <label className="small">Poids de la ruche (kg)<input type="number" min="5" max="120" step="0.5" value={f.poids} onChange={(e) => setF({ ...f, poids: e.target.value })} /></label>
         <select value={f.cellules} onChange={(e) => setF({ ...f, cellules: e.target.value as typeof f.cellules })} aria-label="Cellules royales"><option value="">Cellules royales : non regardé</option><option value="non">Pas de cellules royales</option><option value="essaimage">Cellules d'essaimage (bas des cadres)</option><option value="remplacement">Cellules de remplacement (milieu)</option></select>
@@ -148,7 +156,7 @@ function VisiteForm() {
       <input type="text" placeholder="Intervention (hausse posée, division, nourrissement, cadres changés…)" value={f.action} onChange={(e) => setF({ ...f, action: e.target.value })} style={{ marginTop: 6 }} />
       <input type="text" placeholder="Note" value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} style={{ marginTop: 6 }} />
       <button className="btn primary sm" style={{ marginTop: 8 }} disabled={!rid} onClick={() => {
-        upsert("visites", { id: uid(), rucheId: rid, date: f.date, reine: f.reine || undefined, couvain: num(f.couvain), miel: num(f.miel), pollen: num(f.pollen), humeur: f.humeur ? (Number(f.humeur) as 1 | 2 | 3) : undefined, cellules: f.cellules || undefined, poids: num(f.poids), varroaMethode: f.methode && f.valeur !== "" ? f.methode : undefined, varroaValeur: f.methode && f.valeur !== "" ? Number(f.valeur) : undefined, varroaJours: f.methode === "chute" ? Number(f.jours) || 1 : undefined, action: f.action || undefined, note: f.note || undefined });
+        upsert("visites", { id: uid(), rucheId: rid, date: f.date, reine: f.reine || undefined, couvain: num(f.couvain), miel: num(f.miel), pollen: num(f.pollen), humeur: f.humeur ? (Number(f.humeur) as 1 | 2 | 3) : undefined, cellules: f.cellules || undefined, poids: num(f.poids), cadresAbeilles: num(f.cadresAb), mielRecolte: num(f.mielR), varroaMethode: f.methode && f.valeur !== "" ? f.methode : undefined, varroaValeur: f.methode && f.valeur !== "" ? Number(f.valeur) : undefined, varroaJours: f.methode === "chute" ? Number(f.jours) || 1 : undefined, action: f.action || undefined, note: f.note || undefined });
         setF({ ...vide, rucheId: rid, methode: f.methode });
         toast("Visite notée");
       }}>Enregistrer la visite</button>
@@ -273,6 +281,96 @@ function Pertes() {
         </tbody></table>
       )}
       <p className="small muted">Repère : des pertes au-delà de 10 à 15 % chaque hiver signalent souvent un varroa mal maîtrisé ou des réserves trop faibles. <a href={href("/guide/api-nourrissement")}>Préparer l'hivernage →</a></p>
+    </div>
+  );
+}
+
+function ForceColonies() {
+  const ruches = useStore((st) => st.ruches.filter((r) => !r.morte));
+  const visites = useStore((st) => st.visites);
+  const series = ruches.map((r) => ({ r, pts: forceColonie({ visites }, r.id) })).filter((x) => x.pts.length);
+  if (!series.length) return null;
+  const W = 320, H = 130, P = 22;
+  const dates = series.flatMap((x) => x.pts.map((p) => new Date(p.date).getTime()));
+  const t0 = Math.min(...dates), t1 = Math.max(...dates, t0 + 86400000);
+  const max = Math.max(10, ...series.flatMap((x) => x.pts.map((p) => p.cadres)));
+  const x = (d: string) => P + ((new Date(d).getTime() - t0) / (t1 - t0)) * (W - P - 6);
+  const y = (c: number) => H - P - (c / max) * (H - P - 8);
+  const pal = ["#2f6fd6", "#d33", "#2a9d4b", "#a050c0", "#e08000", "#008c9e", "#806040"];
+  return (
+    <div className="card" style={{ marginTop: 12 }}>
+      <b>💪 Force des colonies</b>
+      <p className="small muted">Cadres couverts d'abeilles à chaque visite : une colonie forte en sortie d'hiver en couvre 5 à 6, plus de 10 en pleine saison. Une colonie qui reste faible au printemps est à réunir ou à remérer.</p>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", maxWidth: 520 }} role="img" aria-label="Évolution du nombre de cadres d'abeilles par ruche">
+        <line x1={P} x2={P} y1={8} y2={H - P} stroke="currentColor" opacity=".3" />
+        <line x1={P} x2={W - 6} y1={H - P} y2={H - P} stroke="currentColor" opacity=".3" />
+        {[5, 10].filter((k) => k <= max).map((k) => <g key={k}><line x1={P} x2={W - 6} y1={y(k)} y2={y(k)} stroke="currentColor" opacity=".12" /><text x={2} y={y(k) + 3} fontSize="8" fill="currentColor" opacity=".6">{k}</text></g>)}
+        {series.map((sr, i) => <g key={sr.r.id}><polyline points={sr.pts.map((p) => `${x(p.date)},${y(p.cadres)}`).join(" ")} fill="none" stroke={pal[i % pal.length]} strokeWidth="1.5" />{sr.pts.map((p) => <circle key={p.date} cx={x(p.date)} cy={y(p.cadres)} r="2.5" fill={pal[i % pal.length]}><title>{`${sr.r.nom} le ${fr(p.date)} : ${p.cadres} cadres`}</title></circle>)}</g>)}
+      </svg>
+      <div className="small">{series.map((sr, i) => <span key={sr.r.id} style={{ marginRight: 10 }}><span style={{ color: pal[i % pal.length] }}>●</span> {sr.r.nom}</span>)}</div>
+    </div>
+  );
+}
+
+function Recoltes() {
+  const st = useStore((x) => ({ visites: x.visites, ruches: x.ruches }));
+  const an = new Date().getFullYear();
+  const [annee, setAnnee] = useState(an);
+  const lignes = recolteParRuche(st, annee);
+  const total = lignes.reduce((a, l) => a + l.kg, 0);
+  return (
+    <div className="card" style={{ marginTop: 12 }}>
+      <div className="row between"><b>🍯 Récolte de miel par ruche</b><span className="row" style={{ gap: 6 }}><button className="btn sm" onClick={() => setAnnee(annee - 1)} aria-label="Année précédente">◀</button><b>{annee}</b><button className="btn sm" onClick={() => setAnnee(annee + 1)} aria-label="Année suivante">▶</button></span></div>
+      {!lignes.length ? <p className="small muted">Notez le miel récolté (en kg) dans la visite de récolte de chaque ruche : vous comparerez vos colonies et repérerez les meilleures reines pour l'élevage.</p> : (
+        <>
+          <table className="table small" style={{ marginTop: 6 }}><tbody>
+            {lignes.map((l) => <tr key={l.ruche.id}><td><b>{l.ruche.nom}</b>{l.ruche.reineAnnee ? <span className="muted"> · reine {l.ruche.reineAnnee}</span> : null}</td><td>{l.kg} kg</td><td style={{ width: "40%" }}><div style={{ height: 8, borderRadius: 4, background: "var(--sun)", width: `${(l.kg / lignes[0].kg) * 100}%` }} /></td></tr>)}
+          </tbody></table>
+          <p className="small">Total {Math.round(total * 10) / 10} kg, moyenne <b>{Math.round((total / lignes.length) * 10) / 10} kg par ruche</b>. <span className="muted">Repère amateur : 10 à 25 kg par ruche et par an selon la région et la saison.</span></p>
+        </>
+      )}
+    </div>
+  );
+}
+
+function Sirop() {
+  const [actuel, setActuel] = useState("28"), [cible, setCible] = useState("38");
+  const r = siropHiver(Number(actuel) || 0, Number(cible) || 0);
+  return (
+    <details className="box" style={{ marginTop: 12 }}><summary>🧪 Calculer le sirop de nourrissement d'automne</summary>
+      <div className="grid-sm" style={{ marginTop: 6 }}>
+        <label className="small">Poids actuel de la ruche (kg)<input type="number" min="0" step="0.5" value={actuel} onChange={(e) => setActuel(e.target.value)} /></label>
+        <label className="small">Poids visé pour l'hiver (kg)<input type="number" min="0" step="0.5" value={cible} onChange={(e) => setCible(e.target.value)} /></label>
+      </div>
+      {r.manque > 0 ? <p className="small">Il manque environ <b>{r.manque} kg</b> de réserves : préparez <b>{r.sucreKg} kg de sucre blanc</b> dans <b>{r.eauL} L d'eau chaude</b> (sirop épais 2/1, environ {r.siropL} L de sirop), donnés en 2 à 4 fois avant la mi-octobre.</p> : <p className="small">Les réserves sont suffisantes.</p>}
+      <p className="small muted">Repère : une Dadant 10 cadres hivernée pèse environ 35 à 40 kg (bois et cadres compris), soit 15 à 20 kg de réserves. Environ 1 kg de sucre en sirop épais donne 1 kg de réserves. En hiver, plus de sirop : du candi posé sur la grappe. <a href={href("/guide/api-nourrissement")}>Nourrir les abeilles →</a></p>
+    </details>
+  );
+}
+
+// Calendrier mellifère : ce que fleurit le jardin, mois par mois, et les trous de miellée
+function CalendrierMellifere() {
+  const st = useStore((x) => ({ cultures: x.cultures, plantes: x.plantes, elements: x.elementsPlan ?? [] }));
+  const mes = new Set([...st.cultures.filter((c) => !c.fini).map((c) => c.planteId), ...st.plantes.map((p) => p.planteId), ...st.elements.map((e) => e.planteId).filter(Boolean) as string[]]);
+  const mell = PLANTES.filter((p) => p.mellifere && (p.floraison ?? []).length);
+  const miennes = mell.filter((p) => mes.has(p.id));
+  const parMois = MOIS_NOMS.map((_, i) => miennes.filter((p) => (p.floraison as number[]).includes(i + 1)));
+  const trous = parMois.map((l, i) => (l.length ? 0 : i + 1)).filter((m) => m >= 2 && m <= 10);
+  const suggestions = (m: number) => mell.filter((p) => !mes.has(p.id) && (p.floraison as number[]).includes(m) && p.sansDangerAnimaux !== false && p.categorie !== "toxique").slice(0, 4);
+  return (
+    <div className="card" style={{ marginTop: 12 }}>
+      <b>🌼 Calendrier mellifère du jardin</b>
+      <p className="small muted">Les abeilles butinent jusqu'à 3 km, mais les fleurs du jardin comptent dans les périodes creuses. Plantes mellifères de vos cultures et de vos fiches « Mes plantes », par mois de floraison :</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 2, alignItems: "end", height: 70 }} aria-label="Nombre de plantes mellifères en fleur par mois">
+        {parMois.map((l, i) => <div key={i} title={`${MOIS_NOMS[i]} : ${l.map((p) => p.nom).join(", ") || "rien"}`} style={{ height: `${Math.max(4, Math.min(100, l.length * 20))}%`, background: l.length ? "var(--sun)" : "var(--danger-soft)", borderRadius: 3 }} />)}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 2 }} className="small muted">{MOIS_NOMS.map((m) => <span key={m} style={{ textAlign: "center" }}>{m[0].toUpperCase()}</span>)}</div>
+      {!miennes.length ? <p className="small">Notez vos cultures et vos plantes dans Mon jardin pour voir ce qui fleurit pour vos abeilles.</p> : trous.length ? (
+        <div className="small" style={{ marginTop: 6 }}><b>Trous de floraison de mars à octobre :</b>
+          <ul className="ticks" style={{ margin: "4px 0 0" }}>{trous.map((m) => <li key={m}>{MOIS_NOMS[m - 1]} : {suggestions(m).length ? suggestions(m).map((p, k) => <span key={p.id}>{k ? ", " : ""}<a href={href(`/plante/${p.id}`)}>{p.nom}</a></span>) : "aucune suggestion dans le catalogue"}</li>)}</ul>
+        </div>
+      ) : <p className="small">Votre jardin offre des fleurs mellifères de mars à octobre.</p>}
+      <p className="small"><a href={href("/guide/jardin-pollinisateurs")}>Des fleurs toute l'année pour les pollinisateurs →</a> · <a href={href("/guide/api-pesticides")}>Protéger son rucher des pesticides →</a></p>
     </div>
   );
 }

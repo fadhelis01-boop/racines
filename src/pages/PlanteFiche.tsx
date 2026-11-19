@@ -2,7 +2,7 @@ import MotsLexique from "../components/MotsLexique";
 import { Ico, Vignette } from "../components/Ico";
 import { useState } from "react";
 import { plante, probleme, CATEGORIES, FAMILLES } from "../data/index";
-import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty } from "../components/ui";
+import { Galerie, Back, Fav, Listen, MonthGrid, Videos, A, Empty, imprimer } from "../components/ui";
 import { useStore, getState } from "../lib/store";
 const getSol = () => getState().settings.sol;
 import { href } from "../lib/router";
@@ -107,6 +107,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
           <p>{p.intro}</p>
           <div className="row">
             <Listen id={`plante-${p.id}`} title={p.nom} blocks={lecture} label="Écouter la fiche" />
+            <button className="btn sm" onClick={() => imprimer()} aria-label="Imprimer cette fiche">🖨️ Imprimer</button>
             {!interieur && situation !== "appartement" && <button className="btn primary" onClick={() => setAjout(!ajout)}>➕ J'ai semé / planté</button>}
             {!interieur && situation === "appartement" && p.lieux.includes("interieur") && <button className="btn" onClick={() => setAjout(!ajout)}>➕ J'ai semé</button>}
             {(interieur || p.lieux.includes("pot") || p.lieux.includes("interieur")) && <button className={`btn ${interieur ? "primary" : ""}`} onClick={() => setAjoutMp(!ajoutMp)}>🌿 {interieur ? "J'ai cette plante" : "Je la suis en pot"}</button>}

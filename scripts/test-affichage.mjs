@@ -31,7 +31,7 @@ const serveur = createServer(async (req, res) => {
 const port = serveur.address().port;
 const base = `http://localhost:${port}/`;
 
-const PAGES = ["/", "/jardin", "/plantes", "/plante/tomate", "/sante", "/diagnostic", "/calendrier", "/guides", "/guide/bocaux", "/plus", "/conserver", "/conserver?t=temps", "/debuter", "/interieur", "/animaux", "/animal/poule", "/rucher", "/lexique", "/reglages", "/recherche?q=limaces", "/sol", "/nutrition", "/creer", "/calculs", "/plan-culture", "/amenagements", "/cueillette", "/bio", "/probleme/pucerons", "/maladie-animale/varroa"];
+const PAGES = ["/", "/jardin", "/plantes", "/plante/tomate", "/sante", "/diagnostic", "/calendrier", "/guides", "/guide/bocaux", "/plus", "/conserver", "/conserver?t=temps", "/debuter", "/interieur", "/animaux", "/animal/poule", "/rucher", "/lexique", "/reglages", "/recherche?q=limaces", "/sol", "/nutrition", "/creer", "/calculs", "/plan-culture", "/amenagements", "/cueillette", "/bio", "/probleme/pucerons", "/maladie-animale/varroa", "/agronome", "/agronome?t=azote", "/agronome?t=dj", "/cours", "/references", "/guide/rotation"];
 
 const profil = mkdtempSync(join(tmpdir(), "racines-test-"));
 const navigateur = await puppeteer.launch({ executablePath: exe, headless: true, userDataDir: profil, args: ["--no-first-run", "--disable-extensions", "--no-default-browser-check"] });
@@ -71,6 +71,19 @@ try {
     if (r.garde) ko(`${p} : la page affiche une erreur`);
     if (erreurs.length) ko(`${p} : erreur ${erreurs[0].slice(0, 160)}`);
   }
+  // Impression : une page normale doit garder son contenu et masquer les menus
+  await page.goto(`${base}#/guide/bocaux`, { waitUntil: "networkidle0" });
+  await page.waitForFunction(() => document.querySelector("main h1"), { timeout: 8000 }).catch(() => undefined);
+  await page.emulateMediaType("print");
+  const impr = await page.evaluate(() => {
+    const m = document.querySelector("main");
+    const vis = m ? getComputedStyle(m.querySelector("h1") ?? m).visibility : "hidden";
+    const side = document.querySelector(".bottom-nav, .side");
+    return { visible: vis === "visible" && (m?.getBoundingClientRect().height ?? 0) > 200, menu: side ? getComputedStyle(side).display : "none" };
+  });
+  if (!impr.visible) ko("impression : le contenu d'un tutoriel ne s'imprime pas");
+  if (impr.menu !== "none") ko("impression : les menus apparaissent sur la page imprimée");
+  await page.emulateMediaType("screen");
 } finally {
   await navigateur.close();
   serveur.close();

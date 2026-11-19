@@ -277,3 +277,13 @@ export function VoirPlus({ reste, onPlus, quoi = "résultats" }: { reste: number
 export function Titre({ ico, emoji, children, style }: { ico: string; emoji: string; children: ReactNode; style?: React.CSSProperties }) {
   return <h1 className="titre-page" style={style}><Ico nom={ico} emoji={emoji} taille={44} /><span>{children}</span></h1>;
 }
+
+/** Imprime seulement l'élément désigné (étiquettes, plan) ; sans sélecteur, imprime la page sans les menus. */
+export function imprimer(selecteur?: string) {
+  const cible = selecteur ? document.querySelector(selecteur) : null;
+  if (cible) { document.body.classList.add("impression-ciblee"); cible.classList.add("a-imprimer"); }
+  const fin = () => { document.body.classList.remove("impression-ciblee"); cible?.classList.remove("a-imprimer"); window.removeEventListener("afterprint", fin); };
+  window.addEventListener("afterprint", fin);
+  window.print();
+  setTimeout(fin, 1000);
+}

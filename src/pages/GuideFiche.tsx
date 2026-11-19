@@ -1,7 +1,8 @@
+import { Quiz, Sources } from "../components/Quiz";
 import MotsLexique from "../components/MotsLexique";
 import { useEffect, useState } from "react";
 import { guide, lienVers, RUBRIQUES } from "../data/index";
-import { Back, Listen, Videos, A, Empty, Photo } from "../components/ui";
+import { Back, Listen, Videos, A, Empty, Photo, imprimer } from "../components/ui";
 import { youtube } from "../data/util";
 import TableFumiers from "../components/TableFumiers";
 import { href } from "../lib/router";
@@ -52,6 +53,7 @@ export default function GuideFiche({ id }: { id?: string }) {
       <div className="row" style={{ margin: "14px 0" }}>
         <button className="btn primary big" onClick={() => setPasAPas(true)}>👐 Mode pas à pas</button>
         <Listen id={`g-${g.id}`} title={g.titre} blocks={blocs} label="Tout écouter" />
+        <button className="btn sm" onClick={() => imprimer()} aria-label="Imprimer ce tutoriel">🖨️ Imprimer</button>
       </div>
       {g.quand && <div className="callout info"><b>📆 Quand</b>{g.quand}</div>}
       {g.materiel && (
@@ -73,6 +75,8 @@ export default function GuideFiche({ id }: { id?: string }) {
       {g.conseils && <><h2>Conseils</h2><ul className="ticks">{g.conseils.map((c) => <li key={c}>{c}</li>)}</ul></>}
       {g.erreurs && <><h2>Erreurs à éviter</h2><ul className="ticks">{g.erreurs.map((c) => <li key={c}>{c}</li>)}</ul></>}
       <h2>🎬 En vidéo</h2>
+      <Quiz id={g.id} />
+      <Sources g={g} />
       <Videos id={`g-${g.id}`} query={g.video} />
       {g.liens && g.liens.length > 0 && (
         <>

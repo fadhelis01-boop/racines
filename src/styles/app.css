@@ -285,10 +285,18 @@ label.row > input[type="checkbox"], label.row > input[type="radio"] { flex-shrin
 
 /* Étiquettes de bocaux : seules les étiquettes s'impriment */
 @media print {
-  body * { visibility: hidden; }
-  .etiquettes, .etiquettes *, .plan-imprimable, .plan-imprimable * { visibility: visible; }
-  .etiquettes, .plan-imprimable { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; }
-  .no-print { display: none !important; }
+  /* Impression normale d'une page : contenu seul, sans menus ni boutons */
+  .side, .bottom-nav, .barre-recherche, .topbar, .player, .no-print, [role="tablist"], button, .btn { display: none !important; }
+  body, .main { background: #fff !important; color: #000 !important; }
+  .main { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+  .card, .callout { box-shadow: none !important; break-inside: avoid; }
+  a { color: #000; text-decoration: none; }
+  details { display: block; }
+  details > * { display: block !important; }
+  /* Impression ciblée (étiquettes de bocaux, plan du jardin) : seule la zone choisie s'imprime */
+  body.impression-ciblee * { visibility: hidden; }
+  body.impression-ciblee .a-imprimer, body.impression-ciblee .a-imprimer * { visibility: visible; }
+  body.impression-ciblee .a-imprimer { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; }
 }
 
 /* Fiches : la photo ne cache plus l'essentiel sur téléphone */

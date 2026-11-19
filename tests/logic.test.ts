@@ -32,6 +32,9 @@ import { dernierSoin } from "../src/lib/calendar";
 import { RACES } from "../src/data/races";
 import { DEUXIEME_SAISON } from "../src/data/debuter";
 import { VARIETES } from "../src/data/varietes";
+import { classerTexture, chaulage, bilanHumique, fumureAzotee, degresJours } from "../src/lib/agronome";
+import { QUIZ, PARCOURS_AGRONOMIE, sourcesDe } from "../src/data/pedagogie";
+import { siropHiver, recolteParRuche, forceColonie } from "../src/lib/rucher";
 import { besoinEau as besoinEauMois, dimensionner } from "../src/lib/arrosage";
 import { hauteurMax, OMBRE_MIDI, ELEMENTS } from "../src/lib/plan";
 import { LEXIQUE } from "../src/data/lexique";
@@ -617,6 +620,47 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   e("chauffer les poussins", "Élever des poussins", 1);
   e("mue des poules", "Ponte, lumière et mue", 1);
   e("lapin éternue", "Coryza", 1);
+}
+
+// Audit agronome, enseignant, apiculteur : calculs, pédagogie, rucher
+{
+  ok(classerTexture(50, 30, 20)?.texture === "argileux" && classerTexture(5, 15, 80)?.nom === "Sableux" && classerTexture(10, 70, 20)?.nom === "Limoneux", "triangle des textures : argile, sable, limon");
+  ok(classerTexture(20, 20, 20) === null, "textures : la somme doit faire 100 %");
+  const c = chaulage({ phActuel: 5.5, phVise: 6.5, texture: "limoneux", surfaceM2: 100, produit: "calcaire" });
+  ok(c.caoKgM2 === 0.2 && c.produitGM2 === 377 && c.annees === 2, `chaulage : 1 unité de pH en sol limoneux = 200 g CaO/m², 377 g de calcaire, en 2 ans (obtenu ${c.caoKgM2}, ${c.produitGM2}, ${c.annees})`);
+  ok(chaulage({ phActuel: 7, phVise: 6.5, texture: "sableux", surfaceM2: 10, produit: "calcaire" }).ecart === 0, "pas de chaulage si le pH est déjà atteint");
+  const h = bilanHumique({ surfaceM2: 10, moPct: 3, texture: "limoneux", amendement: "compost" });
+  ok(h.stockKg === 98 && h.amendementKg === 13 && h.kgM2 === 1.3, `bilan humique : 10 m² à 3 % → 98 kg de MO, 13 kg de compost par an (obtenu ${h.stockKg}, ${h.amendementKg})`);
+  ok(bilanHumique({ surfaceM2: 10, moPct: 3, texture: "sableux", amendement: "compost" }).amendementKg > h.amendementKg, "sol sableux : il faut plus de compost (minéralisation rapide)");
+  const az = fumureAzotee({ culture: "tomate", moPct: 3, precedent: "aucun", apport: "organique" });
+  ok(az.besoin === 150 && az.sol === 90 && az.aApporter === 60 && az.produitGM2 === 71, `fumure azotée tomate : 150 − 90 = 60 kg N/ha, 71 g/m² d'engrais organique (obtenu ${az.aApporter}, ${az.produitGM2})`);
+  ok(fumureAzotee({ culture: "haricot", moPct: 3, precedent: "aucun", apport: "compost" }).aApporter === 0, "pas d'azote pour les haricots");
+  ok(fumureAzotee({ culture: "chou", moPct: 3, precedent: "engrais-vert-legumineuse", apport: "compost" }).aApporter === 60, "engrais vert de légumineuses : 50 kg N/ha en moins");
+  const dj = degresJours("tempere", 6, "2026-05-01", 1300);
+  ok(dj.atteint && (dj.date.startsWith("2026-08") || dj.date.startsWith("2026-09")), `maïs doux semé le 1er mai : récolte en août-septembre en climat tempéré (obtenu ${dj.date})`);
+  ok(!degresJours("montagne", 10, "2026-07-01", 2000).atteint, "besoin non atteint en montagne : saison trop courte");
+  ok(Object.values(QUIZ).every((qs) => qs.length >= 3 && qs.every((q) => q.bonne < q.choix.length)), "quiz : au moins 3 questions, réponses valides");
+  ok(PARCOURS_AGRONOMIE.length === 5 && PARCOURS_AGRONOMIE.every((l) => l.guides.every((id) => GUIDES.some((g) => g.id === id))), "parcours de 5 leçons, tutoriels existants");
+  ok(sourcesDe({ id: "api-varroa", rubrique: "animaux" })[0] === "abeilles" && sourcesDe({ id: "rotation", rubrique: "sol" })[0] === "agronomie", "sources adaptées au domaine du tutoriel");
+  const sv = siropHiver(28, 38);
+  ok(sv.manque === 10 && sv.sucreKg === 10 && sv.eauL === 5, "sirop : 10 kg de réserves manquantes = 10 kg de sucre dans 5 L d'eau");
+  const st = { ruches: [{ id: "a", nom: "R1" }, { id: "b", nom: "R2" }], visites: [{ id: "1", rucheId: "a", date: "2026-07-10", mielRecolte: 12 }, { id: "2", rucheId: "a", date: "2026-05-20", mielRecolte: 6, cadresAbeilles: 9 }, { id: "3", rucheId: "b", date: "2026-07-12", mielRecolte: 25, cadresAbeilles: 12 }] };
+  const rr = recolteParRuche(st, 2026);
+  ok(rr[0].ruche.id === "b" && rr[0].kg === 25 && rr[1].kg === 18, "récolte par ruche, de la meilleure à la moins bonne");
+  ok(forceColonie(st, "b")[0].cadres === 12, "force de la colonie notée");
+  const ag = (q: string, attendu: string, k = 1) => { const r = rechercher(q, k).map((x) => x.titre); ok(r.some((t) => t.startsWith(attendu)), `agronome « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+  ag("chaulage", "Outils de l'agronome");
+  ag("bilan humique", "Outils de l'agronome");
+  ag("triangle des textures", "Outils de l'agronome");
+  ag("degrés-jours", "Outils de l'agronome");
+  ag("seuil de nuisibilité", "Observer, compter, décider");
+  ag("cours d'agronomie", "Comprendre l'agronomie");
+  ag("quiz", "Comprendre l'agronomie");
+  ag("sources", "Sources et références");
+  ag("néonicotinoïdes", "Protéger son rucher des pesticides");
+  ag("combien de sucre pour le sirop", "Mon rucher");
+  ok(!rechercher("source d'eau", 2).some((x) => x.titre.startsWith("Sources et références")), "« source d'eau » ne part pas vers les références");
+  ok(rechercher("abri de jardin déclaration", 1)[0]?.titre.startsWith("Budget et règles"), "« déclaration » n'attrape plus les rations");
 }
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useStore, upsert, remove, uid, setSettings, type Espace, type ElementPlan, type TypeElementPlan } from "../lib/store";
-import { download } from "./ui";
+import { download, imprimer } from "./ui";
 import { href } from "../lib/router";
 import { ELEMENTS, OMBRE_MIDI, hauteurMax, besoinEau } from "../lib/plan";
 export { besoinEau };
@@ -188,7 +188,7 @@ export default function PlanVisuel() {
       </div>
       <div className="row no-print" style={{ gap: 6, marginTop: 8 }}>
         <button className="btn sm" onClick={exporterPng}>🖼️ Enregistrer en image</button>
-        <button className="btn sm" onClick={() => window.print()}>🖨️ Imprimer le plan</button>
+        <button className="btn sm" onClick={() => imprimer(".plan-imprimable")}>🖨️ Imprimer le plan</button>
       </div>
       {e && (
         <div className="row small no-print" style={{ marginTop: 8 }}>
