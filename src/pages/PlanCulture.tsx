@@ -7,9 +7,10 @@ import { useRoute, href, go } from "../lib/router";
 import { Back, Listen, toast, download, Titre } from "../components/ui";
 import { Vignette } from "../components/Ico";
 import { EXPORTS } from "../lib/exports";
+import { economiePlanche, classementCultures, PRIX_BIO, PANIERS_TYPES, paniersPossibles } from "../lib/economie";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-const ONGLETS: [string, string][] = [["planifier", "📆 Produire en continu"], ["planches", "🌍 Mes planches"], ["nurserie", "🌱 Nurserie"], ["temps", "⏱️ Temps de travail"]];
+const ONGLETS: [string, string][] = [["planifier", "📆 Produire en continu"], ["planches", "🌍 Mes planches"], ["nurserie", "🌱 Nurserie"], ["economie", "💶 Économie"], ["temps", "⏱️ Temps de travail"]];
 const legumes = () => PLANTES.filter((p) => MARAICH[p.id] && (p.categorie === "legume" || p.categorie === "aromatique")).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
 
 export default function PlanCulture() {
@@ -26,6 +27,7 @@ export default function PlanCulture() {
       {onglet === "planches" && <Planches />}
       {onglet === "nurserie" && <Nurserie />}
       {onglet === "temps" && <Temps />}
+      {onglet === "economie" && <Economie />}
     </div>
   );
 }
@@ -187,6 +189,72 @@ function Temps() {
         <li>Prévoyez du temps pour la récolte et sa préparation : elles représentent souvent le tiers du temps total.</li>
       </ul>
       <p className="small muted" style={{ margin: 0 }}>Ordres de grandeur pour un jardinier entraîné ; un débutant met souvent 1,5 fois plus de temps la première année.</p>
+    </div>
+  );
+}
+
+function Economie() {
+  const prixPerso = useStore((st) => st.prix);
+  const cultures = useStore((st) => st.cultures);
+  const espaces = useStore((st) => st.espaces);
+  const [cid, setCid] = useState("tomate");
+  const [surf, setSurf] = useState(10);
+  const [prix, setPrix] = useState<string>("");
+  const [critere, setCritere] = useState<"parM2" | "parHeure">("parHeure");
+  const [surfTotale, setSurfTotale] = useState(1000);
+  const prixDe = (id: string) => prixPerso[id] ?? PRIX_BIO[id];
+  const e = economiePlanche(cid, surf, prix === "" ? prixDe(cid) : Number(prix));
+  const tous = classementCultures(critere, prixPerso);
+  const an = new Date().getFullYear();
+  const plan = cultures.filter((c) => c.date.startsWith(String(an)) && c.espaceId).map((c) => { const esp = espaces.find((x) => x.id === c.espaceId); return esp?.surface ? economiePlanche(c.planteId, esp.surface, prixDe(c.planteId)) : null; }).filter(Boolean) as NonNullable<ReturnType<typeof economiePlanche>>[];
+  const totPlan = plan.reduce((a, x) => ({ ca: a.ca + x.chiffre, marge: a.marge + x.marge, h: a.h + x.heures }), { ca: 0, marge: 0, h: 0 });
+  const u = (id: string) => (MARAICH[id]?.unite === "pièces" ? "la pièce" : "le kg");
+  return (
+    <div>
+      <div className="card stack">
+        <b>💶 Économie d'une planche</b>
+        <div className="grid-sm">
+          <label className="field">Culture<select value={cid} onChange={(ev) => { setCid(ev.target.value); setPrix(""); }}>{Object.keys(MARAICH).sort((a, b) => (plante(a)?.nom ?? a).localeCompare(plante(b)?.nom ?? b)).map((id) => <option key={id} value={id}>{plante(id)?.nom ?? id}</option>)}</select></label>
+          <label className="field">Surface (m²)<input type="number" min="1" value={surf} onChange={(ev) => setSurf(Number(ev.target.value) || 1)} /></label>
+          <label className="field">Prix de vente ({u(cid)}, €)<input type="number" min="0" step="0.1" placeholder={String(prixDe(cid) ?? "")} value={prix} onChange={(ev) => setPrix(ev.target.value)} /></label>
+        </div>
+        {e && (
+          <table className="table small"><tbody>
+            <tr><td>Récolte vendable (15 % de pertes)</td><td><b>{e.recolte} {e.unite === "pièces" ? "pièces" : "kg"}</b></td></tr>
+            <tr><td>Chiffre d'affaires</td><td><b>{e.chiffre} €</b></td></tr>
+            <tr><td>Intrants (semences ou plants, compost, paillage)</td><td>− {e.intrants} €</td></tr>
+            <tr><td>Marge</td><td><b>{e.marge} €</b> ({e.parM2} €/m²)</td></tr>
+            <tr><td>Temps de travail</td><td>{e.heures} h</td></tr>
+            <tr><td>Rémunération par heure</td><td><b style={{ color: e.parHeure < 12 ? "var(--danger)" : undefined }}>{e.parHeure} €/h</b></td></tr>
+          </tbody></table>
+        )}
+        <p className="small muted">Repères de vente directe bio, de rendement et de temps de travail : à remplacer par vos chiffres (les prix saisis dans Mon jardin › Récoltes sont repris). Ne comptent pas : les charges fixes (foncier, serre, outils, irrigation, cotisations, transport), à couvrir par l'ensemble des cultures.</p>
+      </div>
+
+      {plan.length > 0 && (
+        <div className="card" style={{ marginTop: 12 }}>
+          <b>Votre plan de culture {an}</b>
+          <p className="small">{plan.length} cultures notées sur vos planches : chiffre d'affaires possible <b>{totPlan.ca} €</b>, marge <b>{totPlan.marge} €</b>, environ <b>{Math.round(totPlan.h)} h</b> de travail, soit <b>{totPlan.h ? Math.round((totPlan.marge / totPlan.h) * 10) / 10 : 0} €/h</b> avant charges fixes.</p>
+        </div>
+      )}
+
+      <div className="card" style={{ marginTop: 12 }}>
+        <div className="row between"><b>Classement des cultures</b>
+          <select value={critere} onChange={(ev) => setCritere(ev.target.value as typeof critere)} style={{ width: "auto" }} aria-label="Critère"><option value="parHeure">par rémunération horaire</option><option value="parM2">par marge au m²</option></select>
+        </div>
+        <table className="table small" style={{ marginTop: 6 }}><thead><tr><th>Culture</th><th>€/m²</th><th>€/h</th></tr></thead><tbody>
+          {tous.slice(0, 15).map((x) => <tr key={x.cultureId}><td>{plante(x.cultureId)?.nom ?? x.cultureId}</td><td>{x.parM2}</td><td>{x.parHeure}</td></tr>)}
+        </tbody></table>
+        <p className="small muted">Les cultures les mieux rémunérées au m² (aromatiques, jeunes pousses, tomates sous abri) ne le sont pas forcément à l'heure ; un maraîcher équilibre les deux, et garde des cultures moins rentables mais attendues dans les paniers.</p>
+      </div>
+
+      <div className="card" style={{ marginTop: 12 }}>
+        <b>🧺 Paniers de saison</b>
+        <label className="field" style={{ maxWidth: 260 }}>Surface cultivée (m²)<input type="number" min="10" step="10" value={surfTotale} onChange={(ev) => setSurfTotale(Number(ev.target.value) || 10)} /></label>
+        <p className="small">Environ <b>{paniersPossibles(surfTotale)} paniers par semaine</b> sur l'année (repère : 25 à 35 m² cultivés par panier hebdomadaire, selon le climat et les abris).</p>
+        <div className="grid">{PANIERS_TYPES.map((pn) => <div key={pn.saison} className="card" style={{ background: "var(--surface-2)" }}><b>{pn.saison}</b> <span className="badge">≈ {pn.valeur} €</span><ul className="ticks small" style={{ margin: "4px 0 0" }}>{pn.contenu.map((c) => <li key={c}>{c}</li>)}</ul></div>)}</div>
+        <p className="small"><a href={href("/guide/devenir-maraicher")}>Devenir maraîcher bio →</a> · <a href={href("/guide/certification-bio")}>La certification bio →</a> · <a href={href("/guide/vendre-surplus")}>Vendre son surplus →</a></p>
+      </div>
     </div>
   );
 }

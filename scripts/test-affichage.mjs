@@ -31,7 +31,7 @@ const serveur = createServer(async (req, res) => {
 const port = serveur.address().port;
 const base = `http://localhost:${port}/`;
 
-const PAGES = ["/", "/jardin", "/plantes", "/plante/tomate", "/sante", "/diagnostic", "/calendrier", "/guides", "/guide/bocaux", "/plus", "/conserver", "/conserver?t=temps", "/debuter", "/interieur", "/animaux", "/animal/poule", "/rucher", "/lexique", "/reglages", "/recherche?q=limaces", "/sol", "/nutrition", "/creer", "/calculs", "/plan-culture", "/amenagements", "/cueillette", "/bio", "/probleme/pucerons", "/maladie-animale/varroa", "/agronome", "/agronome?t=azote", "/agronome?t=dj", "/cours", "/references", "/guide/rotation"];
+const PAGES = ["/", "/jardin", "/plantes", "/plante/tomate", "/sante", "/diagnostic", "/calendrier", "/guides", "/guide/bocaux", "/plus", "/conserver", "/conserver?t=temps", "/debuter", "/interieur", "/animaux", "/animal/poule", "/rucher", "/lexique", "/reglages", "/recherche?q=limaces", "/sol", "/nutrition", "/creer", "/calculs", "/plan-culture", "/amenagements", "/cueillette", "/bio", "/probleme/pucerons", "/maladie-animale/varroa", "/agronome", "/agronome?t=azote", "/agronome?t=dj", "/cours", "/references", "/guide/rotation", "/plan-culture?t=economie", "/remede/biochar"];
 
 const profil = mkdtempSync(join(tmpdir(), "racines-test-"));
 const navigateur = await puppeteer.launch({ executablePath: exe, headless: true, userDataDir: profil, args: ["--no-first-run", "--disable-extensions", "--no-default-browser-check"] });

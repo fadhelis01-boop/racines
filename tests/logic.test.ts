@@ -32,6 +32,8 @@ import { dernierSoin } from "../src/lib/calendar";
 import { RACES } from "../src/data/races";
 import { DEUXIEME_SAISON } from "../src/data/debuter";
 import { VARIETES } from "../src/data/varietes";
+import { economiePlanche, classementCultures, paniersPossibles, PANIERS_TYPES } from "../src/lib/economie";
+import { REMEDES as REMEDES_TOUS } from "../src/data/index";
 import { classerTexture, chaulage, bilanHumique, fumureAzotee, degresJours } from "../src/lib/agronome";
 import { QUIZ, PARCOURS_AGRONOMIE, sourcesDe } from "../src/data/pedagogie";
 import { siropHiver, recolteParRuche, forceColonie } from "../src/lib/rucher";
@@ -661,6 +663,37 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   ag("combien de sucre pour le sirop", "Mon rucher");
   ok(!rechercher("source d'eau", 2).some((x) => x.titre.startsWith("Sources et références")), "« source d'eau » ne part pas vers les références");
   ok(rechercher("abri de jardin déclaration", 1)[0]?.titre.startsWith("Budget et règles"), "« déclaration » n'attrape plus les rations");
+}
+
+// Audit maraîcher bio et fait-maison : économie, guides, préparations, recherche
+{
+  const t = economiePlanche("tomate", 10)!;
+  ok(t.recolte === 42.5 && t.chiffre === 191 && t.marge === 176 && t.heures === 9 && t.parHeure === 19.6, `économie tomate 10 m² : 42,5 kg, 191 €, 176 € de marge, 19,6 €/h (obtenu ${JSON.stringify(t)})`);
+  ok(economiePlanche("tomate", 10, 6)!.chiffre === 255, "le prix saisi remplace le repère");
+  ok(economiePlanche("inconnue", 10) === null, "culture sans données : pas de calcul");
+  const cl = classementCultures("parM2");
+  ok(cl.length >= 40 && cl[0].parM2 >= cl[cl.length - 1].parM2, "classement des cultures par marge au m²");
+  ok(paniersPossibles(1000) === 33, "1 000 m² ≈ 33 paniers hebdomadaires");
+  ok(PANIERS_TYPES.length === 4, "4 paniers de saison");
+  for (const id of ["devenir-maraicher", "certification-bio", "idees-recues", "tunnel-petit-prix", "eau-sans-electricite", "germoir", "etagere-semis", "outils-maraicher-maison", "ou-trouver-gratuit", "plastique-jardin"]) ok(GUIDES.some((g) => g.id === id), `guide ${id}`);
+  for (const id of ["purin-fougere", "decoction-ail", "the-compost", "maceration-sureau", "purin-pissenlit", "melange-ortie-consoude", "biochar"]) ok(REMEDES_TOUS.some((r) => r.id === id) && !!STATUT_REMEDE[id], `préparation ${id} avec statut`);
+  ok(REMEDES_TOUS.filter((r) => /absinthe/i.test(r.nom)).length === 1, "pas de doublon pour l'absinthe");
+  const b = (q: string, attendu: string, k = 1) => { const r = rechercher(q, k).map((x) => x.titre); ok(r.some((x) => x.startsWith(attendu)), `bio « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+  b("certification bio", "La certification bio");
+  b("devenir maraîcher bio", "Devenir maraîcher bio");
+  b("rentabilité d'une planche", "Économie d'une planche");
+  b("prix de vente légumes", "Économie d'une planche");
+  b("pompe à bélier", "L'eau sans électricité");
+  b("biochar", "Biochar");
+  b("thé de compost", "Thé de compost");
+  b("vinaigre désherbant", "Idées reçues");
+  b("palette traitée", "Où trouver gratuitement");
+  b("faire son terreau", "Produire ses plants");
+  b("germoir", "Graines germées");
+  b("grelinette maison", "Fabriquer ses outils de maraîcher");
+  b("tunnel pas cher", "Tunnels et voiles à petit prix");
+  ok(!rechercher("traitement bio", 2).some((x) => x.titre.startsWith("Traire")), "« traitement » ne renvoie plus à la traite");
+  b("traire une chèvre", "Traire une chèvre");
 }
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);
