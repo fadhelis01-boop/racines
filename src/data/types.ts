@@ -95,6 +95,8 @@ export interface Plante {
   cycle?: "annuelle" | "bisannuelle" | "vivace" | "bulbe" | "grimpante" | "arbuste";
   mellifere?: boolean;
   hauteur?: string;
+  rusticite?: number; // température minimale supportée en pleine terre (°C), plante installée
+  feuillage?: "persistant" | "semi-persistant" | "caduc";
 }
 export type Couleur = "blanc" | "jaune" | "orange" | "rouge" | "rose" | "violet" | "bleu" | "vert" | "multicolore";
 

@@ -494,7 +494,7 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   fr("éclaircir les pommes", "Arboriculture");
   fr("consanguinité", "Reproduction et sélection", 1);
   fr("pâturage tournant", "Pâturage tournant", 1);
-  fr("tailler un forsythia", "Tailler les rosiers", 1);
+  fr("tailler un forsythia", "Tailler les rosiers", 3);
   fr("transporter des chèvres", "Transporter ses animaux");
   fr("verticilliose", "Verticilliose", 1);
   fr("black rot", "Black-rot", 1);
@@ -513,6 +513,35 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   const visites = [{ id: "v1", rucheId: "a", date: "2026-11-01", poids: 34 }, { id: "v2", rucheId: "a", date: "2026-12-10", poids: 27 }];
   ok(alertesRucher({ ruches, visites, traitementsApi: [] }, "2026-12-12").some((x) => /27 kg/.test(x.texte)), "alerte ruche trop légère en hiver");
   ok(!alertesRucher({ ruches, visites, traitementsApi: [] }, "2026-06-12").some((x) => /kg/.test(x.texte)), "pas d'alerte de poids en été");
+}
+
+// Audit horticulteur : ornement, rusticité, tailles, guides, recherche
+{
+  const h = (q: string, attendu: string, k = 2) => { const r = rechercher(q, k).map((x) => x.titre); ok(r.some((t) => t.startsWith(attendu)), `horti « ${q} » → ${attendu} (obtenu : ${r.join(" | ")})`); };
+  for (const id of ["photinia", "laurier-tin", "camelia", "rhododendron", "forsythia", "buddleia", "erable-japon", "magnolia", "hellebore", "hosta", "miscanthus", "narcisse", "vigne-vierge", "passiflore", "nenuphar"]) ok(!!PLANTES.find((p) => p.id === id), `fiche ${id}`);
+  const vivacesLigneux = PLANTES.filter((p) => ["fleur", "ornement", "aromatique", "fruit", "arbre"].includes(p.categorie) && p.cycle !== "annuelle");
+  ok(vivacesLigneux.every((p) => p.rusticite != null), `rusticité partout (${vivacesLigneux.filter((p) => p.rusticite == null).map((p) => p.id).join(",")})`);
+  ok(PLANTES.filter((p) => ["arbre", "fruit"].includes(p.categorie)).every((p) => p.hauteur && p.sansDangerAnimaux !== undefined), "arbres et fruitiers : hauteur et danger animaux");
+  ok(JSON.stringify(PLANTES.find((p) => p.id === "glycine")!.taille) === "[1,2,7,8]", "glycine taillée en été et en hiver");
+  ok((PLANTES.find((p) => p.id === "clematite")!.taille ?? []).length > 0, "clématite a ses mois de taille");
+  ok(PLANTES.find((p) => p.id === "hortensia")!.feuillage === "caduc" && PLANTES.find((p) => p.id === "laurier-tin")!.feuillage === "persistant", "feuillage renseigné");
+  ok(PLANTES.find((p) => p.id === "rhododendron")!.sansDangerAnimaux === false, "rhododendron signalé toxique");
+  h("planter un arbre", "Planter un arbre ou un arbuste", 1);
+  h("tuteurer un arbre", "Planter un arbre ou un arbuste", 1);
+  h("planter une haie", "Planter et tailler une haie");
+  h("plantes résistantes à la sécheresse", "Jardiner avec la sécheresse", 1);
+  h("plantes résistantes au froid", "Plantes rustiques", 1);
+  h("fleurs coupées", "Un coin de fleurs à couper", 1);
+  h("jardin d'ombre", "Le jardin d'ombre", 1);
+  h("semer une pelouse", "Semer ou regarnir une pelouse", 1);
+  h("diviser une vivace", "Les vivaces", 1);
+  h("plantes couvre-sol", "Couvre-sols et rocaille", 1);
+  h("plantes grimpantes", "Plantes grimpantes", 1);
+  h("calendrier de taille", "Calendrier de taille", 1);
+  h("jardinière fleurie", "Une jardinière fleurie", 1);
+  h("hellébore", "Hellébore", 1);
+  h("nénuphar", "Nénuphar", 1);
+  ok(!rechercher("séchage", 1)[0]?.titre.startsWith("Jardiner avec la sécheresse"), "« séchage » reste la conserverie");
 }
 
 console.log(fails ? `✗ ${fails}/${n} test(s) en échec` : `✓ ${n} tests de logique réussis`);

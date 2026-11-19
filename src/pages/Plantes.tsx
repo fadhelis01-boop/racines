@@ -16,6 +16,7 @@ export default function Plantes() {
   const [facile, setFacile] = useState(false);
   const [filtres, setFiltres] = useState<string[]>([]);
   const [couleur, setCouleur] = useState("");
+  const [froid, setFroid] = useState(() => Number(new URLSearchParams(location.hash.split("?")[1] ?? "").get("froid")) || 0); // 0 = indifférent ; sinon température minimale à supporter
   const tog = (f: string) => setFiltres(filtres.includes(f) ? filtres.filter((x) => x !== f) : [...filtres, f]);
   const fav = useStore((s) => s.favoris);
   const nq = norm(q);
@@ -32,9 +33,11 @@ export default function Plantes() {
       (!filtres.includes("mellifere") || p.mellifere === true) &&
       (!filtres.includes("enfleur") || (p.floraison ?? []).includes((new Date().getMonth() + 1) as never)) &&
       (!couleur || (p.couleurs ?? []).includes(couleur as never)) &&
+      (!froid || (p.rusticite != null && p.rusticite <= froid)) &&
+      (!filtres.includes("persistant") || p.feuillage === "persistant") &&
       (!nq || norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" ")).includes(nq)),
   ).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
-  const paquet = usePaquets(list, [q, cat, lieu, facile, filtres.join(","), couleur].join("|"));
+  const paquet = usePaquets(list, [q, cat, lieu, facile, filtres.join(","), couleur, froid].join("|"));
   return (
     <div>
       <Titre ico="plantes" emoji="🌱">Les plantes</Titre>
@@ -67,6 +70,14 @@ export default function Plantes() {
         {[["enfleur", "🌸 En fleur ce mois-ci"], ["comestible", "🍽️ Comestible"], ["mellifere", "🐝 Pour les abeilles"], ["animaux", "🐱 Sans danger chats et chiens"], ["sombre", "🌑 Pièce sombre"], ["oublis", "🙈 Pardonne les oublis"], ["fleurs", "🌸 Fleurit en intérieur"]].map(([k, l]) => (
           <button key={k} className={`chip ${filtres.includes(k) ? "on" : ""}`} onClick={() => tog(k)}>{l}</button>
         ))}
+      </div>
+      <div className="row" style={{ marginBottom: 12, gap: 8 }}>
+        <label className="small" style={{ display: "flex", alignItems: "center", gap: 6 }}>❄️ Doit supporter
+          <select value={froid} onChange={(e) => setFroid(Number(e.target.value))} aria-label="Froid à supporter" style={{ width: "auto" }}>
+            <option value={0}>peu importe</option>{[-5, -10, -15, -20, -25].map((t) => <option key={t} value={t}>{t} °C</option>)}
+          </select>
+        </label>
+        <button className={`chip ${filtres.includes("persistant") ? "on" : ""}`} onClick={() => tog("persistant")}>🌲 Feuillage persistant</button>
       </div>
       <div className="chips" style={{ marginBottom: 12 }} aria-label="Couleur des fleurs">
         {[["", "Toutes couleurs", "transparent"], ["blanc", "Blanc", "#f5f5f0"], ["jaune", "Jaune", "#f2d24b"], ["orange", "Orange", "#f29a3b"], ["rouge", "Rouge", "#d9342b"], ["rose", "Rose", "#ec8fb7"], ["violet", "Violet", "#8f5bbf"], ["bleu", "Bleu", "#4f7fd1"]].map(([k, l, col]) => (

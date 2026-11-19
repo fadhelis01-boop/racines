@@ -18,6 +18,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 // Photos d'article inadaptées (vue de jardin botanique, détail, plante sauvage géante) :
 // on place d'abord une vue de la plante telle qu'on la cultive.
 const RECHERCHE: Record<string, string> = {
+  abelia: "Abelia grandiflora flowers", hosta: "Hosta leaves garden", "geranium-vivace": "Geranium Rozanne", nepeta: "Nepeta faassenii", stipa: "Stipa tenuissima",
   bonsai: "Ficus microcarpa bonsai",
   gloxinia: "Sinningia speciosa",
   "feu-bacterien": "Erwinia amylovora fire blight",

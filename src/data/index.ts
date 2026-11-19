@@ -13,9 +13,12 @@ import { GUIDES_MARAICHAGE } from "./guides-maraichage";
 import { GUIDES_APICULTURE } from "./guides-apiculture";
 import { GUIDES_CONSERVERIE } from "./guides-conserverie";
 import { GUIDES_EXPERT } from "./guides-expert";
+import { GUIDES_HORTICULTURE } from "./guides-horticulture";
 import { MALADIES_ANIMALES } from "./maladies-animales";
 import { CONTENANT, RENDEMENT, PROFONDEUR, GERMINATION } from "./cultures-complements";
 import { JARDIN2 } from "./jardin2";
+import { ORNEMENT2 } from "./ornement2";
+import { COMPLEMENTS } from "./rusticite";
 import { FLEURS2, ENRICH_FLEURS } from "./fleurs2";
 import { PROBLEMES, SIGNES } from "./problemes";
 import { REMEDES, AUXILIAIRES } from "./remedes";
@@ -30,7 +33,7 @@ import { ANIMAUX2 } from "./animaux2";
 import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
 
-export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...INTERIEUR3, ...ENVAHISSANTES, ...JARDIN2, ...FLEURS2].map((p) => ({ ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}), ...(!p.recolteConseil && RECOLTE_EN_PLUS[p.id] ? { recolteConseil: RECOLTE_EN_PLUS[p.id] } : {}), ...(!p.contenant && CONTENANT[p.id] ? { contenant: CONTENANT[p.id] } : {}), ...(!p.rendement && RENDEMENT[p.id] ? { rendement: RENDEMENT[p.id] } : {}), ...(!p.profondeur && PROFONDEUR[p.id] ? { profondeur: PROFONDEUR[p.id] } : {}), ...(GERMINATION[p.id] ? { tempGermination: GERMINATION[p.id] } : {}), ...(ALIAS_CULTIVARS[p.id] ? { alias: [...(p.alias ?? []), ...(ENRICH[p.id]?.alias ?? []), ...ALIAS_CULTIVARS[p.id]] } : {}) }));
+export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...INTERIEUR3, ...ENVAHISSANTES, ...JARDIN2, ...FLEURS2, ...ORNEMENT2].map((p) => ({ ...Object.fromEntries(Object.entries(COMPLEMENTS[p.id] ?? {}).filter(([k]) => (p as unknown as Record<string, unknown>)[k] == null)), ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}), ...(!p.recolteConseil && RECOLTE_EN_PLUS[p.id] ? { recolteConseil: RECOLTE_EN_PLUS[p.id] } : {}), ...(!p.contenant && CONTENANT[p.id] ? { contenant: CONTENANT[p.id] } : {}), ...(!p.rendement && RENDEMENT[p.id] ? { rendement: RENDEMENT[p.id] } : {}), ...(!p.profondeur && PROFONDEUR[p.id] ? { profondeur: PROFONDEUR[p.id] } : {}), ...(GERMINATION[p.id] ? { tempGermination: GERMINATION[p.id] } : {}), ...(ALIAS_CULTIVARS[p.id] ? { alias: [...(p.alias ?? []), ...(ENRICH[p.id]?.alias ?? []), ...ALIAS_CULTIVARS[p.id]] } : {}) }));
 
 // Associations rendues réciproques : si A est « bon voisin » de B, B l'est de A ;
 // en cas de désaccord (A ami de B mais B ennemi de A), « à séparer » l'emporte.
@@ -45,7 +48,7 @@ export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUI
   }
   for (const p of PLANTES) p.amis = p.amis.filter((a) => !p.ennemis.includes(a));
 }
-export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX, ...GUIDES_ELEVAGE, ...GUIDES_RECUP, ...GUIDES_MARAICHAGE, ...GUIDES_APICULTURE, ...GUIDES_CONSERVERIE, ...GUIDES_EXPERT].map((g) => (ETAPES_EN_PLUS[g.id] ? { ...g, etapes: [...g.etapes, ...ETAPES_EN_PLUS[g.id]] } : g)).map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
+export const GUIDES: Guide[] = [...GUIDES_JARDIN, ...GUIDES_JARDIN2, ...GUIDES_MAISON, ...GUIDES_INTERIEUR, ...GUIDES_BALCON, ...GUIDES_AGRO, ...GUIDES_BIO, ...GUIDES_ANIMAUX, ...GUIDES_ELEVAGE, ...GUIDES_RECUP, ...GUIDES_MARAICHAGE, ...GUIDES_APICULTURE, ...GUIDES_CONSERVERIE, ...GUIDES_EXPERT, ...GUIDES_HORTICULTURE].map((g) => (ETAPES_EN_PLUS[g.id] ? { ...g, etapes: [...g.etapes, ...ETAPES_EN_PLUS[g.id]] } : g)).map((g) => (ALIAS_GUIDES[g.id] ? { ...g, alias: [...(g.alias ?? []), ...ALIAS_GUIDES[g.id]] } : g));
 const ANIMAUX = [...ANIMAUX1, ...ANIMAUX2];
 export { PROBLEMES, SIGNES, REMEDES, AUXILIAIRES, ANIMAUX, CALENDRIER, ZONES };
 

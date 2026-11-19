@@ -18,6 +18,7 @@ import { FRUITIERS } from "../data/cultures-complements";
 import { srcVignette } from "../components/Ico";
 import { CONSERV, METHODES_CONSERV } from "../data/conservation";
 import { VARIETES, LIB_TYPE_VARIETE } from "../data/varietes";
+import { libRusticite } from "../data/rusticite";
 import { AjoutCulture } from "../components/AjoutCulture";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
@@ -45,6 +46,8 @@ export default function PlanteFiche({ id }: { id?: string }) {
         ["Besoins du sol", BESOIN[p.besoin]],
         ["Sol idéal", SOL_PLANTE[p.id]],
         ["Eau", EAU[p.eau]],
+        ["Rusticité", p.rusticite != null ? `jusqu'à ${p.rusticite} °C : ${libRusticite(p.rusticite)}` : p.cycle === "annuelle" ? "annuelle : vit une seule saison" : undefined],
+        ["Feuillage", p.feuillage ? { persistant: "persistant (vert toute l'année)", "semi-persistant": "semi-persistant (perd une partie de ses feuilles en hiver froid)", caduc: "caduc (perd ses feuilles en hiver)" }[p.feuillage] : undefined],
         ["Espacement", p.espacement],
         ["Profondeur de semis", p.profondeur],
         ["Germination", p.levee],
