@@ -14,7 +14,7 @@ import { RACES } from "../data/races";
 // symptômes (→ diagnostic) et tolérance aux fautes de frappe.
 
 export interface Hit { href: string; emoji: string; titre: string; type: string; score: number; id?: string }
-interface Doc { href: string; emoji: string; titre: string; type: string; noms: string; texte: string; id?: string; principal: boolean; animal?: boolean }
+interface Doc { href: string; emoji: string; titre: string; type: string; noms: string; texte: string; id?: string; principal: boolean; animal?: boolean; interieur?: boolean }
 
 // Autres noms des animaux (pour « coq », « brebis », « ruche »…)
 const ALIAS_ANIMAUX: Record<string, string> = {
@@ -35,11 +35,11 @@ let DOCS: Doc[] | null = null;
 function docs(): Doc[] {
   if (DOCS) return DOCS;
   DOCS = [
-    ...PLANTES.map((p) => ({ principal: true, id: p.id, href: `/plante/${p.id}`, emoji: p.emoji, titre: p.nom, type: p.categorie === "fleur" || p.categorie === "ornement" ? "Fleur et jardin d'agrément" : p.categorie === "arbre" ? "Arbre fruitier" : p.categorie === "interieur" ? "Plante d'intérieur" : p.categorie === "toxique" ? "Plante dangereuse" : p.categorie === "sauvage" ? "Plante sauvage" : "Plante", noms: norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" | ")), texte: norm([p.intro, ...p.etapes, ...p.entretien, p.conservation ?? "", p.lumiere ?? "", p.arrosageDetail ?? "", p.toxique ?? "", p.sansDangerAnimaux ? "sans danger chats chiens" : ""].join(" ")) })),
+    ...PLANTES.map((p) => ({ interieur: p.categorie === "interieur", principal: true, id: p.id, href: `/plante/${p.id}`, emoji: p.emoji, titre: p.nom, type: p.categorie === "fleur" || p.categorie === "ornement" ? "Fleur et jardin d'agrément" : p.categorie === "arbre" ? "Arbre fruitier" : p.categorie === "interieur" ? "Plante d'intérieur" : p.categorie === "toxique" ? "Plante dangereuse" : p.categorie === "sauvage" ? "Plante sauvage" : "Plante", noms: norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" | ")), texte: norm([p.intro, ...p.etapes, ...p.entretien, p.conservation ?? "", p.lumiere ?? "", p.arrosageDetail ?? "", p.toxique ?? "", p.sansDangerAnimaux ? "sans danger chats chiens" : ""].join(" ")) })),
     ...LEXIQUE.map((t) => ({ principal: false, id: t.wiki ? "lex-" + t.id : undefined, href: `/lexique?t=${t.id}`, emoji: "📖", titre: t.terme, type: "Lexique", noms: norm([t.terme, ...(t.alias ?? [])].join(" | ")), texte: norm(t.def) })),
     ...ANIMAUX.map((a) => ({ animal: true, principal: true, id: a.id, href: `/animal/${a.id}`, emoji: a.emoji, titre: a.nom, type: "Animal", noms: norm(a.nom + " | " + (ALIAS_ANIMAUX[a.id] ?? "")), texte: norm([a.resume, ...a.quotidien, ...a.alimentation, ...a.interdits, ...a.reglementation, ...a.sante.map((s) => s.signe)].join(" ")) })),
     ...MALADIES_ANIMALES.map((m) => ({ animal: true, principal: true, id: m.especes[0], href: `/maladie-animale/${m.id}`, emoji: "⚕️", titre: m.nom, type: "Santé des animaux", noms: norm([m.nom, ...m.alias].join(" | ")), texte: norm([m.signes, m.explication, ...m.especes.map((e) => ALIAS_ANIMAUX[e] ?? e)].join(" ")) })),
-    ...PROBLEMES.map((p) => ({ principal: true, id: p.id, href: `/probleme/${p.id}`, emoji: "⚕️", titre: p.nom, type: "Santé des plantes", noms: norm([p.nom, ...(p.alias ?? []), ...p.signes.map((s) => SIGNES[s].label)].join(" | ")), texte: norm([p.cible, ...p.symptomes, p.conditions].join(" ")) })),
+    ...PROBLEMES.map((p) => ({ interieur: !!p.interieur, principal: true, id: p.id, href: `/probleme/${p.id}`, emoji: "⚕️", titre: p.nom, type: "Santé des plantes", noms: norm([p.nom, ...(p.alias ?? []), ...p.signes.map((s) => SIGNES[s].label)].join(" | ")), texte: norm([p.cible, ...p.symptomes, p.conditions].join(" ")) })),
     ...AMENAGEMENTS.map((a) => ({ principal: false, id: a.id, href: `/amenagements?id=${a.id}`, emoji: a.emoji, titre: a.nom, type: "Aménagement", noms: norm([a.nom, "amenager amenagement jardin"].join(" | ")), texte: norm([a.resume, ...a.avantages, ...a.inconvenients].join(" ")) })),
     ...GESTES_RECOLTE.map((g) => ({ principal: false, id: g.id, href: `/cueillette?g=${g.id}`, emoji: g.emoji, titre: "Cueillir — " + g.titre, type: "Bien cueillir", noms: norm(["cueillir recolter cueillette comment recolter", g.titre].join(" | ")), texte: norm([g.quand, ...g.comment].join(" ")) })),
     { principal: false, href: "/interieur", emoji: "🌿", titre: "Plantes d'intérieur et aromates (avec ou sans lampe)", type: "Espace intérieur", noms: norm("plantes d'interieur | plante interieur | plantes vertes | aromates interieur | herbes interieur | lampe de culture | lampe horticole | sans lampe | appartement sombre | quelle plante pour ma fenetre"), texte: norm("fenetre sud nord est ouest lampe aromates bouture substrat") },
@@ -72,6 +72,7 @@ function docs(): Doc[] {
     { principal: false, href: "/cours", emoji: "🎓", titre: "Comprendre l'agronomie : parcours en 5 leçons avec quiz", type: "Outil", noms: norm("comprendre l agronomie | cours d agronomie | lecons | parcours | quiz | apprendre"), texte: norm("sol plante eau fertilite protection des cultures") },
     { animal: true, principal: false, href: "/animaux", emoji: "🐔", titre: "Les animaux : quel animal pour moi ? (place, temps, budget)", type: "Outil", noms: norm("animaux | quel animal | comparateur animaux | animaux de la ferme | basse-cour | elevage familial"), texte: "" },
     { animal: true, principal: false, href: "/diagnostic-animal", emoji: "⚕️", titre: "Mon animal ne va pas bien (diagnostic, températures normales)", type: "Outil", noms: norm("animal malade | diagnostic animal | mon animal ne va pas bien | temperature normale | fievre animal"), texte: "" },
+    { interieur: true, principal: false, href: "/interieur?t=entretien", emoji: "🌱", titre: "Terreaux et mélanges pour plantes d'intérieur (et l'année d'une plante)", type: "Espace intérieur", noms: norm("terreau plante interieur | quel terreau | substrat | melange terreau | terreau cactus | terreau orchidee | terreau monstera | ecorces | perlite"), texte: "" },
     { principal: false, href: "/creer", emoji: "👨‍🌾", titre: "Créer mon potager : un plan pour la première année", type: "Outil", noms: norm("creer mon potager | creer un potager | faire un potager | premier potager | commencer un potager"), texte: "" },
     { principal: false, href: "/guides", emoji: "📚", titre: "Tous les tutoriels (à lire ou imprimer)", type: "Outil", noms: norm("tutoriels | tous les tutoriels | guides | imprimer | impression | version papier"), texte: "" },
     { principal: false, href: "/references", emoji: "📚", titre: "Sources et références", type: "Outil", noms: norm("sources | references | bibliographie | pour aller plus loin | organismes"), texte: norm("inrae itab chambres d agriculture fredon anses itsap gds") },
@@ -86,6 +87,7 @@ function docs(): Doc[] {
     { principal: false, href: "/jardin", emoji: "🔔", titre: "Mes plantes : rappels d'arrosage sur le téléphone", type: "Débuter", noms: norm("rappel | rappels | notification | notifications | alerte arrosage | j oublie d arroser | me prevenir"), texte: norm("agenda telephone arrosage verifier") },
     { principal: false, href: "/debuter", emoji: "🌱", titre: "Je débute : par où commencer (même sans la main verte)", type: "Débuter", noms: norm("debuter | je debute | debutant | main verte | par ou commencer | plantes increvables | plantes faciles"), texte: norm("premier mois increvables aromates legumes balcon liste de courses") },
     { principal: false, href: "/interieur?t=catalogue&facile=1", emoji: "💪", titre: "Les plantes d'intérieur increvables", type: "Débuter", noms: norm("increvable | increvables | plante facile | plantes faciles | plante robuste | indestructible"), texte: norm("facile oubli arrosage peu de lumiere") },
+    { interieur: true, principal: false, href: "/debuter?t=increvables", emoji: "💪", titre: "Plantes d'intérieur faciles qui pardonnent les oublis", type: "Espace intérieur", noms: norm("plante facile | plantes faciles | plante increvable | plante d interieur facile | plante robuste | plante pour debutant"), texte: "" },
     { principal: false, href: "/debuter?t=offrir", emoji: "🎁", titre: "Offrir une plante (facile, sans danger)", type: "Débuter", noms: norm("offrir une plante | plante cadeau | cadeau"), texte: norm("facile sans danger animaux fleurs") },
     { principal: false, href: "/debuter?t=courses", emoji: "🛒", titre: "La liste de courses pour débuter", type: "Débuter", noms: norm("liste de courses | quoi acheter | materiel debutant"), texte: norm("pots terreau arrosoir graines plants") },
     { principal: false, href: "/debuter?t=potager", emoji: "🥗", titre: "Mon premier potager : les légumes les plus faciles", type: "Débuter", noms: norm("potager facile | legumes faciles | premier potager"), texte: norm("radis salade courgette tomate cerise haricot") },
@@ -93,7 +95,7 @@ function docs(): Doc[] {
     { principal: false, href: "/calculs", emoji: "🧮", titre: "Calculs pratiques", type: "Outil", noms: norm("calcul | calculs | combien | quantite | combien de poules | combien de compost | combien de terreau | combien planter"), texte: norm("compost fumier terreau famille eau de pluie poules") },
     { principal: false, href: "/amenagements", emoji: "🗺️", titre: "Aménager son jardin : les façons de faire comparées", type: "Outil", noms: norm("amenager | amenagement | amenager jardin | organiser jardin | plan du jardin | idees jardin"), texte: norm("potager carre butte lasagnes jardin foret verger prairie mare") },
     ...REMEDES.map((r) => ({ principal: false, href: `/remede/${r.id}`, emoji: r.emoji, titre: r.nom, type: "Remède", noms: norm(r.nom), texte: norm([r.role, ...r.usage].join(" ")) })),
-    ...GUIDES_COMPLETS.map((g) => ({ animal: g.rubrique === "animaux" || g.rubrique === "boucherie", principal: false, id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm([g.titre, g.resume, ...(g.alias ?? [])].join(" | ")), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
+    ...GUIDES_COMPLETS.map((g) => ({ interieur: g.rubrique === "interieur", animal: g.rubrique === "animaux" || g.rubrique === "boucherie", principal: false, id: g.id, href: `/guide/${g.id}`, emoji: g.emoji, titre: g.titre, type: "Tutoriel", noms: norm([g.titre, g.resume, ...(g.alias ?? [])].join(" | ")), texte: norm(g.etapes.map((e) => e.titre + " " + e.texte).join(" ")) })),
   ];
   return DOCS;
 }
@@ -152,6 +154,16 @@ const PHRASES: [RegExp, string][] = [
 // de questions et leur page attendue sont vérifiés à chaque build (tests/recherche.test.ts).
 export const debutDeMot = (re: RegExp) => new RegExp(`(?:^|[^a-z0-9])(?:${re.source})`);
 const INTENTIONS_BRUTES: [RegExp, string[]][] = [
+  // Audit apiculteur débutant (avant les intentions apicoles générales)
+  [/(commencer|debuter|debut) (l |en )?apiculture|apiculteur debutant|premiere ruche|combien de ruches|acheter (un |des |une )?(essaim|abeilles|ruchette|colonie)|ou acheter (des )?abeilles|prix (d une |des |de la )?ruches?|budget apicult|essaim (nu|sur cadres)|paquet d abeilles/, ["/guide/api-debuter"]],
+  [/ruches? (en ville|sur (un |le )?toit|sur (un |le )?balcon|dans (un )?petit jardin)|distance.*ruches?|ruches?.*(voisin|distance)|emplacement (d une |de la |des )?ruches?|ou (installer|mettre|placer) (une |la |mes |ma )?ruche|apiculture urbaine/, ["/guide/api-emplacement", "/guide/api-miellees"]],
+  [/pas de reine|reine (introuvable|perdue|morte|disparue)|trouver la reine|(ruche|colonie) orpheline|orphelinage|ouvrieres? pondeuses?|plus d oeufs dans (la )?ruche|bourdonneuse/, ["/guide/api-reine-perdue", "/maladie-animale/orpheline", "/guide/api-reines"]],
+  [/(abeilles|colonie|ruche) (mortes?|morte) (en|cet|pendant l) hiver|ruche (morte|vide)|colonie morte|pertes? hivernales?|pourquoi (ma |la )?ruche est morte|autopsie/, ["/guide/api-ruche-morte", "/rucher"]],
+  [/(^|[^a-z])pillage|pillee|reducteur d entree/, ["/guide/api-pillage"]],
+  [/(abeilles|essaim) dans (la |le |un |une |mon |ma |les )?(cheminee|mur|toit|maison|grenier|volet|arbre|jardin|haie|boite aux lettres)|qui appeler.*essaim|enlever (un )?essaim/, ["/guide/essaim-batiment", "/guide/api-essaimage"]],
+  [/hivernage (de la |des )?ruches?|hiverner (une |la )?ruche|isol(er|ation) (la |une |de la )?ruche|ruches? en hiver|pain de sucre|(^|[^a-z])candi($|[^a-z])|humidite (dans la )?ruche/, ["/guide/api-hivernage", "/guide/api-nourrissement"]],
+  [/frelons? asiatiques?|piege.*frelon|frelon.*piege|vespa velutina/, ["/guide/api-frelon"]],
+  [/(plantes|fleurs) (melliferes|pour (les )?abeilles).*(balcon|pot|jardiniere)|balcon.*(abeilles|mellifere)/, ["/guide/jardin-pollinisateurs"]],
   [/(tue|tuer|meurent|meurt|crevent).*(plantes?|tout)|main verte|increvable|indestructible|qui ne meur|qui meurt pas|plantes? faciles?|debutant|debuter|je debute|commencer le jardinage|par ou commencer|plantes? (robustes?|resistantes?)$/, ["/debuter", "/interieur?t=catalogue&facile=1"]],
   [/feuilles? (marron|brunes?|seches?|grillees?)|bouts? (des feuilles )?(marron|bruns?|secs?)/, ["/probleme/air-sec", "/probleme/soif", "/probleme/coup-soleil", "/probleme/pourriture-racines"]],
   [/betes? blanches?|bestioles? blanches?|insectes? blancs?|coton blanc|duvet blanc sur (la )?plante|petites? mouches? blanches?/, ["/probleme/cochenilles", "/probleme/aleurode"]],
@@ -243,6 +255,14 @@ const INTENTIONS_BRUTES: [RegExp, string[]][] = [
   [/miel|extracteur|hausse|recolte.*ruche/, ["/guide/recolte-miel"]],
   [/salmonel|zoonose|enfants?.*(poule|animaux|chevre|lapin|ane)|laver les oeufs|hygiene.*(oeuf|poule|animaux)/, ["/guide/hygiene-animaux"]],
   [/que (planter|semer|cultiver) pour (mes |les )?(poules|chevres|lapins|animaux)/, ["/guide/cultiver-pour-animaux"]],
+  // Audit plantes d'intérieur débutant
+  [/sauver (une |ma |la )?plante|plante (qui )?(meurt|deperit|se meurt|mourante|agonise)|plante achetee.*(deperit|meurt|perd|jaunit)|reanimer (une )?plante/, ["/guide/sauver-plante", "/guide/choisir-plante"]],
+  [/arros\w* par (le )?(bas|dessous)|pot sans trou|cache.?pots?|billes d argile au fond|drainage (du |d un )?pot|arrosage (par )?meche|trempage/, ["/guide/pots-arrosage"]],
+  [/(quel |quelle )?(terreau|substrat).*(interieur|plante verte|cactus|orchidee|monstera|succulente)|terreau pour plantes? (d interieur|vertes)/, ["/interieur?t=entretien", "/guide/rempoter"]],
+  [/plantes?.*(hiver|ne pousse plus en hiver)|repos (hivernal|d hiver)|pres du radiateur|radiateur|humidifi|air (trop )?sec.*plante|sortir (les |mes )?plantes|rentrer (les |mes )?plantes/, ["/guide/saisons-plantes-interieur"]],
+  [/engrais.*(interieur|plantes? vertes?|orchidee|cactus|succulente|pot)|nourrir (une |ma |les )?plantes? (d interieur|verte)/, ["/guide/engrais-interieur"]],
+  [/plantes? (d interieur |verte )?(facile|increvable|robuste|pour debutant)s?/, ["/debuter?t=increvables", "/interieur"]],
+  [/salle de bain|plantes? (pour|par) (piece|chambre|cuisine|bureau)|depolluante/, ["/guide/plantes-par-piece"]],
   // Audit éleveur amateur
   [/(appeler|trouver|choisir) (un |le |son )?veterinaire|veterinaire (rural|de garde|d urgence|pour (poules|chevres|lapins|animaux))|urgence (animal|veterinaire)|pharmacie (de l |d )?eleveur|trousse (de secours|de soins).*(animaux|eleveur)|premiers? (secours|soins) (animaux|chevre|poule)|temperature (normale|rectale)|prendre la temperature|delai d attente/, ["/guide/veterinaire-urgences", "/diagnostic-animal"]],
   [/quel animal (choisir|pour moi|avoir)|(premier|premiers) animaux|debuter (avec des animaux|un elevage|l elevage)|(combien|prix).*(coute|coutent|cout|prix).*(chevre|mouton|poule|ane|cochon|lapin|alpaga|brebis|cheval|animaux)|cout de depart|budget (elevage|animaux|chevre|poules)|declarer (ses |mes |des )?(poules|chevres|moutons|brebis|cochons|porcs|animaux|volailles)|numero ede/, ["/guide/debuter-animaux", "/animaux"]],
@@ -316,6 +336,8 @@ export function rechercher(q: string, limit = 60): Hit[] {
       if (manquants && !(toks.length >= 3 && manquants === 1)) score = toks.length > 1 ? score * 0.35 : 0;
       else if (manquants) score *= 0.75;
     }
+    // Question sur une plante d'intérieur : les maladies et tutoriels du potager passent derrière
+    if (/(^|[^a-z])(interieur|appartement|salon|plante verte|plantes vertes)($|[^a-z])/.test(brut) && !d.interieur && (d.href.startsWith("/probleme/") || d.href.startsWith("/guide/"))) score *= 0.4;
     // Une question sur les plantes ne doit pas remonter des fiches d'élevage
     if (d.animal && !animalQ) score *= 0.3;
     // Question sur un animal : les fiches qui ne parlent pas de cet animal passent derrière

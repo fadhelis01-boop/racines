@@ -46,6 +46,7 @@ import { CONSERV, METHODES_CONSERV, majorationAltitude } from "../src/data/conse
 import { MALADIES_ANIMALES } from "../src/data/maladies-animales";
 
 import { ok } from "./outils";
+import { lumiereEstimee } from "../src/lib/lumiere";
 import { attentesEnCours, soinsAPrevoir, finAttente } from "../src/lib/attente";
 import { animauxPossibles, REPERES, themeDuGuide } from "../src/lib/choisir-animal";
 import { TEMPERATURES } from "../src/data/maladies-amateur";
@@ -755,4 +756,14 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   for (const id of ["lentille", "pois-chiche", "salsifis", "kaki", "grenadier", "ail-des-ours", "seigle", "feverole", "sarrasin"]) ok(PLANTES.some((p) => p.id === id), `plante ${id}`);
   ok(PLANTES.find((p) => p.id === "ail-des-ours")!.sosies!.some((x) => /muguet/i.test(x.nom)), "ail des ours : sosie mortel signalé");
   for (const id of ["veterinaire-urgences", "debuter-animaux", "rapaces-volailles", "verger-protection"]) ok(GUIDES.some((g) => g.id === id), `guide ${id}`);
+}
+
+// Audit apiculteur et plantes d'intérieur débutants
+{
+  ok(lumiereEstimee("sud", 0, false).niveau === 4 && lumiereEstimee("sud", 0, false).expo.includes("soleil"), "fenêtre sud contre la vitre : soleil direct");
+  ok(lumiereEstimee("est", 2, false).niveau === 1, "fenêtre est à 2 m : lumière faible");
+  ok(lumiereEstimee("nord", 1, true).niveau === 0 && lumiereEstimee("nord", 1, true).expo.length === 0, "nord à 1 m avec voilage : il faut une lampe");
+  ok(lumiereEstimee("loin", 3, false).niveau === 1, "loin d'une fenêtre : la distance n'est pas comptée deux fois");
+  for (const id of ["api-debuter", "api-emplacement", "api-reine-perdue", "api-ruche-morte", "api-pillage", "essaim-batiment", "api-hivernage", "sauver-plante", "pots-arrosage", "saisons-plantes-interieur", "engrais-interieur"]) ok(GUIDES.some((g) => g.id === id), `guide ${id}`);
+  ok(/1er septembre et le 31 décembre/.test(JSON.stringify(GUIDES.find((g) => g.id === "api-debuter"))), "déclaration annuelle des ruches : période indiquée");
 }

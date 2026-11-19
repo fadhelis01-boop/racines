@@ -1,5 +1,6 @@
 import MotsLexique from "../components/MotsLexique";
 import { useEffect, useState } from "react";
+import { lumiereEstimee, type Distance } from "../lib/lumiere";
 
 import { Titre } from "../components/ui";
 import { chercherInterieur } from "../lib/search";
@@ -74,8 +75,11 @@ function Choisir() {
   const [chat, setChat] = useState(false);
   const [facile, setFacile] = useState(false);
   const [fleurs, setFleurs] = useState(false);
+  const [dist, setDist] = useState<Distance>(1);
+  const [voile, setVoile] = useState(false);
   const f = FENETRES.find((x) => x.id === fen)!;
-  const expo = lampe ? ["soleil", "mi-ombre", "ombre"] : f.expo;
+  const lum = lumiereEstimee(fen, dist, voile);
+  const expo: string[] = lampe ? ["soleil", "mi-ombre", "ombre"] : lum.expo;
   const plantes = PLANTES.filter((p) => p.categorie === "interieur" && p.expo.some((e) => expo.includes(e)) && (!chat || p.sansDangerAnimaux) && (!facile || p.difficulte === 1) && (!fleurs || p.fleurit))
     .sort((a, b) => a.difficulte - b.difficulte || a.nom.localeCompare(b.nom, "fr"));
   const aromates = AROMATES_INT.filter((a) => lampe || (fen === "sud" || fen === "ouest" ? true : fen === "est" ? !SOLEIL.has(cle(a)) : fen === "aucune" ? false : OMBRE_OK.has(cle(a))));
@@ -85,6 +89,13 @@ function Choisir() {
         <b>1. Où sera la plante ?</b>
         <div className="chips">{FENETRES.map((x) => <button key={x.id} className={`chip ${fen === x.id ? "on" : ""}`} onClick={() => setFen(x.id)}>{x.label}</button>)}</div>
         <p className="small muted" style={{ margin: 0 }}>{f.detail} Pas sûr ? Faites le <a href={href("/guide/lumiere-led")}>test de l'ombre de la main</a>.</p>
+        {fen !== "loin" && fen !== "aucune" && (
+          <>
+            <div className="chips" aria-label="Distance de la fenêtre">{(["Contre la vitre", "Vers 1 m", "Vers 2 m", "3 m et plus"] as const).map((l, i) => <button key={l} className={`chip ${dist === i ? "on" : ""}`} onClick={() => setDist(i as Distance)}>{l}</button>)}</div>
+            <label className="row small"><input type="checkbox" checked={voile} onChange={(e) => setVoile(e.target.checked)} /> Voilage épais, arbre, balcon ou immeuble devant la fenêtre</label>
+          </>
+        )}
+        {!lampe && <div className="callout info small"><b>💡 Lumière estimée : {lum.lux}</b>{lum.label}. À vérifier vers midi : {lum.ombre} quand vous passez la main à 30 cm au-dessus de l'emplacement.</div>}
         <b>2. Vos conditions</b>
         <label className="row"><input type="checkbox" checked={lampe} onChange={(e) => setLampe(e.target.checked)} /> 💡 J'ai (ou je veux) une lampe de culture</label>
         <label className="row"><input type="checkbox" checked={chat} onChange={(e) => setChat(e.target.checked)} /> 🐱 J'ai un chat, un chien ou un jeune enfant (plantes sans danger)</label>
@@ -195,6 +206,11 @@ function Lampe() {
 function Entretien() {
   return (
     <div>
+      <div className="chips" style={{ marginBottom: 8 }}>
+        <a className="chip" href={href("/guide/saisons-plantes-interieur")}>📆 Hiver, été, rentrée</a>
+        <a className="chip" href={href("/guide/pots-arrosage")}>🌿 Pots, cache-pots, arrosage par le bas</a>
+        <a className="chip" href={href("/guide/engrais-interieur")}>🍽️ Engrais : quand et combien</a>
+      </div>
       <h2>🗓️ L'année d'une plante d'intérieur</h2>
       <div className="grid">{SAISONS_INT.map((s) => <div key={s.saison} className="card"><b>{s.e} {s.saison}</b><ul className="ticks small">{s.taches.map((t) => <li key={t}>{t}</li>)}</ul></div>)}</div>
       <h2>💧 Arroser juste</h2>
@@ -242,6 +258,7 @@ function Soigner() {
   return (
     <div>
       <a className="btn big primary" href={href("/diagnostic?interieur=1")}>🔎 Diagnostic guidé : ma plante ne va pas bien</a>
+      <a className="btn big" href={href("/guide/sauver-plante")} style={{ marginTop: 8 }}>🚑 Sauver une plante qui va mal : le plan en 6 étapes</a>
       <div className="callout warn small" style={{ marginTop: 10 }}><b>Dans 8 cas sur 10</b>c'est l'arrosage (trop, surtout l'hiver) ou la lumière (trop peu). Vérifiez la terre au doigt et la place de la plante avant de chercher un parasite.</div>
       <h2>Problèmes fréquents en intérieur ({pbs.length})</h2>
       <div className="grid">{pbs.map((p) => <Tile key={p.id} to={`/probleme/${p.id}`} id={p.id} emoji="⚕️" title={p.nom} sub={p.symptomes[0]?.slice(0, 80)} />)}</div>

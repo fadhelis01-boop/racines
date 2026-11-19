@@ -305,7 +305,11 @@ label.row > input[type="checkbox"], label.row > input[type="radio"] { flex-shrin
   body.impression-ciblee * { visibility: hidden; }
   body.impression-ciblee .a-imprimer, body.impression-ciblee .a-imprimer * { visibility: visible; }
   body.impression-ciblee .a-imprimer { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; }
+  .seulement-impression { display: block !important; }
+  .fiche-visite table { border-collapse: collapse; width: 100%; }
+  .fiche-visite td, .fiche-visite th { border: 1px solid #999; padding: 6px; height: 26px; color: #000; }
 }
+.seulement-impression { display: none; }
 
 /* Fiches : la photo ne cache plus l'essentiel sur téléphone */
 @media (max-width: 600px) {

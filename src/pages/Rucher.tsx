@@ -5,7 +5,7 @@ import { RACES } from "../data/races";
 import { PLANTES } from "../data/index";
 import { MOIS_NOMS } from "../data/util";
 import { href } from "../lib/router";
-import { toast, download, Empty, Titre, Sommaire } from "../components/ui";
+import { toast, download, Empty, Titre, Sommaire, imprimer } from "../components/ui";
 import { couleurReine, COULEURS_REINE, METHODES_VARROA, valeurVarroa, niveauVarroa, seuilsVarroa, LIB_NIVEAU, pertesHiver, derniereVisite, dernierComptage, alertesRucher, registreTraitementsCsv, dernieresPesees, forceColonie, recolteParRuche, siropHiver, visitesCsv, PRODUITS_VARROA, TYPES_RUCHE, ORIGINES, vivantes, type NiveauVarroa } from "../lib/rucher";
 
 const fr = (iso: string) => new Date(iso + "T12:00:00").toLocaleDateString("fr-FR");
@@ -38,7 +38,18 @@ export default function Rucher() {
         <a className="chip" href={href("/guide/api-visite")}>🔍 Faire une visite</a>
         <a className="chip" href={href("/guide/api-varroa")}>🦠 Plan varroa</a>
         <a className="chip" href={href("/diagnostic-animal?animal=abeille")}>⚕️ Diagnostic de la ruche</a>
+        <a className="chip" href={href("/guide/api-debuter")}>🐣 Débuter</a>
+        <a className="chip" href={href("/guide/api-reine-perdue")}>👑 La reine a disparu ?</a>
+        <a className="chip" href={href("/guide/api-ruche-morte")}>🔍 Ruche morte</a>
       </div>
+      <details className="box small">
+        <summary>🧭 Pendant la visite : que regarder, dans l'ordre</summary>
+        <ol style={{ margin: "6px 0 0", paddingLeft: 20 }}>
+          {ORDRE_VISITE.map(([t, d]) => <li key={t}><b>{t}</b> — {d}</li>)}
+        </ol>
+        <button className="btn sm" style={{ marginTop: 8 }} onClick={() => imprimer(".fiche-visite")}>🖨️ Imprimer une fiche de visite à emporter</button>
+      </details>
+      <FicheVisite ruches={actives.map((r) => r.nom)} />
       {alertes.length > 0 && (
         <div className="card" style={{ borderLeft: "4px solid var(--danger)" }}>
           <b data-titre>À faire au rucher</b>
@@ -375,6 +386,33 @@ function CalendrierMellifere() {
         </div>
       ) : <p className="small">Votre jardin offre des fleurs mellifères de mars à octobre.</p>}
       <p className="small"><a href={href("/guide/jardin-pollinisateurs")}>Des fleurs toute l'année pour les pollinisateurs →</a> · <a href={href("/guide/api-pesticides")}>Protéger son rucher des pesticides →</a></p>
+    </div>
+  );
+}
+
+// L'ordre d'une visite de débutant (repris sur la fiche imprimable)
+const ORDRE_VISITE: [string, string][] = [
+  ["Avant d'ouvrir", "regardez le trou de vol 2 minutes : abeilles qui rentrent du pollen (bon signe), mortes devant, agitation (pillage), frelons."],
+  ["Enfumer", "2 ou 3 bouffées au trou de vol, attendre 1 minute, une bouffée sous le couvre-cadres."],
+  ["Réserves", "cadres de rive : miel operculé et pollen ; soupesez la ruche."],
+  ["Couvain", "cadres du centre : des œufs (reine présente il y a moins de 3 jours), couvain compact, opercules bombés et réguliers."],
+  ["Cellules royales", "au bas et sur le bord des cadres : essaimage en préparation ou remplacement de la reine."],
+  ["Place", "abeilles sur combien de cadres ? Plus de 8 sur 10 au printemps : poser une hausse."],
+  ["Maladies", "couvain troué, opercules affaissés ou percés, odeur, abeilles aux ailes déformées."],
+  ["Refermer et noter", "cadres dans le même ordre, puis notez la visite ici le jour même."],
+];
+
+// Fiche papier pour noter au rucher sans téléphone (invisible à l'écran, imprimée à la demande)
+function FicheVisite({ ruches }: { ruches: string[] }) {
+  const lignes = ruches.length ? ruches : ["", "", ""];
+  return (
+    <div className="fiche-visite seulement-impression">
+      <h2>Fiche de visite du rucher — date : ................................</h2>
+      <p style={{ fontSize: 12 }}>Météo : ............................ Température : ........ °C</p>
+      <table><thead><tr><th>Ruche</th><th>Trou de vol</th><th>Œufs / reine</th><th>Couvain (cadres)</th><th>Miel (cadres)</th><th>Cellules royales</th><th>Abeilles (cadres)</th><th>Humeur</th><th>Varroa</th><th>À faire</th></tr></thead>
+        <tbody>{lignes.map((n, i) => <tr key={i}><td>{n}</td><td /><td /><td /><td /><td /><td /><td /><td /><td /></tr>)}</tbody>
+      </table>
+      <ol style={{ fontSize: 11, marginTop: 10 }}>{ORDRE_VISITE.map(([t, d]) => <li key={t}><b>{t}</b> — {d}</li>)}</ol>
     </div>
   );
 }

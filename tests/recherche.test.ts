@@ -137,6 +137,26 @@ const QUESTIONS: [string, string][] = [
   ["œufs couvés combien de temps", "/calculs?s=eclosion"],
   ["abattre un coq", "/guide/abattage-volaille"],
   ["parer les sabots de l'âne", "/maladie-animale/dents-sabots-equides"],
+  // Audit apiculteur et plantes d'intérieur débutants
+  ["comment commencer l'apiculture", "/guide/api-debuter"],
+  ["acheter un essaim", "/guide/api-debuter"],
+  ["ruche en ville", "/guide/api-emplacement"],
+  ["distance ruche voisin", "/guide/api-emplacement"],
+  ["reine introuvable", "/guide/api-reine-perdue"],
+  ["abeilles mortes en hiver", "/guide/api-ruche-morte"],
+  ["pillage", "/guide/api-pillage"],
+  ["abeilles dans la cheminée", "/guide/essaim-batiment"],
+  ["isolation ruche", "/guide/api-hivernage"],
+  ["frelon asiatique piège", "/guide/api-frelon"],
+  ["sauver une plante", "/guide/sauver-plante"],
+  ["arroser par le bas", "/guide/pots-arrosage"],
+  ["pot sans trou", "/guide/pots-arrosage"],
+  ["quel terreau plante intérieur", "/interieur?t=entretien"],
+  ["sortir les plantes l'été", "/guide/saisons-plantes-interieur"],
+  ["plante près du radiateur", "/guide/saisons-plantes-interieur"],
+  ["engrais plante intérieur", "/guide/engrais-interieur"],
+  ["plante d'intérieur facile", "/debuter?t=increvables"],
+  ["plante pour salle de bain", "/guide/plantes-par-piece"],
 ];
 
 const top = (q: string) => rechercher(q, 3).map((h) => h.href);
@@ -153,5 +173,6 @@ jamais("traitement bio", "/guide/traite-fromage");
 jamais("sol desséché", "/guide/cs-sechage");
 jamais("combien de temps pour avoir des tomates", "/conserver?t=temps");
 jamais("plante facile", "/guide/autres-animaux");
+jamais("taches brunes feuilles intérieur", "/probleme/fusariose");
 
 ok(ciblesInconnues().length === 0, `toutes les pages visées par les intentions existent (inconnues : ${ciblesInconnues().join(", ")})`);
