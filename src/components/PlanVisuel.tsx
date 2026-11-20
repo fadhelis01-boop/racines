@@ -24,6 +24,7 @@ export function famillesDe(espaceId: string, annee: number, cultures: { espaceId
 export default function PlanVisuel() {
   const espaces = useStore((s) => s.espaces.filter((e) => !e.archive));
   const elements = useStore((s) => s.elementsPlan ?? []);
+  const massifs = useStore((s) => s.massifs ?? []);
   const cultures = useStore((s) => s.cultures);
   const nord = useStore((s) => s.settings.planNord ?? 0);
   const terrain = useStore((s) => s.settings.planTerrain ?? { l: 20, h: 12 });
@@ -219,6 +220,14 @@ export default function PlanVisuel() {
             <>
               Longueur <input type="number" step="0.5" min="0.1" value={el.l} onChange={(ev) => majEl({ l: Number(ev.target.value) })} style={{ width: 65 }} /> m
               Largeur <input type="number" step="0.1" min="0.1" value={el.p} onChange={(ev) => majEl({ p: Number(ev.target.value) })} style={{ width: 65 }} /> m
+            </>
+          )}
+          {el.type === "massif" && (
+            <>
+              <select value={el.massifId ?? ""} aria-label="Massif composé" style={{ width: "auto" }} onChange={(ev) => majEl({ massifId: ev.target.value || undefined })}>
+                <option value="">Plantes du massif…</option>{massifs.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
+              </select>
+              <a className="btn sm" href={href(`/fleurs?t=massif&surface=${Math.round(el.l * el.p * 10) / 10}&nom=${encodeURIComponent(el.nom ?? "Massif")}`)}>🌼 Composer</a>
             </>
           )}
           {["arbre", "haie", "maison", "abri"].includes(el.type) && <> Hauteur <input type="number" step="0.5" min="0.5" value={el.hauteur ?? ""} onChange={(ev) => majEl({ hauteur: Number(ev.target.value) || undefined })} style={{ width: 60 }} /> m</>}

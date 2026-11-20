@@ -25,7 +25,15 @@ import { CALENDRIER, ZONES } from "./calendrier";
 import type { Animal, Guide, Plante, Probleme, Remede, Rubrique } from "./types";
 
 import { PLANTES_AMATEUR } from "./plantes-amateur";
-export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...INTERIEUR3, ...ENVAHISSANTES, ...JARDIN2, ...FLEURS2, ...ORNEMENT2, ...PLANTES_AMATEUR].map((p) => ({ ...Object.fromEntries(Object.entries(COMPLEMENTS[p.id] ?? {}).filter(([k]) => (p as unknown as Record<string, unknown>)[k] == null)), ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}), ...(!p.recolteConseil && RECOLTE_EN_PLUS[p.id] ? { recolteConseil: RECOLTE_EN_PLUS[p.id] } : {}), ...(!p.contenant && CONTENANT[p.id] ? { contenant: CONTENANT[p.id] } : {}), ...(!p.rendement && RENDEMENT[p.id] ? { rendement: RENDEMENT[p.id] } : {}), ...(!p.profondeur && PROFONDEUR[p.id] ? { profondeur: PROFONDEUR[p.id] } : {}), ...(GERMINATION[p.id] ? { tempGermination: GERMINATION[p.id] } : {}), ...(ALIAS_CULTIVARS[p.id] ? { alias: [...(p.alias ?? []), ...(ENRICH[p.id]?.alias ?? []), ...ALIAS_CULTIVARS[p.id]] } : {}) }));
+import { ORNEMENT_PRO } from "./ornement-pro";
+export const PLANTES: Plante[] = [...LEGUMES, ...AROMATIQUES, ...FLEURS, ...FRUITS, ...INTERIEUR, ...INTERIEUR2, ...INTERIEUR3, ...ENVAHISSANTES, ...JARDIN2, ...FLEURS2, ...ORNEMENT2, ...PLANTES_AMATEUR, ...ORNEMENT_PRO].map((p) => ({ ...Object.fromEntries(Object.entries(COMPLEMENTS[p.id] ?? {}).filter(([k]) => (p as unknown as Record<string, unknown>)[k] == null)), ...p, ...(ENRICH[p.id] ?? {}), ...(ENRICH_FLEURS[p.id] ?? {}), ...(!p.recolteConseil && RECOLTE_EN_PLUS[p.id] ? { recolteConseil: RECOLTE_EN_PLUS[p.id] } : {}), ...(!p.contenant && CONTENANT[p.id] ? { contenant: CONTENANT[p.id] } : {}), ...(!p.rendement && RENDEMENT[p.id] ? { rendement: RENDEMENT[p.id] } : {}), ...(!p.profondeur && PROFONDEUR[p.id] ? { profondeur: PROFONDEUR[p.id] } : {}), ...(GERMINATION[p.id] ? { tempGermination: GERMINATION[p.id] } : {}), ...(ALIAS_CULTIVARS[p.id] ? { alias: [...(p.alias ?? []), ...(ENRICH[p.id]?.alias ?? []), ...ALIAS_CULTIVARS[p.id]] } : {}) }));
+
+// Fleurs à couper et sols conseillés (paysagiste, fleuriste) pour les plantes déjà présentes
+import { BOUQUET, SOLS } from "./ornement-donnees";
+for (const p of PLANTES) {
+  if (!p.bouquet && BOUQUET[p.id]) p.bouquet = BOUQUET[p.id];
+  if (!p.sols && SOLS[p.id]) p.sols = SOLS[p.id];
+}
 
 // Associations rendues réciproques : si A est « bon voisin » de B, B l'est de A ;
 // en cas de désaccord (A ami de B mais B ennemi de A), « à séparer » l'emporte.

@@ -1,4 +1,6 @@
 import { usePaquets } from "../lib/paquets";
+import { classeHauteur, CLASSES_HAUTEUR, NOMS_SOLS, solsDeMonSol } from "../lib/ornement";
+import { MOIS_NOMS } from "../data/util";
 import { href } from "../lib/router";
 import { Ico } from "../components/Ico";
 import { useState } from "react";
@@ -17,6 +19,12 @@ export default function Plantes() {
   const [filtres, setFiltres] = useState<string[]>([]);
   const [couleur, setCouleur] = useState("");
   const [froid, setFroid] = useState(() => Number(new URLSearchParams(location.hash.split("?")[1] ?? "").get("froid")) || 0); // 0 = indifférent ; sinon température minimale à supporter
+  const params = new URLSearchParams(location.hash.split("?")[1] ?? "");
+  const monSol = useStore((s) => s.settings.sol);
+  const [haut, setHaut] = useState<string>("");
+  const [moisFl, setMoisFl] = useState<number>(Number(params.get("mois")) || 0);
+  const [sol, setSol] = useState<string>(params.get("sol") ?? "");
+  const solsVoulus: string[] = sol === "monsol" ? solsDeMonSol(monSol) : sol ? [sol] : [];
   const tog = (f: string) => setFiltres(filtres.includes(f) ? filtres.filter((x) => x !== f) : [...filtres, f]);
   const fav = useStore((s) => s.favoris);
   const nq = norm(q);
@@ -35,9 +43,13 @@ export default function Plantes() {
       (!couleur || (p.couleurs ?? []).includes(couleur as never)) &&
       (!froid || (p.rusticite != null && p.rusticite <= froid)) &&
       (!filtres.includes("persistant") || p.feuillage === "persistant") &&
+      (!filtres.includes("bouquet") || !!p.bouquet) &&
+      (!haut || classeHauteur(p) === haut) &&
+      (!moisFl || (p.floraison ?? []).includes(moisFl as never)) &&
+      (!solsVoulus.length || solsVoulus.every((x) => (p.sols ?? []).includes(x as never))) &&
       (!nq || norm([p.nom, p.latin, ...(p.alias ?? []), ...(p.latins ?? [])].join(" ")).includes(nq)),
   ).sort((a, b) => a.nom.localeCompare(b.nom, "fr"));
-  const paquet = usePaquets(list, [q, cat, lieu, facile, filtres.join(","), couleur, froid].join("|"));
+  const paquet = usePaquets(list, [q, cat, lieu, facile, filtres.join(","), couleur, froid, haut, moisFl, sol].join("|"));
   return (
     <div>
       <Titre ico="plantes" emoji="🌱">Les plantes</Titre>
@@ -78,6 +90,12 @@ export default function Plantes() {
           </select>
         </label>
         <button className={`chip ${filtres.includes("persistant") ? "on" : ""}`} onClick={() => tog("persistant")}>🌲 Feuillage persistant</button>
+        <button className={`chip ${filtres.includes("bouquet") ? "on" : ""}`} onClick={() => tog("bouquet")}>💐 À bouquet</button>
+      </div>
+      <div className="grid-sm" style={{ marginBottom: 12 }}>
+        <label className="field small">Hauteur adulte<select value={haut} onChange={(e) => setHaut(e.target.value)}><option value="">peu importe</option>{Object.entries(CLASSES_HAUTEUR).map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select></label>
+        <label className="field small">En fleur en<select value={moisFl} onChange={(e) => setMoisFl(Number(e.target.value))}><option value={0}>peu importe</option>{MOIS_NOMS.map((n, i) => <option key={n} value={i + 1}>{n}</option>)}</select></label>
+        <label className="field small">Type de sol<select value={sol} onChange={(e) => setSol(e.target.value)}><option value="">peu importe</option>{monSol && solsDeMonSol(monSol).length > 0 && <option value="monsol">Mon sol (test : {solsDeMonSol(monSol).map((x) => NOMS_SOLS[x].split(" ")[0].toLowerCase()).join(", ")})</option>}{Object.entries(NOMS_SOLS).map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select></label>
       </div>
       <div className="chips" style={{ marginBottom: 12 }} aria-label="Couleur des fleurs">
         {[["", "Toutes couleurs", "transparent"], ["blanc", "Blanc", "#f5f5f0"], ["jaune", "Jaune", "#f2d24b"], ["orange", "Orange", "#f29a3b"], ["rouge", "Rouge", "#d9342b"], ["rose", "Rose", "#ec8fb7"], ["violet", "Violet", "#8f5bbf"], ["bleu", "Bleu", "#4f7fd1"]].map(([k, l, col]) => (

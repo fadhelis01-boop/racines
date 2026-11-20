@@ -19,6 +19,7 @@ import { srcVignette } from "../components/Ico";
 import { CONSERV, METHODES_CONSERV } from "../data/conservation";
 import { VARIETES, LIB_TYPE_VARIETE } from "../data/varietes";
 import { libRusticite } from "../data/rusticite";
+import { NOMS_SOLS } from "../lib/ornement";
 import { AjoutCulture } from "../components/AjoutCulture";
 
 const EXPO = { soleil: "☀️ Soleil", "mi-ombre": "⛅ Mi-ombre", ombre: "☁️ Ombre" };
@@ -46,6 +47,7 @@ export default function PlanteFiche({ id }: { id?: string }) {
         ["Besoins du sol", BESOIN[p.besoin]],
         ["Sol idéal", SOL_PLANTE[p.id]],
         ["Eau", EAU[p.eau]],
+        ["Sols conseillés", p.sols?.length ? p.sols.map((x) => NOMS_SOLS[x].toLowerCase()).join(", ") : undefined],
         ["Rusticité", p.rusticite != null ? `jusqu'à ${p.rusticite} °C : ${libRusticite(p.rusticite)}` : p.cycle === "annuelle" ? "annuelle : vit une seule saison" : undefined],
         ["Feuillage", p.feuillage ? { persistant: "persistant (vert toute l'année)", "semi-persistant": "semi-persistant (perd une partie de ses feuilles en hiver froid)", caduc: "caduc (perd ses feuilles en hiver)" }[p.feuillage] : undefined],
         ["Espacement", p.espacement],
@@ -204,6 +206,13 @@ export default function PlanteFiche({ id }: { id?: string }) {
               <h2>Variétés conseillées</h2>
               <ul className="ticks">{VARIETES[p.id].map((v) => <li key={v.nom}><b>{v.nom}</b> {v.types.map((t) => <span key={t} className={`badge ${t === "R" ? "green" : t === "G" ? "sun" : ""}`} style={{ marginRight: 4 }}>{LIB_TYPE_VARIETE[t]}</span>)}<br /><span className="small">{v.note}</span></li>)}</ul>
               <p className="small muted">Repères courants en France : demandez aussi aux jardiniers et pépiniéristes de votre région quelles variétés réussissent chez vous.</p>
+            </>
+          )}
+          {p.bouquet && (
+            <>
+              <h2>💐 En bouquet</h2>
+              <p><b>Tenue en vase : {p.bouquet.vase}.</b> {p.bouquet.conseil}</p>
+              <p className="small"><a href={href("/guide/art-floral-bases")}>Composer et faire durer un bouquet →</a> · <a href={href("/fleurs")}>Fleurs de saison →</a></p>
             </>
           )}
           {(p.conservation || CONSERV[p.id]) && (() => { const c = CONSERV[p.id]; return (<>

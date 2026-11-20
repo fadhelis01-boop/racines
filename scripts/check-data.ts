@@ -24,7 +24,11 @@ import { LEXIQUE } from "../src/data/lexique";
 import { PLANTES, PROBLEMES, REMEDES, GUIDES as GUIDES_META, ANIMAUX, SIGNES, AUXILIAIRES, CALENDRIER, lienVers } from "../src/data/index";
 import { GUIDES_COMPLETS as GUIDES } from "../src/data/guides-complets";
 
+import { BOUQUET, SOLS } from "../src/data/ornement-donnees";
 const errors: string[] = [];
+{
+  for (const id of [...Object.keys(BOUQUET), ...Object.keys(SOLS)]) if (!PLANTES.some((p) => p.id === id)) errors.push(`bouquet ou sol : plante inconnue « ${id} »`);
+}
 const ids = new Set<string>();
 const dup = (kind: string, arr: { id: string }[]) => {
   for (const x of arr) {

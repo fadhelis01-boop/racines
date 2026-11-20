@@ -157,6 +157,26 @@ const QUESTIONS: [string, string][] = [
   ["engrais plante intérieur", "/guide/engrais-interieur"],
   ["plante d'intérieur facile", "/debuter?t=increvables"],
   ["plante pour salle de bain", "/guide/plantes-par-piece"],
+  // Audit fleuriste et paysagiste débutants
+  ["chrysanthème", "/plante/chrysantheme"],
+  ["renoncule", "/plante/renoncule"],
+  ["charme", "/plante/charme"],
+  ["amélanchier", "/plante/amelanchier"],
+  ["composer un bouquet", "/guide/art-floral-bases"],
+  ["eau du vase", "/guide/art-floral-bases"],
+  ["mousse florale", "/guide/art-floral-bases"],
+  ["fleurs séchées", "/guide/fleurs-sechees"],
+  ["quelles fleurs en hiver", "/fleurs"],
+  ["fleurs toxiques pour les chats", "/plante/lys"],
+  ["devenir fleuriste", "/guide/metier-fleuriste"],
+  ["couleurs qui vont ensemble", "/guide/couleurs-jardin"],
+  ["combien de plantes par m²", "/fleurs?t=massif"],
+  ["plantes sol calcaire", "/plantes?sol=calcaire"],
+  ["jardin méditerranéen", "/guide/jardin-mediterraneen"],
+  ["plantes bord de mer", "/guide/jardin-bord-de-mer"],
+  ["bassin", "/guide/bassin-ornement"],
+  ["mur végétal", "/guide/mur-vegetal"],
+  ["arbre à croissance rapide", "/guide/arbres-petit-jardin"],
 ];
 
 const top = (q: string) => rechercher(q, 3).map((h) => h.href);
@@ -174,5 +194,7 @@ jamais("sol desséché", "/guide/cs-sechage");
 jamais("combien de temps pour avoir des tomates", "/conserver?t=temps");
 jamais("plante facile", "/guide/autres-animaux");
 jamais("taches brunes feuilles intérieur", "/probleme/fusariose");
+jamais("bassinage", "/guide/bassin-ornement");
+jamais("secher les tomates", "/guide/fleurs-sechees");
 
 ok(ciblesInconnues().length === 0, `toutes les pages visées par les intentions existent (inconnues : ${ciblesInconnues().join(", ")})`);

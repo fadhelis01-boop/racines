@@ -8,6 +8,7 @@ export const GROUPES: { titre: string; entrees: Entree[] }[] = [
     { to: "/calendrier", label: "Calendrier", desc: "Ce qui se sème, se plante et se récolte ce mois-ci", ico: "calendrier", emoji: "📅" },
     { to: "/creer", label: "Créer mon potager", desc: "5 questions, puis un plan pour votre première année", ico: "creer", emoji: "👨‍🌾" },
     { to: "/amenagements", label: "Choisir une méthode de potager", desc: "Carrés, buttes, lasagnes, pots… et laquelle vous convient", ico: "jardin", emoji: "🗺️" },
+    { to: "/fleurs", label: "Fleurs et massifs", desc: "Fleurs de saison, bouquets, couleurs, composer un massif", ico: "fleur", emoji: "🌸" },
     { to: "/plan-culture", label: "Plan de culture", desc: "Pour produire beaucoup et en continu (niveau avancé)", ico: "calendrier", emoji: "📋", si: "confirme" },
     { to: "/demenagement", label: "Je déménage", desc: "Emporter ses plantes et repartir dans un nouveau lieu", ico: "reglages", emoji: "📦" },
   ] },

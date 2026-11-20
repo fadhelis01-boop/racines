@@ -46,6 +46,8 @@ import { CONSERV, METHODES_CONSERV, majorationAltitude } from "../src/data/conse
 import { MALADIES_ANIMALES } from "../src/data/maladies-animales";
 
 import { ok } from "./outils";
+import { hauteurCm, classeHauteur, calculMassif, moisSansFleur, solsDeMonSol, typeVegetal, HARMONIES } from "../src/lib/ornement";
+import { FLEURS_ACHAT } from "../src/data/fleurs-saison";
 import { lumiereEstimee } from "../src/lib/lumiere";
 import { attentesEnCours, soinsAPrevoir, finAttente } from "../src/lib/attente";
 import { animauxPossibles, REPERES, themeDuGuide } from "../src/lib/choisir-animal";
@@ -766,4 +768,23 @@ ok(DEUXIEME_SAISON.flatMap((w) => w.taches).length >= 15 && DEUXIEME_SAISON.flat
   ok(lumiereEstimee("loin", 3, false).niveau === 1, "loin d'une fenêtre : la distance n'est pas comptée deux fois");
   for (const id of ["api-debuter", "api-emplacement", "api-reine-perdue", "api-ruche-morte", "api-pillage", "essaim-batiment", "api-hivernage", "sauver-plante", "pots-arrosage", "saisons-plantes-interieur", "engrais-interieur"]) ok(GUIDES.some((g) => g.id === id), `guide ${id}`);
   ok(/1er septembre et le 31 décembre/.test(JSON.stringify(GUIDES.find((g) => g.id === "api-debuter"))), "déclaration annuelle des ruches : période indiquée");
+}
+
+// Audit fleuriste et paysagiste débutants
+{
+  ok(hauteurCm("30 cm à 1,5 m") === 150 && hauteurCm("10 à 20 cm") === 20 && hauteurCm("2 à 4 m") === 400 && hauteurCm(undefined) === 0, "hauteur lue en cm");
+  ok(classeHauteur({ hauteur: "15 à 20 cm" }) === "basse" && classeHauteur({ hauteur: "60 cm à 1 m" }) === "moyenne" && classeHauteur({ hauteur: "4 à 8 m" }) === "arbre", "classes de hauteur");
+  ok(solsDeMonSol({ texture: "argileux", traits: ["calcaire"] }).join() === "argileux,calcaire", "résultat du test de sol traduit en sols de plantes");
+  const pv = PLANTES.find((p) => p.id === "pervenche")!, ach = PLANTES.find((p) => p.id === "achillee")!;
+  ok(typeVegetal(pv) === "couvre-sol" && typeVegetal(ach) === "grande-vivace" || typeVegetal(ach) === "vivace", "type de végétal pour la densité");
+  const c = calculMassif(10, [{ id: "pervenche", part: 50 }, { id: "achillee", part: 50 }], [pv, ach]);
+  ok(c.details[0].nombre === 45 && c.nombre > 45 && c.prixMax > c.prixMin, `massif de 10 m² : 45 pervenches (${JSON.stringify(c.details[0])})`);
+  ok(moisSansFleur([pv]).includes(7) && !moisSansFleur([pv]).includes(4), "mois sans fleurs d'un massif");
+  ok(Object.keys(HARMONIES).length === 8 && HARMONIES.jaune.complementaire.includes("violet"), "harmonies de couleurs");
+  ok(Object.keys(FLEURS_ACHAT).length === 12, "fleurs de saison à acheter pour les 12 mois");
+  for (const id of ["chrysantheme", "gerbera", "freesia", "renoncule", "anemone-caen", "alstroemeria", "eucalyptus", "gypsophile", "statice", "lisianthus", "celosie", "scabieuse", "delphinium", "ammi", "amarante", "charme", "troene", "eleagnus", "pittosporum", "choisya", "nandina", "cotinus", "osmanthe", "amelanchier", "erable-champetre", "mimosa", "alchemille", "astilbe", "campanule", "kniphofia", "bergenia", "sedum", "euphorbe", "pervenche", "bugle", "achillee", "verveine-bonariensis", "carex", "fetuque-bleue"]) ok(PLANTES.some((p) => p.id === id), `plante ${id}`);
+  ok(PLANTES.filter((p) => p.bouquet).length >= 50, `au moins 50 fleurs à bouquet (${PLANTES.filter((p) => p.bouquet).length})`);
+  ok(PLANTES.filter((p) => p.sols?.length).length >= 100, `au moins 100 plantes avec leurs sols (${PLANTES.filter((p) => p.sols?.length).length})`);
+  ok(/MORTEL POUR LES CHATS/.test(PLANTES.find((p) => p.id === "lys")!.bouquet!.conseil), "lys : alerte chats dans le conseil de bouquet");
+  for (const id of ["art-floral-bases", "fleurs-sechees", "couleurs-jardin", "metier-fleuriste", "jardin-mediterraneen", "jardin-japonais", "jardin-bord-de-mer", "jardin-de-pluie", "bassin-ornement", "mur-vegetal", "arbres-petit-jardin"]) ok(GUIDES.some((g) => g.id === id), `guide ${id}`);
 }

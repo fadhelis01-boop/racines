@@ -52,6 +52,7 @@ function Resultat({ texture, traits, alertes }: { texture: string; traits: strin
       {alertes.map((a) => <div key={a} className="callout info small">{a}</div>)}
       <h3>🌱 Ce qui s'y plaît sans effort</h3>
       <div className="chips">{aime.map((p) => <a key={p!.id} className="chip" href={href(`/plante/${p!.id}`)}><Vignette id={p!.id} emoji={p!.emoji} taille={20} /> {p!.nom}</a>)}</div>
+      <p style={{ marginTop: 10 }}><a className="btn" href={href("/plantes?sol=monsol")}>🌸 Fleurs, arbustes et arbres adaptés à mon sol →</a></p>
       <p className="small muted">Toutes les autres cultures restent possibles : on corrige le sol peu à peu avec du compost et du paillage. Dans tous les cas, la matière organique améliore TOUS les types de sol.</p>
     </div>
   );

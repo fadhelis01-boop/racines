@@ -35,7 +35,7 @@ const RECHERCHE: Record<string, string> = {
   "mouche-figue": "Silba adipata",
   // Animaux et plantes dont l'article n'offrait que des planches, des squelettes ou des scènes de boucherie
   chevre: "goats farm pasture", cochon: "domestic pigs pasture", pigeon: "domestic pigeon dovecote", mouton: "sheep flock pasture",
-  herisson: "Erinaceus europaeus garden", kaki: "Diospyros kaki fruits tree", sarrasin: "Fagopyrum esculentum flowers field", taupe: "Talpa europaea", blette: "Swiss chard garden", cognassier: "quince fruit tree", poinsettia: "Poinsettia plant pot",
+  herisson: "Erinaceus europaeus garden", freesia: "Freesia flowers", eleagnus: "Elaeagnus ebbingei", amelanchier: "Amelanchier lamarckii", bergenia: "Bergenia cordifolia flowers", kaki: "Diospyros kaki fruits tree", sarrasin: "Fagopyrum esculentum flowers field", taupe: "Talpa europaea", blette: "Swiss chard garden", cognassier: "quince fruit tree", poinsettia: "Poinsettia plant pot",
 };
 // Mots anglais ou latins fréquents dans les noms de fichiers des maladies et ravageurs
 const EN: Record<string, string[]> = {
@@ -48,7 +48,7 @@ const EN: Record<string, string[]> = {
   chevre: ["goat", "capra"], mouton: ["sheep", "ovis"], ane: ["donkey", "equus_asinus"], cochon: ["pig", "sus_scrofa"],
   oie: ["goose", "anser"], "tenthrede-groseillier": ["nematus", "sawfly"], processionnaire: ["thaumetopoea", "processionary"], "pyrale-buis": ["cydalima", "box_tree", "glyphodes"], "taches-noires-rosier": ["diplocarpon", "black_spot", "rose"], cheval: ["horse", "equus"], dindon: ["turkey", "meleagris"], pigeon: ["columba", "pigeon"], pintade: ["guineafowl", "numida"], abeille: ["apis", "honey_bee", "honeybee"],
 };
-const EXCLURE = /\.svg|logo|map|carte|distribution|diagram|schema|icon|range|flag|drawing|illustration|herbarium|herbier|\.gif|\.tif|Tomate_Dev_Num|Commons-|Wikispecies|Wiktionary|Disambig|Nuvola|Crystal_Clear|Gnome-|Question_book|Edit-clear|Loudspeaker|Info_|Red_pog|catalog|florist|journal|rare_flowers|Angiospermes|nematode|Internet_Archive|_page_|Seed_catalog|skull|cr[aâ]ne|skeleton|squelette|anatom|h[ée]raldi|blason|piggy|tirelire|d[ée]pe[çc]age|boucher|butcher|bulletin|manual|annual|price_list|monograph|pruning-book|BHL|DPLA|Archives|Medizinal|Magazine|Gleanings|homes_and_gardens|Letterbox|infographic|cyclopaedia/i;
+const EXCLURE = /\.svg|logo|map|carte|distribution|diagram|schema|icon|range|flag|drawing|illustration|herbarium|herbier|\.gif|\.tif|Tomate_Dev_Num|Commons-|Wikispecies|Wiktionary|Disambig|Nuvola|Crystal_Clear|Gnome-|Question_book|Edit-clear|Loudspeaker|Info_|Red_pog|catalog|florist|journal|rare_flowers|Angiospermes|nematode|Internet_Archive|_page_|Seed_catalog|skull|cr[aâ]ne|skeleton|squelette|anatom|h[ée]raldi|blason|piggy|tirelire|d[ée]pe[çc]age|boucher|butcher|bulletin|manual|annual|price_list|monograph|pruning-book|BHL|DPLA|Archives|Medizinal|Magazine|Gleanings|homes_and_gardens|Letterbox|infographic|cyclopaedia|Everything_for_the_garden|Vick.s_garden|_\(1[89]\d\d\)/i;
 
 async function getJson(url: string): Promise<any> {
   for (let i = 0; i < 8; i++) {
@@ -179,6 +179,7 @@ const PHOTOS_TECHNIQUES: Record<string, string> = {
   "black-rot": "Guignardia bidwellii grapes",
   "puceron-cendre": "Dysaphis plantaginea",
   // Tutoriels (audit illustrateur : un visuel pour chaque tutoriel)
+  "art-floral-bases": "flower arrangement vase garden flowers", "fleurs-sechees": "dried flowers", "couleurs-jardin": "colorful perennial border", "metier-fleuriste": "florist shop", "jardin-mediterraneen": "mediterranean garden lavender gravel", "jardin-japonais": "japanese garden maple stones", "jardin-bord-de-mer": "seaside garden coastal plants", "jardin-de-pluie": "rain garden", "bassin-ornement": "garden pond water lilies", "mur-vegetal": "green wall plants facade", "arbres-petit-jardin": "Amelanchier lamarckii flowering tree",
   "api-debuter": "beekeeper hive frame", "api-emplacement": "beehives garden hedge", "api-ruche-morte": "dead bees hive frame", "api-pillage": "bees hive entrance", "essaim-batiment": "bee colony in wall", "api-hivernage": "beehives in snow",
   "sauver-plante": "repotting houseplant roots", "pots-arrosage": "houseplant watering", "saisons-plantes-interieur": "houseplants windowsill", "engrais-interieur": "liquid fertilizer houseplant",
   "veterinaire-urgences": "veterinarian examining goat", "debuter-animaux": "hens in garden", "rapaces-volailles": "Accipiter nisus", "verger-protection": "apple orchard winter",

@@ -97,7 +97,11 @@ export interface Plante {
   hauteur?: string;
   rusticite?: number; // température minimale supportée en pleine terre (°C), plante installée
   feuillage?: "persistant" | "semi-persistant" | "caduc";
+  bouquet?: { vase: string; conseil: string }; // fleur à couper : tenue en vase et conditionnement
+  sols?: SolPlante[]; // sols où la plante se plaît (paysagisme)
 }
+// Sols pour le choix des plantes d'ornement (lien avec le test « Mon sol »)
+export type SolPlante = "argileux" | "calcaire" | "acide" | "sableux" | "humide" | "sec";
 export type Couleur = "blanc" | "jaune" | "orange" | "rouge" | "rose" | "violet" | "bleu" | "vert" | "multicolore";
 
 export type TypeProbleme = "champignon" | "bacterie" | "virus" | "ravageur" | "physiologique" | "carence" | "mammifere";

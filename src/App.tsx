@@ -39,6 +39,7 @@ const Sol = lazy(() => import("./pages/Sol"));
 const Nutrition = lazy(() => import("./pages/Nutrition"));
 const Interieur = lazy(() => import("./pages/Interieur"));
 const Cueillette = lazy(() => import("./pages/Cueillette"));
+const Fleurs = lazy(() => import("./pages/Fleurs"));
 const Demenagement = lazy(() => import("./pages/Demenagement"));
 const Amenagements = lazy(() => import("./pages/Amenagements"));
 const Rucher = lazy(() => import("./pages/Rucher"));
@@ -150,6 +151,7 @@ export default function App() {
     case "nutrition": page = <Nutrition />; break;
     case "interieur": page = <Interieur />; break;
     case "cueillette": page = <Cueillette />; break;
+    case "fleurs": page = <Fleurs />; break;
     case "demenagement": page = <Demenagement />; break;
     case "amenagements": page = <Amenagements />; break;
     case "rucher": page = <Rucher />; break;
@@ -193,7 +195,7 @@ export default function App() {
         {["/", "/jardin", "/plantes", "/sante"].map((to) => nav.find((n) => n.to === to)!).map((n) => (
           <a key={n.to} href={href(n.to)} className={isOn(n.to) ? "on" : ""}><span className="i"><Ico nom={n.ico} emoji={n.i} taille={28} /></span>{n.label.replace(" et fleurs", "")}</a>
         ))}
-        <a href={href("/plus")} className={["plus", "calendrier", "conserver", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette", "sol", "nutrition", "debuter", "bio", "plan-culture"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
+        <a href={href("/plus")} className={["plus", "calendrier", "conserver", "creer", "guides", "guide", "animaux", "animal", "identifier", "associations", "reglages", "lexique", "maladie-animale", "diagnostic-animal", "calculs", "demenagement", "amenagements", "cueillette", "fleurs", "sol", "nutrition", "debuter", "bio", "plan-culture"].includes(p0 ?? "") ? "on" : ""}><span className="i"><Ico nom="plus" emoji="☰" taille={28} /></span>Plus</a>
       </nav>
       <Player />
     </div>
